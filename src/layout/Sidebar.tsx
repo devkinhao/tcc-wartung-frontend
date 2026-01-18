@@ -46,15 +46,15 @@ export default function Sidebar() {
       </div>
 
       {/* MENU */}
-      <nav className="flex-1 py-2">
+      <nav className="flex-1 pt-4 py-2"> {/* pt-4 adiciona espaço no topo do menu */}
         {/* ===== GRUPO PRINCIPAL ===== */}
         {menuPrincipal.map(({ label, to, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `group relative flex items-center gap-3 px-4 py-2 text-sm rounded-md transition-colors
-              ${isActive ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}`
+              `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors
+              ${isActive ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}` // py-3 aumenta a altura
             }
           >
             <Icon size={20} className="shrink-0" />
@@ -94,7 +94,7 @@ export default function Sidebar() {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `group relative flex items-center gap-3 px-4 py-2 text-sm rounded-md transition-colors
+              `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors
               ${isActive ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}`
             }
           >
