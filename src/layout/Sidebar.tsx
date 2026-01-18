@@ -1,138 +1,93 @@
-// ================================
-// src/layout/Sidebar.tsx
-// ================================
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  Home,
-  Users,
-  ClipboardCheck,
-  FileText,
-  Building2,
-  UserCog,
-  Sliders,
-  HelpCircle,
-  ChevronLeft,
-  ChevronRight,
-  Settings,
-} from "lucide-react";
+  MdHome,
+  MdPeople,
+  MdChecklist,
+  MdDescription,
+  MdApartment,
+  MdAdminPanelSettings,
+  MdSettings,
+  MdHelp,
+  MdChevronLeft,
+  MdChevronRight,
+} from "react-icons/md";
+
+type SidebarProps = {
+  collapsed: boolean;
+  onToggle: () => void;
+};
 
 const menuPrincipal = [
-  { label: "Início", to: "/dashboard", icon: Home },
-  { label: "Clientes", to: "/customers", icon: Users },
-  { label: "Inspeções", to: "/inspections", icon: ClipboardCheck },
-  { label: "Relatórios", to: "/reports", icon: FileText },
+  { label: "Início", to: "/dashboard", icon: MdHome },
+  { label: "Clientes", to: "/customers", icon: MdPeople },
+  { label: "Inspeções", to: "/inspections", icon: MdChecklist },
+  { label: "Relatórios", to: "/reports", icon: MdDescription },
 ];
 
 const menuOutros = [
-  { label: "Minha Empresa", to: "/company", icon: Building2 },
-  { label: "Usuários", to: "/users", icon: UserCog },
-  { label: "Configurações", to: "/configurations", icon: Settings },
-  { label: "Ajuda", to: "/help", icon: HelpCircle },
+  { label: "Minha Empresa", to: "/company", icon: MdApartment },
+  { label: "Usuários", to: "/users", icon: MdAdminPanelSettings },
+  { label: "Configurações", to: "/configurations", icon: MdSettings },
+  { label: "Ajuda", to: "/help", icon: MdHelp },
 ];
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const getNavLinkClasses = (isActive: boolean) =>
+    `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors ${
+      isActive ? "bg-sidebar-selected font-medium" : "hover:bg-offWhite"
+    }`;
 
   return (
     <aside
-      className={`relative h-screen bg-white border-r transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen bg-sidebar border-r transition-all duration-300 z-40 ${
         collapsed ? "w-16" : "w-64"
       }`}
     >
-      {/* LOGO / TÍTULO */}
-      <div className="h-14 flex items-center px-4 border-b font-semibold whitespace-nowrap overflow-hidden">
+      {/* LOGO */}
+      <div className="h-14 flex items-center px-4 border-b font-semibold text-principal-blue gap-2 overflow-hidden">
+        <img src="/logo.png" alt="Logo" className="h-8 w-auto shrink-0" />
         {!collapsed && "Engenharia Maas"}
       </div>
 
       {/* MENU */}
-      <nav className="flex-1 pt-4 py-2"> {/* pt-4 adiciona espaço no topo do menu */}
-        {/* ===== GRUPO PRINCIPAL ===== */}
-        {menuPrincipal.map(({ label, to, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors
-              ${isActive ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}` // py-3 aumenta a altura
-            }
-          >
-            <Icon size={20} className="shrink-0" />
+      <nav className="pt-6">
+        {[...menuPrincipal, { divider: true }, ...menuOutros].map((item, idx) => {
+          if ("divider" in item) {
+            return <div key={idx} className="my-3 mx-4 border-t border-offWhite" />;
+          }
 
-            {!collapsed && (
-              <span className="whitespace-nowrap overflow-hidden">
-                {label}
-              </span>
-            )}
+          const Icon = item.icon;
 
-            {collapsed && (
-              <span
-                className="
-                  absolute left-full ml-2
-                  whitespace-nowrap
-                  shadow-md
-                  rounded-md bg-gray-900 px-2 py-1
-                  text-xs text-white
-                  opacity-0 group-hover:opacity-100
-                  pointer-events-none
-                  transition
-                  z-50
-                "
-              >
-                {label}
-              </span>
-            )}
-          </NavLink>
-        ))}
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => getNavLinkClasses(isActive)}
+            >
+              <Icon size={24} className="text-principal-blue shrink-0" />
 
-        {/* ===== DIVISOR ===== */}
-        <div className="my-3 mx-4 border-t border-gray-200" />
+              {!collapsed && (
+                <span className="text-text-default whitespace-nowrap">
+                  {item.label}
+                </span>
+              )}
 
-        {/* ===== GRUPO OUTROS ===== */}
-        {menuOutros.map(({ label, to, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors
-              ${isActive ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}`
-            }
-          >
-            <Icon size={20} className="shrink-0" />
-
-            {!collapsed && (
-              <span className="whitespace-nowrap overflow-hidden">
-                {label}
-              </span>
-            )}
-
-            {collapsed && (
-              <span
-                className="
-                  absolute left-full ml-2
-                  whitespace-nowrap
-                  shadow-md
-                  rounded-md bg-gray-900 px-2 py-1
-                  text-xs text-white
-                  opacity-0 group-hover:opacity-100
-                  pointer-events-none
-                  transition
-                  z-50
-                "
-              >
-                {label}
-              </span>
-            )}
-          </NavLink>
-        ))}
+              {collapsed && (
+                <span className="absolute left-full ml-2 whitespace-nowrap rounded-md bg-principal-blue px-2 py-1 text-xs text-principal-white opacity-0 group-hover:opacity-100 transition shadow z-50">
+                  {item.label}
+                </span>
+              )}
+            </NavLink>
+          );
+        })}
       </nav>
 
-      {/* BOTÃO COLLAPSE */}
+      {/* COLLAPSE */}
       <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute bottom-4 right-2 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+        onClick={onToggle}
+        className="absolute bottom-4 right-2 w-10 h-10 flex items-center justify-center rounded-full hover:bg-offWhite transition"
       >
-        {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        {collapsed ? <MdChevronRight size={24} /> : <MdChevronLeft size={24} />}
       </button>
     </aside>
   );

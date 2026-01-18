@@ -5,6 +5,8 @@ import Customers from "./pages/Customers";
 import Layout from "./layout/Layout";
 import UserProfile from "./pages/UserProfile";
 import UserPreferences from "./pages/UserPreferences";
+import Company from "./pages/Company";
+import Help from "./pages/Help";
 
 export default function App() {
   const isAuth = true;
@@ -22,6 +24,8 @@ export default function App() {
             <Route path="customers" element={<Customers />} />
             <Route path="users/me" element={<UserProfile />} />
             <Route path="users/me/preferences" element={<UserPreferences />} />
+            <Route path="company" element={<Company />} />
+            <Route path="help" element={<Help />} />
           </Route>
         </Routes>
       </BrowserRouter>

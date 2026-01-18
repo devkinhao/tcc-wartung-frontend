@@ -1,5 +1,6 @@
+// src/pages/UserProfile.tsx
 import { useRef, useState } from "react";
-import { Camera, Lock, Eye, EyeOff } from "lucide-react";
+import { FiCamera, FiLock, FiEye, FiEyeOff } from "react-icons/fi"; // Feather Icons
 
 export default function UserProfile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -77,13 +78,13 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="max-w-4xl bg-white rounded shadow p-6">
-      <h2 className="text-xl font-semibold mb-6">Meu perfil</h2>
+    <div className="max-w-4xl bg-principal-white rounded shadow p-6 font-sans">
+      <h2 className="text-xl font-semibold mb-6 text-principal-blue">Meu perfil</h2>
 
       {/* Avatar */}
       <div className="flex items-center gap-6 mb-8">
         <div className="relative">
-          <div className="w-28 h-28 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-gray-500">
+          <div className="w-28 h-28 rounded-full bg-offWhite overflow-hidden flex items-center justify-center text-text-secondary text-3xl font-medium">
             {avatarPreview ? (
               <img
                 src={avatarPreview}
@@ -91,19 +92,17 @@ export default function UserProfile() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-3xl font-medium">
-                {fullName.charAt(0)}
-              </span>
+              <span>{fullName.charAt(0)}</span>
             )}
           </div>
 
           {isEditing && (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700"
+              className="absolute bottom-0 right-0 bg-principal-blue text-principal-white p-2 rounded-full hover:bg-principal-green transition"
               title="Alterar avatar"
             >
-              <Camera size={16} />
+              <FiCamera size={16} />
             </button>
           )}
 
@@ -117,47 +116,31 @@ export default function UserProfile() {
         </div>
 
         <div>
-          <p className="font-medium text-gray-900">{fullName}</p>
-          <p className="text-sm text-gray-600">{email}</p>
+          <p className="font-medium text-text-default">{fullName}</p>
+          <p className="text-sm text-text-secondary">{email}</p>
         </div>
       </div>
 
       {/* Form */}
       <div className="grid grid-cols-2 gap-4">
         {[
-          {
-            label: "Nome completo",
-            value: fullName,
-            setter: setFullName,
-          },
-          {
-            label: "CPF",
-            value: cpf,
-            setter: setCpf,
-            placeholder: "000.000.000-00",
-          },
-          {
-            label: "E-mail",
-            value: email,
-            setter: setEmail,
-            placeholder: "usuario@email.com",
-          },
-          {
-            label: "CREA",
-            value: creaNumber,
-            setter: setCreaNumber,
-          },
+          { label: "Nome completo", value: fullName, setter: setFullName },
+          { label: "CPF", value: cpf, setter: setCpf, placeholder: "000.000.000-00" },
+          { label: "E-mail", value: email, setter: setEmail, placeholder: "usuario@email.com" },
+          { label: "CREA", value: creaNumber, setter: setCreaNumber },
         ].map((field) => (
           <div key={field.label}>
-            <label className="text-sm text-gray-600">{field.label}</label>
+            <label className="text-sm text-text-secondary">{field.label}</label>
             <input
               disabled={!isEditing}
               value={field.value}
               placeholder={field.placeholder}
               onChange={(e) => field.setter(e.target.value)}
-              className={`mt-1 w-full border rounded px-3 py-2 ${
-                !isEditing ? "bg-gray-100 cursor-not-allowed" : ""
-              }`}
+              className={`mt-1 w-full border rounded px-3 py-2 placeholder:text-text-secondary ${
+                !isEditing
+                  ? "bg-offWhite cursor-not-allowed"
+                  : "bg-principal-white focus:outline-none focus:ring-2 focus:ring-principal-blue"
+              } transition`}
             />
           </div>
         ))}
@@ -167,16 +150,16 @@ export default function UserProfile() {
       <div className="mt-8 flex justify-between items-center">
         <button
           onClick={() => setPasswordModalOpen(true)}
-          className="flex items-center gap-2 text-sm text-gray-700 hover:underline"
+          className="flex items-center gap-2 text-sm text-principal-blue hover:underline transition"
         >
-          <Lock size={16} />
+          <FiLock size={16} />
           Alterar senha
         </button>
 
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="bg-gray-800 text-white px-5 py-2 rounded hover:bg-gray-700"
+            className="bg-principal-blue text-principal-white px-5 py-2 rounded hover:bg-principal-green transition"
           >
             Editar perfil
           </button>
@@ -184,13 +167,13 @@ export default function UserProfile() {
           <div className="flex gap-2">
             <button
               onClick={handleCancelEdit}
-              className="px-4 py-2 border rounded text-sm"
+              className="px-4 py-2 border rounded text-sm text-text-default hover:bg-offWhite transition"
             >
               Cancelar
             </button>
             <button
               onClick={handleSaveProfile}
-              className="bg-gray-800 text-white px-4 py-2 rounded text-sm"
+              className="bg-principal-blue text-principal-white px-4 py-2 rounded text-sm hover:bg-principal-green transition"
             >
               Salvar alterações
             </button>
@@ -200,38 +183,30 @@ export default function UserProfile() {
 
       {/* Modal senha */}
       {passwordModalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-          <div className="bg-white rounded shadow w-full max-w-sm p-6">
-            <h3 className="text-lg font-medium mb-4">Alterar senha</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-principal-white rounded shadow w-full max-w-sm p-6">
+            <h3 className="text-lg font-medium mb-4 text-principal-blue">Alterar senha</h3>
 
             <div className="space-y-3">
-              {[{
-                placeholder: "Senha atual",
-                value: currentPassword,
-                setter: setCurrentPassword,
-              }, {
-                placeholder: "Nova senha",
-                value: newPassword,
-                setter: setNewPassword,
-              }, {
-                placeholder: "Confirmar nova senha",
-                value: confirmPassword,
-                setter: setConfirmPassword,
-              }].map((field, i) => (
+              {[
+                { placeholder: "Senha atual", value: currentPassword, setter: setCurrentPassword },
+                { placeholder: "Nova senha", value: newPassword, setter: setNewPassword },
+                { placeholder: "Confirmar nova senha", value: confirmPassword, setter: setConfirmPassword },
+              ].map((field, i) => (
                 <div key={i} className="relative">
                   <input
                     type={showPasswords ? "text" : "password"}
                     placeholder={field.placeholder}
                     value={field.value}
                     onChange={(e) => field.setter(e.target.value)}
-                    className="w-full border rounded px-3 py-2 pr-10"
+                    className="w-full border rounded px-3 py-2 pr-10 placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-principal-blue transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPasswords(!showPasswords)}
-                    className="absolute right-3 top-2.5 text-gray-500"
+                    className="absolute right-3 top-2.5 text-text-secondary"
                   >
-                    {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPasswords ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                   </button>
                 </div>
               ))}
@@ -244,13 +219,13 @@ export default function UserProfile() {
             <div className="mt-6 flex justify-end gap-2">
               <button
                 onClick={() => setPasswordModalOpen(false)}
-                className="px-4 py-2 border rounded text-sm"
+                className="px-4 py-2 border rounded text-sm text-text-default hover:bg-offWhite transition"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleChangePassword}
-                className="bg-gray-800 text-white px-4 py-2 rounded text-sm"
+                className="bg-principal-blue text-principal-white px-4 py-2 rounded text-sm hover:bg-principal-green transition"
               >
                 Salvar
               </button>
