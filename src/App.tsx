@@ -7,6 +7,9 @@ import UserProfile from "./pages/UserProfile";
 import UserPreferences from "./pages/UserPreferences";
 import Company from "./pages/Company";
 import Help from "./pages/Help";
+import Configurations from "./pages/Configurations";
+import Reports from "./pages/Reports";
+import Users from "./pages/Users";
 
 export default function App() {
   const isAuth = true;
@@ -26,6 +29,9 @@ export default function App() {
             <Route path="users/me/preferences" element={<UserPreferences />} />
             <Route path="company" element={<Company />} />
             <Route path="help" element={<Help />} />
+            <Route path="configurations" element={<Configurations />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="users" element={<Users />} />
           </Route>
         </Routes>
       </BrowserRouter>

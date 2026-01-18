@@ -19,6 +19,26 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "Meu Perfil", path: "/users/me" },
     { label: "Preferências" },
   ],
+  "/configurations": [
+    { label: "Início", path: "/dashboard" },
+    { label: "Configurações" },
+  ],
+  "/company": [
+    { label: "Início", path: "/dashboard" },
+    { label: "Minha Empresa" },
+  ],
+  "/help": [
+    { label: "Início", path: "/dashboard" },
+    { label: "Ajuda" },
+  ],
+  "/reports": [
+    { label: "Início", path: "/dashboard" },
+    { label: "Relatórios" },
+  ],
+  "/users": [
+    { label: "Início", path: "/dashboard" },
+    { label: "Usuários" },
+  ],
 };
 
 export default function Header() {

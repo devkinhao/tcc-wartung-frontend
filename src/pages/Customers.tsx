@@ -140,7 +140,7 @@ export default function Customers() {
       {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-principal-blue">Clientes</h1>
-        <button className="bg-principal-green text-principal-white px-4 py-2 rounded hover:bg-principal-blue transition">
+        <button className="bg-principal-blue text-principal-white px-4 py-2 rounded hover:bg-principal-green transition">
           + Adicionar cliente
         </button>
       </div>

@@ -1,4 +1,3 @@
-// src/pages/UserProfile.tsx
 import { useRef, useState } from "react";
 import { FiCamera, FiLock, FiEye, FiEyeOff } from "react-icons/fi"; // Feather Icons
 

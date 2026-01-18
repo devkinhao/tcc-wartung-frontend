@@ -44,10 +44,26 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       }`}
     >
       {/* LOGO */}
-      <div className="h-14 flex items-center px-4 border-b font-semibold text-principal-blue gap-2 overflow-hidden">
-        <img src="/logo.png" alt="Logo" className="h-8 w-auto shrink-0" />
-        {!collapsed && "Engenharia Maas"}
-      </div>
+      <NavLink
+        to="/dashboard"
+        className="h-14 flex items-center px-4 font-semibold text-principal-blue gap-2 overflow-hidden hover:opacity-80 transition"
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          className="h-8 w-auto shrink-0"
+        />
+
+        <span
+          className={`
+            transition-all duration-300
+            whitespace-nowrap overflow-hidden
+            ${collapsed ? "max-w-0 opacity-0" : "max-w-[180px] opacity-100"}
+          `}
+        >
+          Engenharia Maas
+        </span>
+      </NavLink>
 
       {/* MENU */}
       <nav className="pt-6">
