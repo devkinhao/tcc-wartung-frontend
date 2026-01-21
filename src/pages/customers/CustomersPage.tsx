@@ -1,0 +1,50 @@
+// src/pages/customers/CustomersPage.tsx
+import { useCustomers } from "./hooks/useCustomers";
+import { CustomersFilters } from "./CustomersFilters";
+import { CustomersTable } from "./CustomersTable";
+import { Pagination } from "../../components/Pagination";
+
+export default function CustomersPage() {
+  const state = useCustomers();
+
+  return (
+    <div className="space-y-6 font-sans">
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold text-principal-blue">Clientes</h1>
+        <button className="bg-principal-blue text-principal-white px-4 py-2 rounded hover:bg-principal-green">
+          + Adicionar cliente
+        </button>
+      </div>
+
+      <CustomersFilters
+        search={state.search}
+        setSearch={state.setSearch}
+        city={state.city}
+        setCity={state.setCity}
+        isCustomer={state.isCustomer}
+        setIsCustomer={state.setIsCustomer}
+        month={state.month}
+        setMonth={state.setMonth}
+        onClearFilters={state.clearFilters}
+      />
+
+      <CustomersTable
+        customers={state.customers}
+        loading={state.loading}
+        sortBy={state.sortBy}
+        sortDir={state.sortDir}
+        onSort={state.handleSort}
+        onRowClick={(id) => console.log("Abrir cliente", id)}
+      />
+
+      <Pagination
+        page={state.page}
+        pageSize={state.pageSize}
+        total={state.totalRecords}
+        onPageChange={state.setPage}
+        onPageSizeChange={state.setPageSize}
+      />
+
+    </div>
+  );
+}

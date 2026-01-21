@@ -19,7 +19,7 @@ type SidebarProps = {
 
 const menuPrincipal = [
   { label: "Início", to: "/dashboard", icon: MdHome },
-  { label: "Clientes", to: "/customers", icon: MdPeople },
+  { label: "Lista de Empresas", to: "/customers", icon: MdPeople },
   { label: "Inspeções", to: "/inspections", icon: MdChecklist },
   { label: "Relatórios", to: "/reports", icon: MdDescription },
 ];

@@ -8,7 +8,7 @@ const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
   "/dashboard": [{ label: "Início", path: "/dashboard" }],
   "/customers": [
     { label: "Início", path: "/dashboard" },
-    { label: "Clientes" },
+    { label: "Lista de Empresas" },
   ],
   "/users/me": [
     { label: "Início", path: "/dashboard" },
@@ -73,7 +73,7 @@ export default function Header() {
           const isLast = idx === crumbs.length - 1;
           return (
             <span key={crumb.label} className="flex items-center gap-1">
-              {idx > 0 && <span className="mx-1 text-text-secondary">|</span>}
+              {idx > 0 && <span className="mx-1 text-text-secondary">/</span>}
 
               {crumb.path && !isLast ? (
                 <button
