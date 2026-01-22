@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 type Props = {
   open: boolean;
@@ -7,24 +8,15 @@ type Props = {
 };
 
 export function CustomersRowMenu({ open, onToggle, onClose }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open, onClose]);
+  useClickOutside(menuRef, onClose, [buttonRef], open);
 
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         onClick={onToggle}
         className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full hover:bg-offWhite transition"
       >
@@ -33,7 +25,7 @@ export function CustomersRowMenu({ open, onToggle, onClose }: Props) {
 
       {open && (
         <div
-          ref={ref}
+          ref={menuRef}
           className="absolute right-4 top-8 bg-principal-white border rounded shadow-md w-40 z-10"
         >
           <button className="block w-full text-left px-4 py-2 hover:bg-offWhite">

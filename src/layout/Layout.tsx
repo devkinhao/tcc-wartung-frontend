@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import Header from "./Header";
+import Header from "./header/Header";
 import { MdChat } from "react-icons/md";
 
 export default function Layout() {

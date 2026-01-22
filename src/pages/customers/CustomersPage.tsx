@@ -10,9 +10,9 @@ export default function CustomersPage() {
   return (
     <div className="space-y-6 font-sans">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-principal-blue">Clientes</h1>
+        <h1 className="text-xl font-semibold text-principal-blue">Gerenciar Empresas</h1>
         <button className="bg-principal-blue text-principal-white px-4 py-2 rounded hover:bg-principal-green">
-          + Adicionar cliente
+          + Adicionar Empresa
         </button>
       </div>
 
@@ -25,6 +25,7 @@ export default function CustomersPage() {
         setIsCustomer={state.setIsCustomer}
         month={state.month}
         setMonth={state.setMonth}
+        hasActiveFilters={state.hasActiveFilters}
         onClearFilters={state.clearFilters}
       />
 

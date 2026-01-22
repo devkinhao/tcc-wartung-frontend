@@ -205,6 +205,12 @@ export function useCustomers() {
     }
   };
 
+  const hasActiveFilters =
+    search !== "" ||
+    city !== "" ||
+    isCustomer !== "" ||
+    month !== "";
+
   const clearFilters = () => {
     setSearch("");
     setCity("");
@@ -239,6 +245,7 @@ export function useCustomers() {
     handleSort,
     totalRecords,
 
+    hasActiveFilters,
     clearFilters,
   };
 }

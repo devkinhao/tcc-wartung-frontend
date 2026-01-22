@@ -11,6 +11,7 @@ type Props = {
   month: string;
   setMonth: (v: string) => void;
 
+  hasActiveFilters: boolean;
   onClearFilters: () => void;
 };
 
@@ -23,6 +24,7 @@ export function CustomersFilters({
   setIsCustomer,
   month,
   setMonth,
+  hasActiveFilters,
   onClearFilters,
 }: Props) {
   return (
@@ -82,7 +84,15 @@ export function CustomersFilters({
         {/* LIMPAR */}
         <button
           onClick={onClearFilters}
-          className="ml-2 text-sm px-3 py-2 rounded border text-text-secondary hover:bg-offWhite transition"
+          disabled={!hasActiveFilters}
+          className={`
+            px-3 py-2 text-sm rounded border transition
+            ${
+              hasActiveFilters
+                ? "text-principal-blue border-principal-blue hover:bg-offWhite"
+                : "text-gray-400 border-gray-200 cursor-not-allowed"
+            }
+          `}
         >
           Limpar filtros
         </button>
