@@ -25,13 +25,14 @@ export default function App() {
             <Route index element={<Navigate to="/dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="customers" element={<Customers />} />
-            <Route path="users/me" element={<UserProfile />} />
-            <Route path="users/me/preferences" element={<UserPreferences />} />
-            <Route path="company" element={<Company />} />
-            <Route path="help" element={<Help />} />
-            <Route path="configurations" element={<Configurations />} />
+            {/*<Route path="inspections" element={<Inspections />} />*/}
             <Route path="reports" element={<Reports />} />
+            <Route path="company" element={<Company />} />
             <Route path="users" element={<Users />} />
+            <Route path="configurations" element={<Configurations />} />
+            <Route path="help" element={<Help />} />
+            <Route path="users/me" element={<UserProfile />} />
+            <Route path="users/me/preferences" element={<UserPreferences />} />                   
           </Route>
         </Routes>
       </BrowserRouter>
