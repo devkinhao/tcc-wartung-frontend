@@ -2,6 +2,7 @@ import { MdArrowDropDown, MdLogout, MdPerson, MdTune } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { clearToken } from "../../auth/authStorage"
 
 export function UserMenu() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export function UserMenu() {
 
   const logout = () => {
     setOpen(false);
-    localStorage.removeItem("token");
+    clearToken();
     navigate("/login");
   };
 

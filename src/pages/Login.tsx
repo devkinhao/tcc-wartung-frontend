@@ -1,28 +1,26 @@
+// src/pages/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "@/services/authService";
+import { login } from "../services/authService";
+import { saveToken } from "../auth/authStorage";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setError("");
+    setLoading(true);
 
     try {
-      setLoading(true);
-
       const { token } = await login({ username, password });
-
-      localStorage.setItem("token", token);
-
+      saveToken(token);
       navigate("/dashboard");
-    } catch (err: any) {
+    } catch (err) {
       setError("Usuário ou senha inválidos");
     } finally {
       setLoading(false);
@@ -31,10 +29,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex font-sans">
-      {/* CARD LOGIN */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-principal-white">
         <div className="w-80 p-8 rounded-lg shadow-lg">
-          {/* LOGO */}
           <div className="flex items-center gap-3 mb-8">
             <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
             <span className="text-2xl font-bold text-principal-blue">
@@ -65,7 +61,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded bg-principal-blue text-white disabled:opacity-50"
+              className="w-full py-3 rounded bg-principal-blue text-principal-white hover:bg-principal-green transition disabled:opacity-60"
             >
               {loading ? "Entrando..." : "Entrar"}
             </button>
@@ -73,12 +69,11 @@ export default function Login() {
         </div>
       </div>
 
-      {/* LADO DIREITO */}
       <div className="hidden md:flex w-1/2 bg-gradient-to-b from-principal-blue to-principal-green items-center justify-center">
-        <div className="text-white text-center px-8">
+        <div className="text-principal-white text-center px-8">
           <h2 className="text-4xl font-bold mb-4">Bem-vindo!</h2>
           <p className="text-lg">
-            Acesse seu painel e gerencie seus clientes e inspeções.
+            Gerencie clientes e inspeções com facilidade.
           </p>
         </div>
       </div>
