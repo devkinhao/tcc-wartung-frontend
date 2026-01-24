@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "./sidebar/Sidebar";
 import Header from "./header/Header";
 import { ChatButton } from "./chatbot/ChatButton";
 

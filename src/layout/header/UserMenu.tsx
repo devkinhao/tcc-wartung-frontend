@@ -2,18 +2,19 @@ import { MdArrowDropDown, MdLogout, MdPerson, MdTune } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { clearToken } from "../../auth/authStorage"
+import { useAuth } from "../../auth/useAuth";
 
 export function UserMenu() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => setOpen(false));
 
-  const logout = () => {
+  const handleLogout = () => {
     setOpen(false);
-    clearToken();
+    logout();
     navigate("/login");
   };
 
@@ -27,7 +28,7 @@ export function UserMenu() {
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation(); // 🔥 ESSENCIAL
+          e.stopPropagation();
           setOpen((v) => !v);
         }}
         className="flex items-center gap-2 hover:bg-offWhite px-2 py-1 rounded-md transition"
@@ -60,7 +61,7 @@ export function UserMenu() {
           <div className="my-1 border-t border-offWhite" />
 
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
           >
             <MdLogout size={18} />
