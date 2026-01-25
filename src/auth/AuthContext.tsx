@@ -1,12 +1,12 @@
 import { createContext } from "react";
+import { User } from "@/types/User";
 
 export type AuthData = {
   token: string | null;
-  username: string | null;
-  permissions: string[];
+  user: User | null;
+  loading: boolean;
   isAuthenticated: boolean;
-  isAdmin : boolean,
-  login: (token: string) => void;
+  login: (token: string) => Promise<void>;
   logout: () => void;
 };
 

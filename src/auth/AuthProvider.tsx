@@ -1,58 +1,64 @@
-// src/auth/AuthProvider.tsx
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "./AuthContext";
+import { getMe } from "@/services/userService";
+import { User } from "@/types/User";
 
 type JwtPayload = {
-  sub: string;
-  permissions?: string[];
   exp: number;
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [permissions, setPermissions] = useState<string[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  function applyToken(jwt: string) {
-    const decoded = jwtDecode<JwtPayload>(jwt);
+  async function applyToken(jwt: string) {
+    try {
+      jwtDecode<JwtPayload>(jwt); // validate token format
 
-    setToken(jwt);
-    setUsername(decoded.sub);
-    setPermissions(decoded.permissions ?? []);
+      setToken(jwt);
+
+      const me = await getMe();
+      setUser(me);
+    } catch {
+      localStorage.removeItem("token");
+      setToken(null);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function login(jwt: string) {
+  async function login(jwt: string) {
     localStorage.setItem("token", jwt);
-    applyToken(jwt);
+    setLoading(true);
+    await applyToken(jwt);
   }
 
   function logout() {
     localStorage.removeItem("token");
     setToken(null);
-    setUsername(null);
-    setPermissions([]);
+    setUser(null);
   }
 
-  // 🔄 restaurar sessão
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+
     if (storedToken) {
       applyToken(storedToken);
+    } else {
+      setLoading(false);
     }
   }, []);
-
-  const isAuthenticated = !!token;
-  const isAdmin = permissions.includes("ROLE_ADMIN");
 
   return (
     <AuthContext.Provider
       value={{
         token,
-        username,
-        permissions,
-        isAuthenticated,
-        isAdmin,
+        user,
+        loading,
+        isAuthenticated: !!user,
         login,
         logout,
       }}

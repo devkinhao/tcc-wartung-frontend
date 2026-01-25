@@ -4,6 +4,7 @@ import {
   MdChevronRight,
 } from "react-icons/md";
 import { menuPrincipal, menuOutros } from "./menu";
+import { canAccess } from "@/auth/permissions";
 import { MenuItem } from "./menu.types";
 import { useAuth } from "@/auth/useAuth";
 
@@ -13,12 +14,9 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
-  const { permissions } = useAuth();
+  const { user } = useAuth();
 
-  const canAccess = (item: MenuItem) => {
-    if (!item.permissions || item.permissions.length === 0) return true;
-    return item.permissions.some((p) => permissions.includes(p));
-  };
+  const permissions = user?.permissions ?? [];
 
   const getNavLinkClasses = (isActive: boolean) =>
     `group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors ${
@@ -26,9 +24,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     }`;
 
   const renderItem = (item: MenuItem) => {
-    if (!canAccess(item)) return null;
+  if (!canAccess(permissions, item.permissions)) return null;
 
-    const Icon = item.icon;
+  const Icon = item.icon;
 
     return (
       <NavLink
