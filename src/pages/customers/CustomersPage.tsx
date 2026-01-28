@@ -3,12 +3,14 @@ import { useCustomers } from "./hooks/useCustomers";
 import { CustomersFilters } from "./CustomersFilters";
 import { CustomersTable } from "./CustomersTable";
 import { Pagination } from "../../components/Pagination";
+import { useCities } from "./hooks/useCities";
 
 export default function CustomersPage() {
   const state = useCustomers();
+  const cities = useCities();
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-6 font-sans pb-10">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-principal-blue">Gerenciar Empresas</h1>
         <button className="bg-principal-blue text-principal-white px-4 py-2 rounded hover:bg-principal-green">
@@ -21,6 +23,7 @@ export default function CustomersPage() {
         setSearch={state.setSearch}
         city={state.city}
         setCity={state.setCity}
+        cities={cities}
         isCustomer={state.isCustomer}
         setIsCustomer={state.setIsCustomer}
         month={state.month}

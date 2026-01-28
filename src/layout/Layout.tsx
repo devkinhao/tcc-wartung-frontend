@@ -5,7 +5,7 @@ import Header from "./header/Header";
 import { ChatButton } from "./chatbot/ChatButton";
 
 export default function Layout() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <div className="bg-screen font-sans">

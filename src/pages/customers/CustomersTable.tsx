@@ -88,7 +88,9 @@ export function CustomersTable({
                 </td>
                 <td className="px-4 py-3 text-center text-text-default">{c.activeInspections}</td>
                 <td className="px-4 py-3 align-middle text-center">
-                  {new Date(c.nextExpirationDate).toLocaleDateString("pt-BR")}
+                  {c.nextExpirationDate 
+                    ? c.nextExpirationDate.split('-').reverse().join('/') 
+                    : "—"}
                 </td>
                 <td
                   className="px-4 py-2 align-middle"

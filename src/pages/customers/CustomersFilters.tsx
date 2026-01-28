@@ -5,6 +5,8 @@ type Props = {
   city: string;
   setCity: (v: string) => void;
 
+  cities: City[];
+
   isCustomer: string;
   setIsCustomer: (v: string) => void;
 
@@ -20,6 +22,7 @@ export function CustomersFilters({
   setSearch,
   city,
   setCity,
+  cities,
   isCustomer,
   setIsCustomer,
   month,
@@ -32,32 +35,25 @@ export function CustomersFilters({
       <div className="flex items-center gap-3 flex-wrap">
         {/* BUSCA */}
         <input
-          placeholder="Buscar por razão social, CNPJ ou cidade"
+          placeholder="Buscar por razão social ou CNPJ"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border rounded px-3 py-2 text-sm w-80"
         />
 
-        {/* CIDADE */}
+        {/* CIDADE DINÂMICA */}
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="border rounded px-3 py-2 text-sm bg-principal-white"
+          className="border rounded px-3 py-2 text-sm bg-principal-white min-w-[150px]"
         >
           <option value="">Todas as cidades</option>
-          <option value="São Paulo">São Paulo</option>
-          <option value="Campinas">Campinas</option>
-        </select>
-
-        {/* CLIENTE */}
-        <select
-          value={isCustomer}
-          onChange={(e) => setIsCustomer(e.target.value)}
-          className="border rounded px-3 py-2 text-sm bg-principal-white"
-        >
-          <option value="">Cliente?</option>
-          <option value="true">Sim</option>
-          <option value="false">Não</option>
+          {cities.map((c) => (
+            // Use c.id para a key e c.name para o valor/texto
+            <option key={c.id} value={c.name}>
+              {c.name}
+            </option>
+          ))}
         </select>
 
         {/* MÊS */}
