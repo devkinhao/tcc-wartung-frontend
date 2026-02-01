@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "./AuthContext";
-import { getMe } from "@/services/userService";
-import { User } from "@/types/User";
+import { useQueryClient } from "@tanstack/react-query";
 
 type JwtPayload = {
   exp: number;
@@ -10,21 +9,17 @@ type JwtPayload = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function applyToken(jwt: string) {
+  const queryClient = useQueryClient(); // ⭐ IMPORTANTE
+
+  function applyToken(jwt: string) {
     try {
-      jwtDecode<JwtPayload>(jwt); // validate token format
-
+      jwtDecode<JwtPayload>(jwt);
       setToken(jwt);
-
-      const me = await getMe();
-      setUser(me);
     } catch {
       localStorage.removeItem("token");
       setToken(null);
-      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -32,14 +27,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function login(jwt: string) {
     localStorage.setItem("token", jwt);
-    setLoading(true);
-    await applyToken(jwt);
+
+    // ⭐ evita dados do usuário anterior
+    queryClient.clear();
+
+    applyToken(jwt);
   }
 
   function logout() {
     localStorage.removeItem("token");
+
+    // ⭐⭐⭐ MUITO IMPORTANTE
+    queryClient.clear();
+
     setToken(null);
-    setUser(null);
   }
 
   useEffect(() => {
@@ -56,9 +57,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         token,
-        user,
         loading,
-        isAuthenticated: !!user,
+        isAuthenticated: !!token,
         login,
         logout,
       }}

@@ -6,7 +6,7 @@ import {
 import { menuPrincipal, menuOutros } from "./menu";
 import { canAccess } from "@/auth/permissions";
 import { MenuItem } from "./menu.types";
-import { useAuth } from "@/auth/useAuth";
+import { useMe } from "@/hooks/useMe";
 
 type SidebarProps = {
   collapsed: boolean;
@@ -14,7 +14,8 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
-  const { user } = useAuth();
+  const { data: user, isLoading } = useMe();
+  if (isLoading) return null; 
 
   const permissions = user?.permissions ?? [];
 

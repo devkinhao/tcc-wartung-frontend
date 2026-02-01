@@ -4,33 +4,42 @@ import {
   MdPerson,
   MdTune,
 } from "react-icons/md";
+
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useAuth } from "@/auth/useAuth";
+import { useMe } from "@/hooks/useMe";
+
 import { getFirstName } from "@/utils/getFirstName";
 
 export function UserMenu() {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+  const { data: user } = useMe();
 
   const [open, setOpen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
-
   useClickOutside(ref, () => setOpen(false));
 
-  if (!user) return null;
-
-  const firstName = getFirstName(user.fullName);
-
-  const avatarSrc = user.avatarUrl
+  // ✅ pode calcular mesmo com user undefined
+  const firstName = user ? getFirstName(user.fullName) : "";
+  const avatarSrc = user?.avatarUrl
     ? `${import.meta.env.VITE_API_URL}${user.avatarUrl}`
     : null;
 
+  useEffect(() => {
+    setAvatarError(false);
+  }, [avatarSrc]);
+
+  // 👇 AGORA sim
+  if (!user) return null;
+
   function handleNavigate(path: string) {
-    setOpen(false);          // 👈 CLOSE FIRST
+    setOpen(false);
     navigate(path);
   }
 
@@ -50,8 +59,10 @@ export function UserMenu() {
         }}
         className="flex items-center gap-2 hover:bg-offWhite px-2 py-1 rounded-md transition"
       >
+        {/* Avatar */}
         {avatarSrc && !avatarError ? (
           <img
+            key={avatarSrc} // ⭐ força React recriar a imagem
             src={avatarSrc}
             alt={firstName}
             className="w-8 h-8 rounded-full object-cover"
@@ -64,6 +75,7 @@ export function UserMenu() {
         )}
 
         <span className="text-sm text-text-default">{firstName}</span>
+
         <MdArrowDropDown className="text-text-secondary" />
       </button>
 
