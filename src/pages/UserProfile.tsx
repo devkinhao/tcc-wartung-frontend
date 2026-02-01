@@ -174,8 +174,8 @@ export default function UserProfile() {
   );
 
   return (
-    <div className="max-w-4xl bg-principal-white rounded shadow p-6 font-sans">
-      <h2 className="text-xl font-semibold mb-6 text-principal-blue">
+    <div className="max-w-4xl bg-principal-white border border-offWhite rounded shadow p-6 font-sans">
+      <h2 className="text-xl font-semibold mb-6 text-text">
         Meu perfil
       </h2>
 
@@ -197,7 +197,13 @@ export default function UserProfile() {
           {isEditing && (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 bg-principal-blue text-white p-2 rounded-full hover:bg-principal-green"
+              className="
+                absolute bottom-0 right-0
+                bg-principal-blue text-white
+                p-2 rounded-full
+                hover:bg-principal-green
+                transition
+              "
             >
               <FiCamera size={16} />
             </button>
@@ -212,22 +218,24 @@ export default function UserProfile() {
           />
         </div>
 
-        {/* ✅ STATUS no lugar do email */}
+        {/* STATUS */}
         <div>
-          <p className="font-medium text-text-default text-principal-blue">{fullName}</p>
+          <p className="font-medium text-text text-lg">
+            {fullName}
+          </p>
 
           <div className="flex items-center gap-2 mt-1">
             {isActive ? (
               <>
-                <FiCheckCircle className="text-green-600" />
-                <span className="text-sm text-green-600 font-medium">
+                <FiCheckCircle className="text-success" />
+                <span className="text-sm text-success font-medium">
                   Ativo
                 </span>
               </>
             ) : (
               <>
-                <FiXCircle className="text-red-600" />
-                <span className="text-sm text-red-600 font-medium">
+                <FiXCircle className="text-danger" />
+                <span className="text-sm text-danger font-medium">
                   Inativo
                 </span>
               </>
@@ -248,15 +256,23 @@ export default function UserProfile() {
             <label className="text-sm text-text-secondary">
               {field.label}
             </label>
+
             <input
               disabled={!isEditing}
               value={field.value}
               onChange={(e) => field.setter(e.target.value)}
-              className={`mt-1 w-full border rounded px-3 py-2 ${
-                !isEditing
-                  ? "bg-offWhite cursor-not-allowed"
-                  : "focus:outline-none focus:ring-2 focus:ring-principal-blue"
-              }`}
+              className={`
+                mt-1 w-full border border-offWhite
+                rounded px-3 py-2
+                bg-principal-white
+                text-text
+                placeholder:text-text-secondary
+                ${
+                  !isEditing
+                    ? "bg-offWhite cursor-not-allowed opacity-70"
+                    : "focus:outline-none focus:ring-2 focus:ring-principal-blue"
+                }
+              `}
             />
           </div>
         ))}
@@ -264,20 +280,20 @@ export default function UserProfile() {
 
       {/* Actions */}
       <div className="mt-8 flex justify-between items-center">
-      {canChangePassword && (
-        <button
-          onClick={() => setPasswordModalOpen(true)}
-          className="flex items-center gap-2 text-sm text-principal-blue hover:underline"
-        >
-          <FiLock size={16} />
-          Alterar senha
-        </button>
-      )}
+        {canChangePassword && (
+          <button
+            onClick={() => setPasswordModalOpen(true)}
+            className="flex items-center gap-2 text-sm text-principal-blue hover:underline"
+          >
+            <FiLock size={16} />
+            Alterar senha
+          </button>
+        )}
 
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="bg-principal-blue text-white px-5 py-2 rounded hover:bg-principal-green"
+            className="bg-principal-blue text-white px-5 py-2 rounded hover:bg-principal-green transition"
           >
             Editar perfil
           </button>
@@ -285,13 +301,21 @@ export default function UserProfile() {
           <div className="flex gap-2">
             <button
               onClick={handleCancelEdit}
-              className="px-4 py-2 border rounded text-sm hover:bg-offWhite"
+              className="
+                px-4 py-2
+                border border-offWhite
+                rounded text-sm
+                text-text
+                hover:bg-offWhite
+                transition
+              "
             >
               Cancelar
             </button>
+
             <button
               onClick={handleSaveProfile}
-              className="bg-principal-blue text-white px-4 py-2 rounded text-sm hover:bg-principal-green"
+              className="bg-principal-blue text-white px-4 py-2 rounded text-sm hover:bg-principal-green transition"
             >
               Salvar alterações
             </button>
@@ -301,9 +325,9 @@ export default function UserProfile() {
 
       {/* Modal senha */}
       {passwordModalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded shadow w-full max-w-sm p-6">
-            <h3 className="text-lg font-medium mb-4 text-principal-blue">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-principal-white border border-offWhite rounded shadow w-full max-w-sm p-6">
+            <h3 className="text-lg font-medium mb-4 text-text">
               Alterar senha
             </h3>
 
@@ -319,12 +343,19 @@ export default function UserProfile() {
                     placeholder={field.placeholder}
                     value={field.value}
                     onChange={(e) => field.setter(e.target.value)}
-                    className="w-full border rounded px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-principal-blue"
+                    className="
+                      w-full border border-offWhite
+                      rounded px-3 py-2 pr-10
+                      bg-principal-white
+                      text-text
+                      focus:outline-none focus:ring-2 focus:ring-principal-blue
+                    "
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowPasswords(!showPasswords)}
-                    className="absolute right-3 top-2.5"
+                    className="absolute right-3 top-2.5 text-text-secondary"
                   >
                     {showPasswords ? <FiEyeOff /> : <FiEye />}
                   </button>
@@ -332,20 +363,21 @@ export default function UserProfile() {
               ))}
 
               {passwordError && (
-                <p className="text-sm text-red-600">{passwordError}</p>
+                <p className="text-sm text-danger">{passwordError}</p>
               )}
             </div>
 
             <div className="mt-6 flex justify-end gap-2">
               <button
                 onClick={() => setPasswordModalOpen(false)}
-                className="px-4 py-2 border rounded text-sm"
+                className="px-4 py-2 border border-offWhite rounded text-sm text-text hover:bg-offWhite transition"
               >
                 Cancelar
               </button>
+
               <button
                 onClick={handleChangePassword}
-                className="bg-principal-blue text-white px-4 py-2 rounded text-sm"
+                className="bg-principal-blue text-white px-4 py-2 rounded text-sm hover:bg-principal-green transition"
               >
                 Salvar
               </button>

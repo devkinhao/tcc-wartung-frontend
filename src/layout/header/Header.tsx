@@ -12,7 +12,7 @@ export default function Header() {
     [{ label: "Início", path: "/dashboard" }];
 
   return (
-    <header className="h-14 bg-screen border-b flex items-center justify-between px-6">
+    <header className="h-14 bg-header border-b flex items-center justify-between px-6">
       <Breadcrumb items={crumbs} />
 
       <div className="flex items-center gap-2">

@@ -25,7 +25,6 @@ export function UserMenu() {
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
 
-  // ✅ pode calcular mesmo com user undefined
   const firstName = user ? getFirstName(user.fullName) : "";
   const avatarSrc = user?.avatarUrl
     ? `${import.meta.env.VITE_API_URL}${user.avatarUrl}`
@@ -35,7 +34,6 @@ export function UserMenu() {
     setAvatarError(false);
   }, [avatarSrc]);
 
-  // 👇 AGORA sim
   if (!user) return null;
 
   function handleNavigate(path: string) {
@@ -57,43 +55,75 @@ export function UserMenu() {
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className="flex items-center gap-2 hover:bg-offWhite px-2 py-1 rounded-md transition"
+        className="
+          flex items-center gap-2
+          hover:bg-offWhite
+          px-2 py-1 rounded-md transition
+          text-text
+        "
       >
         {/* Avatar */}
         {avatarSrc && !avatarError ? (
           <img
-            key={avatarSrc} // ⭐ força React recriar a imagem
+            key={avatarSrc}
             src={avatarSrc}
             alt={firstName}
             className="w-8 h-8 rounded-full object-cover"
             onError={() => setAvatarError(true)}
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-offWhite flex items-center justify-center text-xs font-bold text-text-secondary">
+          <div className="
+            w-8 h-8 rounded-full
+            bg-offWhite
+            flex items-center justify-center
+            text-xs font-bold
+            text-text-secondary
+          ">
             {firstName[0]}
           </div>
         )}
 
-        <span className="text-sm text-text-default">{firstName}</span>
+        <span className="text-sm text-text">
+          {firstName}
+        </span>
 
         <MdArrowDropDown className="text-text-secondary" />
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
+        <div
+          className="
+            absolute right-0 mt-2 w-48
+            bg-principal-white
+            border border-offWhite
+            rounded-md shadow-lg z-50
+          "
+        >
           <button
             onClick={() => handleNavigate("/users/me")}
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-offWhite transition"
+            className="
+              w-full flex items-center gap-2
+              px-4 py-2 text-sm
+              text-text
+              hover:bg-offWhite
+              transition
+            "
           >
-            <MdPerson size={18} />
+            <MdPerson size={18} className="text-text-secondary" />
             Meu perfil
           </button>
 
           <button
             onClick={() => handleNavigate("/users/me/preferences")}
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-offWhite transition"
+            className="
+              w-full flex items-center gap-2
+              px-4 py-2 text-sm
+              text-text
+              hover:bg-offWhite
+              transition
+            "
           >
-            <MdTune size={18} />
+            <MdTune size={18} className="text-text-secondary" />
             Preferências
           </button>
 
@@ -101,9 +131,15 @@ export function UserMenu() {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+            className="
+              w-full flex items-center gap-2
+              px-4 py-2 text-sm
+              text-danger
+              hover:bg-offWhite
+              transition
+            "
           >
-            <MdLogout size={18} />
+            <MdLogout size={18} className="text-danger" />
             Sair
           </button>
         </div>

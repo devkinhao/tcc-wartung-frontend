@@ -12,30 +12,36 @@ import Reports from "./pages/Reports";
 import Users from "./pages/Users";
 import { AuthProvider } from "./auth/AuthProvider";
 import { PrivateRoute } from "./routes/PrivateRoute";
+import { PreferencesProvider } from "./contexts/PreferencesContext";
+import { ThemeProvider } from "@/theme/ThemeProvider";
 
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
+      <PreferencesProvider>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
 
-          <Route element={<PrivateRoute />}>
-            <Route element={<Layout />}>
-              <Route index element={<Navigate to="/dashboard" />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="customers" element={<Customers />} />
-              <Route path="reports" element={<Reports />} />
-              <Route path="company" element={<Company />} />
-              <Route path="users" element={<Users />} />
-              <Route path="configurations" element={<Configurations />} />
-              <Route path="help" element={<Help />} />
-              <Route path="users/me" element={<UserProfile />} />
-              <Route path="users/me/preferences" element={<UserPreferences />} />
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
+              <Route element={<PrivateRoute />}>
+                <Route element={<Layout />}>
+                  <Route index element={<Navigate to="/dashboard" />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="customers" element={<Customers />} />
+                  <Route path="reports" element={<Reports />} />
+                  <Route path="company" element={<Company />} />
+                  <Route path="users" element={<Users />} />
+                  <Route path="configurations" element={<Configurations />} />
+                  <Route path="help" element={<Help />} />
+                  <Route path="users/me" element={<UserProfile />} />
+                  <Route path="users/me/preferences" element={<UserPreferences />} />
+                </Route>
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </PreferencesProvider>
     </AuthProvider>
   );
 }

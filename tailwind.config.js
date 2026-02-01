@@ -1,38 +1,51 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class", // controle manual (OBRIGATÓRIO)
+
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+
   theme: {
     extend: {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"],
       },
+
       colors: {
-        // FUNDOS
         sidebar: {
-          DEFAULT: "#FAFAFA",
-          selected: "#EFEFEC",
+          DEFAULT: "var(--sidebar)",
+          selected: "var(--sidebar-selected)",
         },
-        screen: "#F5F5F5",
+
+        header: "var(--header)",
+        screen: "var(--screen)",
+
         principal: {
-          blue: "#2A4C61",
-          green: "#78744C",
-          white: "#FFFEFD",
+          blue: "var(--principal-blue)",
+          green: "var(--principal-green)",
+          white: "var(--card)",
         },
+
         text: {
-          DEFAULT: "#303030",
-          secondary: "#959595",
+          DEFAULT: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
         },
-        offWhite: "#E5E4DE",
+
+        offWhite: "var(--offWhite)",
+
         button: {
-          gray: "#9E9D99",
-          hover: "#BDBCB7",
+          gray: "var(--button-gray)",
+          hover: "var(--button-hover)",
         },
+
         table: {
-          header: "#E8E8E8",
-          body: "#F2F2F2",
+          header: "var(--table-header)",
+          body: "var(--table-body)",
         },
+        danger: "var(--danger)",
+        success: "var(--success)",
       },
     },
   },
+
   plugins: [],
 };

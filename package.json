@@ -16,11 +16,13 @@
     "@tanstack/react-query-devtools": "^5.91.3",
     "@tanstack/react-query-persist-client": "^5.90.22",
     "axios": "^1.13.2",
+    "i18next": "^25.8.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.1",
+    "react-i18next": "^16.5.4",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.12.0",
     "zod": "^3.25.76"
