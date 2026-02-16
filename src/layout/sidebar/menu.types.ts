@@ -1,8 +1,8 @@
-import { IconType } from "react-icons";
+import type { SvgIconComponent } from "@mui/icons-material";
 
 export type MenuItem = {
   label: string;
   to: string;
-  icon: IconType;
+  icon: SvgIconComponent;
   permissions?: string[];
 };

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMe } from "@/services/userService";
-import { useAuth } from "@/auth/useAuth";
+import { getMe } from "@/features/users/api/user.api";
+import { useAuth } from "@/features/auth/useAuth";
 
 export function useMe() {
   const { token } = useAuth();

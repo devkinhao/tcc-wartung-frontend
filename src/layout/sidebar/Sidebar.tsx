@@ -1,135 +1,165 @@
 import { NavLink } from "react-router-dom";
 import {
-  MdChevronLeft,
-  MdChevronRight,
-} from "react-icons/md";
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { ChevronRight, MenuOpen } from "@mui/icons-material";
+
 import { menuPrincipal, menuOutros } from "./menu";
-import { canAccess } from "@/auth/permissions";
 import { MenuItem } from "./menu.types";
+import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
+
+export const DRAWER_WIDTH = 260;
+export const DRAWER_COLLAPSED_WIDTH = 72;
 
 type SidebarProps = {
   collapsed: boolean;
   onToggle: () => void;
+  drawerWidth: number;
 };
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const theme = useTheme();
   const { data: user, isLoading } = useMe();
   if (isLoading) return null;
 
   const permissions = user?.permissions ?? [];
-
-  const getNavLinkClasses = (isActive: boolean) =>
-    `
-    group relative flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-colors
-    ${isActive
-      ? "bg-sidebar-selected font-medium text-text"
-      : "text-text hover:bg-offWhite"}
-  `;
+  const drawerWidth = collapsed ? DRAWER_COLLAPSED_WIDTH : DRAWER_WIDTH;
 
   const renderItem = (item: MenuItem) => {
     if (!canAccess(permissions, item.permissions)) return null;
 
     const Icon = item.icon;
 
-    return (
-      <NavLink
-        key={item.to}
+    const content = (
+      <ListItemButton
+        component={NavLink}
         to={item.to}
-        className={({ isActive }) => getNavLinkClasses(isActive)}
+        sx={(theme) => ({
+          my: 0.5,
+          mx: 0,           // 0 margin ensures the button always spans full width
+          borderRadius: 0, // Set to 0 or use a different style for active state
+          minHeight: 44,
+          px: 0,           // 0 padding so we control centering manually
+          justifyContent: "flex-start",
+          "&.active": {
+            backgroundColor: theme.palette.action.selected,
+          },
+        })}
       >
-        {/* Ícone */}
-        <Icon
-          size={24}
-          className="text-principal-blue shrink-0"
+        <ListItemIcon
+          sx={{
+            minWidth: DRAWER_COLLAPSED_WIDTH, // Fixed width matching the drawer
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "inherit",
+          }}
+        >
+          <Icon sx={{ fontSize: 22 }} />
+        </ListItemIcon>
+
+        <ListItemText
+          primary={item.label}
+          primaryTypographyProps={{
+            noWrap: true,
+            fontSize: 14,
+            fontWeight: 500,
+          }}
+          sx={{
+            opacity: collapsed ? 0 : 1,
+            transition: "opacity 0.2s",
+            m: 0,
+          }}
         />
+      </ListItemButton>
+    );
 
-        {!collapsed && (
-          <span className="whitespace-nowrap">
-            {item.label}
-          </span>
-        )}
-
-        {/* Tooltip quando collapsed */}
-        {collapsed && (
-          <span className="
-            absolute left-full ml-2 whitespace-nowrap
-            rounded-md
-            bg-principal-blue
-            px-2 py-1 text-xs
-            text-white
-            opacity-0 group-hover:opacity-100
-            transition shadow z-50
-          ">
-            {item.label}
-          </span>
-        )}
-      </NavLink>
+    return collapsed ? (
+      <Tooltip key={item.to} title={item.label} placement="right">
+        <Box>{content}</Box>
+      </Tooltip>
+    ) : (
+      <Box key={item.to}>{content}</Box>
     );
   };
 
   return (
-    <aside
-      className={`
-        fixed top-0 left-0 h-screen
-        bg-sidebar
-        border-r border-offWhite
-        transition-all duration-300 z-40
-        ${collapsed ? "w-16" : "w-64"}
-      `}
+    <Drawer
+      variant="permanent"
+      open
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          overflowX: "hidden",
+          boxSizing: "border-box",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          transition: theme.transitions.create("width", {
+            duration: theme.transitions.duration.standard,
+          }),
+        },
+      }}
     >
-      {/* LOGO */}
-      <NavLink
+      {/* Logo */}
+      <Box
+        component={NavLink}
         to="/dashboard"
-        className="
-          h-14 flex items-center px-4
-          font-semibold
-          text-principal-blue
-          gap-2 overflow-hidden
-          hover:opacity-80 transition
-        "
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          px: 0, // Remove padding to control spacing via the icon container
+          py: 1.5,
+          textDecoration: "none",
+          color: "inherit",
+        }}
       >
-        <img src="/logo.png" alt="Logo" className="h-8 w-auto shrink-0" />
-
-        <span
-          className={`
-            transition-all duration-300
-            whitespace-nowrap overflow-hidden
-            ${collapsed ? "max-w-0 opacity-0" : "max-w-[180px] opacity-100"}
-          `}
+        <Box 
+          sx={{ 
+            width: DRAWER_COLLAPSED_WIDTH, // Match the sidebar width
+            display: "flex", 
+            justifyContent: "center", 
+            flexShrink: 0 
+          }}
         >
-          Engenharia Maas
-        </span>
-      </NavLink>
-
-      {/* MENU */}
-      <nav className="pt-6">
-        {menuPrincipal.map(renderItem)}
-
-        <div className="my-3 mx-4 border-t border-offWhite" />
-
-        {menuOutros.map(renderItem)}
-      </nav>
-
-      {/* COLLAPSE */}
-      <button
-        onClick={onToggle}
-        className="
-          absolute bottom-4 right-2
-          w-10 h-10
-          flex items-center justify-center
-          rounded-full
-          text-text-secondary
-          hover:bg-offWhite
-          transition
-        "
-      >
-        {collapsed ? (
-          <MdChevronRight size={24} />
-        ) : (
-          <MdChevronLeft size={24} />
+          <Box component="img" src="/logo.png" alt="Logo" sx={{ height: 32, width: "auto" }} />
+        </Box>
+        
+        {!collapsed && (
+          <Typography variant="subtitle1" fontWeight={700} noWrap sx={{ ml: 1 }}>
+            Engenharia Maas
+          </Typography>
         )}
-      </button>
-    </aside>
+      </Box>
+
+      <Box sx={{ flex: 1, py: 1 }}>
+        <List disablePadding>{menuPrincipal.map(renderItem)}</List>
+
+        <Divider sx={{ my: 1 }} />
+
+        <List disablePadding>{menuOutros.map(renderItem)}</List>
+      </Box>
+
+      {/* Collapse */}
+      <Box sx={{ display: "flex", justifyContent: collapsed ? "center" : "flex-end", p: 1 }}>
+        <IconButton onClick={onToggle} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>
+          {collapsed ? <ChevronRight /> : <MenuOpen />}
+        </IconButton>
+      </Box>
+    </Drawer>
   );
 }

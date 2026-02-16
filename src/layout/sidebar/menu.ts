@@ -1,23 +1,23 @@
 import {
-  MdHome,
-  MdPeople,
-  MdChecklist,
-  MdDescription,
-  MdApartment,
-  MdAdminPanelSettings,
-  MdSettings,
-  MdHelp,
-} from "react-icons/md";
+  Home as HomeIcon,
+  People as PeopleIcon,
+  Checklist as ChecklistIcon,
+  Description as DescriptionIcon,
+  Apartment as ApartmentIcon,
+  AdminPanelSettings as AdminIcon,
+  Settings as SettingsIcon,
+  Help as HelpIcon,
+} from "@mui/icons-material";
 import { MenuItem } from "./menu.types";
 
 export const menuPrincipal: MenuItem[] = [
-  { label: "Início", to: "/dashboard", icon: MdHome },
-  { label: "Lista de Empresas", to: "/customers", icon: MdPeople },
-  { label: "Inspeções", to: "/inspections", icon: MdChecklist },
+  { label: "Início", to: "/dashboard", icon: HomeIcon },
+  { label: "Lista de Empresas", to: "/customers", icon: PeopleIcon },
+  { label: "Inspeções", to: "/inspections", icon: ChecklistIcon },
   {
     label: "Relatórios",
     to: "/reports",
-    icon: MdDescription,
+    icon: DescriptionIcon,
     permissions: ["ROLE_ACCESS_REPORTS"],
   },
 ];
@@ -26,20 +26,20 @@ export const menuOutros: MenuItem[] = [
   {
     label: "Minha Empresa",
     to: "/company",
-    icon: MdApartment,
+    icon: ApartmentIcon,
     permissions: ["ROLE_ADMIN"],
   },
   {
     label: "Usuários",
     to: "/users",
-    icon: MdAdminPanelSettings,
+    icon: AdminIcon,
     permissions: ["ROLE_ADMIN"],
   },
   {
     label: "Configurações",
     to: "/configurations",
-    icon: MdSettings,
+    icon: SettingsIcon,
     permissions: ["ROLE_ADMIN"],
   },
-  { label: "Ajuda", to: "/help", icon: MdHelp },
+  { label: "Ajuda", to: "/help", icon: HelpIcon },
 ];

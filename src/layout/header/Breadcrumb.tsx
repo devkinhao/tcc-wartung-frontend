@@ -1,41 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import { BreadcrumbItem } from "./breadcrumbMap";
+import { Breadcrumbs, Link, Typography } from "@mui/material";
+import type { BreadcrumbItem } from "./breadcrumbMap";
 
-type Props = {
-  items: BreadcrumbItem[];
-};
-
-export function Breadcrumb({ items }: Props) {
+export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   const navigate = useNavigate();
 
   return (
-    <nav className="text-sm flex items-center gap-1 text-text-secondary">
-      {items.map((crumb, idx) => {
-        const isLast = idx === items.length - 1;
+    <Breadcrumbs aria-label="breadcrumb">
+      {items.map((c, i) => {
+        const last = i === items.length - 1;
+
+        if (c.path && !last) {
+          return (
+            <Link
+              key={`${c.label}-${i}`}
+              underline="hover"
+              color="inherit"
+              sx={{ cursor: "pointer" }}
+              onClick={() => navigate(c.path!)}
+            >
+              {c.label}
+            </Link>
+          );
+        }
 
         return (
-          <span key={idx} className="flex items-center gap-1">
-            {idx > 0 && <span className="mx-1">/</span>}
-
-            {crumb.path && !isLast ? (
-              <button
-                onClick={() => crumb.path && navigate(crumb.path)}
-                className="hover:text-principal-blue hover:underline"
-              >
-                {crumb.label}
-              </button>
-            ) : (
-              <span
-                className={`font-medium ${
-                  isLast ? "text-principal-blue" : ""
-                }`}
-              >
-                {crumb.label}
-              </span>
-            )}
-          </span>
+          <Typography key={`${c.label}-${i}`} color={last ? "text.primary" : "text.secondary"} fontWeight={last ? 700 : 500}>
+            {c.label}
+          </Typography>
         );
       })}
-    </nav>
+    </Breadcrumbs>
   );
 }

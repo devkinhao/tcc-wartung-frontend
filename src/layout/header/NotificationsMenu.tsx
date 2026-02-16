@@ -1,64 +1,41 @@
-import { useRef, useState } from "react";
-import { MdNotifications } from "react-icons/md";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { useState } from "react";
+import { Badge, IconButton, Menu, MenuItem, Typography, Box } from "@mui/material";
+import { Notifications } from "@mui/icons-material";
 
 export function NotificationsMenu() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useClickOutside(ref, () => setOpen(false));
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   return (
-    <div className="relative" ref={ref}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="
-          relative w-9 h-9
-          flex items-center justify-center
-          rounded-full
-          hover:bg-offWhite
-          transition
-        "
+    <>
+      <IconButton
+        aria-label="Notificações"
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        size="large"
       >
-        <MdNotifications size={20} className="text-text" />
+        <Badge color="error" variant="dot">
+          <Notifications />
+        </Badge>
+      </IconButton>
 
-        {/* badge */}
-        <span
-          className="
-            absolute top-2 right-2
-            w-2 h-2
-            bg-danger
-            rounded-full
-          "
-        />
-      </button>
-
-      {open && (
-        <div
-          className="
-            absolute right-0 mt-2 w-72
-            bg-principal-white
-            border border-offWhite
-            rounded-md shadow-lg
-            z-50
-          "
-        >
-          <div
-            className="
-              px-4 py-2
-              text-sm font-medium
-              text-text
-              border-b border-offWhite
-            "
-          >
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={() => setAnchorEl(null)}
+        PaperProps={{ sx: { width: 320 } }}
+      >
+        <Box sx={{ px: 2, py: 1 }}>
+          <Typography variant="subtitle2" fontWeight={700}>
             Notificações
-          </div>
+          </Typography>
+        </Box>
 
-          <div className="px-4 py-3 text-sm text-text-secondary">
+        <MenuItem disabled>
+          <Typography variant="body2" color="text.secondary">
             Nenhuma notificação no momento
-          </div>
-        </div>
-      )}
-    </div>
+          </Typography>
+        </MenuItem>
+      </Menu>
+    </>
   );
 }
