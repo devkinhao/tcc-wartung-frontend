@@ -128,8 +128,51 @@
     "description": "Gerencie usuários, permissões e status.",
     "search": "Buscar",
     "empty": "Nenhum usuário encontrado.",
-    "actions": { "newUser": "Novo usuário" },
-    "table": { "name": "Nome", "email": "E-mail", "role": "Perfil", "status": "Status", "actions": "Ações" }
+    "actions": {
+      "newUser": "Novo usuário",
+      "viewEdit": "Ver / Editar",
+      "inactivate": "Inativar usuário",
+      "activate": "Ativar usuário"
+    },
+    "table": {
+      "name": "Nome",
+      "email": "E-mail",
+      "role": "Perfil",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "edit": {
+      "title": "Editar usuário",
+      "tabs": {
+        "profile": "Perfil",
+        "permissions": "Permissões",
+        "security": "Segurança"
+      },
+      "permissionsHint": "Marque ou desmarque as permissões.",
+      "resetPasswordHint": "Defina uma nova senha para o usuário e clique em Resetar senha.",
+      "newPassword": "Nova senha",
+      "resetPassword": "Resetar senha"
+    },
+    "create": {
+      "title": "Novo usuário",
+      "fields": {
+        "username": "Usuário",
+        "password": "Senha",
+        "fullName": "Nome completo",
+        "cpf": "CPF (opcional)",
+        "email": "E-mail (opcional)",
+        "creaNumber": "CREA (opcional)"
+      },
+      "helpers": {
+        "username": "Somente letras minúsculas e números (mínimo 4 caracteres)."
+      }
+    },
+    "fields": {
+      "fullName": "Nome completo",
+      "cpf": "CPF",
+      "email": "E-mail",
+      "creaNumber": "CREA"
+    }
   },
   "userProfile": {
     "title": "Meu perfil",

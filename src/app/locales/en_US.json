@@ -128,11 +128,54 @@
   },
   "users": {
     "title": "Users",
-    "description": "Manage users, permissions and status.",
+    "description": "Manage users, permissions, and status.",
     "search": "Search",
     "empty": "No users found.",
-    "actions": { "newUser": "New user" },
-    "table": { "name": "Name", "email": "Email", "role": "Role", "status": "Status", "actions": "Actions" }
+    "actions": {
+      "newUser": "New user",
+      "viewEdit": "View / Edit",
+      "inactivate": "Inactivate user",
+      "activate": "Activate user"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "edit": {
+      "title": "Edit user",
+      "tabs": {
+        "profile": "Profile",
+        "permissions": "Permissions",
+        "security": "Security"
+      },
+      "permissionsHint": "Check or uncheck permissions.",
+      "resetPasswordHint": "Set a new password and click Reset password.",
+      "newPassword": "New password",
+      "resetPassword": "Reset password"
+    },
+    "create": {
+      "title": "New user",
+      "fields": {
+        "username": "Username",
+        "password": "Password",
+        "fullName": "Full name",
+        "cpf": "CPF (optional)",
+        "email": "Email (optional)",
+        "creaNumber": "CREA (optional)"
+      },
+      "helpers": {
+        "username": "Lowercase letters and numbers only (minimum 4 characters)."
+      }
+    },
+    "fields": {
+      "fullName": "Full name",
+      "cpf": "CPF",
+      "email": "Email",
+      "creaNumber": "CREA"
+    }
   },
   "userProfile": {
     "title": "My profile",

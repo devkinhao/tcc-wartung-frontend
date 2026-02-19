@@ -128,11 +128,54 @@
   },
   "users": {
     "title": "Benutzer",
-    "description": "Benutzer, Berechtigungen und Status verwalten.",
+    "description": "Verwalten Sie Benutzer, Berechtigungen und Status.",
     "search": "Suchen",
     "empty": "Keine Benutzer gefunden.",
-    "actions": { "newUser": "Neuer Benutzer" },
-    "table": { "name": "Name", "email": "E-Mail", "role": "Rolle", "status": "Status", "actions": "Aktionen" }
+    "actions": {
+      "newUser": "Neuer Benutzer",
+      "viewEdit": "Ansehen / Bearbeiten",
+      "inactivate": "Benutzer deaktivieren",
+      "activate": "Benutzer aktivieren"
+    },
+    "table": {
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "edit": {
+      "title": "Benutzer bearbeiten",
+      "tabs": {
+        "profile": "Profil",
+        "permissions": "Berechtigungen",
+        "security": "Sicherheit"
+      },
+      "permissionsHint": "Berechtigungen an- oder abwählen.",
+      "resetPasswordHint": "Neues Passwort festlegen und auf „Passwort zurücksetzen“ klicken.",
+      "newPassword": "Neues Passwort",
+      "resetPassword": "Passwort zurücksetzen"
+    },
+    "create": {
+      "title": "Neuer Benutzer",
+      "fields": {
+        "username": "Benutzername",
+        "password": "Passwort",
+        "fullName": "Vollständiger Name",
+        "cpf": "CPF (optional)",
+        "email": "E-Mail (optional)",
+        "creaNumber": "CREA (optional)"
+      },
+      "helpers": {
+        "username": "Nur Kleinbuchstaben und Zahlen (mindestens 4 Zeichen)."
+      }
+    },
+    "fields": {
+      "fullName": "Vollständiger Name",
+      "cpf": "CPF",
+      "email": "E-Mail",
+      "creaNumber": "CREA"
+    }
   },
   "userProfile": {
     "title": "Mein Profil",
