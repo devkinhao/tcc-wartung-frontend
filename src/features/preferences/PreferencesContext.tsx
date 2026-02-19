@@ -6,6 +6,8 @@ import {
 } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/useAuth";
+import i18n from "@/app/i18n";
+import { useEffect } from "react";
 
 import { getMyPreferences, updatePreference } from "./api/preferences.api";
 
@@ -66,6 +68,12 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const setPreference = (name: string, value: string) => {
     mutation.mutate({ name, value });
   };
+
+  useEffect(() => {
+    if (preferences.LANGUAGE) {
+      i18n.changeLanguage(preferences.LANGUAGE);
+    }
+  }, [preferences.LANGUAGE]);
 
   return (
     <PreferencesContext.Provider

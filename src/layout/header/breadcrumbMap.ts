@@ -1,45 +1,45 @@
 export type BreadcrumbItem = {
-  label: string;
+  label: string; // translation key
   path?: string;
 };
 
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
-  "/dashboard": [{ label: "Início", path: "/dashboard" }],
+  "/dashboard": [{ label: "nav.home", path: "/dashboard" }],
   "/customers": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Lista de Empresas" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.customersList" },
   ],
   "/inspections": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Lista de Inspeções" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.inspectionsList" },
   ],
   "/reports": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Relatórios" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.reports" },
   ],
   "/company": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Minha Empresa" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.myCompany" },
   ],
   "/users": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Usuários" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.users" },
   ],
   "/configurations": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Configurações" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.configurations" },
   ],
   "/help": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Ajuda" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.help" },
   ],
   "/users/me": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Meu Perfil" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.myProfile" },
   ],
   "/users/me/preferences": [
-    { label: "Início", path: "/dashboard" },
-    { label: "Meu Perfil", path: "/users/me" },
-    { label: "Preferências" },
+    { label: "nav.home", path: "/dashboard" },
+    { label: "nav.myProfile", path: "/users/me" },
+    { label: "nav.preferences" },
   ],
 };

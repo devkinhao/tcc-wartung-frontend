@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
 import type { AbvtexSealType } from "../types/abvtexSeal";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   seal: AbvtexSealType;
@@ -7,11 +8,13 @@ type Props = {
 };
 
 export function AbvtexChip({ seal, size = "small" }: Props) {
+  const { t } = useTranslation();
+
   const getProps = () => {
     switch (seal) {
       case "NAO_POSSUI":
         return {
-          label: "Não possui",
+          label: t("abvtex.none"),
           sx: {
             bgcolor: "grey.200",
             color: "grey.800",
@@ -21,7 +24,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
 
       case "COBRE":
         return {
-          label: "Cobre",
+          label: t("abvtex.copper"),
           sx: {
             bgcolor: "#B87333",
             color: "#fff",
@@ -31,7 +34,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
 
       case "BRONZE":
         return {
-          label: "Bronze",
+          label: t("abvtex.bronze"),
           sx: {
             bgcolor: "#CD7F32",
             color: "#fff",
@@ -41,7 +44,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
 
       case "PRATA":
         return {
-          label: "Prata",
+          label: t("abvtex.silver"),
           sx: {
             bgcolor: "#C0C0C0",
             color: "#000",
@@ -51,7 +54,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
 
       case "OURO":
         return {
-          label: "Ouro",
+          label: t("abvtex.gold"),
           sx: {
             bgcolor: "#D4AF37",
             color: "#000",
@@ -61,13 +64,12 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
 
       default:
         return {
-          label: seal,
+          label: String(seal),
           sx: {},
         };
     }
   };
 
   const { label, sx } = getProps();
-
   return <Chip size={size} label={label} sx={sx} />;
 }

@@ -13,6 +13,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { ChevronRight, MenuOpen } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 import { menuPrincipal, menuOutros } from "./menu";
 import { MenuItem } from "./menu.types";
@@ -29,6 +30,7 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { data: user, isLoading } = useMe();
   if (isLoading) return null;
@@ -40,6 +42,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     if (!canAccess(permissions, item.permissions)) return null;
 
     const Icon = item.icon;
+    const label = t(item.label);
 
     const content = (
       <ListItemButton
@@ -47,10 +50,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         to={item.to}
         sx={(theme) => ({
           my: 0.5,
-          mx: 0,           // 0 margin ensures the button always spans full width
-          borderRadius: 0, // Set to 0 or use a different style for active state
+          mx: 0,
+          borderRadius: 0,
           minHeight: 44,
-          px: 0,           // 0 padding so we control centering manually
+          px: 0,
           justifyContent: "flex-start",
           "&.active": {
             backgroundColor: theme.palette.action.selected,
@@ -59,7 +62,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       >
         <ListItemIcon
           sx={{
-            minWidth: DRAWER_COLLAPSED_WIDTH, // Fixed width matching the drawer
+            minWidth: DRAWER_COLLAPSED_WIDTH,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -70,7 +73,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </ListItemIcon>
 
         <ListItemText
-          primary={item.label}
+          primary={label}
           primaryTypographyProps={{
             noWrap: true,
             fontSize: 14,
@@ -86,7 +89,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     );
 
     return collapsed ? (
-      <Tooltip key={item.to} title={item.label} placement="right">
+      <Tooltip key={item.to} title={label} placement="right">
         <Box>{content}</Box>
       </Tooltip>
     ) : (
@@ -122,26 +125,26 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         sx={{
           display: "flex",
           alignItems: "center",
-          px: 0, // Remove padding to control spacing via the icon container
+          px: 0,
           py: 1.5,
           textDecoration: "none",
           color: "inherit",
         }}
       >
-        <Box 
-          sx={{ 
-            width: DRAWER_COLLAPSED_WIDTH, // Match the sidebar width
-            display: "flex", 
-            justifyContent: "center", 
-            flexShrink: 0 
+        <Box
+          sx={{
+            width: DRAWER_COLLAPSED_WIDTH,
+            display: "flex",
+            justifyContent: "center",
+            flexShrink: 0,
           }}
         >
-          <Box component="img" src="/logo.png" alt="Logo" sx={{ height: 32, width: "auto" }} />
+          <Box component="img" src="/logo.png" alt={t("common.logoAlt")} sx={{ height: 32, width: "auto" }} />
         </Box>
-        
+
         {!collapsed && (
           <Typography variant="subtitle1" fontWeight={700} noWrap sx={{ ml: 1 }}>
-            Engenharia Maas
+            {t("app.brandName")}
           </Typography>
         )}
       </Box>
@@ -156,7 +159,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Collapse */}
       <Box sx={{ display: "flex", justifyContent: collapsed ? "center" : "flex-end", p: 1 }}>
-        <IconButton onClick={onToggle} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>
+        <IconButton
+          onClick={onToggle}
+          aria-label={collapsed ? t("sidebar.actions.expandMenu") : t("sidebar.actions.collapseMenu")}
+        >
           {collapsed ? <ChevronRight /> : <MenuOpen />}
         </IconButton>
       </Box>

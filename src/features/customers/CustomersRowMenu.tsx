@@ -5,6 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   customerId: number;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -33,7 +35,7 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
 
   return (
     <>
-      <IconButton size="small" onClick={handleOpen} aria-label="Ações">
+      <IconButton size="small" onClick={handleOpen} aria-label={t("customers.rowMenu.actionsLabel")}>
         <MoreVertIcon fontSize="small" />
       </IconButton>
 
@@ -53,21 +55,21 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
           <ListItemIcon>
             <VisibilityIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Ver cliente</ListItemText>
+          <ListItemText>{t("customers.rowMenu.view")}</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Editar</ListItemText>
+          <ListItemText>{t("common.actions.edit")}</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <FactCheckIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Inspeções</ListItemText>
+          <ListItemText>{t("customers.rowMenu.inspections")}</ListItemText>
         </MenuItem>
       </Menu>
     </>

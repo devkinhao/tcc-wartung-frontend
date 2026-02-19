@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useTranslation } from "react-i18next";
 
 import { useCustomers } from "../hooks/useCustomers";
 import { CustomersFilters } from "../CustomersFilters";
@@ -10,6 +11,8 @@ import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
 
 export default function CustomersPage() {
+  const { t } = useTranslation();
+
   const state = useCustomers();
   const cities = useCities();
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -25,19 +28,15 @@ export default function CustomersPage() {
       >
         <Box>
           <Typography variant="h6" fontWeight={600} color="primary.main">
-            Gerenciar Empresas
+            {t("customers.title")}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Busque, filtre e gerencie empresas cadastradas.
+            {t("customers.description")}
           </Typography>
         </Box>
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setIsAddOpen(true)}
-        >
-          Adicionar Empresa
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+          {t("customers.actions.addCompany")}
         </Button>
       </Stack>
 

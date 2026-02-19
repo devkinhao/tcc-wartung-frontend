@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Badge, IconButton, Menu, MenuItem, Typography, Box } from "@mui/material";
 import { Notifications } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export function NotificationsMenu() {
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   return (
     <>
       <IconButton
-        aria-label="Notificações"
+        aria-label={t("notifications.ariaLabel")}
         onClick={(e) => setAnchorEl(e.currentTarget)}
         size="large"
       >
@@ -26,13 +28,13 @@ export function NotificationsMenu() {
       >
         <Box sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" fontWeight={700}>
-            Notificações
+            {t("notifications.title")}
           </Typography>
         </Box>
 
         <MenuItem disabled>
           <Typography variant="body2" color="text.secondary">
-            Nenhuma notificação no momento
+            {t("notifications.empty")}
           </Typography>
         </MenuItem>
       </Menu>

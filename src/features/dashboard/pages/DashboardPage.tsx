@@ -1,10 +1,13 @@
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+
   return (
     <Box sx={{ maxWidth: 1152, width: "100%" }}>
       <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 3 }}>
-        Dashboard
+        {t("dashboard.title")}
       </Typography>
 
       <Grid container spacing={2}>
@@ -18,10 +21,10 @@ export default function Dashboard() {
           >
             <CardContent>
               <Typography variant="subtitle2" fontWeight={600} color="text.primary" gutterBottom>
-                Serviços mais solicitados
+                {t("dashboard.cards.topRequestedServices.title")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Nenhum dado disponível no momento
+                {t("common.noDataAvailable")}
               </Typography>
             </CardContent>
           </Card>
@@ -37,10 +40,10 @@ export default function Dashboard() {
           >
             <CardContent>
               <Typography variant="subtitle2" fontWeight={600} color="text.primary" gutterBottom>
-                Clientes por cidade
+                {t("dashboard.cards.customersByCity.title")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Nenhum dado disponível no momento
+                {t("common.noDataAvailable")}
               </Typography>
             </CardContent>
           </Card>
@@ -56,10 +59,10 @@ export default function Dashboard() {
           >
             <CardContent>
               <Typography variant="subtitle2" fontWeight={600} color="text.primary" gutterBottom>
-                Inspeções
+                {t("dashboard.cards.inspections.title")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Nenhum dado disponível no momento
+                {t("common.noDataAvailable")}
               </Typography>
             </CardContent>
           </Card>

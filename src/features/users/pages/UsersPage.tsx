@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type UserRow = {
   id: string;
@@ -23,6 +24,7 @@ type UserRow = {
 };
 
 export default function UsersPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
   const users: UserRow[] = [
@@ -69,24 +71,24 @@ export default function UsersPage() {
       >
         <Box>
           <Typography variant="h6" fontWeight={600} color="text.primary">
-            Usuários
+            {t("users.title")}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Gerencie usuários, permissões e status.
+            {t("users.description")}
           </Typography>
         </Box>
 
         <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems={{ sm: "center" }}>
           <TextField
             size="small"
-            label="Buscar"
+            label={t("users.search")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             sx={{ minWidth: 260 }}
           />
 
           <Button variant="contained" onClick={handleCreate}>
-            Novo usuário
+            {t("users.actions.newUser")}
           </Button>
         </Stack>
       </Stack>
@@ -101,11 +103,11 @@ export default function UsersPage() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell><b>Nome</b></TableCell>
-              <TableCell><b>E-mail</b></TableCell>
-              <TableCell><b>Perfil</b></TableCell>
-              <TableCell><b>Status</b></TableCell>
-              <TableCell align="right"><b>Ações</b></TableCell>
+              <TableCell><b>{t("users.table.name")}</b></TableCell>
+              <TableCell><b>{t("users.table.email")}</b></TableCell>
+              <TableCell><b>{t("users.table.role")}</b></TableCell>
+              <TableCell><b>{t("users.table.status")}</b></TableCell>
+              <TableCell align="right"><b>{t("users.table.actions")}</b></TableCell>
             </TableRow>
           </TableHead>
 
@@ -118,14 +120,14 @@ export default function UsersPage() {
                 <TableCell>
                   <Chip
                     size="small"
-                    label={u.isActive ? "Ativo" : "Inativo"}
+                    label={u.isActive ? t("common.status.active") : t("common.status.inactive")}
                     color={u.isActive ? "success" : "default"}
                     variant={u.isActive ? "filled" : "outlined"}
                   />
                 </TableCell>
                 <TableCell align="right">
                   <Button size="small" onClick={() => handleEdit(u.id)}>
-                    Editar
+                    {t("common.actions.edit")}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -135,7 +137,7 @@ export default function UsersPage() {
               <TableRow>
                 <TableCell colSpan={5}>
                   <Typography variant="body2" color="text.secondary">
-                    Nenhum usuário encontrado.
+                    {t("users.empty")}
                   </Typography>
                 </TableCell>
               </TableRow>

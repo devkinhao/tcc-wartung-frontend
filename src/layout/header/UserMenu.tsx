@@ -10,12 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandMore, Logout, Person, Tune } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/auth/useAuth";
 import { useMe } from "@/hooks/useMe";
 import { getFirstName } from "@/utils/getFirstName";
 
 export function UserMenu() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { data: user } = useMe();
@@ -27,9 +29,7 @@ export function UserMenu() {
 
   const firstName = useMemo(() => (user ? getFirstName(user.fullName) : ""), [user]);
 
-  const avatarSrc = user?.avatarUrl
-    ? `${import.meta.env.VITE_API_URL}${user.avatarUrl}`
-    : null;
+  const avatarSrc = user?.avatarUrl ? `${import.meta.env.VITE_API_URL}${user.avatarUrl}` : null;
 
   useEffect(() => setAvatarError(false), [avatarSrc]);
 
@@ -59,9 +59,10 @@ export function UserMenu() {
               src={avatarSrc}
               imgProps={{ onError: () => setAvatarError(true) }}
               sx={{ width: 32, height: 32 }}
+              alt={t("common.avatarAlt")}
             />
           ) : (
-            <Avatar sx={{ width: 32, height: 32 }}>
+            <Avatar sx={{ width: 32, height: 32 }} aria-label={t("common.userAvatar")}>
               {firstName?.[0] ?? "U"}
             </Avatar>
           )
@@ -77,14 +78,14 @@ export function UserMenu() {
           <ListItemIcon>
             <Person fontSize="small" />
           </ListItemIcon>
-          Meu perfil
+          {t("userMenu.myProfile")}
         </MenuItem>
 
         <MenuItem onClick={() => go("/users/me/preferences")}>
           <ListItemIcon>
             <Tune fontSize="small" />
           </ListItemIcon>
-          Preferências
+          {t("userMenu.preferences")}
         </MenuItem>
 
         <Divider />
@@ -93,7 +94,7 @@ export function UserMenu() {
           <ListItemIcon sx={{ color: "error.main" }}>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Sair
+          {t("userMenu.logout")}
         </MenuItem>
       </Menu>
     </>

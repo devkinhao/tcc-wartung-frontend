@@ -1,13 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, Paper, Stack, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type Report = {
   id: string;
@@ -16,21 +9,23 @@ type Report = {
 };
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
+
   const [reports] = useState<Report[]>([
     {
       id: "inspections_due",
-      title: "Inspeções a vencer",
-      description: "Lista de inspeções que vencem nos próximos dias.",
+      title: t("reports.items.inspectionsDue.title"),
+      description: t("reports.items.inspectionsDue.description"),
     },
     {
       id: "inspections_overdue",
-      title: "Inspeções vencidas",
-      description: "Inspeções com prazo expirado.",
+      title: t("reports.items.inspectionsOverdue.title"),
+      description: t("reports.items.inspectionsOverdue.description"),
     },
     {
       id: "inspections_by_period",
-      title: "Inspeções por período",
-      description: "Relatório de inspeções em um intervalo de datas.",
+      title: t("reports.items.inspectionsByPeriod.title"),
+      description: t("reports.items.inspectionsByPeriod.description"),
     },
   ]);
 
@@ -48,21 +43,12 @@ export default function ReportsPage() {
         bgcolor: "background.paper",
       }}
     >
-      <Typography
-        variant="h6"
-        fontWeight={600}
-        color="primary.main"
-        sx={{ mb: 1 }}
-      >
-        Relatórios
+      <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 1 }}>
+        {t("reports.title")}
       </Typography>
 
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ mb: 3 }}
-      >
-        Gere relatórios do sistema para análise ou exportação.
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        {t("reports.description")}
       </Typography>
 
       <Stack spacing={2}>
@@ -81,35 +67,17 @@ export default function ReportsPage() {
             }}
           >
             <CardContent>
-              <Typography
-                variant="subtitle1"
-                fontWeight={600}
-                color="text.primary"
-              >
+              <Typography variant="subtitle1" fontWeight={600} color="text.primary">
                 {report.title}
               </Typography>
 
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ mt: 0.5 }}
-              >
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                 {report.description}
               </Typography>
 
-              <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleGenerate(report.id)}
-                >
-                  Gerar relatório
+              <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="contained" color="primary" onClick={() => handleGenerate(report.id)}>
+                  {t("reports.actions.generate")}
                 </Button>
               </Box>
             </CardContent>

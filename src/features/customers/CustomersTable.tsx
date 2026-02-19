@@ -11,6 +11,7 @@ import {
   TableSortLabel,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import { Customer } from "./types/customersList";
 import { CustomersRowMenu } from "./CustomersRowMenu";
@@ -50,14 +51,8 @@ function headerCell(
   );
 }
 
-export function CustomersTable({
-  customers,
-  loading,
-  sortBy,
-  sortDir,
-  onSort,
-  onRowClick,
-}: Props) {
+export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, onRowClick }: Props) {
+  const { t } = useTranslation();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   return (
@@ -72,15 +67,15 @@ export function CustomersTable({
       <Table size="small">
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            {headerCell("Razão social", "legalName", sortBy, sortDir, onSort, "left")}
-            {headerCell("CNPJ", "cnpj", sortBy, sortDir, onSort, "left")}
-            {headerCell("Cidade", "city", sortBy, sortDir, onSort, "left")}
+            {headerCell(t("customers.table.legalName"), "legalName", sortBy, sortDir, onSort, "left")}
+            {headerCell(t("customers.table.cnpj"), "cnpj", sortBy, sortDir, onSort, "left")}
+            {headerCell(t("customers.table.city"), "city", sortBy, sortDir, onSort, "left")}
 
-            <TableCell align="center"><b>Cliente?</b></TableCell>
-            <TableCell align="center"><b>ABVTEX</b></TableCell>
+            <TableCell align="center"><b>{t("customers.table.isCustomer")}</b></TableCell>
+            <TableCell align="center"><b>{t("customers.table.abvtex")}</b></TableCell>
 
-            {headerCell("Inspeções Ativas", "activeInspections", sortBy, sortDir, onSort, "center")}
-            {headerCell("Próximo Vencimento", "nextExpirationDate", sortBy, sortDir, onSort, "center")}
+            {headerCell(t("customers.table.activeInspections"), "activeInspections", sortBy, sortDir, onSort, "center")}
+            {headerCell(t("customers.table.nextExpiration"), "nextExpirationDate", sortBy, sortDir, onSort, "center")}
 
             <TableCell align="right" />
           </TableRow>
@@ -93,7 +88,7 @@ export function CustomersTable({
                 <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1.5 }}>
                   <CircularProgress size={18} />
                   <Typography variant="body2" color="text.secondary">
-                    Carregando clientes...
+                    {t("customers.loading")}
                   </Typography>
                 </Box>
               </TableCell>
@@ -102,18 +97,13 @@ export function CustomersTable({
             <TableRow>
               <TableCell colSpan={8} align="center" sx={{ py: 3 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Nenhum cliente encontrado
+                  {t("customers.empty")}
                 </Typography>
               </TableCell>
             </TableRow>
           ) : (
             customers.map((c) => (
-              <TableRow
-                key={c.id}
-                hover
-                sx={{ cursor: "pointer" }}
-                onClick={() => onRowClick(c.id)}
-              >
+              <TableRow key={c.id} hover sx={{ cursor: "pointer" }} onClick={() => onRowClick(c.id)}>
                 <TableCell>{c.legalName}</TableCell>
                 <TableCell>{c.cnpj}</TableCell>
                 <TableCell>{c.city}</TableCell>
@@ -121,7 +111,7 @@ export function CustomersTable({
                 <TableCell align="center">
                   <Chip
                     size="small"
-                    label={c.isCustomer ? "Sim" : "Não"}
+                    label={c.isCustomer ? t("common.yes") : t("common.no")}
                     color={c.isCustomer ? "success" : "default"}
                     variant={c.isCustomer ? "filled" : "outlined"}
                   />
@@ -134,11 +124,7 @@ export function CustomersTable({
                 <TableCell align="center">{c.activeInspections}</TableCell>
                 <TableCell align="center">{formatDateBR(c.nextExpirationDate)}</TableCell>
 
-                <TableCell
-                  align="right"
-                  onClick={(e) => e.stopPropagation()}
-                  sx={{ width: 48 }}
-                >
+                <TableCell align="right" onClick={(e) => e.stopPropagation()} sx={{ width: 48 }}>
                   <CustomersRowMenu
                     customerId={c.id}
                     open={openMenuId === c.id}

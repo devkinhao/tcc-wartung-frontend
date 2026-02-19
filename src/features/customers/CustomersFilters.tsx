@@ -1,5 +1,16 @@
 import type { City } from "@/types/City";
-import { Box, Button, Card, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   search: string;
@@ -33,8 +44,9 @@ export function CustomersFilters({
   hasActiveFilters,
   onClearFilters,
 }: Props) {
-  // Mantém as props para não quebrar a página.
-  // (O filtro "Cliente?" não existia visualmente na versão anterior.)
+  const { t } = useTranslation();
+
+  // Keep props to avoid breaking page.
   void isCustomer;
   void setIsCustomer;
 
@@ -43,22 +55,22 @@ export function CustomersFilters({
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }} flexWrap="wrap">
         <TextField
           size="small"
-          label="Buscar"
-          placeholder="Buscar por razão social ou CNPJ"
+          label={t("customers.filters.searchLabel")}
+          placeholder={t("customers.filters.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           sx={{ minWidth: { xs: "100%", md: 340 } }}
         />
 
         <FormControl size="small" sx={{ minWidth: 200 }}>
-          <InputLabel id="customers-city">Cidade</InputLabel>
+          <InputLabel id="customers-city">{t("customers.filters.city")}</InputLabel>
           <Select
             labelId="customers-city"
-            label="Cidade"
+            label={t("customers.filters.city")}
             value={city}
             onChange={(e) => setCity(String(e.target.value))}
           >
-            <MenuItem value="">Todas as cidades</MenuItem>
+            <MenuItem value="">{t("customers.filters.allCities")}</MenuItem>
             {cities.map((c) => (
               <MenuItem key={c.id} value={c.name}>
                 {c.name}
@@ -68,33 +80,33 @@ export function CustomersFilters({
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: 190 }}>
-          <InputLabel id="customers-month">Mês</InputLabel>
+          <InputLabel id="customers-month">{t("customers.filters.month")}</InputLabel>
           <Select
             labelId="customers-month"
-            label="Mês"
+            label={t("customers.filters.month")}
             value={month}
             onChange={(e) => setMonth(String(e.target.value))}
           >
-            <MenuItem value="">Todos os meses</MenuItem>
-            <MenuItem value="1">Janeiro</MenuItem>
-            <MenuItem value="2">Fevereiro</MenuItem>
-            <MenuItem value="3">Março</MenuItem>
-            <MenuItem value="4">Abril</MenuItem>
-            <MenuItem value="5">Maio</MenuItem>
-            <MenuItem value="6">Junho</MenuItem>
-            <MenuItem value="7">Julho</MenuItem>
-            <MenuItem value="8">Agosto</MenuItem>
-            <MenuItem value="9">Setembro</MenuItem>
-            <MenuItem value="10">Outubro</MenuItem>
-            <MenuItem value="11">Novembro</MenuItem>
-            <MenuItem value="12">Dezembro</MenuItem>
+            <MenuItem value="">{t("customers.filters.allMonths")}</MenuItem>
+            <MenuItem value="1">{t("months.january")}</MenuItem>
+            <MenuItem value="2">{t("months.february")}</MenuItem>
+            <MenuItem value="3">{t("months.march")}</MenuItem>
+            <MenuItem value="4">{t("months.april")}</MenuItem>
+            <MenuItem value="5">{t("months.may")}</MenuItem>
+            <MenuItem value="6">{t("months.june")}</MenuItem>
+            <MenuItem value="7">{t("months.july")}</MenuItem>
+            <MenuItem value="8">{t("months.august")}</MenuItem>
+            <MenuItem value="9">{t("months.september")}</MenuItem>
+            <MenuItem value="10">{t("months.october")}</MenuItem>
+            <MenuItem value="11">{t("months.november")}</MenuItem>
+            <MenuItem value="12">{t("months.december")}</MenuItem>
           </Select>
         </FormControl>
 
         <Box sx={{ flex: 1 }} />
 
         <Button variant="outlined" onClick={onClearFilters} disabled={!hasActiveFilters}>
-          Limpar filtros
+          {t("customers.filters.clear")}
         </Button>
       </Stack>
     </Card>

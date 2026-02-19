@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
+import { useTranslation } from "react-i18next";
 import {
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { t } = useTranslation();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +33,7 @@ export default function LoginPage() {
       await login(token);
       navigate("/dashboard");
     } catch {
-      setError("Usuário ou senha inválidos");
+      setError(t("login.errors.invalidCredentials"));
     } finally {
       setLoading(false);
     }
@@ -54,15 +56,15 @@ export default function LoginPage() {
       >
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-            <Box component="img" src="/logo.png" alt="Logo" sx={{ height: 40 }} />
+            <Box component="img" src="/logo.png" alt={t("common.logoAlt")} sx={{ height: 40 }} />
             <Typography variant="h6" fontWeight={800} color="primary">
-              Engenharia Maas
+              {t("app.brandName")}
             </Typography>
           </Box>
 
           <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: 2 }}>
             <TextField
-              label="Usuário"
+              label={t("login.fields.username")}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
@@ -71,7 +73,7 @@ export default function LoginPage() {
             />
 
             <TextField
-              label="Senha"
+              label={t("login.fields.password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -94,10 +96,10 @@ export default function LoginPage() {
               {loading ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CircularProgress size={18} />
-                  Entrando...
+                  {t("login.actions.signingIn")}
                 </Box>
               ) : (
-                "Entrar"
+                t("login.actions.signIn")
               )}
             </Button>
           </Box>
@@ -120,10 +122,10 @@ export default function LoginPage() {
       >
         <Box sx={{ textAlign: "center", maxWidth: 420 }}>
           <Typography variant="h3" fontWeight={900} gutterBottom>
-            Bem-vindo!
+            {t("login.welcome.title")}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.95 }}>
-            Gerencie clientes e inspeções com facilidade.
+            {t("login.welcome.subtitle")}
           </Typography>
         </Box>
       </Grid>

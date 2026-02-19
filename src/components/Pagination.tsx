@@ -1,4 +1,5 @@
 import { TablePagination } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   /** 1-based */
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChange }: Props) {
+  const { t } = useTranslation();
+
   const safeTotal = total || 0;
   const pageZeroBased = Math.max(0, page - 1);
 
@@ -27,7 +30,26 @@ export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChan
         onPageChange(1);
       }}
       rowsPerPageOptions={[5, 10, 20, 50]}
-      labelRowsPerPage="Registros por página:"
+      labelRowsPerPage={t("pagination.rowsPerPage")}
+      labelDisplayedRows={({ from, to, count }) =>
+        count === -1
+          ? t("pagination.displayedRowsUnknownTotal", { from, to })
+          : t("pagination.displayedRows", { from, to, count })
+      }
+      getItemAriaLabel={(type) => {
+        switch (type) {
+          case "first":
+            return t("pagination.firstPage");
+          case "last":
+            return t("pagination.lastPage");
+          case "next":
+            return t("pagination.nextPage");
+          case "previous":
+            return t("pagination.previousPage");
+          default:
+            return "";
+        }
+      }}
       sx={{
         borderTop: (t) => `1px solid ${t.palette.divider}`,
         mt: 2,

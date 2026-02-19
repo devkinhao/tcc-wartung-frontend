@@ -28,8 +28,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
 import { User } from "@/types/User";
 import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
+import { useTranslation } from "react-i18next";
 
 export default function UserProfile() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -112,7 +114,7 @@ export default function UserProfile() {
       setPasswordError("");
     },
     onError: (err: any) => {
-      setPasswordError(err?.response?.data?.message ?? "Erro ao alterar senha");
+      setPasswordError(err?.response?.data?.message ?? t("userProfile.password.errors.changeFailed"));
     },
   });
 
@@ -140,7 +142,7 @@ export default function UserProfile() {
 
   function handleChangePassword() {
     if (newPassword !== confirmPassword) {
-      setPasswordError("As senhas não coincidem");
+      setPasswordError(t("userProfile.password.errors.mismatch"));
       return;
     }
 
@@ -152,7 +154,7 @@ export default function UserProfile() {
       <Stack direction="row" spacing={2} alignItems="center">
         <CircularProgress size={18} />
         <Typography variant="body2" color="text.secondary">
-          Carregando perfil...
+          {t("userProfile.loading")}
         </Typography>
       </Stack>
     );
@@ -174,7 +176,7 @@ export default function UserProfile() {
         }}
       >
         <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 3 }}>
-          Meu perfil
+          {t("userProfile.title")}
         </Typography>
 
         {/* Avatar + Status */}
@@ -183,6 +185,7 @@ export default function UserProfile() {
             <Avatar
               sx={{ width: 112, height: 112, fontSize: 32, bgcolor: "background.default" }}
               src={avatarPreview ?? undefined}
+              alt={t("common.avatarAlt")}
             >
               {fullName?.charAt(0)}
             </Avatar>
@@ -192,6 +195,7 @@ export default function UserProfile() {
                 <IconButton
                   onClick={() => fileInputRef.current?.click()}
                   size="small"
+                  aria-label={t("userProfile.actions.changeAvatar")}
                   sx={{
                     position: "absolute",
                     bottom: 6,
@@ -204,13 +208,7 @@ export default function UserProfile() {
                   <PhotoCameraIcon fontSize="small" />
                 </IconButton>
 
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handleAvatarChange}
-                />
+                <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
               </>
             )}
           </Box>
@@ -222,7 +220,7 @@ export default function UserProfile() {
 
             <Chip
               size="small"
-              label={isActive ? "Ativo" : "Inativo"}
+              label={isActive ? t("common.status.active") : t("common.status.inactive")}
               color={isActive ? "success" : "error"}
               sx={{ mt: 1 }}
             />
@@ -242,7 +240,7 @@ export default function UserProfile() {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="Nome completo"
+                label={t("userProfile.fields.fullName")}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 size="small"
@@ -253,7 +251,7 @@ export default function UserProfile() {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="CPF"
+                label={t("userProfile.fields.cpf")}
                 value={cpf}
                 onChange={(e) => setCpf(e.target.value)}
                 size="small"
@@ -264,7 +262,7 @@ export default function UserProfile() {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="E-mail"
+                label={t("userProfile.fields.email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 size="small"
@@ -275,7 +273,7 @@ export default function UserProfile() {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="CREA"
+                label={t("userProfile.fields.crea")}
                 value={creaNumber}
                 onChange={(e) => setCreaNumber(e.target.value)}
                 size="small"
@@ -288,12 +286,8 @@ export default function UserProfile() {
         {/* Actions */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 3 }}>
           {canChangePassword ? (
-            <Button
-              variant="text"
-              startIcon={<LockIcon />}
-              onClick={() => setPasswordModalOpen(true)}
-            >
-              Alterar senha
+            <Button variant="text" startIcon={<LockIcon />} onClick={() => setPasswordModalOpen(true)}>
+              {t("userProfile.actions.changePassword")}
             </Button>
           ) : (
             <span />
@@ -301,12 +295,12 @@ export default function UserProfile() {
 
           {!isEditing ? (
             <Button variant="contained" onClick={() => setIsEditing(true)}>
-              Editar perfil
+              {t("userProfile.actions.editProfile")}
             </Button>
           ) : (
             <Stack direction="row" spacing={1}>
               <Button variant="outlined" onClick={handleCancelEdit}>
-                Cancelar
+                {t("common.actions.cancel")}
               </Button>
 
               <Button
@@ -314,7 +308,7 @@ export default function UserProfile() {
                 onClick={handleSaveProfile}
                 disabled={updateMutation.isPending || avatarMutation.isPending}
               >
-                Salvar alterações
+                {t("company.actions.saveChanges")}
               </Button>
             </Stack>
           )}
@@ -323,12 +317,12 @@ export default function UserProfile() {
 
       {/* Password Dialog */}
       <Dialog open={passwordModalOpen} onClose={() => setPasswordModalOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>Alterar senha</DialogTitle>
+        <DialogTitle>{t("userProfile.password.title")}</DialogTitle>
 
         <DialogContent sx={{ pt: 1 }}>
           <Stack spacing={2} sx={{ mt: 1 }}>
             <TextField
-              label="Senha atual"
+              label={t("userProfile.password.fields.current")}
               type={showPasswords ? "text" : "password"}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
@@ -337,7 +331,11 @@ export default function UserProfile() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPasswords((p) => !p)} edge="end">
+                    <IconButton
+                      onClick={() => setShowPasswords((p) => !p)}
+                      edge="end"
+                      aria-label={t("userProfile.password.actions.toggleVisibility")}
+                    >
                       {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -346,7 +344,7 @@ export default function UserProfile() {
             />
 
             <TextField
-              label="Nova senha"
+              label={t("userProfile.password.fields.new")}
               type={showPasswords ? "text" : "password"}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
@@ -355,7 +353,11 @@ export default function UserProfile() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPasswords((p) => !p)} edge="end">
+                    <IconButton
+                      onClick={() => setShowPasswords((p) => !p)}
+                      edge="end"
+                      aria-label={t("userProfile.password.actions.toggleVisibility")}
+                    >
                       {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -364,7 +366,7 @@ export default function UserProfile() {
             />
 
             <TextField
-              label="Confirmar nova senha"
+              label={t("userProfile.password.fields.confirm")}
               type={showPasswords ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -373,7 +375,11 @@ export default function UserProfile() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPasswords((p) => !p)} edge="end">
+                    <IconButton
+                      onClick={() => setShowPasswords((p) => !p)}
+                      edge="end"
+                      aria-label={t("userProfile.password.actions.toggleVisibility")}
+                    >
                       {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -387,10 +393,10 @@ export default function UserProfile() {
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setPasswordModalOpen(false)} variant="outlined">
-            Cancelar
+            {t("common.actions.cancel")}
           </Button>
           <Button onClick={handleChangePassword} variant="contained" disabled={passwordMutation.isPending}>
-            Salvar
+            {t("common.actions.save")}
           </Button>
         </DialogActions>
       </Dialog>

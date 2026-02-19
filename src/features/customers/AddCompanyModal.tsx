@@ -23,6 +23,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 type AddCompanyModalProps = {
   open: boolean;
@@ -65,6 +66,8 @@ const defaultForm: NewCompanyForm = {
 };
 
 export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps) {
+  const { t } = useTranslation();
+
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [form, setForm] = useState<NewCompanyForm>(defaultForm);
   const [submitting, setSubmitting] = useState(false);
@@ -76,13 +79,13 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const abvtexOptions = useMemo(
     () =>
       [
-        { value: "NAO_POSSUI" as const, label: "Não possui" },
-        { value: "COBRE" as const, label: "Cobre" },
-        { value: "BRONZE" as const, label: "Bronze" },
-        { value: "PRATA" as const, label: "Prata" },
-        { value: "OURO" as const, label: "Ouro" },
+        { value: "NAO_POSSUI" as const, label: t("abvtex.none") },
+        { value: "COBRE" as const, label: t("abvtex.copper") },
+        { value: "BRONZE" as const, label: t("abvtex.bronze") },
+        { value: "PRATA" as const, label: t("abvtex.silver") },
+        { value: "OURO" as const, label: t("abvtex.gold") },
       ] satisfies Array<{ value: AbvtexSealType; label: string }>,
-    []
+    [t]
   );
 
   const closeAndReset = () => {
@@ -143,7 +146,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
       setStep(2);
     } catch (e) {
       console.error("Erro ao criar cliente:", e);
-      setError("Não foi possível cadastrar a empresa. Verifique os dados e tente novamente.");
+      setError(t("customers.addModal.errors.createFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -157,21 +160,21 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
   return (
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
-      <DialogTitle>Novo cliente</DialogTitle>
+      <DialogTitle>{t("customers.addModal.title")}</DialogTitle>
 
       <DialogContent dividers>
         <Stepper activeStep={step} sx={{ mb: 3 }}>
-          <Step><StepLabel>Informações</StepLabel></Step>
-          <Step><StepLabel>Endereço</StepLabel></Step>
-          <Step><StepLabel>Concluído</StepLabel></Step>
+          <Step><StepLabel>{t("customers.addModal.steps.info")}</StepLabel></Step>
+          <Step><StepLabel>{t("customers.addModal.steps.address")}</StepLabel></Step>
+          <Step><StepLabel>{t("customers.addModal.steps.done")}</StepLabel></Step>
         </Stepper>
 
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: -1, mb: 2 }}>
           {step === 0
-            ? "1. Informações básicas de identificação e contato"
+            ? t("customers.addModal.stepHints.step1")
             : step === 1
-              ? "2. Localização do cliente"
-              : "Cadastro concluído"}
+              ? t("customers.addModal.stepHints.step2")
+              : t("customers.addModal.stepHints.done")}
         </Typography>
 
         {error ? <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert> : null}
@@ -179,63 +182,67 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         {step === 2 ? (
           <Box sx={{ textAlign: "center", py: 4 }}>
             <Typography fontWeight={600} color="text.primary">
-              Empresa cadastrada com sucesso!
+              {t("customers.addModal.success.title")}
             </Typography>
+
             {createdId ? (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                ID: {createdId}
+                {t("customers.addModal.success.idLabel")}: {createdId}
               </Typography>
             ) : null}
+
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              Deseja acessar o cadastro agora ou apenas fechar?
+              {t("customers.addModal.success.question")}
             </Typography>
           </Box>
         ) : step === 0 ? (
           <Grid container spacing={2}>
             <Grid item xs={12} md={8}>
               <TextField
-                label="Nome fantasia"
-                placeholder="Digite o nome fantasia..."
+                label={t("customers.addModal.fields.fantasyName")}
+                placeholder={t("customers.addModal.placeholders.fantasyName")}
                 value={form.fantasyName}
                 onChange={(e) => setForm((p) => ({ ...p, fantasyName: e.target.value }))}
                 fullWidth
                 size="small"
               />
             </Grid>
+
             <Grid item xs={12} md={4}>
               <TextField
-                label="CNPJ"
-                placeholder="00.000.000/0000-00"
+                label={t("customers.addModal.fields.cnpj")}
+                placeholder={t("customers.addModal.placeholders.cnpj")}
                 value={form.cnpj}
                 onChange={(e) => setForm((p) => ({ ...p, cnpj: e.target.value }))}
                 fullWidth
                 size="small"
-                helperText="Formato: 00.000.000/0000-00"
+                helperText={t("customers.addModal.helpers.cnpjFormat")}
               />
             </Grid>
 
             <Grid item xs={12} md={8}>
               <TextField
-                label="Razão social"
-                placeholder="Digite a razão social..."
+                label={t("customers.addModal.fields.legalName")}
+                placeholder={t("customers.addModal.placeholders.legalName")}
                 value={form.legalName}
                 onChange={(e) => setForm((p) => ({ ...p, legalName: e.target.value }))}
                 fullWidth
                 size="small"
               />
             </Grid>
+
             <Grid item xs={12} md={4}>
               <FormControl fullWidth size="small">
-                <InputLabel id="abvtex">Selo ABVTEX</InputLabel>
+                <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex"
-                  label="Selo ABVTEX"
+                  label={t("customers.addModal.fields.abvtexSeal")}
                   value={form.abvtexSeal}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, abvtexSeal: e.target.value as NewCompanyForm["abvtexSeal"] }))
                   }
                 >
-                  <MenuItem value="">Selecione o selo ABVTEX</MenuItem>
+                  <MenuItem value="">{t("customers.addModal.placeholders.abvtexSeal")}</MenuItem>
                   {abvtexOptions.map((o) => (
                     <MenuItem key={o.value} value={o.value}>
                       {o.label}
@@ -247,33 +254,35 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
             <Grid item xs={12} md={4}>
               <TextField
-                label="Telefone"
-                placeholder="Digite o telefone..."
+                label={t("customers.addModal.fields.phone")}
+                placeholder={t("customers.addModal.placeholders.phone")}
                 value={form.phone}
                 onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
                 fullWidth
                 size="small"
               />
             </Grid>
+
             <Grid item xs={12} md={4}>
               <TextField
-                label="Celular"
-                placeholder="Digite o celular..."
+                label={t("customers.addModal.fields.mobile")}
+                placeholder={t("customers.addModal.placeholders.mobile")}
                 value={form.mobile}
                 onChange={(e) => setForm((p) => ({ ...p, mobile: e.target.value }))}
                 fullWidth
                 size="small"
               />
             </Grid>
+
             <Grid item xs={12} md={4}>
               <TextField
-                label="E-mail"
-                placeholder="nome@dominio.com"
+                label={t("customers.addModal.fields.email")}
+                placeholder={t("customers.addModal.placeholders.email")}
                 value={form.email}
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 fullWidth
                 size="small"
-                helperText="Ex: nome@dominio.com"
+                helperText={t("customers.addModal.helpers.emailExample")}
               />
             </Grid>
           </Grid>
@@ -281,19 +290,20 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
               <TextField
-                label="CEP"
-                placeholder="00000-000"
+                label={t("customers.addModal.fields.zipCode")}
+                placeholder={t("customers.addModal.placeholders.zipCode")}
                 value={form.zipCode}
                 onChange={(e) => setForm((p) => ({ ...p, zipCode: e.target.value }))}
                 fullWidth
                 size="small"
-                helperText="Formato: 00000-000"
+                helperText={t("customers.addModal.helpers.zipCodeFormat")}
               />
             </Grid>
+
             <Grid item xs={12} md={9}>
               <TextField
-                label="Logradouro"
-                placeholder="Digite o logradouro..."
+                label={t("customers.addModal.fields.street")}
+                placeholder={t("customers.addModal.placeholders.street")}
                 value={form.street}
                 onChange={(e) => setForm((p) => ({ ...p, street: e.target.value }))}
                 fullWidth
@@ -303,18 +313,19 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
             <Grid item xs={12} md={3}>
               <TextField
-                label="Número"
-                placeholder="Digite o número..."
+                label={t("customers.addModal.fields.number")}
+                placeholder={t("customers.addModal.placeholders.number")}
                 value={form.number}
                 onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))}
                 fullWidth
                 size="small"
               />
             </Grid>
+
             <Grid item xs={12} md={9}>
               <TextField
-                label="Complemento"
-                placeholder="Digite o complemento..."
+                label={t("customers.addModal.fields.complement")}
+                placeholder={t("customers.addModal.placeholders.complement")}
                 value={form.complement}
                 onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))}
                 fullWidth
@@ -324,8 +335,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Bairro"
-                placeholder="Digite o bairro..."
+                label={t("customers.addModal.fields.neighborhood")}
+                placeholder={t("customers.addModal.placeholders.neighborhood")}
                 value={form.neighborhood}
                 onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))}
                 fullWidth
@@ -335,10 +346,10 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
             <Grid item xs={12} md={6}>
               <FormControl fullWidth size="small">
-                <InputLabel id="city">Cidade</InputLabel>
+                <InputLabel id="city">{t("customers.addModal.fields.city")}</InputLabel>
                 <Select
                   labelId="city"
-                  label="Cidade"
+                  label={t("customers.addModal.fields.city")}
                   value={form.cityId}
                   onChange={(e) =>
                     setForm((p) => ({
@@ -347,7 +358,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                     }))
                   }
                 >
-                  <MenuItem value="">Selecione a cidade</MenuItem>
+                  <MenuItem value="">{t("customers.addModal.placeholders.city")}</MenuItem>
                   {cities.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       {c.name}
@@ -363,7 +374,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
       <DialogActions sx={{ px: 3, py: 2 }}>
         {step === 1 ? (
           <Button variant="outlined" onClick={() => setStep(0)}>
-            Anterior
+            {t("customers.addModal.actions.previous")}
           </Button>
         ) : (
           <Box sx={{ flex: 1 }} />
@@ -371,7 +382,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
         {step === 0 ? (
           <Button variant="contained" onClick={() => setStep(1)} disabled={!step1Valid}>
-            Próximo
+            {t("customers.addModal.actions.next")}
           </Button>
         ) : step === 1 ? (
           <Button
@@ -380,15 +391,15 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
             disabled={!step2Valid || submitting}
             startIcon={submitting ? <CircularProgress size={16} /> : undefined}
           >
-            {submitting ? "Salvando..." : "Concluir"}
+            {submitting ? t("customers.addModal.actions.saving") : t("customers.addModal.actions.finish")}
           </Button>
         ) : (
           <Box sx={{ display: "flex", gap: 1 }}>
             <Button variant="outlined" onClick={closeAndReset}>
-              Fechar
+              {t("customers.addModal.actions.close")}
             </Button>
             <Button variant="contained" onClick={goToCadastro}>
-              Acessar cadastro
+              {t("customers.addModal.actions.openRecord")}
             </Button>
           </Box>
         )}

@@ -35,7 +35,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { AbvtexChip } from "../components/AbvtexChip";
-import { useCities } from "../hooks/useCities"; // you already have this hook
+import { useCities } from "../hooks/useCities";
 import type { CustomerDetailResponseDTO } from "../types/customerDetail";
 import {
   deactivateCustomer,
@@ -44,10 +44,10 @@ import {
   updateCustomerContacts,
   updateCustomerGeneral,
 } from "../api/customers.detail.api";
+import { useTranslation } from "react-i18next";
 
 function formatDateBR(iso?: string | null) {
   if (!iso) return "—";
-  // accepts "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss"
   const date = iso.split("T")[0];
   const [y, m, d] = date.split("-");
   if (!y || !m || !d) return iso;
@@ -57,12 +57,15 @@ function formatDateBR(iso?: string | null) {
 function formatDateTimeBR(iso?: string | null) {
   if (!iso) return "—";
   const [date, time] = iso.split("T");
-  return `${formatDateBR(date)}${time ? ` às ${time.slice(0, 5)}` : ""}`;
+  // "às" should be translated
+  return `${formatDateBR(date)}${time ? ` ${time.slice(0, 5)}` : ""}`;
 }
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
 export default function CustomerDetailsPage() {
+  const { t } = useTranslation();
+
   const { id } = useParams();
   const customerId = Number(id);
   const navigate = useNavigate();
@@ -71,10 +74,8 @@ export default function CustomerDetailsPage() {
 
   const [tab, setTab] = useState<TabKey>("general");
 
-  // header menu
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
 
-  // edit toggles
   const [editingGeneral, setEditingGeneral] = useState(false);
   const [editingContacts, setEditingContacts] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
@@ -87,10 +88,8 @@ export default function CustomerDetailsPage() {
     enabled: Number.isFinite(customerId) && customerId > 0,
   });
 
-  // Local editable state (initialized from query)
   const [draft, setDraft] = useState<CustomerDetailResponseDTO | null>(null);
 
-  // When data arrives first time, set draft
   useMemo(() => {
     if (data && !draft) setDraft(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +102,7 @@ export default function CustomerDetailsPage() {
       setDraft(updated);
       setEditingGeneral(false);
     },
-    onError: () => setError("Não foi possível atualizar os dados gerais."),
+    onError: () => setError(t("customerDetails.errors.updateGeneral")),
   });
 
   const contactsMutation = useMutation({
@@ -113,7 +112,7 @@ export default function CustomerDetailsPage() {
       setDraft(updated);
       setEditingContacts(false);
     },
-    onError: () => setError("Não foi possível atualizar os contatos."),
+    onError: () => setError(t("customerDetails.errors.updateContacts")),
   });
 
   const addressMutation = useMutation({
@@ -123,16 +122,15 @@ export default function CustomerDetailsPage() {
       setDraft(updated);
       setEditingAddress(false);
     },
-    onError: () => setError("Não foi possível atualizar o endereço."),
+    onError: () => setError(t("customerDetails.errors.updateAddress")),
   });
 
   const deactivateMutation = useMutation({
     mutationFn: () => deactivateCustomer(customerId),
     onSuccess: () => {
-      // go back to list after inactivating
       navigate("/customers");
     },
-    onError: () => setError("Não foi possível inativar o cliente."),
+    onError: () => setError(t("customerDetails.errors.deactivate")),
   });
 
   const view = draft ?? data;
@@ -142,7 +140,7 @@ export default function CustomerDetailsPage() {
       <Stack direction="row" spacing={2} alignItems="center">
         <CircularProgress size={18} />
         <Typography variant="body2" color="text.secondary">
-          Carregando cliente...
+          {t("customerDetails.loading")}
         </Typography>
       </Stack>
     );
@@ -157,6 +155,10 @@ export default function CustomerDetailsPage() {
     if (data) setDraft(data);
   };
 
+  const statusLabel = view.isCustomer
+    ? t("customerDetails.status.active")
+    : t("customerDetails.status.inactive");
+
   return (
     <Box sx={{ maxWidth: 1200 }}>
       {error ? (
@@ -165,13 +167,16 @@ export default function CustomerDetailsPage() {
         </Alert>
       ) : null}
 
-      {/* TOP SUMMARY CARD */}
       <Paper elevation={1} sx={{ borderRadius: 2, mb: 2 }}>
         <Box sx={{ px: 2, py: 1.5 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <IconButton size="small" onClick={() => navigate("/customers")} aria-label="Voltar">
+                <IconButton
+                  size="small"
+                  onClick={() => navigate("/customers")}
+                  aria-label={t("customerDetails.actions.back")}
+                >
                   <ArrowBackIcon fontSize="small" />
                 </IconButton>
 
@@ -182,27 +187,25 @@ export default function CustomerDetailsPage() {
 
               <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 0.5, flexWrap: "wrap" }}>
                 <Typography variant="body2" color="text.secondary">
-                  CNPJ {view.cnpj}
+                  {t("customerDetails.summary.cnpj")} {view.cnpj}
                 </Typography>
 
-                <Chip
-                  size="small"
-                  label={view.isCustomer ? "ATIVO" : "INATIVO"}
-                  color={view.isCustomer ? "success" : "default"}
-                />
+                <Chip size="small" label={statusLabel} color={view.isCustomer ? "success" : "default"} />
 
                 <Typography variant="body2" color="text.secondary">
-                  Telefone: {view.phone || "—"}
+                  {t("customerDetails.summary.phone")}: {view.phone || "—"}
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
-                  Celular: {view.mobilePhone || "—"}
+                  {t("customerDetails.summary.mobile")}: {view.mobilePhone || "—"}
                 </Typography>
 
                 <IconButton
                   size="small"
-                  aria-label="WhatsApp"
-                  onClick={() => window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")}
+                  aria-label={t("customerDetails.actions.whatsapp")}
+                  onClick={() =>
+                    window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")
+                  }
                   disabled={!view.mobilePhone}
                 >
                   <WhatsAppIcon fontSize="small" />
@@ -212,7 +215,7 @@ export default function CustomerDetailsPage() {
 
             <Box>
               <IconButton
-                aria-label="Ações"
+                aria-label={t("customerDetails.actions.actions")}
                 onClick={(e) => setMenuEl(e.currentTarget)}
                 disabled={headerActionsDisabled}
               >
@@ -226,7 +229,7 @@ export default function CustomerDetailsPage() {
                     deactivateMutation.mutate();
                   }}
                 >
-                  Inativar cliente
+                  {t("customerDetails.actions.deactivate")}
                 </MenuItem>
               </Menu>
             </Box>
@@ -235,7 +238,6 @@ export default function CustomerDetailsPage() {
 
         <Divider />
 
-        {/* Tabs */}
         <Tabs
           value={tab}
           onChange={(_, v) => setTab(v)}
@@ -243,17 +245,15 @@ export default function CustomerDetailsPage() {
           textColor="primary"
           indicatorColor="primary"
         >
-          <Tab value="general" label="Dados gerais" />
-          <Tab value="address" label="Endereço" />
-          <Tab value="inspections" label="Inspeções" />
-          <Tab value="movements" label="Movimentações" />
+          <Tab value="general" label={t("customerDetails.tabs.general")} />
+          <Tab value="address" label={t("customerDetails.tabs.address")} />
+          <Tab value="inspections" label={t("customerDetails.tabs.inspections")} />
+          <Tab value="movements" label={t("customerDetails.tabs.movements")} />
         </Tabs>
       </Paper>
 
-      {/* TAB CONTENT */}
       {tab === "general" ? (
         <Stack spacing={2}>
-          {/* General Info card */}
           <Card
             sx={{
               borderRadius: 2,
@@ -264,12 +264,12 @@ export default function CustomerDetailsPage() {
             <CardContent>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography fontWeight={700} color="text.primary">
-                  Dados gerais
+                  {t("customerDetails.general.title")}
                 </Typography>
 
                 {!editingGeneral ? (
                   <Button startIcon={<EditIcon />} onClick={() => setEditingGeneral(true)}>
-                    Editar
+                    {t("common.actions.edit")}
                   </Button>
                 ) : (
                   <Stack direction="row" spacing={1}>
@@ -280,7 +280,7 @@ export default function CustomerDetailsPage() {
                         setEditingGeneral(false);
                       }}
                     >
-                      Cancelar
+                      {t("common.actions.cancel")}
                     </Button>
                     <Button
                       variant="contained"
@@ -295,7 +295,7 @@ export default function CustomerDetailsPage() {
                       }
                       disabled={generalMutation.isPending}
                     >
-                      Salvar
+                      {t("common.actions.save")}
                     </Button>
                   </Stack>
                 )}
@@ -303,12 +303,12 @@ export default function CustomerDetailsPage() {
 
               <Grid container spacing={2}>
                 <Grid item xs={12} md={2}>
-                  <TextField label="Código" value={view.id} size="small" fullWidth disabled />
+                  <TextField label={t("customerDetails.general.fields.code")} value={view.id} size="small" fullWidth disabled />
                 </Grid>
 
                 <Grid item xs={12} md={7}>
                   <TextField
-                    label="Razão social"
+                    label={t("customerDetails.general.fields.legalName")}
                     value={view.legalName}
                     size="small"
                     fullWidth
@@ -319,10 +319,10 @@ export default function CustomerDetailsPage() {
 
                 <Grid item xs={12} md={3}>
                   <FormControl fullWidth size="small" disabled={!editingGeneral}>
-                    <InputLabel id="abvtex-label">Selo ABVTEX</InputLabel>
+                    <InputLabel id="abvtex-label">{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
                     <Select
                       labelId="abvtex-label"
-                      label="Selo ABVTEX"
+                      label={t("customerDetails.general.fields.abvtexSeal")}
                       value={view.abvtexSeal}
                       onChange={(e) =>
                         setDraft((p) =>
@@ -330,18 +330,18 @@ export default function CustomerDetailsPage() {
                         )
                       }
                     >
-                      <MenuItem value="NAO_POSSUI">Não possui</MenuItem>
-                      <MenuItem value="COBRE">Cobre</MenuItem>
-                      <MenuItem value="BRONZE">Bronze</MenuItem>
-                      <MenuItem value="PRATA">Prata</MenuItem>
-                      <MenuItem value="OURO">Ouro</MenuItem>
+                      <MenuItem value="NAO_POSSUI">{t("abvtex.none")}</MenuItem>
+                      <MenuItem value="COBRE">{t("abvtex.copper")}</MenuItem>
+                      <MenuItem value="BRONZE">{t("abvtex.bronze")}</MenuItem>
+                      <MenuItem value="PRATA">{t("abvtex.silver")}</MenuItem>
+                      <MenuItem value="OURO">{t("abvtex.gold")}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={12} md={2}>
                   <TextField
-                    label="CNPJ"
+                    label={t("customerDetails.general.fields.cnpj")}
                     value={view.cnpj}
                     size="small"
                     fullWidth
@@ -352,7 +352,7 @@ export default function CustomerDetailsPage() {
 
                 <Grid item xs={12} md={7}>
                   <TextField
-                    label="Nome fantasia"
+                    label={t("customerDetails.general.fields.fantasyName")}
                     value={view.fantasyName}
                     size="small"
                     fullWidth
@@ -364,10 +364,10 @@ export default function CustomerDetailsPage() {
                 <Grid item xs={12} md={3}>
                   <Stack spacing={1}>
                     <Typography variant="caption" color="text.secondary">
-                      Cliente ativo?
+                      {t("customerDetails.general.fields.customerActive")}
                     </Typography>
                     <Chip
-                      label={view.isCustomer ? "SIM" : "NÃO"}
+                      label={view.isCustomer ? t("common.yes") : t("common.no")}
                       color={view.isCustomer ? "success" : "default"}
                       variant={view.isCustomer ? "filled" : "outlined"}
                       sx={{ width: "fit-content" }}
@@ -386,7 +386,6 @@ export default function CustomerDetailsPage() {
             </CardContent>
           </Card>
 
-          {/* Contacts card */}
           <Card
             sx={{
               borderRadius: 2,
@@ -397,12 +396,12 @@ export default function CustomerDetailsPage() {
             <CardContent>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography fontWeight={700} color="text.primary">
-                  Contatos
+                  {t("customerDetails.contacts.title")}
                 </Typography>
 
                 {!editingContacts ? (
                   <Button startIcon={<EditIcon />} onClick={() => setEditingContacts(true)}>
-                    Editar
+                    {t("common.actions.edit")}
                   </Button>
                 ) : (
                   <Stack direction="row" spacing={1}>
@@ -413,7 +412,7 @@ export default function CustomerDetailsPage() {
                         setEditingContacts(false);
                       }}
                     >
-                      Cancelar
+                      {t("common.actions.cancel")}
                     </Button>
                     <Button
                       variant="contained"
@@ -426,7 +425,7 @@ export default function CustomerDetailsPage() {
                       }
                       disabled={contactsMutation.isPending}
                     >
-                      Salvar
+                      {t("common.actions.save")}
                     </Button>
                   </Stack>
                 )}
@@ -435,7 +434,7 @@ export default function CustomerDetailsPage() {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                   <TextField
-                    label="Telefone"
+                    label={t("customerDetails.contacts.fields.phone")}
                     value={view.phone ?? ""}
                     size="small"
                     fullWidth
@@ -446,7 +445,7 @@ export default function CustomerDetailsPage() {
 
                 <Grid item xs={12} md={4}>
                   <TextField
-                    label="Celular"
+                    label={t("customerDetails.contacts.fields.mobile")}
                     value={view.mobilePhone ?? ""}
                     size="small"
                     fullWidth
@@ -456,6 +455,7 @@ export default function CustomerDetailsPage() {
                       endAdornment: (
                         <IconButton
                           size="small"
+                          aria-label={t("customerDetails.actions.whatsapp")}
                           onClick={() =>
                             window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")
                           }
@@ -470,7 +470,7 @@ export default function CustomerDetailsPage() {
 
                 <Grid item xs={12} md={4}>
                   <TextField
-                    label="E-mail"
+                    label={t("customerDetails.contacts.fields.email")}
                     value={view.email ?? ""}
                     size="small"
                     fullWidth
@@ -480,6 +480,7 @@ export default function CustomerDetailsPage() {
                       endAdornment: (
                         <IconButton
                           size="small"
+                          aria-label={t("customerDetails.actions.email")}
                           onClick={() => window.open(`mailto:${view.email}`, "_blank")}
                           disabled={!view.email}
                         >
@@ -508,11 +509,11 @@ export default function CustomerDetailsPage() {
             >
               <CardContent>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                  <Typography fontWeight={700}>Endereço</Typography>
+                  <Typography fontWeight={700}>{t("customerDetails.address.title")}</Typography>
 
                   {!editingAddress ? (
                     <Button startIcon={<EditIcon />} onClick={() => setEditingAddress(true)}>
-                      Editar
+                      {t("common.actions.edit")}
                     </Button>
                   ) : (
                     <Stack direction="row" spacing={1}>
@@ -523,7 +524,7 @@ export default function CustomerDetailsPage() {
                           setEditingAddress(false);
                         }}
                       >
-                        Cancelar
+                        {t("common.actions.cancel")}
                       </Button>
                       <Button
                         variant="contained"
@@ -535,11 +536,11 @@ export default function CustomerDetailsPage() {
                             complement: view.address.complement,
                             neighborhood: view.address.neighborhood,
                             cityId: view.address.city.id,
-                            })
+                          })
                         }
                         disabled={addressMutation.isPending}
                       >
-                        Salvar
+                        {t("common.actions.save")}
                       </Button>
                     </Stack>
                   )}
@@ -548,43 +549,43 @@ export default function CustomerDetailsPage() {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={4}>
                     <TextField
-                      label="CEP"
+                      label={t("customerDetails.address.fields.zipCode")}
                       size="small"
                       fullWidth
                       disabled={!editingAddress}
                       value={view.address.zipCode ?? ""}
                       onChange={(e) =>
-                        setDraft((p) =>
-                          p ? { ...p, address: { ...p.address, zipCode: e.target.value } } : p
-                        )
+                        setDraft((p) => (p ? { ...p, address: { ...p.address, zipCode: e.target.value } } : p))
                       }
                     />
                   </Grid>
 
                   <Grid item xs={12} md={8}>
                     <FormControl fullWidth size="small" disabled={!editingAddress}>
-                      <InputLabel id="city-label">Cidade</InputLabel>
+                      <InputLabel id="city-label">{t("customerDetails.address.fields.city")}</InputLabel>
                       <Select
                         labelId="city-label"
-                        label="Cidade"
+                        label={t("customerDetails.address.fields.city")}
                         value={view.address.city?.id ?? ""}
                         onChange={(e) =>
-                        setDraft((p) =>
+                          setDraft((p) =>
                             p
-                            ? {
-                                ...p,
-                                address: {
+                              ? {
+                                  ...p,
+                                  address: {
                                     ...p.address,
                                     city: {
-                                    ...(p.address.city ?? { id: 0, name: "" }),
-                                    id: Number(e.target.value),
-                                    // keep the name in sync for UI
-                                    name: cities.find((c) => c.id === Number(e.target.value))?.name ?? p.address.city?.name ?? "",
+                                      ...(p.address.city ?? { id: 0, name: "" }),
+                                      id: Number(e.target.value),
+                                      name:
+                                        cities.find((c) => c.id === Number(e.target.value))?.name ??
+                                        p.address.city?.name ??
+                                        "",
                                     },
-                                },
+                                  },
                                 }
-                            : p
-                        )
+                              : p
+                          )
                         }
                       >
                         {cities.map((c) => (
@@ -598,52 +599,46 @@ export default function CustomerDetailsPage() {
 
                   <Grid item xs={12}>
                     <TextField
-                      label="Logradouro"
+                      label={t("customerDetails.address.fields.street")}
                       size="small"
                       fullWidth
                       disabled={!editingAddress}
                       value={view.address.street ?? ""}
                       onChange={(e) =>
-                        setDraft((p) =>
-                          p ? { ...p, address: { ...p.address, street: e.target.value } } : p
-                        )
+                        setDraft((p) => (p ? { ...p, address: { ...p.address, street: e.target.value } } : p))
                       }
                     />
                   </Grid>
 
                   <Grid item xs={12} md={8}>
                     <TextField
-                      label="Complemento"
+                      label={t("customerDetails.address.fields.complement")}
                       size="small"
                       fullWidth
                       disabled={!editingAddress}
                       value={view.address.complement ?? ""}
                       onChange={(e) =>
-                        setDraft((p) =>
-                          p ? { ...p, address: { ...p.address, complement: e.target.value } } : p
-                        )
+                        setDraft((p) => (p ? { ...p, address: { ...p.address, complement: e.target.value } } : p))
                       }
                     />
                   </Grid>
 
                   <Grid item xs={12} md={4}>
                     <TextField
-                      label="Número"
+                      label={t("customerDetails.address.fields.number")}
                       size="small"
                       fullWidth
                       disabled={!editingAddress}
                       value={view.address.number ?? ""}
                       onChange={(e) =>
-                        setDraft((p) =>
-                          p ? { ...p, address: { ...p.address, number: e.target.value } } : p
-                        )
+                        setDraft((p) => (p ? { ...p, address: { ...p.address, number: e.target.value } } : p))
                       }
                     />
                   </Grid>
 
                   <Grid item xs={12}>
                     <TextField
-                      label="Bairro"
+                      label={t("customerDetails.address.fields.neighborhood")}
                       size="small"
                       fullWidth
                       disabled={!editingAddress}
@@ -665,47 +660,41 @@ export default function CustomerDetailsPage() {
               sx={{
                 borderRadius: 2,
                 overflow: "hidden",
-                height: 360, // adjust to match the left card visually
+                height: 360,
                 transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
                 "&:hover": { boxShadow: 4 },
               }}
             >
               <Box
                 component="iframe"
-                title="Mapa"
+                title={t("customerDetails.address.mapTitle")}
                 src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-                sx={{
-                  border: 0,
-                  width: "100%",
-                  height: "100%", // ✅ fills the card
-                  display: "block", // ✅ removes small iframe baseline gap
-                }}
+                sx={{ border: 0, width: "100%", height: "100%", display: "block" }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </Card>
           </Grid>
-
         </Grid>
       ) : null}
 
       {tab === "inspections" ? (
         <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
           <Typography fontWeight={700} sx={{ mb: 2 }}>
-            Inspeções
+            {t("customerDetails.inspections.title")}
           </Typography>
 
-          <Box
-            sx={{
-              border: (t) => `1px solid ${t.palette.divider}`,
-              borderRadius: 2,
-              overflow: "hidden",
-            }}
-          >
+          <Box sx={{ border: (t) => `1px solid ${t.palette.divider}`, borderRadius: 2, overflow: "hidden" }}>
             <Box component="table" sx={{ width: "100%", borderCollapse: "collapse" }}>
               <Box component="thead" sx={{ bgcolor: "background.default" }}>
                 <Box component="tr">
-                  {["Data da inspeção", "Serviço", "Observações", "Vencimento", "Documentos"].map((h) => (
+                  {[
+                    t("customerDetails.inspections.table.inspectionDate"),
+                    t("customerDetails.inspections.table.service"),
+                    t("customerDetails.inspections.table.notes"),
+                    t("customerDetails.inspections.table.expiration"),
+                    t("customerDetails.inspections.table.documents"),
+                  ].map((h) => (
                     <Box
                       key={h}
                       component="th"
@@ -727,46 +716,39 @@ export default function CustomerDetailsPage() {
               <Box component="tbody">
                 {view.inspections?.length ? (
                   view.inspections.map((i) => (
-                    <Box
-                      key={i.id}
-                      component="tr"
-                      sx={{
-                        "&:hover": { bgcolor: "action.hover" },
-                      }}
-                    >
+                    <Box key={i.id} component="tr" sx={{ "&:hover": { bgcolor: "action.hover" } }}>
                       <Box component="td" sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
                         {formatDateBR(i.inspectionDate)}
                       </Box>
+
+                      <Box component="td" sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
+                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+                          <Typography variant="body2">{i.serviceType?.name ?? "—"}</Typography>
+
+                          {!i.isActive && (
+                            <Chip size="small" label={t("customerDetails.inspections.status.inactive")} color="default" variant="outlined" />
+                          )}
+
+                          {i.isRenewed && <Chip size="small" label={t("customerDetails.inspections.status.renewed")} color="info" />}
+                        </Stack>
+                      </Box>
+
                       <Box
                         component="td"
                         sx={{
-                            px: 2,
-                            py: 1,
-                            borderBottom: (t) => `1px solid ${t.palette.divider}`,
+                          px: 2,
+                          py: 1,
+                          borderBottom: (t) => `1px solid ${t.palette.divider}`,
+                          color: "text.secondary",
                         }}
-                        >
-                        <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                            <Typography variant="body2">
-                            {i.serviceType?.name ?? "—"}
-                            </Typography>
-
-                            {!i.isActive && (
-                            <Chip size="small" label="Inativa" color="default" variant="outlined" />
-                            )}
-
-                            {i.isRenewed && (
-                            <Chip size="small" label="Renovada" color="info" />
-                            )}
-                        </Stack>
-                        </Box>
-
-                      <Box component="td" sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}`, color: "text.secondary" }}>
+                      >
                         {i.notes || "—"}
                       </Box>
+
                       <Box component="td" sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
                         {formatDateBR(i.expirationDate)}
                       </Box>
-                  
+
                       <Box
                         component="td"
                         sx={{
@@ -779,7 +761,8 @@ export default function CustomerDetailsPage() {
                         {i.documents?.length ? (
                           <IconButton
                             size="small"
-                            /*onClick={() => handleOpenDocuments(i.documents)}*/
+                            aria-label={t("customerDetails.inspections.actions.openDocuments")}
+                            /* onClick={() => handleOpenDocuments(i.documents)} */
                           >
                             <Badge badgeContent={i.documents.length} color="primary">
                               <DescriptionIcon fontSize="small" />
@@ -789,14 +772,12 @@ export default function CustomerDetailsPage() {
                           "—"
                         )}
                       </Box>
-
-
                     </Box>
                   ))
                 ) : (
                   <Box component="tr">
                     <Box component="td" colSpan={5} sx={{ px: 2, py: 2, color: "text.secondary" }}>
-                      Nenhuma inspeção encontrada.
+                      {t("customerDetails.inspections.empty")}
                     </Box>
                   </Box>
                 )}
@@ -809,22 +790,27 @@ export default function CustomerDetailsPage() {
       {tab === "movements" ? (
         <Paper elevation={1} sx={{ borderRadius: 2, p: 2, maxWidth: 720 }}>
           <Typography fontWeight={700} sx={{ mb: 2 }}>
-            Movimentações
+            {t("customerDetails.movements.title")}
           </Typography>
 
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <TextField
-                label="Data/Hora de criação"
+                label={t("customerDetails.movements.fields.createdAt")}
                 size="small"
                 fullWidth
-                value={formatDateTimeBR(view.createdAt)}
+                value={
+                  view.createdAt
+                    ? t("customerDetails.movements.format.dateTime", { date: formatDateBR(view.createdAt), time: formatDateTimeBR(view.createdAt).split(" ").slice(-1)[0] })
+                    : "—"
+                }
                 disabled
               />
             </Grid>
+
             <Grid item xs={12} md={6}>
               <TextField
-                label="Usuário criação"
+                label={t("customerDetails.movements.fields.createdBy")}
                 size="small"
                 fullWidth
                 value={view.createdByUsername ?? "—"}
@@ -834,16 +820,21 @@ export default function CustomerDetailsPage() {
 
             <Grid item xs={12} md={6}>
               <TextField
-                label="Data/Hora de alteração"
+                label={t("customerDetails.movements.fields.updatedAt")}
                 size="small"
                 fullWidth
-                value={formatDateTimeBR(view.updatedAt)}
+                value={
+                  view.updatedAt
+                    ? t("customerDetails.movements.format.dateTime", { date: formatDateBR(view.updatedAt), time: formatDateTimeBR(view.updatedAt).split(" ").slice(-1)[0] })
+                    : "—"
+                }
                 disabled
               />
             </Grid>
+
             <Grid item xs={12} md={6}>
               <TextField
-                label="Usuário alteração"
+                label={t("customerDetails.movements.fields.updatedBy")}
                 size="small"
                 fullWidth
                 value={view.updatedByUsername ?? "—"}

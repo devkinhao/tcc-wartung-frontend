@@ -1,0 +1,333 @@
+{
+  "app": { "brandName": "Engenharia Maas" },
+  "common": {
+    "logoAlt": "Logo",
+    "avatarAlt": "Avatar",
+    "userAvatar": "Benutzeravatar",
+    "noDataAvailable": "Derzeit keine Daten verfügbar",
+    "yes": "Ja",
+    "no": "Nein",
+    "status": { "active": "Aktiv", "inactive": "Inaktiv" },
+    "actions": { "edit": "Bearbeiten", "cancel": "Abbrechen", "save": "Speichern" }
+  },
+  "months": {
+    "january": "Januar",
+    "february": "Februar",
+    "march": "März",
+    "april": "April",
+    "may": "Mai",
+    "june": "Juni",
+    "july": "Juli",
+    "august": "August",
+    "september": "September",
+    "october": "Oktober",
+    "november": "November",
+    "december": "Dezember"
+  },
+  "abvtex": {
+    "none": "Keine",
+    "copper": "Kupfer",
+    "bronze": "Bronze",
+    "silver": "Silber",
+    "gold": "Gold"
+  },
+  "nav": {
+    "home": "Start",
+    "customersList": "Unternehmensliste",
+    "inspections": "Inspektionen",
+    "inspectionsList": "Inspektionsliste",
+    "reports": "Berichte",
+    "myCompany": "Mein Unternehmen",
+    "users": "Benutzer",
+    "configurations": "Einstellungen",
+    "help": "Hilfe",
+    "myProfile": "Mein Profil",
+    "preferences": "Einstellungen",
+    "customerDetails": "Kundendetails"
+  },
+  "sidebar": { "actions": { "expandMenu": "Menü erweitern", "collapseMenu": "Menü einklappen" } },
+  "userMenu": { "myProfile": "Mein Profil", "preferences": "Einstellungen", "logout": "Abmelden" },
+  "notifications": {
+    "ariaLabel": "Benachrichtigungen",
+    "title": "Benachrichtigungen",
+    "empty": "Derzeit keine Benachrichtigungen"
+  },
+  "pagination": {
+    "rowsPerPage": "Zeilen pro Seite:",
+    "displayedRows": "{{from}}-{{to}} von {{count}}",
+    "displayedRowsUnknownTotal": "{{from}}-{{to}} von vielen",
+    "firstPage": "Erste Seite",
+    "lastPage": "Letzte Seite",
+    "nextPage": "Nächste Seite",
+    "previousPage": "Vorherige Seite"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "topRequestedServices": { "title": "Am häufigsten angeforderte Dienstleistungen" },
+      "customersByCity": { "title": "Kunden nach Stadt" },
+      "inspections": { "title": "Inspektionen" }
+    }
+  },
+  "preferences": {
+    "title": "Einstellungen",
+    "description": "Passen Sie das System nach Ihren Vorlieben an.",
+    "loading": "Einstellungen werden geladen...",
+    "language": "Sprache",
+    "languageDescription": "Sprache der Systemoberfläche",
+    "theme": "Design",
+    "themeDescription": "Visuelles Design des Systems"
+  },
+  "configurations": {
+    "title": "Systemeinstellungen",
+    "description": "Allgemeine Einstellungen, die das Systemverhalten steuern.",
+    "actions": { "save": "Einstellungen speichern" }
+  },
+  "help": {
+    "title": "Hilfe",
+    "description": "Schnelle Hinweise zur Nutzung des Systems.",
+    "faq": {
+      "title": "Häufige Fragen",
+      "q1": {
+        "question": "Wie registriere ich einen Kunden?",
+        "answer": "Gehen Sie zu Kunden und klicken Sie auf Neu. Daten ausfüllen und bestätigen."
+      },
+      "q2": {
+        "question": "Wie ändere ich meine Einstellungen?",
+        "answer": "Gehen Sie zu Einstellungen und wählen Sie Sprache/Design."
+      },
+      "q3": {
+        "question": "Wie erstelle ich Berichte?",
+        "answer": "In Berichte wählen Sie einen Typ und klicken auf Bericht erstellen."
+      }
+    },
+    "support": {
+      "title": "Support",
+      "description": "Wenn Sie Hilfe benötigen, kontaktieren Sie den Support.",
+      "emailLabel": "E-Mail:"
+    }
+  },
+  "reports": {
+    "title": "Berichte",
+    "description": "Erstellen Sie Systemberichte zur Analyse oder zum Export.",
+    "actions": { "generate": "Bericht erstellen" },
+    "items": {
+      "inspectionsDue": {
+        "title": "Bald fällige Inspektionen",
+        "description": "Liste der Inspektionen, die in den nächsten Tagen ablaufen."
+      },
+      "inspectionsOverdue": {
+        "title": "Überfällige Inspektionen",
+        "description": "Inspektionen mit abgelaufenem Termin."
+      },
+      "inspectionsByPeriod": {
+        "title": "Inspektionen nach Zeitraum",
+        "description": "Inspektionsbericht innerhalb eines Datumsbereichs."
+      }
+    }
+  },
+  "users": {
+    "title": "Benutzer",
+    "description": "Benutzer, Berechtigungen und Status verwalten.",
+    "search": "Suchen",
+    "empty": "Keine Benutzer gefunden.",
+    "actions": { "newUser": "Neuer Benutzer" },
+    "table": { "name": "Name", "email": "E-Mail", "role": "Rolle", "status": "Status", "actions": "Aktionen" }
+  },
+  "userProfile": {
+    "title": "Mein Profil",
+    "loading": "Profil wird geladen...",
+    "fields": { "fullName": "Vollständiger Name", "cpf": "CPF", "email": "E-Mail", "crea": "CREA" },
+    "actions": { "editProfile": "Profil bearbeiten", "changePassword": "Passwort ändern", "changeAvatar": "Avatar ändern" },
+    "password": {
+      "title": "Passwort ändern",
+      "fields": { "current": "Aktuelles Passwort", "new": "Neues Passwort", "confirm": "Neues Passwort bestätigen" },
+      "actions": { "toggleVisibility": "Passwort anzeigen/ausblenden" },
+      "errors": { "mismatch": "Passwörter stimmen nicht überein", "changeFailed": "Passwortänderung fehlgeschlagen" }
+    }
+  },
+  "customers": {
+    "title": "Unternehmen verwalten",
+    "description": "Unternehmen suchen, filtern und verwalten.",
+    "actions": { "addCompany": "Unternehmen hinzufügen" },
+    "filters": {
+      "searchLabel": "Suchen",
+      "searchPlaceholder": "Nach Firmenname oder CNPJ suchen",
+      "city": "Stadt",
+      "allCities": "Alle Städte",
+      "month": "Monat",
+      "allMonths": "Alle Monate",
+      "clear": "Filter zurücksetzen"
+    },
+    "table": {
+      "legalName": "Firmenname",
+      "cnpj": "CNPJ",
+      "city": "Stadt",
+      "isCustomer": "Kunde?",
+      "abvtex": "ABVTEX",
+      "activeInspections": "Aktive Inspektionen",
+      "nextExpiration": "Nächste Fälligkeit"
+    },
+    "loading": "Kunden werden geladen...",
+    "empty": "Keine Kunden gefunden",
+    "rowMenu": { "actionsLabel": "Aktionen", "view": "Kunde anzeigen", "inspections": "Inspektionen" },
+    "addModal": {
+      "title": "Neuer Kunde",
+      "steps": { "info": "Informationen", "address": "Adresse", "done": "Abgeschlossen" },
+      "stepHints": {
+        "step1": "1. Grundlegende Identifikations- und Kontaktinformationen",
+        "step2": "2. Standort des Kunden",
+        "done": "Registrierung abgeschlossen"
+      },
+      "fields": {
+        "fantasyName": "Handelsname",
+        "legalName": "Firmenname",
+        "cnpj": "CNPJ",
+        "abvtexSeal": "ABVTEX-Siegel",
+        "phone": "Telefon",
+        "mobile": "Mobil",
+        "email": "E-Mail",
+        "zipCode": "PLZ",
+        "street": "Straße",
+        "number": "Nummer",
+        "complement": "Zusatz",
+        "neighborhood": "Stadtteil",
+        "city": "Stadt"
+      },
+      "placeholders": {
+        "fantasyName": "Handelsname eingeben...",
+        "legalName": "Firmennamen eingeben...",
+        "cnpj": "00.000.000/0000-00",
+        "abvtexSeal": "ABVTEX-Siegel auswählen",
+        "phone": "Telefonnummer eingeben...",
+        "mobile": "Mobilnummer eingeben...",
+        "email": "name@domain.com",
+        "zipCode": "00000-000",
+        "street": "Straße eingeben...",
+        "number": "Nummer eingeben...",
+        "complement": "Zusatz eingeben...",
+        "neighborhood": "Stadtteil eingeben...",
+        "city": "Stadt auswählen"
+      },
+      "helpers": {
+        "cnpjFormat": "Format: 00.000.000/0000-00",
+        "zipCodeFormat": "Format: 00000-000",
+        "emailExample": "Beispiel: name@domain.com"
+      },
+      "actions": {
+        "previous": "Zurück",
+        "next": "Weiter",
+        "finish": "Abschließen",
+        "saving": "Wird gespeichert...",
+        "close": "Schließen",
+        "openRecord": "Datensatz öffnen"
+      },
+      "success": {
+        "title": "Unternehmen erfolgreich registriert!",
+        "idLabel": "ID",
+        "question": "Möchten Sie den Datensatz jetzt öffnen oder nur schließen?"
+      },
+      "errors": {
+        "createFailed": "Das Unternehmen konnte nicht registriert werden. Prüfen Sie die Daten und versuchen Sie es erneut."
+      }
+    }
+  },
+  "login": {
+    "fields": { "username": "Benutzername", "password": "Passwort" },
+    "actions": { "signIn": "Anmelden", "signingIn": "Anmeldung..." },
+    "welcome": { "title": "Willkommen!", "subtitle": "Verwalten Sie Kunden und Inspektionen ganz einfach." },
+    "errors": { "invalidCredentials": "Ungültiger Benutzername oder Passwort" }
+  },
+  "company": {
+    "title": "Mein Unternehmen",
+    "loading": "Unternehmensdaten werden geladen...",
+    "actions": { "saveChanges": "Änderungen speichern" },
+    "fields": {
+      "fantasyName": "Handelsname",
+      "legalName": "Firmenname",
+      "cnpj": "CNPJ",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "mobile": "Mobil"
+    },
+    "address": {
+      "title": "Adresse",
+      "fields": {
+        "street": "Straße",
+        "number": "Nummer",
+        "complement": "Zusatz",
+        "neighborhood": "Stadtteil",
+        "zipCode": "PLZ",
+        "city": "Stadt"
+      },
+      "actions": { "selectCity": "Stadt auswählen" }
+    },
+    "hints": { "clickEditToChange": "Klicken Sie auf", "toChangeData": "um die Daten zu bearbeiten." }
+  },
+  "customerDetails": {
+    "loading": "Kunde wird geladen...",
+    "status": { "active": "AKTIV", "inactive": "INAKTIV" },
+    "actions": {
+      "back": "Zurück",
+      "actions": "Aktionen",
+      "deactivate": "Kunden deaktivieren",
+      "whatsapp": "WhatsApp",
+      "email": "E-Mail"
+    },
+    "summary": { "cnpj": "CNPJ", "phone": "Telefon", "mobile": "Mobil" },
+    "tabs": { "general": "Allgemein", "address": "Adresse", "inspections": "Inspektionen", "movements": "Aktivität" },
+    "errors": {
+      "updateGeneral": "Allgemeine Daten konnten nicht aktualisiert werden.",
+      "updateContacts": "Kontakte konnten nicht aktualisiert werden.",
+      "updateAddress": "Adresse konnte nicht aktualisiert werden.",
+      "deactivate": "Kunde konnte nicht deaktiviert werden."
+    },
+    "general": {
+      "title": "Allgemeine Daten",
+      "fields": {
+        "code": "Code",
+        "legalName": "Firmenname",
+        "fantasyName": "Handelsname",
+        "cnpj": "CNPJ",
+        "abvtexSeal": "ABVTEX-Siegel",
+        "customerActive": "Aktiver Kunde?"
+      }
+    },
+    "contacts": { "title": "Kontakte", "fields": { "phone": "Telefon", "mobile": "Mobil", "email": "E-Mail" } },
+    "address": {
+      "title": "Adresse",
+      "mapTitle": "Karte",
+      "fields": {
+        "zipCode": "PLZ",
+        "city": "Stadt",
+        "street": "Straße",
+        "complement": "Zusatz",
+        "number": "Nummer",
+        "neighborhood": "Stadtteil"
+      }
+    },
+    "inspections": {
+      "title": "Inspektionen",
+      "empty": "Keine Inspektionen gefunden.",
+      "table": {
+        "inspectionDate": "Inspektionsdatum",
+        "service": "Service",
+        "notes": "Notizen",
+        "expiration": "Ablauf",
+        "documents": "Dokumente"
+      },
+      "status": { "inactive": "Inaktiv", "renewed": "Erneuert" },
+      "actions": { "openDocuments": "Dokumente öffnen" }
+    },
+    "movements": {
+      "title": "Aktivität",
+      "fields": {
+        "createdAt": "Erstellt am/um",
+        "createdBy": "Erstellt von",
+        "updatedAt": "Geändert am/um",
+        "updatedBy": "Geändert von"
+      },
+      "format": { "dateTime": "{{date}} {{time}}" }
+    }
+  }
+}

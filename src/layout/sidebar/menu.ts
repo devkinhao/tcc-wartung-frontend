@@ -11,11 +11,11 @@ import {
 import { MenuItem } from "./menu.types";
 
 export const menuPrincipal: MenuItem[] = [
-  { label: "Início", to: "/dashboard", icon: HomeIcon },
-  { label: "Lista de Empresas", to: "/customers", icon: PeopleIcon },
-  { label: "Inspeções", to: "/inspections", icon: ChecklistIcon },
+  { label: "nav.home", to: "/dashboard", icon: HomeIcon },
+  { label: "nav.customersList", to: "/customers", icon: PeopleIcon },
+  { label: "nav.inspections", to: "/inspections", icon: ChecklistIcon },
   {
-    label: "Relatórios",
+    label: "nav.reports",
     to: "/reports",
     icon: DescriptionIcon,
     permissions: ["ROLE_ACCESS_REPORTS"],
@@ -24,22 +24,22 @@ export const menuPrincipal: MenuItem[] = [
 
 export const menuOutros: MenuItem[] = [
   {
-    label: "Minha Empresa",
+    label: "nav.myCompany",
     to: "/company",
     icon: ApartmentIcon,
     permissions: ["ROLE_ADMIN"],
   },
   {
-    label: "Usuários",
+    label: "nav.users",
     to: "/users",
     icon: AdminIcon,
     permissions: ["ROLE_ADMIN"],
   },
   {
-    label: "Configurações",
+    label: "nav.configurations",
     to: "/configurations",
     icon: SettingsIcon,
     permissions: ["ROLE_ADMIN"],
   },
-  { label: "Ajuda", to: "/help", icon: HelpIcon },
+  { label: "nav.help", to: "/help", icon: HelpIcon },
 ];

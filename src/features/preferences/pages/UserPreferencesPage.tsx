@@ -11,20 +11,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
-const labels: Record<string, { title: string; description: string }> = {
-  LANGUAGE: {
-    title: "Idioma",
-    description: "Idioma utilizado na interface do sistema",
-  },
-  THEME: {
-    title: "Tema",
-    description: "Tema visual do sistema",
-  },
-};
+import { useTranslation } from "react-i18next";
 
 export default function UserPreferences() {
+  const { t } = useTranslation();
   const { preferences, setPreference, isLoading } = usePreferences();
+
+  const labels: Record<string, { title: string; description: string }> = {
+    LANGUAGE: {
+      title: t("preferences.language"),
+      description: t("preferences.languageDescription"),
+    },
+    THEME: {
+      title: t("preferences.theme"),
+      description: t("preferences.themeDescription"),
+    },
+  };
 
   const { data: options, isLoading: loadingOptions } = useQuery({
     queryKey: ["preference-options"],
@@ -35,7 +37,7 @@ export default function UserPreferences() {
   if (isLoading || loadingOptions || !options) {
     return (
       <Typography variant="body2" color="text.secondary">
-        Carregando preferências...
+        {t("preferences.loading")}
       </Typography>
     );
   }
@@ -51,11 +53,11 @@ export default function UserPreferences() {
       }}
     >
       <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 0.5 }}>
-        Preferências
+        {t("preferences.title")}
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Personalize o sistema de acordo com suas preferências.
+        {t("preferences.description")}
       </Typography>
 
       <Stack spacing={2}>
@@ -93,7 +95,7 @@ export default function UserPreferences() {
 
                 <FormControl size="small" sx={{ minWidth: 220 }}>
                   <Select
-                    value={preferences[name]}
+                    value={(preferences as Record<string, string>)[name] ?? ""}
                     onChange={(e) => setPreference(name, String(e.target.value))}
                   >
                     {values.map((opt) => (

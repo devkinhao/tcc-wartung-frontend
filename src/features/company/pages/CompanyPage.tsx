@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 /* ===== TYPES ===== */
 
@@ -41,6 +42,8 @@ type Company = {
 };
 
 export default function Company() {
+  const { t } = useTranslation();
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +53,7 @@ export default function Company() {
 
   /* ===== MOCK FETCH ===== */
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       const fetchedCities: City[] = [
         { id: 1, name: "São Paulo", state: "SP" },
         { id: 2, name: "Campinas", state: "SP" },
@@ -80,7 +83,7 @@ export default function Company() {
       setLoading(false);
     }, 500);
 
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, []);
 
   const cityValue = useMemo(() => {
@@ -93,7 +96,7 @@ export default function Company() {
       <Stack direction="row" spacing={2} alignItems="center">
         <CircularProgress size={18} />
         <Typography variant="body2" color="text.secondary">
-          Carregando dados da empresa...
+          {t("company.loading")}
         </Typography>
       </Stack>
     );
@@ -113,7 +116,12 @@ export default function Company() {
     // Select always returns string
     const parsed = value === "" ? null : Number(value);
     setCompany((prev) =>
-      prev ? { ...prev, address: { ...prev.address, cityId: Number.isNaN(parsed) ? null : parsed } } : prev
+      prev
+        ? {
+            ...prev,
+            address: { ...prev.address, cityId: Number.isNaN(parsed) ? null : parsed },
+          }
+        : prev
     );
   };
 
@@ -141,39 +149,40 @@ export default function Company() {
       {/* HEADER */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Typography variant="h6" fontWeight={600} color="primary.main">
-          Minha empresa
+          {t("company.title")}
         </Typography>
 
         {!isEditing ? (
           <Button variant="contained" onClick={() => setIsEditing(true)}>
-            Editar
+            {t("common.actions.edit")}
           </Button>
         ) : (
           <Stack direction="row" spacing={1}>
             <Button variant="outlined" onClick={handleCancel}>
-              Cancelar
+              {t("common.actions.cancel")}
             </Button>
             <Button variant="contained" onClick={handleSave}>
-              Salvar alterações
+              {t("company.actions.saveChanges")}
             </Button>
           </Stack>
         )}
       </Stack>
 
-      {/* DADOS DA EMPRESA */}
+      {/* COMPANY DATA */}
       <Card
         sx={{
           p: 2,
           borderRadius: 2,
           mb: 3,
-          transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+          transition: (t) =>
+            t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
           "&:hover": { boxShadow: 4 },
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nome fantasia"
+              label={t("company.fields.fantasyName")}
               fullWidth
               size="small"
               value={company.fantasyName}
@@ -184,7 +193,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Razão social"
+              label={t("company.fields.legalName")}
               fullWidth
               size="small"
               value={company.legalName}
@@ -195,7 +204,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="CNPJ"
+              label={t("company.fields.cnpj")}
               fullWidth
               size="small"
               value={company.cnpj}
@@ -206,7 +215,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="E-mail"
+              label={t("company.fields.email")}
               fullWidth
               size="small"
               value={company.email}
@@ -217,7 +226,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Telefone"
+              label={t("company.fields.phone")}
               fullWidth
               size="small"
               value={company.phone}
@@ -228,7 +237,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Celular"
+              label={t("company.fields.mobile")}
               fullWidth
               size="small"
               value={company.mobile}
@@ -239,23 +248,24 @@ export default function Company() {
         </Grid>
       </Card>
 
-      {/* ENDEREÇO */}
+      {/* ADDRESS */}
       <Typography variant="subtitle1" fontWeight={600} color="primary.main" sx={{ mb: 1.5 }}>
-        Endereço
+        {t("company.address.title")}
       </Typography>
 
       <Card
         sx={{
           p: 2,
           borderRadius: 2,
-          transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+          transition: (t) =>
+            t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
           "&:hover": { boxShadow: 4 },
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Rua"
+              label={t("company.address.fields.street")}
               fullWidth
               size="small"
               value={company.address.street}
@@ -266,7 +276,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Número"
+              label={t("company.address.fields.number")}
               fullWidth
               size="small"
               value={company.address.number}
@@ -277,7 +287,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Complemento"
+              label={t("company.address.fields.complement")}
               fullWidth
               size="small"
               value={company.address.complement}
@@ -288,7 +298,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Bairro"
+              label={t("company.address.fields.neighborhood")}
               fullWidth
               size="small"
               value={company.address.neighborhood}
@@ -299,7 +309,7 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="CEP"
+              label={t("company.address.fields.zipCode")}
               fullWidth
               size="small"
               value={company.address.zipCode}
@@ -310,15 +320,15 @@ export default function Company() {
 
           <Grid item xs={12} md={6}>
             <FormControl fullWidth size="small" disabled={!isEditing}>
-              <InputLabel id="city-label">Cidade</InputLabel>
+              <InputLabel id="city-label">{t("company.address.fields.city")}</InputLabel>
               <Select
                 labelId="city-label"
-                label="Cidade"
+                label={t("company.address.fields.city")}
                 value={cityValue}
                 onChange={(e) => handleCityChange(String(e.target.value))}
               >
                 <MenuItem value="">
-                  <em>Selecione a cidade</em>
+                  <em>{t("company.address.actions.selectCity")}</em>
                 </MenuItem>
                 {cities.map((city) => (
                   <MenuItem key={city.id} value={city.id}>
@@ -333,7 +343,9 @@ export default function Company() {
         {!isEditing ? (
           <Box sx={{ mt: 2 }}>
             <Typography variant="caption" color="text.secondary">
-              Clique em <b>Editar</b> para alterar os dados.
+              {t("company.hints.clickEditToChange")}{" "}
+              <b>{t("common.actions.edit")}</b>{" "}
+              {t("company.hints.toChangeData")}
             </Typography>
           </Box>
         ) : null}

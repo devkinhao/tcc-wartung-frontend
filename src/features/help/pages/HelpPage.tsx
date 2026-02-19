@@ -8,8 +8,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function HelpPage() {
+  const { t } = useTranslation();
+
   return (
     <Paper
       elevation={1}
@@ -21,24 +24,25 @@ export default function HelpPage() {
       }}
     >
       <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 0.5 }}>
-        Ajuda
+        {t("help.title")}
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Encontre orientações rápidas sobre como usar o sistema.
+        {t("help.description")}
       </Typography>
 
       <Stack spacing={2}>
         <Card
           sx={{
             borderRadius: 2,
-            transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+            transition: (t) =>
+              t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
             "&:hover": { boxShadow: 4 },
           }}
         >
           <CardContent>
             <Typography variant="subtitle1" fontWeight={600} color="text.primary" gutterBottom>
-              Perguntas frequentes
+              {t("help.faq.title")}
             </Typography>
 
             <Divider sx={{ mb: 2 }} />
@@ -46,28 +50,28 @@ export default function HelpPage() {
             <Stack spacing={1.25}>
               <Box>
                 <Typography fontWeight={600} variant="body2" color="text.primary">
-                  Como cadastrar um cliente?
+                  {t("help.faq.q1.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Acesse <b>Clientes</b> e clique em <b>Novo</b>. Preencha os dados e confirme.
+                  {t("help.faq.q1.answer")}
                 </Typography>
               </Box>
 
               <Box>
                 <Typography fontWeight={600} variant="body2" color="text.primary">
-                  Como alterar minhas preferências?
+                  {t("help.faq.q2.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Vá em <b>Preferências</b> e selecione o idioma/tema desejados.
+                  {t("help.faq.q2.answer")}
                 </Typography>
               </Box>
 
               <Box>
                 <Typography fontWeight={600} variant="body2" color="text.primary">
-                  Como gerar relatórios?
+                  {t("help.faq.q3.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Em <b>Relatórios</b>, escolha um tipo e clique em <b>Gerar relatório</b>.
+                  {t("help.faq.q3.answer")}
                 </Typography>
               </Box>
             </Stack>
@@ -77,23 +81,24 @@ export default function HelpPage() {
         <Card
           sx={{
             borderRadius: 2,
-            transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+            transition: (t) =>
+              t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
             "&:hover": { boxShadow: 4 },
           }}
         >
           <CardContent>
             <Typography variant="subtitle1" fontWeight={600} color="text.primary" gutterBottom>
-              Suporte
+              {t("help.support.title")}
             </Typography>
 
             <Divider sx={{ mb: 2 }} />
 
             <Typography variant="body2" color="text.secondary">
-              Se precisar de ajuda, entre em contato com o suporte.
+              {t("help.support.description")}
             </Typography>
 
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              E-mail:{" "}
+              {t("help.support.emailLabel")}{" "}
               <Link href="mailto:suporte@empresa.com" underline="hover">
                 suporte@empresa.com
               </Link>
