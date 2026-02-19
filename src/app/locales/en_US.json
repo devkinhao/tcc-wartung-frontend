@@ -155,6 +155,8 @@
       "searchPlaceholder": "Search by legal name or CNPJ",
       "city": "City",
       "allCities": "All cities",
+      "isCustomer": "Customer",
+      "all": "All",
       "month": "Month",
       "allMonths": "All months",
       "clear": "Clear filters"

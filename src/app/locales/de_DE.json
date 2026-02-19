@@ -155,6 +155,8 @@
       "searchPlaceholder": "Nach Firmenname oder CNPJ suchen",
       "city": "Stadt",
       "allCities": "Alle Städte",
+      "isCustomer": "Kunde",
+      "all": "Alle",
       "month": "Monat",
       "allMonths": "Alle Monate",
       "clear": "Filter zurücksetzen"

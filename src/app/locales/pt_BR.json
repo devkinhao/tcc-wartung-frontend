@@ -152,6 +152,8 @@
       "searchPlaceholder": "Buscar por razão social ou CNPJ",
       "city": "Cidade",
       "allCities": "Todas as cidades",
+      "isCustomer": "Cliente",
+      "all": "Todos",
       "month": "Mês",
       "allMonths": "Todos os meses",
       "clear": "Limpar filtros"

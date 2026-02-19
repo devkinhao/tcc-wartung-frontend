@@ -46,10 +46,6 @@ export function CustomersFilters({
 }: Props) {
   const { t } = useTranslation();
 
-  // Keep props to avoid breaking page.
-  void isCustomer;
-  void setIsCustomer;
-
   return (
     <Card variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }} flexWrap="wrap">
@@ -76,6 +72,20 @@ export function CustomersFilters({
                 {c.name}
               </MenuItem>
             ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size="small" sx={{ minWidth: 190 }}>
+          <InputLabel id="customers-isCustomer">{t("customers.filters.isCustomer")}</InputLabel>
+          <Select
+            labelId="customers-isCustomer"
+            label={t("customers.filters.isCustomer")}
+            value={isCustomer}
+            onChange={(e) => setIsCustomer(String(e.target.value))}
+          >
+            <MenuItem value="">{t("customers.filters.all")}</MenuItem>
+            <MenuItem value="true">{t("common.yes")}</MenuItem>
+            <MenuItem value="false">{t("common.no")}</MenuItem>
           </Select>
         </FormControl>
 
