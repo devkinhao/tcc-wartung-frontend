@@ -7,7 +7,24 @@ import { breadcrumbMap } from "./breadcrumbMap";
 
 export default function Header({ drawerWidth }: { drawerWidth: number }) {
   const location = useLocation();
-  const crumbs = breadcrumbMap[location.pathname] ?? [{ label: "Início", path: "/dashboard" }];
+  const pathname = location.pathname;
+
+  // Static crumbs (exact match)
+  let crumbs = breadcrumbMap[pathname];
+
+  // Dynamic crumbs (pattern match)
+  if (!crumbs) {
+    // Customers details: /customers/:id
+    if (/^\/customers\/\d+$/.test(pathname)) {
+      crumbs = [
+        { label: "Início", path: "/dashboard" },
+        { label: "Lista de Empresas", path: "/customers" },
+        { label: "Detalhes do cliente" },
+      ];
+    }
+  }
+
+  if (!crumbs) crumbs = [{ label: "Início", path: "/dashboard" }];
 
   return (
     <AppBar

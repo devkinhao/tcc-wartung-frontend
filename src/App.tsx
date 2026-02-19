@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./features/auth/pages/LoginPage";
 import Dashboard from "./features/dashboard/pages/DashboardPage";
-import Customers from "./features/customers/CustomersPage";
+import Customers from "./features/customers/pages/CustomersListPage";
 import Layout from "./layout/Layout";
 import UserProfile from "./features/users/pages/UserProfilePage";
 import UserPreferences from "./features/preferences/pages/UserPreferencesPage";
@@ -10,6 +10,7 @@ import Help from "./features/help/pages/HelpPage";
 import Configurations from "./features/configurations/pages/ConfigurationsPage";
 import Reports from "./features/reports/pages/ReportsPage";
 import Users from "./features/users/pages/UsersPage";
+import CustomerDetailsPage from "./features/customers/pages/CustomerDetailsPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { PreferencesProvider } from "./features/preferences/PreferencesContext";
 import { ThemeSync } from "./app/ThemeSync";
@@ -36,6 +37,7 @@ export default function App() {
                 <Route path="configurations" element={<Configurations />} />
                 <Route path="help" element={<Help />} />
                 <Route path="users/me" element={<UserProfile />} />
+                <Route path="/customers/:id" element={<CustomerDetailsPage />} />
                 <Route
                   path="users/me/preferences"
                   element={<UserPreferences />}

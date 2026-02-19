@@ -114,7 +114,8 @@ export default function LoginPage() {
           justifyContent: "center",
           color: "#fff",
           p: 6,
-          background: "linear-gradient(180deg, var(--principal-blue), var(--principal-green))",
+          background: (theme) =>
+            `linear-gradient(180deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
         }}
       >
         <Box sx={{ textAlign: "center", maxWidth: 420 }}>

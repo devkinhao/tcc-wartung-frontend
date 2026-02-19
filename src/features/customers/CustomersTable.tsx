@@ -12,8 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Customer } from "./types";
-import { abvtexLabel } from "./constants";
+import { Customer } from "./types/customersList";
 import { CustomersRowMenu } from "./CustomersRowMenu";
 import { AbvtexChip } from "./components/AbvtexChip";
 
@@ -141,6 +140,7 @@ export function CustomersTable({
                   sx={{ width: 48 }}
                 >
                   <CustomersRowMenu
+                    customerId={c.id}
                     open={openMenuId === c.id}
                     onToggle={() => setOpenMenuId(openMenuId === c.id ? null : c.id)}
                     onClose={() => setOpenMenuId(null)}

@@ -1,5 +1,5 @@
 import { Chip } from "@mui/material";
-import type { AbvtexSealType } from "../types";
+import type { AbvtexSealType } from "../types/abvtexSeal";
 
 type Props = {
   seal: AbvtexSealType;

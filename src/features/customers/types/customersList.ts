@@ -1,10 +1,4 @@
-// src/pages/customers/types.ts
-export type AbvtexSealType =
-  | "NAO_POSSUI"
-  | "COBRE"
-  | "BRONZE"
-  | "PRATA"
-  | "OURO";
+import { AbvtexSealType } from "./abvtexSeal"
 
 export type Customer = {
   id: number;

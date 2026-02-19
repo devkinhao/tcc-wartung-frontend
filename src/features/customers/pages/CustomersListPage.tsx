@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-import { useCustomers } from "./hooks/useCustomers";
-import { CustomersFilters } from "./CustomersFilters";
-import { CustomersTable } from "./CustomersTable";
-import { Pagination } from "../../components/Pagination";
-import { useCities } from "./hooks/useCities";
-import { AddCompanyModal } from "./AddCompanyModal";
+import { useCustomers } from "../hooks/useCustomers";
+import { CustomersFilters } from "../CustomersFilters";
+import { CustomersTable } from "../CustomersTable";
+import { Pagination } from "../../../components/Pagination";
+import { useCities } from "../hooks/useCities";
+import { AddCompanyModal } from "../AddCompanyModal";
 
 export default function CustomersPage() {
   const state = useCustomers();

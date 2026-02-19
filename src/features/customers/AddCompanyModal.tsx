@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { City } from "@/types/City";
-import type { AbvtexSealType } from "./types";
+import type { AbvtexSealType } from "./types/abvtexSeal";
 import { api } from "@/api/client";
 import { useNavigate } from "react-router-dom";
 import {
@@ -111,7 +111,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     CEP_REGEX.test(form.zipCode.trim()) &&
     form.street.trim() !== "" &&
     form.number.trim() !== "" &&
-    form.complement.trim() !== "" &&
     form.neighborhood.trim() !== "" &&
     form.cityId !== "";
 

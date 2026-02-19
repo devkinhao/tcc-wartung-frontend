@@ -1,17 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 
 type Props = {
+  customerId: number;
   open: boolean;
   onClose: () => void;
   onToggle: () => void;
 };
 
-export function CustomersRowMenu({ open, onToggle, onClose }: Props) {
+export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -41,18 +44,29 @@ export function CustomersRowMenu({ open, onToggle, onClose }: Props) {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon><VisibilityIcon fontSize="small" /></ListItemIcon>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate(`/customers/${customerId}`);
+          }}
+        >
+          <ListItemIcon>
+            <VisibilityIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText>Ver cliente</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={handleClose}>
-          <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText>Editar</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={handleClose}>
-          <ListItemIcon><FactCheckIcon fontSize="small" /></ListItemIcon>
+          <ListItemIcon>
+            <FactCheckIcon fontSize="small" />
+          </ListItemIcon>
           <ListItemText>Inspeções</ListItemText>
         </MenuItem>
       </Menu>
