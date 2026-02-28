@@ -1,5 +1,7 @@
 {
-  "app": { "brandName": "Engenharia Maas" },
+  "app": {
+    "brandName": "Engenharia Maas"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -7,8 +9,17 @@
     "noDataAvailable": "No data available at the moment",
     "yes": "Yes",
     "no": "No",
-    "status": { "active": "Active", "inactive": "Inactive" },
-    "actions": { "edit": "Edit", "cancel": "Cancel", "save": "Save", "close": "Close", "retry": "Retry" }
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "close": "Close",
+      "retry": "Retry"
+    }
   },
   "months": {
     "january": "January",
@@ -36,6 +47,7 @@
     "customersList": "Companies list",
     "inspections": "Inspections",
     "inspectionsList": "Inspections list",
+    "inspectionDetails": "Inspection details",
     "reports": "Reports",
     "myCompany": "My company",
     "users": "Users",
@@ -45,8 +57,17 @@
     "preferences": "Preferences",
     "customerDetails": "Customer details"
   },
-  "sidebar": { "actions": { "expandMenu": "Expand menu", "collapseMenu": "Collapse menu" } },
-  "userMenu": { "myProfile": "My profile", "preferences": "Preferences", "logout": "Sign out" },
+  "sidebar": {
+    "actions": {
+      "expandMenu": "Expand menu",
+      "collapseMenu": "Collapse menu"
+    }
+  },
+  "userMenu": {
+    "myProfile": "My profile",
+    "preferences": "Preferences",
+    "logout": "Sign out"
+  },
   "notifications": {
     "ariaLabel": "Notifications",
     "title": "Notifications",
@@ -64,9 +85,15 @@
   "dashboard": {
     "title": "Dashboard",
     "cards": {
-      "topRequestedServices": { "title": "Most requested services" },
-      "customersByCity": { "title": "Customers by city" },
-      "inspections": { "title": "Inspections" }
+      "topRequestedServices": {
+        "title": "Most requested services"
+      },
+      "customersByCity": {
+        "title": "Customers by city"
+      },
+      "inspections": {
+        "title": "Inspections"
+      }
     }
   },
   "preferences": {
@@ -81,7 +108,9 @@
   "configurations": {
     "title": "System settings",
     "description": "General settings that control the system behavior.",
-    "actions": { "save": "Save settings" }
+    "actions": {
+      "save": "Save settings"
+    }
   },
   "help": {
     "title": "Help",
@@ -110,7 +139,9 @@
   "reports": {
     "title": "Reports",
     "description": "Generate system reports for analysis or export.",
-    "actions": { "generate": "Generate report" },
+    "actions": {
+      "generate": "Generate report"
+    },
     "items": {
       "inspectionsDue": {
         "title": "Inspections due soon",
@@ -180,19 +211,39 @@
   "userProfile": {
     "title": "My profile",
     "loading": "Loading profile...",
-    "fields": { "fullName": "Full name", "cpf": "CPF", "email": "Email", "crea": "CREA" },
-    "actions": { "editProfile": "Edit profile", "changePassword": "Change password", "changeAvatar": "Change avatar" },
+    "fields": {
+      "fullName": "Full name",
+      "cpf": "CPF",
+      "email": "Email",
+      "crea": "CREA"
+    },
+    "actions": {
+      "editProfile": "Edit profile",
+      "changePassword": "Change password",
+      "changeAvatar": "Change avatar"
+    },
     "password": {
       "title": "Change password",
-      "fields": { "current": "Current password", "new": "New password", "confirm": "Confirm new password" },
-      "actions": { "toggleVisibility": "Show/hide password" },
-      "errors": { "mismatch": "Passwords do not match", "changeFailed": "Failed to change password" }
+      "fields": {
+        "current": "Current password",
+        "new": "New password",
+        "confirm": "Confirm new password"
+      },
+      "actions": {
+        "toggleVisibility": "Show/hide password"
+      },
+      "errors": {
+        "mismatch": "Passwords do not match",
+        "changeFailed": "Failed to change password"
+      }
     }
   },
   "customers": {
     "title": "Manage companies",
     "description": "Search, filter and manage registered companies.",
-    "actions": { "addCompany": "Add company" },
+    "actions": {
+      "addCompany": "Add company"
+    },
     "filters": {
       "searchLabel": "Search",
       "searchPlaceholder": "Search by legal name or CNPJ",
@@ -215,7 +266,11 @@
     },
     "loading": "Loading customers...",
     "empty": "No customers found",
-    "rowMenu": { "actionsLabel": "Actions", "view": "View customer", "inspections": "Inspections" },
+    "rowMenu": {
+      "actionsLabel": "Actions",
+      "view": "View customer",
+      "inspections": "Inspections"
+    },
     "quickView": {
       "title": "Inspections (quick view)",
       "loading": "Loading inspections...",
@@ -227,11 +282,17 @@
         "notes": "Notes",
         "expiration": "Expiration"
       },
-      "actions": { "openInspection": "Open inspection" }
+      "actions": {
+        "openInspection": "Open inspection"
+      }
     },
     "addModal": {
       "title": "New customer",
-      "steps": { "info": "Information", "address": "Address", "done": "Done" },
+      "steps": {
+        "info": "Information",
+        "address": "Address",
+        "done": "Done"
+      },
       "stepHints": {
         "step1": "1. Basic identification and contact information",
         "step2": "2. Customer location",
@@ -291,15 +352,28 @@
     }
   },
   "login": {
-    "fields": { "username": "Username", "password": "Password" },
-    "actions": { "signIn": "Sign in", "signingIn": "Signing in..." },
-    "welcome": { "title": "Welcome!", "subtitle": "Manage customers and inspections easily." },
-    "errors": { "invalidCredentials": "Invalid username or password" }
+    "fields": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "actions": {
+      "signIn": "Sign in",
+      "signingIn": "Signing in..."
+    },
+    "welcome": {
+      "title": "Welcome!",
+      "subtitle": "Manage customers and inspections easily."
+    },
+    "errors": {
+      "invalidCredentials": "Invalid username or password"
+    }
   },
   "company": {
     "title": "My company",
     "loading": "Loading company data...",
-    "actions": { "saveChanges": "Save changes" },
+    "actions": {
+      "saveChanges": "Save changes"
+    },
     "fields": {
       "fantasyName": "Trade name",
       "legalName": "Legal name",
@@ -318,13 +392,21 @@
         "zipCode": "ZIP code",
         "city": "City"
       },
-      "actions": { "selectCity": "Select a city" }
+      "actions": {
+        "selectCity": "Select a city"
+      }
     },
-    "hints": { "clickEditToChange": "Click", "toChangeData": "to edit the data." }
+    "hints": {
+      "clickEditToChange": "Click",
+      "toChangeData": "to edit the data."
+    }
   },
   "customerDetails": {
     "loading": "Loading customer...",
-    "status": { "active": "ACTIVE", "inactive": "INACTIVE" },
+    "status": {
+      "active": "ACTIVE",
+      "inactive": "INACTIVE"
+    },
     "actions": {
       "back": "Back",
       "actions": "Actions",
@@ -332,8 +414,17 @@
       "whatsapp": "WhatsApp",
       "email": "Email"
     },
-    "summary": { "cnpj": "CNPJ", "phone": "Phone", "mobile": "Mobile" },
-    "tabs": { "general": "General", "address": "Address", "inspections": "Inspections", "movements": "Activity" },
+    "summary": {
+      "cnpj": "CNPJ",
+      "phone": "Phone",
+      "mobile": "Mobile"
+    },
+    "tabs": {
+      "general": "General",
+      "address": "Address",
+      "inspections": "Inspections",
+      "movements": "Activity"
+    },
     "errors": {
       "updateGeneral": "Could not update general information.",
       "updateContacts": "Could not update contacts.",
@@ -351,7 +442,14 @@
         "customerActive": "Active customer?"
       }
     },
-    "contacts": { "title": "Contacts", "fields": { "phone": "Phone", "mobile": "Mobile", "email": "Email" } },
+    "contacts": {
+      "title": "Contacts",
+      "fields": {
+        "phone": "Phone",
+        "mobile": "Mobile",
+        "email": "Email"
+      }
+    },
     "address": {
       "title": "Address",
       "mapTitle": "Map",
@@ -374,8 +472,13 @@
         "expiration": "Expiration",
         "documents": "Documents"
       },
-      "status": { "inactive": "Inactive", "renewed": "Renewed" },
-      "actions": { "openDocuments": "Open documents" }
+      "status": {
+        "inactive": "Inactive",
+        "renewed": "Renewed"
+      },
+      "actions": {
+        "openDocuments": "Open documents"
+      }
     },
     "movements": {
       "title": "Activity",
@@ -385,7 +488,77 @@
         "updatedAt": "Updated date/time",
         "updatedBy": "Updated by"
       },
-      "format": { "dateTime": "{{date}} {{time}}" }
+      "format": {
+        "dateTime": "{{date}} {{time}}"
+      }
+    }
+  },
+  "inspectionDetails": {
+    "loading": "Loading inspection...",
+    "title": "Inspection",
+    "titleWithService": "Inspection • {{service}}",
+    "actions": {
+      "back": "Back"
+    },
+    "summary": {
+      "id": "ID",
+      "customer": "Customer",
+      "customerUnknown": "—"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "renewed": "Renewed"
+    },
+    "sections": {
+      "general": "Inspection data",
+      "documents": "Documents",
+      "audit": "Audit"
+    },
+    "fields": {
+      "service": "Service",
+      "inspectionDate": "Inspection date",
+      "expirationDate": "Expiration date",
+      "notes": "Notes"
+    },
+    "documents": {
+    "loading": "Loading documents...",
+      "empty": "No documents found.",
+      "table": {
+        "description": "Description",
+        "name": "Name",
+        "size": "Size",
+        "uploadDate": "Upload date",
+        "actions": "Actions"
+      },
+      "actions": {
+      "view": "View document",
+      "download": "Download",
+      "delete": "Delete",
+      "upload": "Upload document"
+    },
+    "confirmDelete": "Are you sure you want to delete this document?",
+    "uploadDialog": {
+      "title": "Upload document",
+      "description": "Description",
+      "chooseFile": "Choose file",
+      "fileSelected": "File: {{name}}",
+      "hint": "Upload a document related to this inspection.",
+      "upload": "Upload"
+    }
+    },
+    "audit": {
+      "createdAt": "Created at",
+      "createdBy": "Created by",
+      "updatedAt": "Updated at",
+      "updatedBy": "Updated by"
+    },
+    "errors": {
+    "update": "Could not update inspection",
+    "uploadDoc": "Could not upload document.",
+    "uploadDocMissingFile": "Please choose a file to upload.",
+    "downloadDoc": "Could not download document.",
+    "deleteDoc": "Could not delete document."
     }
   }
 }

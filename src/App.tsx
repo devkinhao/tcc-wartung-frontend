@@ -11,6 +11,7 @@ import Configurations from "./features/configurations/pages/ConfigurationsPage";
 import Reports from "./features/reports/pages/ReportsPage";
 import Users from "./features/users/pages/UsersPage";
 import CustomerDetailsPage from "./features/customers/pages/CustomerDetailsPage";
+import InspectionDetailsPage from "./features/inspections/pages/InspectionDetailsPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { PreferencesProvider } from "./features/preferences/PreferencesContext";
 import { ThemeSync } from "./app/ThemeSync";
@@ -38,6 +39,7 @@ export default function App() {
                 <Route path="help" element={<Help />} />
                 <Route path="users/me" element={<UserProfile />} />
                 <Route path="/customers/:id" element={<CustomerDetailsPage />} />
+                <Route path="/inspections/:id" element={<InspectionDetailsPage />} />
                 <Route
                   path="users/me/preferences"
                   element={<UserPreferences />}

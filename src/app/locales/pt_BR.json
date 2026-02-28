@@ -1,5 +1,7 @@
 {
-  "app": { "brandName": "Engenharia Maas" },
+  "app": {
+    "brandName": "Engenharia Maas"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -7,8 +9,17 @@
     "noDataAvailable": "Nenhum dado disponível no momento",
     "yes": "Sim",
     "no": "Não",
-    "status": { "active": "Ativo", "inactive": "Inativo" },
-    "actions": { "edit": "Editar", "cancel": "Cancelar", "save": "Salvar", "close": "Fechar", "retry": "Tentar novamente" }
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "actions": {
+      "edit": "Editar",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "close": "Fechar",
+      "retry": "Tentar novamente"
+    }
   },
   "months": {
     "january": "Janeiro",
@@ -36,6 +47,7 @@
     "customersList": "Lista de Empresas",
     "inspections": "Inspeções",
     "inspectionsList": "Lista de Inspeções",
+    "inspectionDetails": "Detalhes da inspeção",
     "reports": "Relatórios",
     "myCompany": "Minha Empresa",
     "users": "Usuários",
@@ -45,8 +57,17 @@
     "preferences": "Preferências",
     "customerDetails": "Detalhes do cliente"
   },
-  "sidebar": { "actions": { "expandMenu": "Expandir menu", "collapseMenu": "Recolher menu" } },
-  "userMenu": { "myProfile": "Meu perfil", "preferences": "Preferências", "logout": "Sair" },
+  "sidebar": {
+    "actions": {
+      "expandMenu": "Expandir menu",
+      "collapseMenu": "Recolher menu"
+    }
+  },
+  "userMenu": {
+    "myProfile": "Meu perfil",
+    "preferences": "Preferências",
+    "logout": "Sair"
+  },
   "notifications": {
     "ariaLabel": "Notificações",
     "title": "Notificações",
@@ -64,9 +85,15 @@
   "dashboard": {
     "title": "Dashboard",
     "cards": {
-      "topRequestedServices": { "title": "Serviços mais solicitados" },
-      "customersByCity": { "title": "Clientes por cidade" },
-      "inspections": { "title": "Inspeções" }
+      "topRequestedServices": {
+        "title": "Serviços mais solicitados"
+      },
+      "customersByCity": {
+        "title": "Clientes por cidade"
+      },
+      "inspections": {
+        "title": "Inspeções"
+      }
     }
   },
   "preferences": {
@@ -81,7 +108,9 @@
   "configurations": {
     "title": "Configurações do sistema",
     "description": "Ajustes gerais que controlam o comportamento do sistema.",
-    "actions": { "save": "Salvar configurações" }
+    "actions": {
+      "save": "Salvar configurações"
+    }
   },
   "help": {
     "title": "Ajuda",
@@ -110,13 +139,18 @@
   "reports": {
     "title": "Relatórios",
     "description": "Gere relatórios do sistema para análise ou exportação.",
-    "actions": { "generate": "Gerar relatório" },
+    "actions": {
+      "generate": "Gerar relatório"
+    },
     "items": {
       "inspectionsDue": {
         "title": "Inspeções a vencer",
         "description": "Lista de inspeções que vencem nos próximos dias."
       },
-      "inspectionsOverdue": { "title": "Inspeções vencidas", "description": "Inspeções com prazo expirado." },
+      "inspectionsOverdue": {
+        "title": "Inspeções vencidas",
+        "description": "Inspeções com prazo expirado."
+      },
       "inspectionsByPeriod": {
         "title": "Inspeções por período",
         "description": "Relatório de inspeções em um intervalo de datas."
@@ -177,19 +211,39 @@
   "userProfile": {
     "title": "Meu perfil",
     "loading": "Carregando perfil...",
-    "fields": { "fullName": "Nome completo", "cpf": "CPF", "email": "E-mail", "crea": "CREA" },
-    "actions": { "editProfile": "Editar perfil", "changePassword": "Alterar senha", "changeAvatar": "Alterar avatar" },
+    "fields": {
+      "fullName": "Nome completo",
+      "cpf": "CPF",
+      "email": "E-mail",
+      "crea": "CREA"
+    },
+    "actions": {
+      "editProfile": "Editar perfil",
+      "changePassword": "Alterar senha",
+      "changeAvatar": "Alterar avatar"
+    },
     "password": {
       "title": "Alterar senha",
-      "fields": { "current": "Senha atual", "new": "Nova senha", "confirm": "Confirmar nova senha" },
-      "actions": { "toggleVisibility": "Mostrar/ocultar senha" },
-      "errors": { "mismatch": "As senhas não coincidem", "changeFailed": "Erro ao alterar senha" }
+      "fields": {
+        "current": "Senha atual",
+        "new": "Nova senha",
+        "confirm": "Confirmar nova senha"
+      },
+      "actions": {
+        "toggleVisibility": "Mostrar/ocultar senha"
+      },
+      "errors": {
+        "mismatch": "As senhas não coincidem",
+        "changeFailed": "Erro ao alterar senha"
+      }
     }
   },
   "customers": {
     "title": "Gerenciar Empresas",
     "description": "Busque, filtre e gerencie empresas cadastradas.",
-    "actions": { "addCompany": "Adicionar Empresa" },
+    "actions": {
+      "addCompany": "Adicionar Empresa"
+    },
     "filters": {
       "searchLabel": "Buscar",
       "searchPlaceholder": "Buscar por razão social ou CNPJ",
@@ -212,7 +266,11 @@
     },
     "loading": "Carregando clientes...",
     "empty": "Nenhum cliente encontrado",
-    "rowMenu": { "actionsLabel": "Ações", "view": "Ver cliente", "inspections": "Inspeções" },
+    "rowMenu": {
+      "actionsLabel": "Ações",
+      "view": "Ver cliente",
+      "inspections": "Inspeções"
+    },
     "quickView": {
       "title": "Inspeções (visualização rápida)",
       "loading": "Carregando inspeções...",
@@ -224,11 +282,17 @@
         "notes": "Observações",
         "expiration": "Vencimento"
       },
-      "actions": { "openInspection": "Abrir inspeção" }
+      "actions": {
+        "openInspection": "Abrir inspeção"
+      }
     },
     "addModal": {
       "title": "Novo cliente",
-      "steps": { "info": "Informações", "address": "Endereço", "done": "Concluído" },
+      "steps": {
+        "info": "Informações",
+        "address": "Endereço",
+        "done": "Concluído"
+      },
       "stepHints": {
         "step1": "1. Informações básicas de identificação e contato",
         "step2": "2. Localização do cliente",
@@ -288,15 +352,28 @@
     }
   },
   "login": {
-    "fields": { "username": "Usuário", "password": "Senha" },
-    "actions": { "signIn": "Entrar", "signingIn": "Entrando..." },
-    "welcome": { "title": "Bem-vindo!", "subtitle": "Gerencie clientes e inspeções com facilidade." },
-    "errors": { "invalidCredentials": "Usuário ou senha inválidos" }
+    "fields": {
+      "username": "Usuário",
+      "password": "Senha"
+    },
+    "actions": {
+      "signIn": "Entrar",
+      "signingIn": "Entrando..."
+    },
+    "welcome": {
+      "title": "Bem-vindo!",
+      "subtitle": "Gerencie clientes e inspeções com facilidade."
+    },
+    "errors": {
+      "invalidCredentials": "Usuário ou senha inválidos"
+    }
   },
   "company": {
     "title": "Minha empresa",
     "loading": "Carregando dados da empresa...",
-    "actions": { "saveChanges": "Salvar alterações" },
+    "actions": {
+      "saveChanges": "Salvar alterações"
+    },
     "fields": {
       "fantasyName": "Nome fantasia",
       "legalName": "Razão social",
@@ -315,13 +392,21 @@
         "zipCode": "CEP",
         "city": "Cidade"
       },
-      "actions": { "selectCity": "Selecione a cidade" }
+      "actions": {
+        "selectCity": "Selecione a cidade"
+      }
     },
-    "hints": { "clickEditToChange": "Clique em", "toChangeData": "para alterar os dados." }
+    "hints": {
+      "clickEditToChange": "Clique em",
+      "toChangeData": "para alterar os dados."
+    }
   },
   "customerDetails": {
     "loading": "Carregando cliente...",
-    "status": { "active": "ATIVO", "inactive": "INATIVO" },
+    "status": {
+      "active": "ATIVO",
+      "inactive": "INATIVO"
+    },
     "actions": {
       "back": "Voltar",
       "actions": "Ações",
@@ -329,7 +414,11 @@
       "whatsapp": "WhatsApp",
       "email": "E-mail"
     },
-    "summary": { "cnpj": "CNPJ", "phone": "Telefone", "mobile": "Celular" },
+    "summary": {
+      "cnpj": "CNPJ",
+      "phone": "Telefone",
+      "mobile": "Celular"
+    },
     "tabs": {
       "general": "Dados gerais",
       "address": "Endereço",
@@ -353,7 +442,14 @@
         "customerActive": "Cliente ativo?"
       }
     },
-    "contacts": { "title": "Contatos", "fields": { "phone": "Telefone", "mobile": "Celular", "email": "E-mail" } },
+    "contacts": {
+      "title": "Contatos",
+      "fields": {
+        "phone": "Telefone",
+        "mobile": "Celular",
+        "email": "E-mail"
+      }
+    },
     "address": {
       "title": "Endereço",
       "mapTitle": "Mapa",
@@ -376,8 +472,13 @@
         "expiration": "Vencimento",
         "documents": "Documentos"
       },
-      "status": { "inactive": "Inativa", "renewed": "Renovada" },
-      "actions": { "openDocuments": "Abrir documentos" }
+      "status": {
+        "inactive": "Inativa",
+        "renewed": "Renovada"
+      },
+      "actions": {
+        "openDocuments": "Abrir documentos"
+      }
     },
     "movements": {
       "title": "Movimentações",
@@ -387,7 +488,77 @@
         "updatedAt": "Data/Hora de alteração",
         "updatedBy": "Usuário alteração"
       },
-      "format": { "dateTime": "{{date}} {{time}}" }
+      "format": {
+        "dateTime": "{{date}} {{time}}"
+      }
+    }
+  },
+  "inspectionDetails": {
+    "loading": "Carregando inspeção...",
+    "title": "Inspeção",
+    "titleWithService": "Inspeção • {{service}}",
+    "actions": {
+      "back": "Voltar"
+    },
+    "summary": {
+      "id": "ID",
+      "customer": "Empresa",
+      "customerUnknown": "—"
+    },
+    "status": {
+      "active": "Ativa",
+      "inactive": "Inativa",
+      "renewed": "Renovada"
+    },
+    "sections": {
+      "general": "Dados da inspeção",
+      "documents": "Documentos",
+      "audit": "Auditoria"
+    },
+    "fields": {
+      "service": "Serviço",
+      "inspectionDate": "Data da inspeção",
+      "expirationDate": "Data de vencimento",
+      "notes": "Observações"
+    },
+    "documents": {
+    "loading": "Carregando documentos...",
+      "empty": "Nenhum documento encontrado.",
+      "table": {
+        "description": "Descrição",
+        "name": "Nome",
+        "size": "Tamanho",
+        "uploadDate": "Data de envio",
+        "actions": "Ações"
+      },
+      "actions": {
+      "view": "Ver documento",
+      "download": "Baixar",
+      "delete": "Excluir",
+      "upload": "Enviar documento"
+    },
+    "confirmDelete": "Tem certeza que deseja excluir este documento?",
+    "uploadDialog": {
+      "title": "Enviar documento",
+      "description": "Descrição",
+      "chooseFile": "Selecionar arquivo",
+      "fileSelected": "Arquivo: {{name}}",
+      "hint": "Envie um documento relacionado a esta inspeção.",
+      "upload": "Enviar"
+    }
+    },
+    "audit": {
+      "createdAt": "Criado em",
+      "createdBy": "Criado por",
+      "updatedAt": "Atualizado em",
+      "updatedBy": "Atualizado por"
+    },
+    "errors": {
+    "update": "Não foi possível atualizar a inspeção",
+    "uploadDoc": "Não foi possível enviar o documento.",
+    "uploadDocMissingFile": "Selecione um arquivo para enviar.",
+    "downloadDoc": "Não foi possível baixar o documento.",
+    "deleteDoc": "Não foi possível excluir o documento."
     }
   }
 }

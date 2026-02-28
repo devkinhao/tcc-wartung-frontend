@@ -24,6 +24,15 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
         { label: "nav.customerDetails" },
       ];
     }
+
+    // Inspection details: /inspections/:id
+    if (/^\/inspections\/\d+$/.test(pathname)) {
+      crumbs = [
+        { label: "nav.home", path: "/dashboard" },
+        { label: "nav.inspectionsList", path: "/inspections" },
+        { label: "nav.inspectionDetails" },
+      ];
+    }
   }
 
   if (!crumbs) crumbs = [{ label: "nav.home", path: "/dashboard" }];

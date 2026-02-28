@@ -1,5 +1,7 @@
 {
-  "app": { "brandName": "Engenharia Maas" },
+  "app": {
+    "brandName": "Engenharia Maas"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -7,8 +9,17 @@
     "noDataAvailable": "Derzeit keine Daten verfügbar",
     "yes": "Ja",
     "no": "Nein",
-    "status": { "active": "Aktiv", "inactive": "Inaktiv" },
-    "actions": { "edit": "Bearbeiten", "cancel": "Abbrechen", "save": "Speichern", "close": "Schließen", "retry": "Erneut versuchen" }
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
+    },
+    "actions": {
+      "edit": "Bearbeiten",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "close": "Schließen",
+      "retry": "Erneut versuchen"
+    }
   },
   "months": {
     "january": "Januar",
@@ -36,6 +47,7 @@
     "customersList": "Unternehmensliste",
     "inspections": "Inspektionen",
     "inspectionsList": "Inspektionsliste",
+    "inspectionDetails": "Inspektionsdetails",
     "reports": "Berichte",
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
@@ -45,8 +57,17 @@
     "preferences": "Einstellungen",
     "customerDetails": "Kundendetails"
   },
-  "sidebar": { "actions": { "expandMenu": "Menü erweitern", "collapseMenu": "Menü einklappen" } },
-  "userMenu": { "myProfile": "Mein Profil", "preferences": "Einstellungen", "logout": "Abmelden" },
+  "sidebar": {
+    "actions": {
+      "expandMenu": "Menü erweitern",
+      "collapseMenu": "Menü einklappen"
+    }
+  },
+  "userMenu": {
+    "myProfile": "Mein Profil",
+    "preferences": "Einstellungen",
+    "logout": "Abmelden"
+  },
   "notifications": {
     "ariaLabel": "Benachrichtigungen",
     "title": "Benachrichtigungen",
@@ -64,9 +85,15 @@
   "dashboard": {
     "title": "Dashboard",
     "cards": {
-      "topRequestedServices": { "title": "Am häufigsten angeforderte Dienstleistungen" },
-      "customersByCity": { "title": "Kunden nach Stadt" },
-      "inspections": { "title": "Inspektionen" }
+      "topRequestedServices": {
+        "title": "Am häufigsten angeforderte Dienstleistungen"
+      },
+      "customersByCity": {
+        "title": "Kunden nach Stadt"
+      },
+      "inspections": {
+        "title": "Inspektionen"
+      }
     }
   },
   "preferences": {
@@ -81,7 +108,9 @@
   "configurations": {
     "title": "Systemeinstellungen",
     "description": "Allgemeine Einstellungen, die das Systemverhalten steuern.",
-    "actions": { "save": "Einstellungen speichern" }
+    "actions": {
+      "save": "Einstellungen speichern"
+    }
   },
   "help": {
     "title": "Hilfe",
@@ -110,7 +139,9 @@
   "reports": {
     "title": "Berichte",
     "description": "Erstellen Sie Systemberichte zur Analyse oder zum Export.",
-    "actions": { "generate": "Bericht erstellen" },
+    "actions": {
+      "generate": "Bericht erstellen"
+    },
     "items": {
       "inspectionsDue": {
         "title": "Bald fällige Inspektionen",
@@ -180,19 +211,39 @@
   "userProfile": {
     "title": "Mein Profil",
     "loading": "Profil wird geladen...",
-    "fields": { "fullName": "Vollständiger Name", "cpf": "CPF", "email": "E-Mail", "crea": "CREA" },
-    "actions": { "editProfile": "Profil bearbeiten", "changePassword": "Passwort ändern", "changeAvatar": "Avatar ändern" },
+    "fields": {
+      "fullName": "Vollständiger Name",
+      "cpf": "CPF",
+      "email": "E-Mail",
+      "crea": "CREA"
+    },
+    "actions": {
+      "editProfile": "Profil bearbeiten",
+      "changePassword": "Passwort ändern",
+      "changeAvatar": "Avatar ändern"
+    },
     "password": {
       "title": "Passwort ändern",
-      "fields": { "current": "Aktuelles Passwort", "new": "Neues Passwort", "confirm": "Neues Passwort bestätigen" },
-      "actions": { "toggleVisibility": "Passwort anzeigen/ausblenden" },
-      "errors": { "mismatch": "Passwörter stimmen nicht überein", "changeFailed": "Passwortänderung fehlgeschlagen" }
+      "fields": {
+        "current": "Aktuelles Passwort",
+        "new": "Neues Passwort",
+        "confirm": "Neues Passwort bestätigen"
+      },
+      "actions": {
+        "toggleVisibility": "Passwort anzeigen/ausblenden"
+      },
+      "errors": {
+        "mismatch": "Passwörter stimmen nicht überein",
+        "changeFailed": "Passwortänderung fehlgeschlagen"
+      }
     }
   },
   "customers": {
     "title": "Unternehmen verwalten",
     "description": "Unternehmen suchen, filtern und verwalten.",
-    "actions": { "addCompany": "Unternehmen hinzufügen" },
+    "actions": {
+      "addCompany": "Unternehmen hinzufügen"
+    },
     "filters": {
       "searchLabel": "Suchen",
       "searchPlaceholder": "Nach Firmenname oder CNPJ suchen",
@@ -215,7 +266,11 @@
     },
     "loading": "Kunden werden geladen...",
     "empty": "Keine Kunden gefunden",
-    "rowMenu": { "actionsLabel": "Aktionen", "view": "Kunde anzeigen", "inspections": "Inspektionen" },
+    "rowMenu": {
+      "actionsLabel": "Aktionen",
+      "view": "Kunde anzeigen",
+      "inspections": "Inspektionen"
+    },
     "quickView": {
       "title": "Inspektionen (Schnellansicht)",
       "loading": "Inspektionen werden geladen...",
@@ -227,11 +282,17 @@
         "notes": "Notizen",
         "expiration": "Ablauf"
       },
-      "actions": { "openInspection": "Inspektion öffnen" }
+      "actions": {
+        "openInspection": "Inspektion öffnen"
+      }
     },
     "addModal": {
       "title": "Neuer Kunde",
-      "steps": { "info": "Informationen", "address": "Adresse", "done": "Abgeschlossen" },
+      "steps": {
+        "info": "Informationen",
+        "address": "Adresse",
+        "done": "Abgeschlossen"
+      },
       "stepHints": {
         "step1": "1. Grundlegende Identifikations- und Kontaktinformationen",
         "step2": "2. Standort des Kunden",
@@ -291,15 +352,28 @@
     }
   },
   "login": {
-    "fields": { "username": "Benutzername", "password": "Passwort" },
-    "actions": { "signIn": "Anmelden", "signingIn": "Anmeldung..." },
-    "welcome": { "title": "Willkommen!", "subtitle": "Verwalten Sie Kunden und Inspektionen ganz einfach." },
-    "errors": { "invalidCredentials": "Ungültiger Benutzername oder Passwort" }
+    "fields": {
+      "username": "Benutzername",
+      "password": "Passwort"
+    },
+    "actions": {
+      "signIn": "Anmelden",
+      "signingIn": "Anmeldung..."
+    },
+    "welcome": {
+      "title": "Willkommen!",
+      "subtitle": "Verwalten Sie Kunden und Inspektionen ganz einfach."
+    },
+    "errors": {
+      "invalidCredentials": "Ungültiger Benutzername oder Passwort"
+    }
   },
   "company": {
     "title": "Mein Unternehmen",
     "loading": "Unternehmensdaten werden geladen...",
-    "actions": { "saveChanges": "Änderungen speichern" },
+    "actions": {
+      "saveChanges": "Änderungen speichern"
+    },
     "fields": {
       "fantasyName": "Handelsname",
       "legalName": "Firmenname",
@@ -318,13 +392,21 @@
         "zipCode": "PLZ",
         "city": "Stadt"
       },
-      "actions": { "selectCity": "Stadt auswählen" }
+      "actions": {
+        "selectCity": "Stadt auswählen"
+      }
     },
-    "hints": { "clickEditToChange": "Klicken Sie auf", "toChangeData": "um die Daten zu bearbeiten." }
+    "hints": {
+      "clickEditToChange": "Klicken Sie auf",
+      "toChangeData": "um die Daten zu bearbeiten."
+    }
   },
   "customerDetails": {
     "loading": "Kunde wird geladen...",
-    "status": { "active": "AKTIV", "inactive": "INAKTIV" },
+    "status": {
+      "active": "AKTIV",
+      "inactive": "INAKTIV"
+    },
     "actions": {
       "back": "Zurück",
       "actions": "Aktionen",
@@ -332,8 +414,17 @@
       "whatsapp": "WhatsApp",
       "email": "E-Mail"
     },
-    "summary": { "cnpj": "CNPJ", "phone": "Telefon", "mobile": "Mobil" },
-    "tabs": { "general": "Allgemein", "address": "Adresse", "inspections": "Inspektionen", "movements": "Aktivität" },
+    "summary": {
+      "cnpj": "CNPJ",
+      "phone": "Telefon",
+      "mobile": "Mobil"
+    },
+    "tabs": {
+      "general": "Allgemein",
+      "address": "Adresse",
+      "inspections": "Inspektionen",
+      "movements": "Aktivität"
+    },
     "errors": {
       "updateGeneral": "Allgemeine Daten konnten nicht aktualisiert werden.",
       "updateContacts": "Kontakte konnten nicht aktualisiert werden.",
@@ -351,7 +442,14 @@
         "customerActive": "Aktiver Kunde?"
       }
     },
-    "contacts": { "title": "Kontakte", "fields": { "phone": "Telefon", "mobile": "Mobil", "email": "E-Mail" } },
+    "contacts": {
+      "title": "Kontakte",
+      "fields": {
+        "phone": "Telefon",
+        "mobile": "Mobil",
+        "email": "E-Mail"
+      }
+    },
     "address": {
       "title": "Adresse",
       "mapTitle": "Karte",
@@ -374,8 +472,13 @@
         "expiration": "Ablauf",
         "documents": "Dokumente"
       },
-      "status": { "inactive": "Inaktiv", "renewed": "Erneuert" },
-      "actions": { "openDocuments": "Dokumente öffnen" }
+      "status": {
+        "inactive": "Inaktiv",
+        "renewed": "Erneuert"
+      },
+      "actions": {
+        "openDocuments": "Dokumente öffnen"
+      }
     },
     "movements": {
       "title": "Aktivität",
@@ -385,7 +488,77 @@
         "updatedAt": "Geändert am/um",
         "updatedBy": "Geändert von"
       },
-      "format": { "dateTime": "{{date}} {{time}}" }
+      "format": {
+        "dateTime": "{{date}} {{time}}"
+      }
+    }
+  },
+  "inspectionDetails": {
+    "loading": "Inspektion wird geladen...",
+    "title": "Inspektion",
+    "titleWithService": "Inspektion • {{service}}",
+    "actions": {
+      "back": "Zurück"
+    },
+    "summary": {
+      "id": "ID",
+      "customer": "Kunde",
+      "customerUnknown": "—"
+    },
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "renewed": "Erneuert"
+    },
+    "sections": {
+      "general": "Inspektionsdaten",
+      "documents": "Dokumente",
+      "audit": "Audit"
+    },
+    "fields": {
+      "service": "Dienst",
+      "inspectionDate": "Inspektionsdatum",
+      "expirationDate": "Ablaufdatum",
+      "notes": "Notizen"
+    },
+    "documents": {
+    "loading": "Dokumente werden geladen...",
+      "empty": "Keine Dokumente gefunden.",
+      "table": {
+        "description": "Beschreibung",
+        "name": "Name",
+        "size": "Größe",
+        "uploadDate": "Upload-Datum",
+        "actions": "Aktionen"
+      },
+      "actions": {
+      "view": "Dokument ansehen",
+      "download": "Herunterladen",
+      "delete": "Löschen",
+      "upload": "Dokument hochladen"
+    },
+    "confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
+    "uploadDialog": {
+      "title": "Dokument hochladen",
+      "description": "Beschreibung",
+      "chooseFile": "Datei auswählen",
+      "fileSelected": "Datei: {{name}}",
+      "hint": "Laden Sie ein Dokument hoch, das zu dieser Inspektion gehört.",
+      "upload": "Hochladen"
+    }
+    },
+    "audit": {
+      "createdAt": "Erstellt am",
+      "createdBy": "Erstellt von",
+      "updatedAt": "Aktualisiert am",
+      "updatedBy": "Aktualisiert von"
+    },
+    "errors": {
+    "update": "Inspektion konnte nicht aktualisiert werden",
+    "uploadDoc": "Dokument konnte nicht hochgeladen werden.",
+    "uploadDocMissingFile": "Bitte wählen Sie eine Datei zum Hochladen aus.",
+    "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
+    "deleteDoc": "Dokument konnte nicht gelöscht werden."
     }
   }
 }
