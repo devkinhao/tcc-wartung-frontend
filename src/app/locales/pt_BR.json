@@ -8,7 +8,7 @@
     "yes": "Sim",
     "no": "Não",
     "status": { "active": "Ativo", "inactive": "Inativo" },
-    "actions": { "edit": "Editar", "cancel": "Cancelar", "save": "Salvar" }
+    "actions": { "edit": "Editar", "cancel": "Cancelar", "save": "Salvar", "close": "Fechar", "retry": "Tentar novamente" }
   },
   "months": {
     "january": "Janeiro",
@@ -213,6 +213,19 @@
     "loading": "Carregando clientes...",
     "empty": "Nenhum cliente encontrado",
     "rowMenu": { "actionsLabel": "Ações", "view": "Ver cliente", "inspections": "Inspeções" },
+    "quickView": {
+      "title": "Inspeções (visualização rápida)",
+      "loading": "Carregando inspeções...",
+      "empty": "Nenhuma inspeção encontrada para este cliente",
+      "error": "Não foi possível carregar as inspeções",
+      "table": {
+        "inspectionDate": "Data da inspeção",
+        "service": "Serviço",
+        "notes": "Observações",
+        "expiration": "Vencimento"
+      },
+      "actions": { "openInspection": "Abrir inspeção" }
+    },
     "addModal": {
       "title": "Novo cliente",
       "steps": { "info": "Informações", "address": "Endereço", "done": "Concluído" },

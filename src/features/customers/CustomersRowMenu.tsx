@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { InspectionsQuickViewDialog } from "./components/InspectionsQuickViewDialog";
 
 type Props = {
   customerId: number;
@@ -18,6 +19,7 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
 
   useEffect(() => {
     if (!open) setAnchorEl(null);
@@ -58,20 +60,20 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
           <ListItemText>{t("customers.rowMenu.view")}</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{t("common.actions.edit")}</ListItemText>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            setQuickViewOpen(true);
+          }}
+        >
           <ListItemIcon>
             <FactCheckIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t("customers.rowMenu.inspections")}</ListItemText>
         </MenuItem>
       </Menu>
+
+      <InspectionsQuickViewDialog open={quickViewOpen} customerId={customerId} onClose={() => setQuickViewOpen(false)} />
     </>
   );
 }
