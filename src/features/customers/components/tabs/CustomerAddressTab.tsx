@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { CepTextField } from "@/components/CepTextField";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
 import type { CustomerDetailResponseDTO, CityResponseDTO } from "../../types/customerDetail";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { CustomerUpdateAddressRequestDTO } from "../../api/customers.detail.api";
@@ -23,6 +25,7 @@ type Props = {
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
+  onCepFound: (data: ViaCepResponseDTO) => void;
   updateAddress: <K extends keyof CustomerDetailResponseDTO["address"]>(
     field: K,
     value: CustomerDetailResponseDTO["address"][K]
@@ -37,6 +40,7 @@ export function CustomerAddressTab({
   onEdit,
   onCancel,
   onSave,
+  onCepFound,
   updateAddress,
 }: Props) {
   const { t } = useTranslation();
@@ -67,13 +71,12 @@ export function CustomerAddressTab({
 
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
-                <TextField
-                  label={t("customerDetails.address.fields.zipCode")}
-                  size="small"
-                  fullWidth
-                  disabled={!editing}
+                <CepTextField
                   value={view.address.zipCode ?? ""}
-                  onChange={(e) => updateAddress("zipCode", e.target.value)}
+                  onChange={(val) => updateAddress("zipCode", val)}
+                  onAddressFound={onCepFound}
+                  label={t("customerDetails.address.fields.zipCode")}
+                  disabled={!editing}
                 />
               </Grid>
 

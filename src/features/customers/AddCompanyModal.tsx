@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { City } from "@/types/City";
 import type { AbvtexSealType } from "./types/abvtexSeal";
 import { api } from "@/api/client";
@@ -24,6 +24,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { CepTextField } from "@/components/CepTextField";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
 
 type AddCompanyModalProps = {
   open: boolean;
@@ -158,6 +160,17 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     closeAndReset();
   };
 
+  const handleCepFound = useCallback((cepData: ViaCepResponseDTO) => {
+    setForm((prev) => ({
+      ...prev,
+      zipCode: cepData.zipCode,
+      street: cepData.street || prev.street,
+      complement: cepData.complement || prev.complement,
+      neighborhood: cepData.neighborhood || prev.neighborhood,
+      cityId: cepData.cityId ? Number(cepData.cityId) : prev.cityId,
+    }));
+  }, []);
+
   return (
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
       <DialogTitle>{t("customers.addModal.title")}</DialogTitle>
@@ -289,13 +302,11 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         ) : (
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
-              <TextField
-                label={t("customers.addModal.fields.zipCode")}
-                placeholder={t("customers.addModal.placeholders.zipCode")}
+              <CepTextField
                 value={form.zipCode}
-                onChange={(e) => setForm((p) => ({ ...p, zipCode: e.target.value }))}
-                fullWidth
-                size="small"
+                onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
+                onAddressFound={handleCepFound}
+                label={t("customers.addModal.fields.zipCode")}
                 helperText={t("customers.addModal.helpers.zipCodeFormat")}
               />
             </Grid>

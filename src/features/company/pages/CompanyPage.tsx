@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -20,6 +20,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { useCities } from "@/features/customers/hooks/useCities";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { CepTextField } from "@/components/CepTextField";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
 import {
   getCompany,
   updateCompany,
@@ -151,6 +153,24 @@ export default function CompanyPage() {
     if (!draft) return;
     save(toRequestDTO(draft));
   }
+
+  // Preenche campos de endereço automaticamente quando o CEP é encontrado
+  const handleCepFound = useCallback((cepData: ViaCepResponseDTO) => {
+    setDraft((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        address: {
+          ...prev.address,
+          zipCode: cepData.zipCode,
+          street: cepData.street || prev.address.street,
+          complement: cepData.complement || prev.address.complement,
+          neighborhood: cepData.neighborhood || prev.address.neighborhood,
+          cityId: cepData.cityId ? Number(cepData.cityId) : prev.address.cityId,
+        },
+      };
+    });
+  }, []);
 
   // ---- Render states ----
 
@@ -313,11 +333,11 @@ export default function CompanyPage() {
           </Grid>
 
           <Grid item xs={12} md={3}>
-            <TextField
-              label={t("company.address.fields.zipCode")}
-              fullWidth size="small"
+            <CepTextField
               value={draft.address.zipCode}
-              onChange={(e) => updateAddress("zipCode", e.target.value)}
+              onChange={(val) => updateAddress("zipCode", val)}
+              onAddressFound={handleCepFound}
+              label={t("company.address.fields.zipCode")}
               disabled={!isEditing}
             />
           </Grid>

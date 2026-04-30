@@ -44,6 +44,7 @@ export default function CustomerDetailsPage() {
     updateField,
     updateAddress,
     resetDraft,
+    handleCepFound,
     mutations,
   } = useCustomerDetail(Number(id));
 
@@ -197,6 +198,7 @@ export default function CustomerDetailsPage() {
           saving={mutations.address.isPending}
           cities={cities}
           updateAddress={updateAddress}
+          onCepFound={handleCepFound}
           onEdit={() => setEditingAddress(true)}
           onCancel={() => { resetDraft(); setEditingAddress(false); }}
           onSave={() =>

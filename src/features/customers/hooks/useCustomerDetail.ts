@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
 import type { CustomerDetailResponseDTO } from "../types/customerDetail";
 import type { AddressResponseDTO } from "../types/customerDetail";
 import {
@@ -95,6 +96,27 @@ export function useCustomerDetail(customerId: number) {
     if (data) setDraft(data);
   }, [data]);
 
+  // Preenche campos de endereço ao encontrar um CEP via backend
+  const handleCepFound = useCallback((cepData: ViaCepResponseDTO) => {
+    setDraft((prev) => {
+      if (!prev) return prev;
+      const city = cepData.cityId
+        ? { id: Number(cepData.cityId), name: prev.address?.city?.name ?? "" }
+        : prev.address?.city;
+      return {
+        ...prev,
+        address: {
+          ...prev.address,
+          zipCode: cepData.zipCode,
+          street: cepData.street || prev.address?.street,
+          complement: cepData.complement || prev.address?.complement,
+          neighborhood: cepData.neighborhood || prev.address?.neighborhood,
+          city: city ?? prev.address?.city,
+        },
+      };
+    });
+  }, []);
+
   return {
     data,
     draft,
@@ -106,6 +128,7 @@ export function useCustomerDetail(customerId: number) {
     updateField,
     updateAddress,
     resetDraft,
+    handleCepFound,
     mutations: {
       general: generalMutation,
       contacts: contactsMutation,
