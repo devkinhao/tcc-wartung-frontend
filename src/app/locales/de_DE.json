@@ -328,11 +328,6 @@
         "neighborhood": "Stadtteil eingeben...",
         "city": "Stadt auswählen"
       },
-      "helpers": {
-        "cnpjFormat": "Format: 00.000.000/0000-00",
-        "zipCodeFormat": "Format: 00000-000",
-        "emailExample": "Beispiel: name@domain.com"
-      },
       "actions": {
         "previous": "Zurück",
         "next": "Weiter",

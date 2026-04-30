@@ -229,8 +229,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.cnpj}
                 onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
                 fullWidth
-                size="small"
-                helperText={t("customers.addModal.helpers.cnpjFormat")}
+                size="small"               
               />
             </Grid>
 
@@ -295,8 +294,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.email}
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 fullWidth
-                size="small"
-                helperText={t("customers.addModal.helpers.emailExample")}
+                size="small"                
               />
             </Grid>
           </Grid>
@@ -307,8 +305,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.zipCode}
                 onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
                 onAddressFound={handleCepFound}
-                label={t("customers.addModal.fields.zipCode")}
-                helperText={t("customers.addModal.helpers.zipCodeFormat")}
+                label={t("customers.addModal.fields.zipCode")}              
               />
             </Grid>
 
