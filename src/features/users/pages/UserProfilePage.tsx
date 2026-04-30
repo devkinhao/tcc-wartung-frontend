@@ -29,6 +29,7 @@ import { canAccess } from "@/features/auth/permissions";
 import { User } from "@/types/User";
 import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
 import { useTranslation } from "react-i18next";
+import { qk } from "@/api/keys";
 
 export default function UserProfile() {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export default function UserProfile() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["me"],
+    queryKey: qk.me(),
     queryFn: getMe,
   });
 
@@ -75,7 +76,7 @@ export default function UserProfile() {
   const updateMutation = useMutation({
     mutationFn: updateMe,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: qk.me() });
       setIsEditing(false);
     },
   });
@@ -84,7 +85,7 @@ export default function UserProfile() {
     mutationFn: uploadAvatar,
 
     async onMutate(file) {
-      await queryClient.cancelQueries({ queryKey: ["me"] });
+      await queryClient.cancelQueries({ queryKey: qk.me() });
       const previousUser = queryClient.getQueryData<User>(["me"]);
 
       if (previousUser) {
@@ -100,7 +101,7 @@ export default function UserProfile() {
     },
 
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: qk.me() });
     },
   });
 

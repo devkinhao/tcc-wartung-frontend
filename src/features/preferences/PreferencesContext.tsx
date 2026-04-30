@@ -2,14 +2,18 @@ import {
   createContext,
   useContext,
   useMemo,
+  useCallback,
   ReactNode,
+  useEffect,
 } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/useAuth";
 import i18n from "@/app/i18n";
-import { useEffect } from "react";
+import { qk } from "@/api/keys";
 
 import { getMyPreferences, updatePreference } from "./api/preferences.api";
+
+type Preference = { name: string; value: string };
 
 type PreferencesContextType = {
   preferences: Record<string, string>;
@@ -24,50 +28,46 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["preferences"],
+    queryKey: qk.preferences(),
     queryFn: getMyPreferences,
     enabled: isAuthenticated,
     staleTime: 0,
     refetchOnMount: "always",
   });
 
-  const mutation = useMutation({
-    mutationFn: ({ name, value }: any) =>
-      updatePreference(name, value),
+  const { mutate } = useMutation({
+    mutationFn: ({ name, value }: Preference) => updatePreference(name, value),
 
-    // ⭐ optimistic update (UX absurda de boa)
-    onMutate: async ({ name, value }) => {
-      await queryClient.cancelQueries({ queryKey: ["preferences"] });
+    onMutate: async ({ name, value }: Preference) => {
+      await queryClient.cancelQueries({ queryKey: qk.preferences() });
 
-      const previous = queryClient.getQueryData(["preferences"]);
+      const previous = queryClient.getQueryData(qk.preferences());
 
-      queryClient.setQueryData(["preferences"], (old: any) =>
-        old.map((p: any) =>
-          p.name === name ? { ...p, value } : p
-        )
+      queryClient.setQueryData<Preference[]>(qk.preferences(), (old = []) =>
+        old.map((p) => (p.name === name ? { ...p, value } : p))
       );
 
       return { previous };
     },
 
     onError: (_, __, context) => {
-      queryClient.setQueryData(["preferences"], context?.previous);
+      queryClient.setQueryData(qk.preferences(), context?.previous);
     },
   });
 
   const preferences = useMemo(() => {
     const map: Record<string, string> = {};
-
     data?.forEach((p) => {
       map[p.name] = p.value;
     });
-
     return map;
   }, [data]);
 
-  const setPreference = (name: string, value: string) => {
-    mutation.mutate({ name, value });
-  };
+  // mutate é estável entre renders — useCallback correto
+  const setPreference = useCallback(
+    (name: string, value: string) => mutate({ name, value }),
+    [mutate]
+  );
 
   useEffect(() => {
     if (preferences.LANGUAGE) {
@@ -76,9 +76,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   }, [preferences.LANGUAGE]);
 
   return (
-    <PreferencesContext.Provider
-      value={{ preferences, setPreference, isLoading }}
-    >
+    <PreferencesContext.Provider value={{ preferences, setPreference, isLoading }}>
       {children}
     </PreferencesContext.Provider>
   );

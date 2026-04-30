@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -20,84 +20,23 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 
-import { usersApi, type UserResponseDTO } from "../api/usersApi";
+import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
-
-type UserRow = {
-  id: number;
-  fullName: string;
-  email: string;
-  role: string;
-  isActive: boolean;
-};
-
-function roleFromPermissions(perms: string[] | undefined) {
-  const p = perms ?? [];
-  if (p.includes("ROLE_ADMIN")) return "ADMIN";
-  if (p.includes("ROLE_USER")) return "USER";
-  return p[0]?.replace("ROLE_", "") ?? "—";
-}
-
-function toRow(u: UserResponseDTO): UserRow {
-  return {
-    id: u.id,
-    fullName: u.fullName,
-    email: u.email ?? "—",
-    role: roleFromPermissions(u.permissions),
-    isActive: Boolean(u.isActive),
-  };
-}
 
 export default function UsersPage() {
   const { t } = useTranslation();
 
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [users, setUsers] = useState<UserRow[]>([]);
-  const [createOpen, setCreateOpen] = useState(false);
+  const { users, isLoading, error, reload, toggleActive, isTogglingActive } = useUsers(query);
 
-  // Edit modal
+  const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
-  // Row menu (single menu for the table)
+  // Estado do row-menu
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuUser, setMenuUser] = useState<UserRow | null>(null);
-
-  async function loadUsers() {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await usersApi.findAll();
-      setUsers(data.map(toRow));
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || t("common.noDataAvailable");
-      setError(String(msg));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadUsers();
-  }, []);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return users;
-    return users.filter(
-      (u) =>
-        u.fullName.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q) ||
-        u.role.toLowerCase().includes(q)
-    );
-  }, [query, users]);
-
-  function handleCreate() {
-    setCreateOpen(true);
-  }
 
   function openMenu(e: React.MouseEvent<HTMLElement>, u: UserRow) {
     setMenuAnchor(e.currentTarget);
@@ -116,28 +55,10 @@ export default function UsersPage() {
     closeMenu();
   }
 
-  async function handleToggleActive() {
+  function handleToggleActive() {
     if (!menuUser) return;
-
-    try {
-      if (menuUser.isActive) {
-        await usersApi.delete(menuUser.id);
-      } else {
-        await usersApi.activate(menuUser.id);
-      }
-
-      await loadUsers();
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || t("common.noDataAvailable");
-      setError(String(msg));
-    } finally {
-      closeMenu();
-    }
-  }
-
-  function closeEdit() {
-    setEditOpen(false);
-    setSelectedUserId(null);
+    toggleActive(menuUser);
+    closeMenu();
   }
 
   return (
@@ -159,7 +80,7 @@ export default function UsersPage() {
 
           {error && (
             <Typography variant="body2" sx={{ mt: 1 }} color="error">
-              {error}
+              {String(error)}
             </Typography>
           )}
         </Box>
@@ -171,10 +92,9 @@ export default function UsersPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             sx={{ minWidth: 260 }}
-            disabled={loading}
+            disabled={isLoading}
           />
-
-          <Button variant="contained" onClick={handleCreate} disabled={loading}>
+          <Button variant="contained" onClick={() => setCreateOpen(true)} disabled={isLoading}>
             {t("users.actions.newUser")}
           </Button>
         </Stack>
@@ -182,13 +102,13 @@ export default function UsersPage() {
 
       <Box
         sx={{
-          border: (t) => `1px solid ${t.palette.divider}`,
+          border: (th) => `1px solid ${th.palette.divider}`,
           borderRadius: 2,
           overflow: "hidden",
           position: "relative",
         }}
       >
-        {loading && (
+        {(isLoading || isTogglingActive) && (
           <Box
             sx={{
               position: "absolute",
@@ -212,16 +132,12 @@ export default function UsersPage() {
               <TableCell><b>{t("users.table.email")}</b></TableCell>
               <TableCell><b>{t("users.table.role")}</b></TableCell>
               <TableCell><b>{t("users.table.status")}</b></TableCell>
-
-              {/* Centered header */}
-              <TableCell align="center">
-                <b>{t("users.table.actions")}</b>
-              </TableCell>
+              <TableCell align="center"><b>{t("users.table.actions")}</b></TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {filtered.map((u) => (
+            {users.map((u) => (
               <TableRow key={u.id} hover>
                 <TableCell>{u.fullName}</TableCell>
                 <TableCell>{u.email}</TableCell>
@@ -234,8 +150,6 @@ export default function UsersPage() {
                     variant={u.isActive ? "filled" : "outlined"}
                   />
                 </TableCell>
-
-                {/* Centered 3-dots menu */}
                 <TableCell align="center">
                   <IconButton size="small" onClick={(e) => openMenu(e, u)}>
                     <MoreVertIcon fontSize="small" />
@@ -244,7 +158,7 @@ export default function UsersPage() {
               </TableRow>
             ))}
 
-            {!loading && filtered.length === 0 && (
+            {!isLoading && users.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5}>
                   <Typography variant="body2" color="text.secondary">
@@ -257,28 +171,24 @@ export default function UsersPage() {
         </Table>
       </Box>
 
-      {/* Menu */}
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-        <MenuItem onClick={handleViewEdit}>{t("users.actions.viewEdit") || "View / Edit"}</MenuItem>
+        <MenuItem onClick={handleViewEdit}>{t("users.actions.viewEdit")}</MenuItem>
         <MenuItem onClick={handleToggleActive}>
-          {menuUser?.isActive
-            ? t("users.actions.inactivate") || "Inactivate user"
-            : t("users.actions.activate") || "Activate user"}
+          {menuUser?.isActive ? t("users.actions.inactivate") : t("users.actions.activate")}
         </MenuItem>
       </Menu>
 
-      {/* Modal */}
       <EditUserModal
         open={editOpen}
         userId={selectedUserId}
-        onClose={closeEdit}
-        onChanged={loadUsers}
+        onClose={() => { setEditOpen(false); setSelectedUserId(null); }}
+        onChanged={reload}
       />
 
       <CreateUserModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        onCreated={loadUsers}
+        onCreated={reload}
       />
     </Paper>
   );

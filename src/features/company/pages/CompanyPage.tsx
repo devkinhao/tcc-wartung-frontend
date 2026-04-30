@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
-  Button,
   Card,
   CircularProgress,
   FormControl,
@@ -15,21 +15,26 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-/* ===== TYPES ===== */
+import { qk } from "@/api/keys";
+import { useCities } from "@/features/customers/hooks/useCities";
+import { EditableCardHeader } from "@/components/EditableCardHeader";
+import {
+  getCompany,
+  updateCompany,
+  type CompanyResponseDTO,
+  type CompanyUpdateRequestDTO,
+} from "../api/company.api";
 
-type City = {
-  id: number;
-  name: string;
-  state: string;
-};
+// ---- Draft shape (alinha campos opcionais com strings para os inputs) ----
 
-type Company = {
+type CompanyDraft = {
   fantasyName: string;
   legalName: string;
   cnpj: string;
   phone: string;
-  mobile: string;
+  mobilePhone: string;
   email: string;
   address: {
     street: string;
@@ -41,57 +46,115 @@ type Company = {
   };
 };
 
-export default function Company() {
+function toDraft(data: CompanyResponseDTO): CompanyDraft {
+  return {
+    fantasyName: data.fantasyName ?? "",
+    legalName: data.legalName,
+    cnpj: data.cnpj,
+    phone: data.phone ?? "",
+    mobilePhone: data.mobilePhone ?? "",
+    email: data.email ?? "",
+    address: {
+      street: data.address?.street ?? "",
+      number: data.address?.number ?? "",
+      complement: data.address?.complement ?? "",
+      neighborhood: data.address?.neighborhood ?? "",
+      zipCode: data.address?.zipCode ?? "",
+      cityId: data.address?.city?.id ?? null,
+    },
+  };
+}
+
+function toRequestDTO(draft: CompanyDraft): CompanyUpdateRequestDTO {
+  return {
+    fantasyName: draft.fantasyName || null,
+    legalName: draft.legalName,
+    cnpj: draft.cnpj,
+    phone: draft.phone || null,
+    mobilePhone: draft.mobilePhone || null,
+    email: draft.email || null,
+    address: {
+      street: draft.address.street,
+      number: draft.address.number,
+      complement: draft.address.complement || null,
+      neighborhood: draft.address.neighborhood,
+      zipCode: draft.address.zipCode,
+      cityId: draft.address.cityId as number,
+    },
+  };
+}
+
+// ---- Page ----
+
+export default function CompanyPage() {
   const { t } = useTranslation();
+  const qc = useQueryClient();
+  const cities = useCities();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [draft, setDraft] = useState<CompanyDraft | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const [cities, setCities] = useState<City[]>([]);
-  const [company, setCompany] = useState<Company | null>(null);
-  const [initialCompany, setInitialCompany] = useState<Company | null>(null);
+  const { data, isLoading } = useQuery({
+    queryKey: qk.company(),
+    queryFn: getCompany,
+  });
 
-  /* ===== MOCK FETCH ===== */
+  // Inicializa o draft uma vez quando os dados chegam
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const fetchedCities: City[] = [
-        { id: 1, name: "São Paulo", state: "SP" },
-        { id: 2, name: "Campinas", state: "SP" },
-        { id: 3, name: "Rio de Janeiro", state: "RJ" },
-      ];
+    if (data) setDraft((prev) => prev ?? toDraft(data));
+  }, [data]);
 
-      const fetchedCompany: Company = {
-        fantasyName: "Engenharia Maas",
-        legalName: "Engenharia Maas LTDA",
-        cnpj: "12.345.678/0001-90",
-        phone: "(11) 3333-3333",
-        mobile: "(11) 98888-8888",
-        email: "contato@engenhariamaas.com.br",
-        address: {
-          street: "Rua Exemplo",
-          number: "123",
-          complement: "Sala 45",
-          neighborhood: "Centro",
-          zipCode: "01000-000",
-          cityId: 1,
-        },
-      };
+  const { mutate: save, isPending: isSaving } = useMutation({
+    mutationFn: (dto: CompanyUpdateRequestDTO) => updateCompany(dto),
+    onSuccess: () => {
+      // Invalida o cache para refletir os dados salvos
+      qc.invalidateQueries({ queryKey: qk.company() });
+      setIsEditing(false);
+      setError(null);
+    },
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.errors?.[0] ||
+        err?.message ||
+        t("company.errors.saveFailed");
+      setError(String(msg));
+    },
+  });
 
-      setCities(fetchedCities);
-      setCompany(fetchedCompany);
-      setInitialCompany(fetchedCompany);
-      setLoading(false);
-    }, 500);
+  // ---- Handlers de mudança no draft ----
 
-    return () => clearTimeout(timer);
-  }, []);
+  function updateField<K extends keyof Omit<CompanyDraft, "address">>(
+    field: K,
+    value: CompanyDraft[K]
+  ) {
+    setDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
+  }
 
-  const cityValue = useMemo(() => {
-    if (!company) return "";
-    return company.address.cityId ?? "";
-  }, [company]);
+  function updateAddress<K extends keyof CompanyDraft["address"]>(
+    field: K,
+    value: CompanyDraft["address"][K]
+  ) {
+    setDraft((prev) =>
+      prev ? { ...prev, address: { ...prev.address, [field]: value } } : prev
+    );
+  }
 
-  if (loading || !company) {
+  function handleCancel() {
+    if (data) setDraft(toDraft(data)); // descarta alterações
+    setIsEditing(false);
+    setError(null);
+  }
+
+  function handleSave() {
+    if (!draft) return;
+    save(toRequestDTO(draft));
+  }
+
+  // ---- Render states ----
+
+  if (isLoading || !draft) {
     return (
       <Stack direction="row" spacing={2} alignItems="center">
         <CircularProgress size={18} />
@@ -102,91 +165,47 @@ export default function Company() {
     );
   }
 
-  const handleChange = (field: keyof Company, value: string) => {
-    setCompany((prev) => (prev ? { ...prev, [field]: value } : prev));
-  };
-
-  const handleAddressChange = (field: keyof Company["address"], value: string) => {
-    setCompany((prev) =>
-      prev ? { ...prev, address: { ...prev.address, [field]: value } } : prev
-    );
-  };
-
-  const handleCityChange = (value: string) => {
-    // Select always returns string
-    const parsed = value === "" ? null : Number(value);
-    setCompany((prev) =>
-      prev
-        ? {
-            ...prev,
-            address: { ...prev.address, cityId: Number.isNaN(parsed) ? null : parsed },
-          }
-        : prev
-    );
-  };
-
-  const handleSave = () => {
-    console.log("Salvar empresa (mock)", company);
-    setInitialCompany(company);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    if (initialCompany) setCompany(initialCompany);
-    setIsEditing(false);
-  };
+  const cardSx = {
+    p: 2,
+    borderRadius: 2,
+    transition: (th: any) =>
+      th.transitions.create("box-shadow", { duration: th.transitions.duration.short }),
+    "&:hover": { boxShadow: 4 },
+  } as const;
 
   return (
-    <Paper
-      elevation={1}
-      sx={{
-        maxWidth: 1100,
-        p: 3,
-        borderRadius: 2,
-        bgcolor: "background.paper",
-      }}
-    >
-      {/* HEADER */}
+    <Paper elevation={1} sx={{ maxWidth: 1100, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+      {/* Cabeçalho com título e botões Edit/Cancel/Save */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Typography variant="h6" fontWeight={600} color="primary.main">
           {t("company.title")}
         </Typography>
 
-        {!isEditing ? (
-          <Button variant="contained" onClick={() => setIsEditing(true)}>
-            {t("common.actions.edit")}
-          </Button>
-        ) : (
-          <Stack direction="row" spacing={1}>
-            <Button variant="outlined" onClick={handleCancel}>
-              {t("common.actions.cancel")}
-            </Button>
-            <Button variant="contained" onClick={handleSave}>
-              {t("company.actions.saveChanges")}
-            </Button>
-          </Stack>
-        )}
+        <EditableCardHeader
+          title=""
+          editing={isEditing}
+          saving={isSaving}
+          onEdit={() => setIsEditing(true)}
+          onCancel={handleCancel}
+          onSave={handleSave}
+        />
       </Stack>
 
-      {/* COMPANY DATA */}
-      <Card
-        sx={{
-          p: 2,
-          borderRadius: 2,
-          mb: 3,
-          transition: (t) =>
-            t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
-          "&:hover": { boxShadow: 4 },
-        }}
-      >
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Dados da empresa */}
+      <Card sx={{ ...cardSx, mb: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.fields.fantasyName")}
-              fullWidth
-              size="small"
-              value={company.fantasyName}
-              onChange={(e) => handleChange("fantasyName", e.target.value)}
+              fullWidth size="small"
+              value={draft.fantasyName}
+              onChange={(e) => updateField("fantasyName", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
@@ -194,21 +213,42 @@ export default function Company() {
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.fields.legalName")}
-              fullWidth
-              size="small"
-              value={company.legalName}
-              onChange={(e) => handleChange("legalName", e.target.value)}
+              fullWidth size="small"
+              value={draft.legalName}
+              onChange={(e) => updateField("legalName", e.target.value)}
+              disabled={!isEditing}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <TextField
+              label={t("company.fields.cnpj")}
+              fullWidth size="small"
+              value={draft.cnpj}
+              onChange={(e) => updateField("cnpj", e.target.value)}
+              disabled={!isEditing}
+              required
+              placeholder="00.000.000/0000-00"
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <TextField
+              label={t("company.fields.phone")}
+              fullWidth size="small"
+              value={draft.phone}
+              onChange={(e) => updateField("phone", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <TextField
-              label={t("company.fields.cnpj")}
-              fullWidth
-              size="small"
-              value={company.cnpj}
-              onChange={(e) => handleChange("cnpj", e.target.value)}
+              label={t("company.fields.mobile")}
+              fullWidth size="small"
+              value={draft.mobilePhone}
+              onChange={(e) => updateField("mobilePhone", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
@@ -216,123 +256,91 @@ export default function Company() {
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.fields.email")}
-              fullWidth
-              size="small"
-              value={company.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              disabled={!isEditing}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              label={t("company.fields.phone")}
-              fullWidth
-              size="small"
-              value={company.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              disabled={!isEditing}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              label={t("company.fields.mobile")}
-              fullWidth
-              size="small"
-              value={company.mobile}
-              onChange={(e) => handleChange("mobile", e.target.value)}
+              fullWidth size="small"
+              value={draft.email}
+              onChange={(e) => updateField("email", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
         </Grid>
       </Card>
 
-      {/* ADDRESS */}
+      {/* Endereço */}
       <Typography variant="subtitle1" fontWeight={600} color="primary.main" sx={{ mb: 1.5 }}>
         {t("company.address.title")}
       </Typography>
 
-      <Card
-        sx={{
-          p: 2,
-          borderRadius: 2,
-          transition: (t) =>
-            t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
-          "&:hover": { boxShadow: 4 },
-        }}
-      >
+      <Card sx={cardSx}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.address.fields.street")}
-              fullWidth
-              size="small"
-              value={company.address.street}
-              onChange={(e) => handleAddressChange("street", e.target.value)}
+              fullWidth size="small"
+              value={draft.address.street}
+              onChange={(e) => updateAddress("street", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <TextField
               label={t("company.address.fields.number")}
-              fullWidth
-              size="small"
-              value={company.address.number}
-              onChange={(e) => handleAddressChange("number", e.target.value)}
+              fullWidth size="small"
+              value={draft.address.number}
+              onChange={(e) => updateAddress("number", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <TextField
               label={t("company.address.fields.complement")}
-              fullWidth
-              size="small"
-              value={company.address.complement}
-              onChange={(e) => handleAddressChange("complement", e.target.value)}
+              fullWidth size="small"
+              value={draft.address.complement}
+              onChange={(e) => updateAddress("complement", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <TextField
               label={t("company.address.fields.neighborhood")}
-              fullWidth
-              size="small"
-              value={company.address.neighborhood}
-              onChange={(e) => handleAddressChange("neighborhood", e.target.value)}
+              fullWidth size="small"
+              value={draft.address.neighborhood}
+              onChange={(e) => updateAddress("neighborhood", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3}>
             <TextField
               label={t("company.address.fields.zipCode")}
-              fullWidth
-              size="small"
-              value={company.address.zipCode}
-              onChange={(e) => handleAddressChange("zipCode", e.target.value)}
+              fullWidth size="small"
+              value={draft.address.zipCode}
+              onChange={(e) => updateAddress("zipCode", e.target.value)}
               disabled={!isEditing}
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={5}>
             <FormControl fullWidth size="small" disabled={!isEditing}>
-              <InputLabel id="city-label">{t("company.address.fields.city")}</InputLabel>
+              <InputLabel id="company-city-label">
+                {t("company.address.fields.city")}
+              </InputLabel>
               <Select
-                labelId="city-label"
+                labelId="company-city-label"
                 label={t("company.address.fields.city")}
-                value={cityValue}
-                onChange={(e) => handleCityChange(String(e.target.value))}
+                value={draft.address.cityId ?? ""}
+                onChange={(e) =>
+                  updateAddress("cityId", e.target.value === "" ? null : Number(e.target.value))
+                }
               >
                 <MenuItem value="">
                   <em>{t("company.address.actions.selectCity")}</em>
                 </MenuItem>
                 {cities.map((city) => (
                   <MenuItem key={city.id} value={city.id}>
-                    {city.name} - {city.state}
+                    {city.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -340,7 +348,7 @@ export default function Company() {
           </Grid>
         </Grid>
 
-        {!isEditing ? (
+        {!isEditing && (
           <Box sx={{ mt: 2 }}>
             <Typography variant="caption" color="text.secondary">
               {t("company.hints.clickEditToChange")}{" "}
@@ -348,7 +356,7 @@ export default function Company() {
               {t("company.hints.toChangeData")}
             </Typography>
           </Box>
-        ) : null}
+        )}
       </Card>
     </Paper>
   );

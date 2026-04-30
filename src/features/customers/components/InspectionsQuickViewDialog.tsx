@@ -23,19 +23,13 @@ import { useTranslation } from "react-i18next";
 
 import { getCustomerDetail } from "../api/customers.detail.api";
 import type { InspectionSummaryResponseDTO } from "../types/customerDetail";
+import { formatDateBR } from "@/utils/date";
 
 type Props = {
   open: boolean;
   customerId: number;
   onClose: () => void;
 };
-
-function formatDateBR(iso?: string | null) {
-  if (!iso) return "—";
-  const parts = iso.split("-");
-  if (parts.length !== 3) return iso;
-  return `${parts[2]}/${parts[1]}/${parts[0]}`;
-}
 
 export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props) {
   const { t } = useTranslation();

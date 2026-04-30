@@ -5,9 +5,7 @@ import { Box, Toolbar } from "@mui/material";
 import Sidebar from "./sidebar/Sidebar";
 import Header from "./header/Header";
 import { ChatButton } from "./chatbot/ChatButton";
-
-export const DRAWER_WIDTH = 260;
-export const DRAWER_COLLAPSED_WIDTH = 72;
+import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./sidebar/constants";
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(true);
@@ -15,17 +13,13 @@ export default function Layout() {
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      {/* Sidebar FIXED */}
       <Sidebar
         collapsed={collapsed}
         onToggle={() => setCollapsed((p) => !p)}
-        drawerWidth={drawerWidth}
       />
 
-      {/* Header FIXED and aligned with drawer */}
       <Header drawerWidth={drawerWidth} />
 
-      {/* Content shifts/resizes together */}
       <Box
         sx={{
           ml: `${drawerWidth}px`,
@@ -35,7 +29,6 @@ export default function Layout() {
             }),
         }}
       >
-        {/* pushes content below fixed AppBar */}
         <Toolbar />
 
         <Box component="main" sx={{ p: 3 }}>

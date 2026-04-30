@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
@@ -10,12 +11,14 @@ import { Pagination } from "../../../components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
 
-export default function CustomersPage() {
+export default function CustomersListPage() {
   const { t } = useTranslation();
-
-  const state = useCustomers();
+  const navigate = useNavigate();
   const cities = useCities();
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const { customers, loading, total, filters, setFilter, hasActiveFilters, clearFilters, pagination, sort } =
+    useCustomers();
 
   return (
     <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
@@ -43,35 +46,29 @@ export default function CustomersPage() {
       <AddCompanyModal open={isAddOpen} onClose={() => setIsAddOpen(false)} cities={cities} />
 
       <CustomersFilters
-        search={state.search}
-        setSearch={state.setSearch}
-        city={state.city}
-        setCity={state.setCity}
+        values={filters}
+        onChange={setFilter}
         cities={cities}
-        isCustomer={state.isCustomer}
-        setIsCustomer={state.setIsCustomer}
-        month={state.month}
-        setMonth={state.setMonth}
-        hasActiveFilters={state.hasActiveFilters}
-        onClearFilters={state.clearFilters}
+        hasActiveFilters={hasActiveFilters}
+        onClear={clearFilters}
       />
 
       <CustomersTable
-        customers={state.customers}
-        loading={state.loading}
-        sortBy={state.sortBy}
-        sortDir={state.sortDir}
-        onSort={state.handleSort}
-        onRowClick={(id) => console.log("Abrir cliente", id)}
+        customers={customers}
+        loading={loading}
+        sortBy={sort.by}
+        sortDir={sort.dir}
+        onSort={sort.handle}
+        onRowClick={(id) => navigate(`/customers/${id}`)}
       />
 
       <Box sx={{ mt: 1 }}>
         <Pagination
-          page={state.page}
-          pageSize={state.pageSize}
-          total={state.totalRecords}
-          onPageChange={state.setPage}
-          onPageSizeChange={state.setPageSize}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          total={total}
+          onPageChange={pagination.setPage}
+          onPageSizeChange={pagination.setPageSize}
         />
       </Box>
     </Paper>

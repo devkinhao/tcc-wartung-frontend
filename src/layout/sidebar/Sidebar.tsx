@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { NavLink } from "react-router-dom";
 import {
   Box,
@@ -19,105 +20,112 @@ import { menuPrincipal, menuOutros } from "./menu";
 import { MenuItem } from "./menu.types";
 import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
-
-export const DRAWER_WIDTH = 260;
-export const DRAWER_COLLAPSED_WIDTH = 72;
+import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./constants";
 
 type SidebarProps = {
   collapsed: boolean;
   onToggle: () => void;
-  drawerWidth: number;
 };
+
+type SidebarItemProps = {
+  item: MenuItem;
+  collapsed: boolean;
+  permissions: string[];
+};
+
+const SidebarItem = memo(function SidebarItem({ item, collapsed, permissions }: SidebarItemProps) {
+  const { t } = useTranslation();
+
+  if (!canAccess(permissions, item.permissions)) return null;
+
+  const Icon = item.icon;
+  const label = t(item.label);
+
+  const content = (
+    <ListItemButton
+      component={NavLink}
+      to={item.to}
+      sx={(theme) => ({
+        my: 0.5,
+        mx: 0,
+        borderRadius: 0,
+        minHeight: 44,
+        px: 0,
+        justifyContent: "flex-start",
+        "&.active": {
+          backgroundColor: theme.palette.action.selected,
+        },
+      })}
+    >
+      <ListItemIcon
+        sx={{
+          minWidth: DRAWER_COLLAPSED_WIDTH,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "inherit",
+        }}
+      >
+        <Icon sx={{ fontSize: 22 }} />
+      </ListItemIcon>
+
+      <ListItemText
+        primary={label}
+        primaryTypographyProps={{
+          noWrap: true,
+          fontSize: 14,
+          fontWeight: 500,
+        }}
+        sx={{
+          opacity: collapsed ? 0 : 1,
+          transition: "opacity 0.2s",
+          m: 0,
+        }}
+      />
+    </ListItemButton>
+  );
+
+  return collapsed ? (
+    <Tooltip title={label} placement="right">
+      <Box>{content}</Box>
+    </Tooltip>
+  ) : (
+    <Box>{content}</Box>
+  );
+});
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { data: user, isLoading } = useMe();
-  if (isLoading) return null;
 
-  const permissions = user?.permissions ?? [];
   const drawerWidth = collapsed ? DRAWER_COLLAPSED_WIDTH : DRAWER_WIDTH;
+  const permissions = user?.permissions ?? [];
 
-  const renderItem = (item: MenuItem) => {
-    if (!canAccess(permissions, item.permissions)) return null;
+  const drawerSx = {
+    width: drawerWidth,
+    flexShrink: 0,
+    "& .MuiDrawer-paper": {
+      width: drawerWidth,
+      overflowX: "hidden",
+      boxSizing: "border-box",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      height: "100vh",
+      transition: theme.transitions.create("width", {
+        duration: theme.transitions.duration.standard,
+      }),
+    },
+  } as const;
 
-    const Icon = item.icon;
-    const label = t(item.label);
-
-    const content = (
-      <ListItemButton
-        component={NavLink}
-        to={item.to}
-        sx={(theme) => ({
-          my: 0.5,
-          mx: 0,
-          borderRadius: 0,
-          minHeight: 44,
-          px: 0,
-          justifyContent: "flex-start",
-          "&.active": {
-            backgroundColor: theme.palette.action.selected,
-          },
-        })}
-      >
-        <ListItemIcon
-          sx={{
-            minWidth: DRAWER_COLLAPSED_WIDTH,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "inherit",
-          }}
-        >
-          <Icon sx={{ fontSize: 22 }} />
-        </ListItemIcon>
-
-        <ListItemText
-          primary={label}
-          primaryTypographyProps={{
-            noWrap: true,
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-          sx={{
-            opacity: collapsed ? 0 : 1,
-            transition: "opacity 0.2s",
-            m: 0,
-          }}
-        />
-      </ListItemButton>
-    );
-
-    return collapsed ? (
-      <Tooltip key={item.to} title={label} placement="right">
-        <Box>{content}</Box>
-      </Tooltip>
-    ) : (
-      <Box key={item.to}>{content}</Box>
-    );
-  };
+  // Retorna drawer vazio durante loading para evitar layout shift
+  if (isLoading) {
+    return <Drawer variant="permanent" open sx={drawerSx} />;
+  }
 
   return (
-    <Drawer
-      variant="permanent"
-      open
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          overflowX: "hidden",
-          boxSizing: "border-box",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          height: "100vh",
-          transition: theme.transitions.create("width", {
-            duration: theme.transitions.duration.standard,
-          }),
-        },
-      }}
-    >
+    <Drawer variant="permanent" open sx={drawerSx}>
       {/* Logo */}
       <Box
         component={NavLink}
@@ -150,14 +158,22 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </Box>
 
       <Box sx={{ flex: 1, py: 1 }}>
-        <List disablePadding>{menuPrincipal.map(renderItem)}</List>
+        <List disablePadding>
+          {menuPrincipal.map((item) => (
+            <SidebarItem key={item.to} item={item} collapsed={collapsed} permissions={permissions} />
+          ))}
+        </List>
 
         <Divider sx={{ my: 1 }} />
 
-        <List disablePadding>{menuOutros.map(renderItem)}</List>
+        <List disablePadding>
+          {menuOutros.map((item) => (
+            <SidebarItem key={item.to} item={item} collapsed={collapsed} permissions={permissions} />
+          ))}
+        </List>
       </Box>
 
-      {/* Collapse */}
+      {/* Collapse toggle */}
       <Box sx={{ display: "flex", justifyContent: collapsed ? "center" : "flex-end", p: 1 }}>
         <IconButton
           onClick={onToggle}

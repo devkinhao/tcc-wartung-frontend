@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import {
   Alert,
@@ -17,6 +17,11 @@ import {
   Link,
   Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -43,20 +48,8 @@ import type {
   InspectionDetailResponseDTO,
   InspectionUpdateRequestDTO,
 } from "../types/inspectionDetail";
-
-function formatDateBR(iso?: string | null) {
-  if (!iso) return "—";
-  const date = iso.split("T")[0];
-  const [y, m, d] = date.split("-");
-  if (!y || !m || !d) return iso;
-  return `${d}/${m}/${y}`;
-}
-
-function formatDateTimeBR(iso?: string | null) {
-  if (!iso) return "—";
-  const [date, time] = iso.split("T");
-  return `${formatDateBR(date)}${time ? ` ${time.slice(0, 5)}` : ""}`;
-}
+import { qk } from "@/api/keys";
+import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -77,28 +70,28 @@ export default function InspectionDetailsPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadDescription, setUploadDescription] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["inspection-detail", inspectionId],
+    queryKey: qk.inspectionDetail(inspectionId),
     queryFn: () => getInspectionDetail(inspectionId),
     enabled: Number.isFinite(inspectionId) && inspectionId > 0,
   });
 
   const docsQuery = useQuery({
-    queryKey: ["inspection-documents", inspectionId],
+    queryKey: qk.inspectionDocuments(inspectionId),
     queryFn: () => listInspectionDocuments(inspectionId),
     enabled: Number.isFinite(inspectionId) && inspectionId > 0,
   });
 
-  useMemo(() => {
-    if (data && !draft) setDraft(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (data) setDraft((prev) => prev ?? data);
   }, [data]);
 
   const mutation = useMutation({
     mutationFn: (payload: InspectionUpdateRequestDTO) => updateInspection(inspectionId, payload),
     onSuccess: (updated) => {
-      qc.setQueryData(["inspection-detail", inspectionId], updated);
+      qc.setQueryData(qk.inspectionDetail(inspectionId), updated);
       setDraft(updated);
       setEditing(false);
     },
@@ -113,8 +106,8 @@ export default function InspectionDetailsPage() {
       setUploadDescription("");
       setUploadFile(null);
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ["inspection-documents", inspectionId] }),
-        qc.invalidateQueries({ queryKey: ["inspection-detail", inspectionId] }),
+        qc.invalidateQueries({ queryKey: qk.inspectionDocuments(inspectionId) }),
+        qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
     },
     onError: () => setError(t("inspectionDetails.errors.uploadDoc")),
@@ -124,8 +117,8 @@ export default function InspectionDetailsPage() {
     mutationFn: (docId: number) => deleteInspectionDocument(inspectionId, docId),
     onSuccess: async () => {
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ["inspection-documents", inspectionId] }),
-        qc.invalidateQueries({ queryKey: ["inspection-detail", inspectionId] }),
+        qc.invalidateQueries({ queryKey: qk.inspectionDocuments(inspectionId) }),
+        qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
     },
     onError: () => setError(t("inspectionDetails.errors.deleteDoc")),
@@ -185,9 +178,7 @@ export default function InspectionDetailsPage() {
   };
 
   const handleDeleteDoc = (docId: number) => {
-    const ok = window.confirm(t("inspectionDetails.documents.confirmDelete"));
-    if (!ok) return;
-    deleteMutation.mutate(docId);
+    setConfirmDeleteId(docId);
   };
 
   return (
@@ -197,6 +188,27 @@ export default function InspectionDetailsPage() {
           {error}
         </Alert>
       ) : null}
+
+      {/* Confirm delete dialog — substitui window.confirm */}
+      <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>{t("inspectionDetails.documents.confirmDeleteTitle")}</DialogTitle>
+        <DialogContent>
+          <Typography>{t("inspectionDetails.documents.confirmDelete")}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteId(null)}>{t("common.actions.cancel")}</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              if (confirmDeleteId !== null) deleteMutation.mutate(confirmDeleteId);
+              setConfirmDeleteId(null);
+            }}
+          >
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Paper elevation={1} sx={{ borderRadius: 2, mb: 2 }}>
         <Box sx={{ px: 2, py: 1.5 }}>
@@ -386,81 +398,33 @@ export default function InspectionDetailsPage() {
                 overflow: "hidden",
               }}
             >
-              <Box component="table" sx={{ width: "100%", borderCollapse: "collapse" }}>
-                <Box component="thead" sx={{ bgcolor: "background.default" }}>
-                  <Box component="tr">
-                    {[
-                      t("inspectionDetails.documents.table.description"),
-                      t("inspectionDetails.documents.table.name"),
-                      t("inspectionDetails.documents.table.size"),
-                      t("inspectionDetails.documents.table.uploadDate"),
-                      t("inspectionDetails.documents.table.actions"),
-                    ].map((h) => (
-                      <Box
-                        key={h}
-                        component="th"
-                        sx={{
-                          textAlign: "left",
-                          fontWeight: 700,
-                          fontSize: 13,
-                          px: 2,
-                          py: 1,
-                          borderBottom: (t) => `1px solid ${t.palette.divider}`,
-                        }}
-                      >
-                        {h}
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
+              <Table size="small">
+                <TableHead sx={{ bgcolor: "background.default" }}>
+                  <TableRow>
+                    <TableCell><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
+                    <TableCell><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
+                    <TableCell><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
+                    <TableCell><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
+                    <TableCell align="center"><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
+                  </TableRow>
+                </TableHead>
 
-                <Box component="tbody">
+                <TableBody>
                   {docsQuery.isLoading ? (
-                    <Box component="tr">
-                      <Box component="td" colSpan={5} sx={{ px: 2, py: 2, color: "text.secondary" }}>
+                    <TableRow>
+                      <TableCell colSpan={5} sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.loading")}
-                      </Box>
-                    </Box>
+                      </TableCell>
+                    </TableRow>
                   ) : documents?.length ? (
                     documents.map((d) => (
-                      <Box key={d.id} component="tr" sx={{ "&:hover": { bgcolor: "action.hover" } }}>
-                        <Box
-                          component="td"
-                          sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}
-                        >
-                          {d.description || "—"}
-                        </Box>
-
-                        <Box
-                          component="td"
-                          sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}
-                        >
-                          {d.name}
-                        </Box>
-
-                        <Box
-                          component="td"
-                          sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}
-                        >
-                          {typeof d.size === "number" ? `${Math.ceil(d.size / 1024)} KB` : "—"}
-                        </Box>
-
-                        <Box
-                          component="td"
-                          sx={{ px: 2, py: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}
-                        >
-                          {formatDateTimeBR(d.uploadDate)}
-                        </Box>
-
-                        <Box
-                          component="td"
-                          sx={{
-                            px: 2,
-                            py: 1,
-                            borderBottom: (t) => `1px solid ${t.palette.divider}`,
-                          }}
-                        >
-                          <Stack direction="row" spacing={0.5} alignItems="center">
+                      <TableRow key={d.id} hover>
+                        <TableCell>{d.description || "—"}</TableCell>
+                        <TableCell>{d.name}</TableCell>
+                        <TableCell>{formatFileSizeKB(d.size)}</TableCell>
+                        <TableCell>{formatDateTimeBR(d.uploadDate)}</TableCell>
+                        <TableCell align="center">
+                          <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
                             <IconButton
                               size="small"
                               aria-label={t("inspectionDetails.documents.actions.download")}
@@ -468,7 +432,6 @@ export default function InspectionDetailsPage() {
                             >
                               <DownloadIcon fontSize="small" />
                             </IconButton>
-
                             <IconButton
                               size="small"
                               aria-label={t("inspectionDetails.documents.actions.delete")}
@@ -478,18 +441,18 @@ export default function InspectionDetailsPage() {
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                           </Stack>
-                        </Box>
-                      </Box>
+                        </TableCell>
+                      </TableRow>
                     ))
                   ) : (
-                    <Box component="tr">
-                      <Box component="td" colSpan={5} sx={{ px: 2, py: 2, color: "text.secondary" }}>
+                    <TableRow>
+                      <TableCell colSpan={5} sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.empty")}
-                      </Box>
-                    </Box>
+                      </TableCell>
+                    </TableRow>
                   )}
-                </Box>
-              </Box>
+                </TableBody>
+              </Table>
             </Box>
           </CardContent>
         </Card>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -64,7 +64,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   // reset password
   const [newPassword, setNewPassword] = useState("");
 
-  async function load() {
+  const load = useCallback(async () => {
     if (!open || userId == null) return;
 
     setTab(0);
@@ -92,12 +92,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [open, userId, t]);
 
   useEffect(() => {
     void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, userId]);
+  }, [load]);
 
   function togglePermission(name: string, checked: boolean) {
     setSelectedPermissions((prev) => {

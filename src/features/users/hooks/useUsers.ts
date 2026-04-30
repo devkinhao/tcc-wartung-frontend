@@ -1,80 +1,81 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { usersApi } from "../api/usersApi";
-import type { UserCreateRequestDTO, UserResponseDTO, UserUpdateRequestDTO } from "../api/usersApi";
+import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { qk } from "@/api/keys";
+import { usersApi, type UserResponseDTO } from "../api/usersApi";
 
-export function useUsers() {
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<UserResponseDTO[]>([]);
-  const [error, setError] = useState<unknown>(null);
+// --- Tipos e helpers de apresentação ---
 
-  // UI state (adapt to your existing UsersPage controls)
-  const [search, setSearch] = useState("");
+export type UserRow = {
+  id: number;
+  fullName: string;
+  username: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+};
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await usersApi.findAll();
-      setUsers(data);
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+function roleFromPermissions(perms: string[] | undefined): string {
+  const p = perms ?? [];
+  if (p.includes("ROLE_ADMIN")) return "ADMIN";
+  if (p.includes("ROLE_USER")) return "USER";
+  return p[0]?.replace("ROLE_", "") ?? "—";
+}
 
-  useEffect(() => {
-    void load();
-  }, [load]);
+function toRow(u: UserResponseDTO): UserRow {
+  return {
+    id: u.id,
+    fullName: u.fullName,
+    username: u.username,
+    email: u.email ?? "—",
+    role: roleFromPermissions(u.permissions),
+    isActive: Boolean(u.isActive),
+  };
+}
 
-  const filtered = useMemo(() => {
+function matchesSearch(u: UserRow, q: string): boolean {
+  return (
+    u.fullName.toLowerCase().includes(q) ||
+    u.username.toLowerCase().includes(q) ||
+    u.email.toLowerCase().includes(q) ||
+    u.role.toLowerCase().includes(q)
+  );
+}
+
+// --- Hook ---
+
+export function useUsers(search = "") {
+  const queryClient = useQueryClient();
+
+  const { data = [], isLoading, error } = useQuery({
+    queryKey: qk.users(),
+    queryFn: () => usersApi.findAll(),
+  });
+
+  const rows = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return users;
+    const all = data.map(toRow);
+    return q ? all.filter((u) => matchesSearch(u, q)) : all;
+  }, [data, search]);
 
-    return users.filter((u) => {
-      return (
-        u.username.toLowerCase().includes(q) ||
-        u.fullName.toLowerCase().includes(q) ||
-        (u.email ?? "").toLowerCase().includes(q) ||
-        (u.cpf ?? "").toLowerCase().includes(q)
-      );
-    });
-  }, [users, search]);
+  const reload = () => queryClient.invalidateQueries({ queryKey: qk.users() });
 
-  // CRUD
-  const createUser = useCallback(async (dto: UserCreateRequestDTO) => {
-    const created = await usersApi.create(dto);
-    // backend assigns default ROLE_USER + preferences automatically
-    setUsers((prev) => [created, ...prev]);
-    return created;
-  }, []);
-
-  const updateUser = useCallback(async (id: number, dto: UserUpdateRequestDTO) => {
-    const updated = await usersApi.update(id, dto);
-    setUsers((prev) => prev.map((u) => (u.id === id ? updated : u)));
-    return updated;
-  }, []);
-
-  const deleteUser = useCallback(async (id: number) => {
-    await usersApi.delete(id);
-    setUsers((prev) => prev.filter((u) => u.id !== id));
-  }, []);
+  const toggleActiveMutation = useMutation({
+    mutationFn: async (user: UserRow) => {
+      if (user.isActive) {
+        await usersApi.delete(user.id);
+      } else {
+        await usersApi.activate(user.id);
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: qk.users() }),
+  });
 
   return {
-    // data
-    users: filtered,
-    rawUsers: users,
-    loading,
+    users: rows,
+    isLoading,
     error,
-
-    // ui
-    search,
-    setSearch,
-
-    // actions
-    reload: load,
-    createUser,
-    updateUser,
-    deleteUser,
+    reload,
+    toggleActive: toggleActiveMutation.mutate,
+    isTogglingActive: toggleActiveMutation.isPending,
   };
 }
