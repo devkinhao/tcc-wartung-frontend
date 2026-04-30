@@ -395,10 +395,6 @@
       "actions": {
         "selectCity": "Select a city"
       }
-    },
-    "hints": {
-      "clickEditToChange": "Click",
-      "toChangeData": "to edit the data."
     }
   },
   "customerDetails": {

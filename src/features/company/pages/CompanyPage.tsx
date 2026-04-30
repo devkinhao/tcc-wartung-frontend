@@ -347,16 +347,6 @@ export default function CompanyPage() {
             </FormControl>
           </Grid>
         </Grid>
-
-        {!isEditing && (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="caption" color="text.secondary">
-              {t("company.hints.clickEditToChange")}{" "}
-              <b>{t("common.actions.edit")}</b>{" "}
-              {t("company.hints.toChangeData")}
-            </Typography>
-          </Box>
-        )}
       </Card>
     </Paper>
   );
