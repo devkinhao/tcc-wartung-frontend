@@ -30,6 +30,7 @@ import { User } from "@/types/User";
 import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
+import { MaskedTextField } from "@/components/MaskedTextField";
 
 export default function UserProfile() {
   const { t } = useTranslation();
@@ -250,11 +251,12 @@ export default function UserProfile() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TextField
+              <MaskedTextField
+                mask="cpf"
                 fullWidth
                 label={t("userProfile.fields.cpf")}
                 value={cpf}
-                onChange={(e) => setCpf(e.target.value)}
+                onChange={(v) => setCpf(v)}
                 size="small"
                 disabled={!isEditing}
               />

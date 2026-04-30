@@ -5,6 +5,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchCep, normalizeCep, type ViaCepResponseDTO } from "@/api/cep.api";
+import { maskCep } from "@/utils/masks";
 
 type Props = {
   value: string;
@@ -70,7 +71,9 @@ export function CepTextField({
       fullWidth
       required={required}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => onChange(maskCep(e.target.value))}
+      inputMode="numeric"
+      inputProps={{ inputMode: "numeric" }}
       disabled={disabled}
       error={isError}
       helperText={displayHelper}

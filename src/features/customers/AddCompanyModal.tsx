@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
+import { MaskedTextField } from "@/components/MaskedTextField";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 
 type AddCompanyModalProps = {
@@ -222,11 +223,11 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <TextField
+              <MaskedTextField
+                mask="cnpj"
                 label={t("customers.addModal.fields.cnpj")}
-                placeholder={t("customers.addModal.placeholders.cnpj")}
                 value={form.cnpj}
-                onChange={(e) => setForm((p) => ({ ...p, cnpj: e.target.value }))}
+                onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
                 fullWidth
                 size="small"
                 helperText={t("customers.addModal.helpers.cnpjFormat")}
@@ -266,22 +267,22 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <TextField
+              <MaskedTextField
+                mask="phone"
                 label={t("customers.addModal.fields.phone")}
-                placeholder={t("customers.addModal.placeholders.phone")}
                 value={form.phone}
-                onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                onChange={(v) => setForm((p) => ({ ...p, phone: v }))}
                 fullWidth
                 size="small"
               />
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <TextField
+              <MaskedTextField
+                mask="mobile"
                 label={t("customers.addModal.fields.mobile")}
-                placeholder={t("customers.addModal.placeholders.mobile")}
                 value={form.mobile}
-                onChange={(e) => setForm((p) => ({ ...p, mobile: e.target.value }))}
+                onChange={(v) => setForm((p) => ({ ...p, mobile: v }))}
                 fullWidth
                 size="small"
               />

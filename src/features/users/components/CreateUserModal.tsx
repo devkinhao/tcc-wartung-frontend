@@ -13,6 +13,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { usersApi, type UserCreateRequestDTO } from "../api/usersApi";
+import { MaskedTextField } from "@/components/MaskedTextField";
 
 type Props = {
   open: boolean;
@@ -130,12 +131,12 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             disabled={submitting}
           />
 
-          <TextField
+          <MaskedTextField
+            mask="cpf"
             size="small"
             label={t("users.create.fields.cpf")}
-            placeholder="000.000.000-00"
             value={form.cpf ?? ""}
-            onChange={(e) => setForm((p) => ({ ...p, cpf: e.target.value }))}
+            onChange={(v) => setForm((p) => ({ ...p, cpf: v }))}
             disabled={submitting}
           />
 

@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 
 import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/usersApi";
 import { permissionsApi, type PermissionResponseDTO } from "../api/permissionsApi";
+import { MaskedTextField } from "@/components/MaskedTextField";
 
 type Props = {
   open: boolean;
@@ -228,12 +229,12 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={savingProfile}
                 />
-                <TextField
+                <MaskedTextField
+                  mask="cpf"
                   size="small"
                   label={t("users.fields.cpf") || "CPF"}
-                  placeholder="000.000.000-00"
                   value={cpf}
-                  onChange={(e) => setCpf(e.target.value)}
+                  onChange={(v) => setCpf(v)}
                   disabled={savingProfile}
                 />
                 <TextField

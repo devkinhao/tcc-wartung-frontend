@@ -17,6 +17,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { MaskedTextField } from "@/components/MaskedTextField";
 import { AbvtexChip } from "../AbvtexChip";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
 
@@ -106,12 +107,13 @@ export function CustomerGeneralTab({
             </Grid>
 
             <Grid item xs={12} md={2}>
-              <TextField
+              <MaskedTextField
+                mask="cnpj"
                 label={t("customerDetails.general.fields.cnpj")}
                 value={view.cnpj}
                 size="small" fullWidth
                 disabled={!editingGeneral}
-                onChange={(e) => updateField("cnpj", e.target.value)}
+                onChange={(v) => updateField("cnpj", v)}
               />
             </Grid>
 
@@ -164,22 +166,24 @@ export function CustomerGeneralTab({
 
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <TextField
+              <MaskedTextField
+                mask="phone"
                 label={t("customerDetails.contacts.fields.phone")}
                 value={view.phone ?? ""}
                 size="small" fullWidth
                 disabled={!editingContacts}
-                onChange={(e) => updateField("phone", e.target.value)}
+                onChange={(v) => updateField("phone", v)}
               />
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <TextField
+              <MaskedTextField
+                mask="mobile"
                 label={t("customerDetails.contacts.fields.mobile")}
                 value={view.mobilePhone ?? ""}
                 size="small" fullWidth
                 disabled={!editingContacts}
-                onChange={(e) => updateField("mobilePhone", e.target.value)}
+                onChange={(v) => updateField("mobilePhone", v)}
                 InputProps={{
                   endAdornment: (
                     <IconButton

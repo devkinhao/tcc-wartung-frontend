@@ -21,6 +21,7 @@ import { qk } from "@/api/keys";
 import { useCities } from "@/features/customers/hooks/useCities";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
+import { MaskedTextField } from "@/components/MaskedTextField";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import {
   getCompany,
@@ -242,33 +243,35 @@ export default function CompanyPage() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextField
+            <MaskedTextField
+              mask="cnpj"
               label={t("company.fields.cnpj")}
               fullWidth size="small"
               value={draft.cnpj}
-              onChange={(e) => updateField("cnpj", e.target.value)}
+              onChange={(v) => updateField("cnpj", v)}
               disabled={!isEditing}
               required
-              placeholder="00.000.000/0000-00"
             />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextField
+            <MaskedTextField
+              mask="phone"
               label={t("company.fields.phone")}
               fullWidth size="small"
               value={draft.phone}
-              onChange={(e) => updateField("phone", e.target.value)}
+              onChange={(v) => updateField("phone", v)}
               disabled={!isEditing}
             />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextField
+            <MaskedTextField
+              mask="mobile"
               label={t("company.fields.mobile")}
               fullWidth size="small"
               value={draft.mobilePhone}
-              onChange={(e) => updateField("mobilePhone", e.target.value)}
+              onChange={(v) => updateField("mobilePhone", v)}
               disabled={!isEditing}
             />
           </Grid>
