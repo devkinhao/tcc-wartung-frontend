@@ -103,7 +103,18 @@
     "language": "Sprache",
     "languageDescription": "Sprache der Systemoberfläche",
     "theme": "Design",
-    "themeDescription": "Visuelles Design des Systems"
+    "themeDescription": "Visuelles Design des Systems",
+    "options": {
+      "LANGUAGE": {
+        "pt_BR": "Português (Brasil)",
+        "en_US": "English (US)",
+        "de_DE": "Deutsch"
+      },
+      "THEME": {
+        "light": "Hell",
+        "dark": "Dunkel"
+      }
+    }
   },
   "configurations": {
     "title": "Systemeinstellungen",
@@ -513,7 +524,7 @@
       "notes": "Notizen"
     },
     "documents": {
-    "loading": "Dokumente werden geladen...",
+      "loading": "Dokumente werden geladen...",
       "empty": "Keine Dokumente gefunden.",
       "table": {
         "description": "Beschreibung",
@@ -523,20 +534,20 @@
         "actions": "Aktionen"
       },
       "actions": {
-      "view": "Dokument ansehen",
-      "download": "Herunterladen",
-      "delete": "Löschen",
-      "upload": "Dokument hochladen"
-    },
-    "confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
-    "uploadDialog": {
-      "title": "Dokument hochladen",
-      "description": "Beschreibung",
-      "chooseFile": "Datei auswählen",
-      "fileSelected": "Datei: {{name}}",
-      "hint": "Laden Sie ein Dokument hoch, das zu dieser Inspektion gehört.",
-      "upload": "Hochladen"
-    }
+        "view": "Dokument ansehen",
+        "download": "Herunterladen",
+        "delete": "Löschen",
+        "upload": "Dokument hochladen"
+      },
+      "confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
+      "uploadDialog": {
+        "title": "Dokument hochladen",
+        "description": "Beschreibung",
+        "chooseFile": "Datei auswählen",
+        "fileSelected": "Datei: {{name}}",
+        "hint": "Laden Sie ein Dokument hoch, das zu dieser Inspektion gehört.",
+        "upload": "Hochladen"
+      }
     },
     "audit": {
       "createdAt": "Erstellt am",
@@ -545,11 +556,11 @@
       "updatedBy": "Aktualisiert von"
     },
     "errors": {
-    "update": "Inspektion konnte nicht aktualisiert werden",
-    "uploadDoc": "Dokument konnte nicht hochgeladen werden.",
-    "uploadDocMissingFile": "Bitte wählen Sie eine Datei zum Hochladen aus.",
-    "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
-    "deleteDoc": "Dokument konnte nicht gelöscht werden."
+      "update": "Inspektion konnte nicht aktualisiert werden",
+      "uploadDoc": "Dokument konnte nicht hochgeladen werden.",
+      "uploadDocMissingFile": "Bitte wählen Sie eine Datei zum Hochladen aus.",
+      "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
+      "deleteDoc": "Dokument konnte nicht gelöscht werden."
     }
   }
 }

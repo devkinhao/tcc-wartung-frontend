@@ -103,7 +103,18 @@
     "language": "Idioma",
     "languageDescription": "Idioma utilizado na interface do sistema",
     "theme": "Tema",
-    "themeDescription": "Tema visual do sistema"
+    "themeDescription": "Tema visual do sistema",
+    "options": {
+      "LANGUAGE": {
+        "pt_BR": "Português (Brasil)",
+        "en_US": "English (US)",
+        "de_DE": "Deutsch"
+      },
+      "THEME": {
+        "light": "Claro",
+        "dark": "Escuro"
+      }
+    }
   },
   "configurations": {
     "title": "Configurações do sistema",
@@ -513,7 +524,7 @@
       "notes": "Observações"
     },
     "documents": {
-    "loading": "Carregando documentos...",
+      "loading": "Carregando documentos...",
       "empty": "Nenhum documento encontrado.",
       "table": {
         "description": "Descrição",
@@ -523,20 +534,20 @@
         "actions": "Ações"
       },
       "actions": {
-      "view": "Ver documento",
-      "download": "Baixar",
-      "delete": "Excluir",
-      "upload": "Enviar documento"
-    },
-    "confirmDelete": "Tem certeza que deseja excluir este documento?",
-    "uploadDialog": {
-      "title": "Enviar documento",
-      "description": "Descrição",
-      "chooseFile": "Selecionar arquivo",
-      "fileSelected": "Arquivo: {{name}}",
-      "hint": "Envie um documento relacionado a esta inspeção.",
-      "upload": "Enviar"
-    }
+        "view": "Ver documento",
+        "download": "Baixar",
+        "delete": "Excluir",
+        "upload": "Enviar documento"
+      },
+      "confirmDelete": "Tem certeza que deseja excluir este documento?",
+      "uploadDialog": {
+        "title": "Enviar documento",
+        "description": "Descrição",
+        "chooseFile": "Selecionar arquivo",
+        "fileSelected": "Arquivo: {{name}}",
+        "hint": "Envie um documento relacionado a esta inspeção.",
+        "upload": "Enviar"
+      }
     },
     "audit": {
       "createdAt": "Criado em",
@@ -545,11 +556,11 @@
       "updatedBy": "Atualizado por"
     },
     "errors": {
-    "update": "Não foi possível atualizar a inspeção",
-    "uploadDoc": "Não foi possível enviar o documento.",
-    "uploadDocMissingFile": "Selecione um arquivo para enviar.",
-    "downloadDoc": "Não foi possível baixar o documento.",
-    "deleteDoc": "Não foi possível excluir o documento."
+      "update": "Não foi possível atualizar a inspeção",
+      "uploadDoc": "Não foi possível enviar o documento.",
+      "uploadDocMissingFile": "Selecione um arquivo para enviar.",
+      "downloadDoc": "Não foi possível baixar o documento.",
+      "deleteDoc": "Não foi possível excluir o documento."
     }
   }
 }
