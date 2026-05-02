@@ -70,6 +70,6 @@ export const usersApi = {
   },
 
   async activate(id: number): Promise<void> {
-    await api.put(`/users/${id}`);
+    await api.patch(`/users/${id}`);
   },
 };

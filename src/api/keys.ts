@@ -12,4 +12,5 @@ export const qk = {
   inspectionDetail: (id: number) => ["inspection-detail", id] as const,
   inspectionDocuments: (id: number) => ["inspection-documents", id] as const,
   users: () => ["users"] as const,
+  dashboard: () => ["dashboard"] as const,
 };

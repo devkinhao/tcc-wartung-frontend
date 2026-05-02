@@ -84,15 +84,29 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "loading": "Loading data...",
+    "empty": "No data available",
     "cards": {
+      "inspectionStatus": {
+        "title": "Inspection Status",
+        "expired": "Expired",
+        "nearExpiration": "Expiring in 30 days",
+        "onTrack": "On Track",
+        "total": "total"
+      },
+      "expirationsByMonth": {
+        "title": "Expirations by Month",
+        "subtitle": "Next 12 months",
+        "yAxisLabel": "Inspections",
+        "tooltipLabel": "expiration(s)"
+      },
       "topRequestedServices": {
-        "title": "Most requested services"
+        "title": "Most Requested Services",
+        "tooltipLabel": "inspection(s)"
       },
       "customersByCity": {
-        "title": "Customers by city"
-      },
-      "inspections": {
-        "title": "Inspections"
+        "title": "Customers by City",
+        "tooltipLabel": "customer(s)"
       }
     }
   },

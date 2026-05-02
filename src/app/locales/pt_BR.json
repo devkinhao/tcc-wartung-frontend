@@ -84,15 +84,29 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "loading": "Carregando dados...",
+    "empty": "Sem dados disponíveis",
     "cards": {
+      "inspectionStatus": {
+        "title": "Status das Inspeções",
+        "expired": "Vencidas",
+        "nearExpiration": "Vencem em 30 dias",
+        "onTrack": "Em dia",
+        "total": "total"
+      },
+      "expirationsByMonth": {
+        "title": "Vencimentos por Mês",
+        "subtitle": "Próximos 12 meses",
+        "yAxisLabel": "Inspeções",
+        "tooltipLabel": "vencimento(s)"
+      },
       "topRequestedServices": {
-        "title": "Serviços mais solicitados"
+        "title": "Serviços Mais Solicitados",
+        "tooltipLabel": "inspeção(ões)"
       },
       "customersByCity": {
-        "title": "Clientes por cidade"
-      },
-      "inspections": {
-        "title": "Inspeções"
+        "title": "Clientes por Cidade",
+        "tooltipLabel": "cliente(s)"
       }
     }
   },

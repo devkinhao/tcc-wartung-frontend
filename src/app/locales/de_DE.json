@@ -84,15 +84,29 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "loading": "Daten werden geladen...",
+    "empty": "Keine Daten verfügbar",
     "cards": {
+      "inspectionStatus": {
+        "title": "Status der Inspektionen",
+        "expired": "Abgelaufen",
+        "nearExpiration": "Läuft in 30 Tagen ab",
+        "onTrack": "Aktuell",
+        "total": "gesamt"
+      },
+      "expirationsByMonth": {
+        "title": "Ablauf nach Monat",
+        "subtitle": "Nächste 12 Monate",
+        "yAxisLabel": "Inspektionen",
+        "tooltipLabel": "Ablauf(-läufe)"
+      },
       "topRequestedServices": {
-        "title": "Am häufigsten angeforderte Dienstleistungen"
+        "title": "Meistgefragte Dienstleistungen",
+        "tooltipLabel": "Inspektion(en)"
       },
       "customersByCity": {
-        "title": "Kunden nach Stadt"
-      },
-      "inspections": {
-        "title": "Inspektionen"
+        "title": "Kunden nach Stadt",
+        "tooltipLabel": "Kunde(n)"
       }
     }
   },
