@@ -163,22 +163,45 @@
   },
   "reports": {
     "title": "Reports",
-    "description": "Generate system reports for analysis or export.",
+    "description": "Generate PDF reports for analysis or printing.",
     "actions": {
-      "generate": "Generate report"
+      "generate": "Generate PDF",
+      "generating": "Generating..."
+    },
+    "filters": {
+      "title": "Filters",
+      "isCustomer": {
+        "label": "Company type",
+        "all": "All companies",
+        "customersOnly": "Customers only",
+        "nonCustomersOnly": "Non-customers only"
+      },
+      "abvtexSeal": {
+        "label": "ABVTEX Seal",
+        "all": "All seals",
+        "NAO_POSSUI": "None",
+        "COBRE": "Copper",
+        "BRONZE": "Bronze",
+        "PRATA": "Silver",
+        "OURO": "Gold"
+      },
+      "city": {
+        "label": "City",
+        "all": "All cities"
+      }
     },
     "items": {
-      "inspectionsDue": {
-        "title": "Inspections due soon",
-        "description": "List of inspections that expire in the next few days."
+      "companies": {
+        "title": "Companies Report",
+        "description": "General data, contacts and address for all active companies, with filters by customer type, ABVTEX seal and city."
       },
-      "inspectionsOverdue": {
-        "title": "Overdue inspections",
-        "description": "Inspections with an expired due date."
+      "expiringInspections": {
+        "title": "Expirations by Month and Customer",
+        "description": "Active inspections from active customers expiring in the next 12 months, grouped by month and customer."
       },
-      "inspectionsByPeriod": {
-        "title": "Inspections by period",
-        "description": "Inspection report within a date range."
+      "overdueInspections": {
+        "title": "Overdue Inspections by Customer",
+        "description": "Active overdue inspections from active customers, grouped by customer."
       }
     }
   },

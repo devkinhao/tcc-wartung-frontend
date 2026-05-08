@@ -163,22 +163,45 @@
   },
   "reports": {
     "title": "Berichte",
-    "description": "Erstellen Sie Systemberichte zur Analyse oder zum Export.",
+    "description": "PDF-Berichte zur Analyse oder zum Drucken erstellen.",
     "actions": {
-      "generate": "Bericht erstellen"
+      "generate": "PDF erstellen",
+      "generating": "Wird erstellt..."
+    },
+    "filters": {
+      "title": "Filter",
+      "isCustomer": {
+        "label": "Unternehmenstyp",
+        "all": "Alle Unternehmen",
+        "customersOnly": "Nur Kunden",
+        "nonCustomersOnly": "Nur Nicht-Kunden"
+      },
+      "abvtexSeal": {
+        "label": "ABVTEX-Siegel",
+        "all": "Alle Siegel",
+        "NAO_POSSUI": "Keines",
+        "COBRE": "Kupfer",
+        "BRONZE": "Bronze",
+        "PRATA": "Silber",
+        "OURO": "Gold"
+      },
+      "city": {
+        "label": "Stadt",
+        "all": "Alle Städte"
+      }
     },
     "items": {
-      "inspectionsDue": {
-        "title": "Bald fällige Inspektionen",
-        "description": "Liste der Inspektionen, die in den nächsten Tagen ablaufen."
+      "companies": {
+        "title": "Unternehmensbericht",
+        "description": "Allgemeine Daten, Kontakte und Adresse aller aktiven Unternehmen, mit Filtern nach Kundentyp, ABVTEX-Siegel und Stadt."
       },
-      "inspectionsOverdue": {
-        "title": "Überfällige Inspektionen",
-        "description": "Inspektionen mit abgelaufenem Termin."
+      "expiringInspections": {
+        "title": "Ablauf nach Monat und Kunde",
+        "description": "Aktive Inspektionen aktiver Kunden, die in den nächsten 12 Monaten ablaufen, gruppiert nach Monat und Kunde."
       },
-      "inspectionsByPeriod": {
-        "title": "Inspektionen nach Zeitraum",
-        "description": "Inspektionsbericht innerhalb eines Datumsbereichs."
+      "overdueInspections": {
+        "title": "Überfällige Inspektionen nach Kunde",
+        "description": "Aktive überfällige Inspektionen aktiver Kunden, nach Kunde gruppiert."
       }
     }
   },

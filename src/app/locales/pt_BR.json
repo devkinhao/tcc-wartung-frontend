@@ -163,22 +163,45 @@
   },
   "reports": {
     "title": "Relatórios",
-    "description": "Gere relatórios do sistema para análise ou exportação.",
+    "description": "Gere relatórios em PDF para análise ou impressão.",
     "actions": {
-      "generate": "Gerar relatório"
+      "generate": "Gerar PDF",
+      "generating": "Gerando..."
+    },
+    "filters": {
+      "title": "Filtros",
+      "isCustomer": {
+        "label": "Tipo de empresa",
+        "all": "Todas as empresas",
+        "customersOnly": "Apenas clientes",
+        "nonCustomersOnly": "Apenas não-clientes"
+      },
+      "abvtexSeal": {
+        "label": "Selo ABVTEX",
+        "all": "Todos os selos",
+        "NAO_POSSUI": "Não possui",
+        "COBRE": "Cobre",
+        "BRONZE": "Bronze",
+        "PRATA": "Prata",
+        "OURO": "Ouro"
+      },
+      "city": {
+        "label": "Cidade",
+        "all": "Todas as cidades"
+      }
     },
     "items": {
-      "inspectionsDue": {
-        "title": "Inspeções a vencer",
-        "description": "Lista de inspeções que vencem nos próximos dias."
+      "companies": {
+        "title": "Relatório de Empresas",
+        "description": "Dados gerais, contatos e endereço de todas as empresas ativas, com filtros por tipo de cliente, selo ABVTEX e cidade."
       },
-      "inspectionsOverdue": {
-        "title": "Inspeções vencidas",
-        "description": "Inspeções com prazo expirado."
+      "expiringInspections": {
+        "title": "Vencimentos por Mês e Cliente",
+        "description": "Inspeções ativas de clientes ativos com vencimento nos próximos 12 meses, agrupadas por mês e por cliente."
       },
-      "inspectionsByPeriod": {
-        "title": "Inspeções por período",
-        "description": "Relatório de inspeções em um intervalo de datas."
+      "overdueInspections": {
+        "title": "Inspeções Vencidas por Cliente",
+        "description": "Inspeções ativas com prazo expirado, de clientes ativos, agrupadas por cliente."
       }
     }
   },
