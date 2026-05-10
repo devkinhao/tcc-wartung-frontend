@@ -54,7 +54,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
             </Typography>
           </Box>
         ) : (
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={260} minWidth={0}>
             <BarChart
               data={series}
               layout="vertical"

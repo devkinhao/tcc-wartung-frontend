@@ -124,8 +124,8 @@ export function InspectionStatusCards({ data, loading }: Props) {
 
           {/* Donut */}
           {total > 0 && (
-            <Box sx={{ width: { xs: "100%", md: 200 }, height: 160 }}>
-              <ResponsiveContainer width="100%" height="100%">
+            <Box sx={{ width: { xs: "100%", md: 200 }, height: 160, minWidth: 0, flexShrink: 0 }}>
+              <ResponsiveContainer width="100%" height={160} minWidth={0}>
                 <PieChart>
                   <Pie
                     data={pieData}

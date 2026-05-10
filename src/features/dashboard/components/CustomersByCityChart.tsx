@@ -71,7 +71,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
             </Typography>
           </Box>
         ) : (
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={260} minWidth={0}>
             <PieChart>
               <Pie
                 data={series}
