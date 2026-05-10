@@ -16,6 +16,7 @@ import { PrivateRoute } from "./routes/PrivateRoute";
 import { PreferencesProvider } from "./features/preferences/PreferencesContext";
 import { ThemeSync } from "./app/ThemeSync";
 import { MuiThemeProvider } from "./app/MuiThemeProvider";
+import { SnackbarProvider } from "notistack";
 
 export default function App() {
   return (
@@ -23,31 +24,37 @@ export default function App() {
       <ThemeSync />
 
       <MuiThemeProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
+        {/* SnackbarProvider dentro do MuiThemeProvider herda o tema (dark/light) */}
+        <SnackbarProvider
+          maxSnack={4}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
 
-            <Route element={<PrivateRoute />}>
-              <Route element={<Layout />}>
-                <Route index element={<Navigate to="/dashboard" />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="customers" element={<Customers />} />
-                <Route path="reports" element={<Reports />} />
-                <Route path="company" element={<Company />} />
-                <Route path="users" element={<Users />} />
-                <Route path="configurations" element={<Configurations />} />
-                <Route path="help" element={<Help />} />
-                <Route path="users/me" element={<UserProfile />} />
-                <Route path="/customers/:id" element={<CustomerDetailsPage />} />
-                <Route path="/inspections/:id" element={<InspectionDetailsPage />} />
-                <Route
-                  path="users/me/preferences"
-                  element={<UserPreferences />}
-                />
+              <Route element={<PrivateRoute />}>
+                <Route element={<Layout />}>
+                  <Route index element={<Navigate to="/dashboard" />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="customers" element={<Customers />} />
+                  <Route path="reports" element={<Reports />} />
+                  <Route path="company" element={<Company />} />
+                  <Route path="users" element={<Users />} />
+                  <Route path="configurations" element={<Configurations />} />
+                  <Route path="help" element={<Help />} />
+                  <Route path="users/me" element={<UserProfile />} />
+                  <Route path="/customers/:id" element={<CustomerDetailsPage />} />
+                  <Route path="/inspections/:id" element={<InspectionDetailsPage />} />
+                  <Route
+                    path="users/me/preferences"
+                    element={<UserPreferences />}
+                  />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </SnackbarProvider>
       </MuiThemeProvider>
     </PreferencesProvider>
   );

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
   Box,
   CircularProgress,
   Dialog,
@@ -21,6 +20,7 @@ import {
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useTranslation } from "react-i18next";
 
+import { useNotify } from "@/hooks/useNotify";
 import { getCustomerDetail } from "../api/customers.detail.api";
 import type { InspectionSummaryResponseDTO } from "../types/customerDetail";
 import { formatDateBR } from "@/utils/date";
@@ -33,10 +33,10 @@ type Props = {
 
 export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props) {
   const { t } = useTranslation();
+  const notify = useNotify();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [inspections, setInspections] = useState<InspectionSummaryResponseDTO[]>([]);
 
   const sortedInspections = useMemo(() => {
@@ -53,7 +53,6 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
 
     let mounted = true;
     setLoading(true);
-    setError(null);
 
     getCustomerDetail(customerId)
       .then((data) => {
@@ -62,7 +61,7 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
       })
       .catch(() => {
         if (!mounted) return;
-        setError(t("customers.quickView.error"));
+        notify.error("notify.error.loadFailed");
         setInspections([]);
       })
       .finally(() => {
@@ -79,13 +78,12 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
     // Trigger the effect again by toggling open state isn't possible here;
     // we just re-run the same fetch inline.
     setLoading(true);
-    setError(null);
     getCustomerDetail(customerId)
       .then((data) => {
         setInspections(data.inspections ?? []);
       })
       .catch(() => {
-        setError(t("customers.quickView.error"));
+        notify.error("notify.error.loadFailed");
         setInspections([]);
       })
       .finally(() => setLoading(false));
@@ -96,19 +94,6 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
       <DialogTitle>{t("customers.quickView.title")}</DialogTitle>
 
       <DialogContent dividers>
-        {error && (
-          <Alert
-            severity="error"
-            action={
-              <Button size="small" onClick={handleRetry}>
-                {t("common.actions.retry")}
-              </Button>
-            }
-            sx={{ mb: 2 }}
-          >
-            {error}
-          </Alert>
-        )}
 
         {loading ? (
           <Box sx={{ py: 5, display: "flex", alignItems: "center", justifyContent: "center", gap: 1.5 }}>

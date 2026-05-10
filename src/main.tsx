@@ -5,6 +5,7 @@ import "@/app/i18n";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SnackbarProvider } from "notistack";
 
 import { AuthProvider } from "./features/auth/AuthProvider";
 
@@ -13,9 +14,8 @@ function AppProviders({ children }: { children: React.ReactNode }) {
     const client = new QueryClient({
       defaultOptions: {
         queries: {
-          // keep cache reasonable and predictable; preferences refetch is handled per-query
-          staleTime: 1000 * 60 * 5, // 5 min
-          gcTime: 1000 * 60 * 60 * 24, // 24h
+          staleTime: 1000 * 60 * 5,
+          gcTime: 1000 * 60 * 60 * 24,
           refetchOnWindowFocus: false,
           retry: 1,
         },
@@ -27,7 +27,15 @@ function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        {/*
+          SnackbarProvider deve ficar dentro do MuiThemeProvider (em App.tsx)
+          para herdar o tema. Mas como o AuthProvider precisa ser pai do App,
+          e o MuiThemeProvider está dentro do App, o SnackbarProvider é
+          renderizado dentro do MuiThemeProvider via App.tsx.
+        */}
+        {children}
+      </AuthProvider>
 
       {import.meta.env.DEV && (
         <ReactQueryDevtools initialIsOpen={false} />

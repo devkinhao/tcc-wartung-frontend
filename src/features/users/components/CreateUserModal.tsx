@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -13,6 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { usersApi, type UserCreateRequestDTO } from "../api/usersApi";
+import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 
 type Props = {
@@ -23,9 +23,9 @@ type Props = {
 
 export function CreateUserModal({ open, onClose, onCreated }: Props) {
   const { t } = useTranslation();
+  const notify = useNotify();
 
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState<UserCreateRequestDTO>({
     username: "",
@@ -37,7 +37,6 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
   });
 
   function resetForm() {
-    setError(null);
     setForm({
       username: "",
       password: "",
@@ -56,7 +55,6 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
 
   async function handleCreate() {
     setSubmitting(true);
-    setError(null);
     try {
       const payload: UserCreateRequestDTO = {
         username: form.username.trim(),
@@ -78,7 +76,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
         e?.response?.data?.error ||
         e?.message ||
         t("common.noDataAvailable");
-      setError(String(msg));
+      notify.fromError(e);
     } finally {
       setSubmitting(false);
     }
@@ -101,8 +99,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
       </DialogTitle>
 
       <DialogContent dividers>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
+        
         <Stack spacing={2}>
           <TextField
             size="small"

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -49,6 +48,7 @@ import type {
   InspectionUpdateRequestDTO,
 } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
+import { useNotify } from "@/hooks/useNotify";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 
 function toISODate(value?: string | null) {
@@ -62,8 +62,8 @@ export default function InspectionDetailsPage() {
   const inspectionId = Number(id);
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const notify = useNotify();
 
-  const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<InspectionDetailResponseDTO | null>(null);
 
@@ -94,23 +94,26 @@ export default function InspectionDetailsPage() {
       qc.setQueryData(qk.inspectionDetail(inspectionId), updated);
       setDraft(updated);
       setEditing(false);
+      notify.success("notify.success.saved");
     },
-    onError: () => setError(t("inspectionDetails.errors.update")),
+    onError: (err) => notify.fromError(err),
   });
 
   const uploadMutation = useMutation({
     mutationFn: (params: { description: string; file: File }) =>
       uploadInspectionDocument(inspectionId, params),
     onSuccess: async () => {
-      setUploadOpen(false);
-      setUploadDescription("");
-      setUploadFile(null);
+      // Invalida e aguarda os dados atualizados ANTES de fechar o dialog
       await Promise.all([
         qc.invalidateQueries({ queryKey: qk.inspectionDocuments(inspectionId) }),
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
+      setUploadOpen(false);
+      setUploadDescription("");
+      setUploadFile(null);
+      notify.success("notify.success.uploaded");
     },
-    onError: () => setError(t("inspectionDetails.errors.uploadDoc")),
+    onError: (err) => notify.fromError(err),
   });
 
   const deleteMutation = useMutation({
@@ -120,8 +123,9 @@ export default function InspectionDetailsPage() {
         qc.invalidateQueries({ queryKey: qk.inspectionDocuments(inspectionId) }),
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
+      notify.success("notify.success.deleted");
     },
-    onError: () => setError(t("inspectionDetails.errors.deleteDoc")),
+    onError: (err) => notify.fromError(err),
   });
 
   const view = draft ?? data;
@@ -173,7 +177,7 @@ export default function InspectionDetailsPage() {
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      setError(t("inspectionDetails.errors.downloadDoc"));
+      notify.error("notify.error.downloadFailed");
     }
   };
 
@@ -183,11 +187,6 @@ export default function InspectionDetailsPage() {
 
   return (
     <Box sx={{ maxWidth: 1200 }}>
-      {error ? (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      ) : null}
 
       {/* Confirm delete dialog — substitui window.confirm */}
       <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
@@ -543,7 +542,7 @@ export default function InspectionDetailsPage() {
             startIcon={uploadMutation.isPending ? <CircularProgress size={16} /> : <UploadFileIcon />}
             onClick={() => {
               if (!uploadFile) {
-                setError(t("inspectionDetails.errors.uploadDocMissingFile"));
+                notify.warning("notify.error.uploadFailed");
                 return;
               }
               uploadMutation.mutate({ description: uploadDescription, file: uploadFile });

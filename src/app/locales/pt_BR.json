@@ -599,5 +599,34 @@
       "downloadDoc": "Não foi possível baixar o documento.",
       "deleteDoc": "Não foi possível excluir o documento."
     }
+  },
+  "notify": {
+    "success": {
+      "saved": "Alterações salvas com sucesso",
+      "created": "Cadastro realizado com sucesso",
+      "deleted": "Removido com sucesso",
+      "uploaded": "Arquivo enviado com sucesso",
+      "passwordChanged": "Senha alterada com sucesso"
+    },
+    "error": {
+      "generic": "Ocorreu um erro. Tente novamente.",
+      "saveFailed": "Erro ao salvar alterações",
+      "loadFailed": "Erro ao carregar dados",
+      "uploadFailed": "Erro ao enviar arquivo",
+      "deleteFailed": "Erro ao remover",
+      "downloadFailed": "Erro ao baixar arquivo",
+      "reportFailed": "Erro ao gerar relatório"
+    },
+    "httpErrors": {
+      "400": "Dados inválidos. Verifique os campos e tente novamente.",
+      "401": "Sessão expirada. Faça login novamente.",
+      "403": "Você não tem permissão para realizar esta ação.",
+      "404": "Registro não encontrado.",
+      "409": "Conflito: este registro já existe.",
+      "422": "Dados inválidos. Verifique os campos e tente novamente.",
+      "500": "Erro interno do servidor. Tente novamente mais tarde.",
+      "network": "Sem conexão com o servidor. Verifique sua internet.",
+      "unknown": "Ocorreu um erro inesperado. Tente novamente."
+    }
   }
 }

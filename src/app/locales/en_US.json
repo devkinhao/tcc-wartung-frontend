@@ -599,5 +599,34 @@
       "downloadDoc": "Could not download document.",
       "deleteDoc": "Could not delete document."
     }
+  },
+  "notify": {
+    "success": {
+      "saved": "Changes saved successfully",
+      "created": "Created successfully",
+      "deleted": "Removed successfully",
+      "uploaded": "File uploaded successfully",
+      "passwordChanged": "Password changed successfully"
+    },
+    "error": {
+      "generic": "An error occurred. Please try again.",
+      "saveFailed": "Failed to save changes",
+      "loadFailed": "Failed to load data",
+      "uploadFailed": "Failed to upload file",
+      "deleteFailed": "Failed to remove",
+      "downloadFailed": "Failed to download file",
+      "reportFailed": "Failed to generate report"
+    },
+    "httpErrors": {
+      "400": "Invalid data. Please check the fields and try again.",
+      "401": "Session expired. Please log in again.",
+      "403": "You do not have permission to perform this action.",
+      "404": "Record not found.",
+      "409": "Conflict: this record already exists.",
+      "422": "Invalid data. Please check the fields and try again.",
+      "500": "Internal server error. Please try again later.",
+      "network": "Cannot reach the server. Check your internet connection.",
+      "unknown": "An unexpected error occurred. Please try again."
+    }
   }
 }

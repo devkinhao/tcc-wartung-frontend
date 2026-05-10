@@ -599,5 +599,34 @@
       "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
       "deleteDoc": "Dokument konnte nicht gelöscht werden."
     }
+  },
+  "notify": {
+    "success": {
+      "saved": "Änderungen erfolgreich gespeichert",
+      "created": "Erfolgreich erstellt",
+      "deleted": "Erfolgreich entfernt",
+      "uploaded": "Datei erfolgreich hochgeladen",
+      "passwordChanged": "Passwort erfolgreich geändert"
+    },
+    "error": {
+      "generic": "Ein Fehler ist aufgetreten. Bitte erneut versuchen.",
+      "saveFailed": "Fehler beim Speichern",
+      "loadFailed": "Fehler beim Laden",
+      "uploadFailed": "Fehler beim Hochladen",
+      "deleteFailed": "Fehler beim Entfernen",
+      "downloadFailed": "Fehler beim Herunterladen",
+      "reportFailed": "Fehler beim Erstellen des Berichts"
+    },
+    "httpErrors": {
+      "400": "Ungültige Daten. Bitte prüfen Sie die Felder und versuchen Sie es erneut.",
+      "401": "Sitzung abgelaufen. Bitte melden Sie sich erneut an.",
+      "403": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+      "404": "Datensatz nicht gefunden.",
+      "409": "Konflikt: Dieser Datensatz existiert bereits.",
+      "422": "Ungültige Daten. Bitte prüfen Sie die Felder und versuchen Sie es erneut.",
+      "500": "Interner Serverfehler. Bitte versuchen Sie es später erneut.",
+      "network": "Keine Verbindung zum Server. Prüfen Sie Ihre Internetverbindung.",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    }
   }
 }

@@ -4,7 +4,6 @@ import type { AbvtexSealType } from "./types/abvtexSeal";
 import { api } from "@/api/client";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
@@ -14,6 +13,7 @@ import {
   DialogTitle,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -23,8 +23,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
+import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 
@@ -70,11 +72,11 @@ const defaultForm: NewCompanyForm = {
 
 export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps) {
   const { t } = useTranslation();
+  const notify = useNotify();
 
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [form, setForm] = useState<NewCompanyForm>(defaultForm);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [createdId, setCreatedId] = useState<number | null>(null);
 
   const navigate = useNavigate();
@@ -95,7 +97,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     setStep(0);
     setForm(defaultForm);
     setSubmitting(false);
-    setError(null);
     setCreatedId(null);
     onClose();
   };
@@ -122,7 +123,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
   const onSubmit = async () => {
     setSubmitting(true);
-    setError(null);
 
     try {
       const payload = {
@@ -149,7 +149,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
       setStep(2);
     } catch (e) {
       console.error("Erro ao criar cliente:", e);
-      setError(t("customers.addModal.errors.createFailed"));
+      notify.fromError(e);
     } finally {
       setSubmitting(false);
     }
@@ -174,7 +174,12 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
   return (
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
-      <DialogTitle>{t("customers.addModal.title")}</DialogTitle>
+      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        {t("customers.addModal.title")}
+        <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
       <DialogContent dividers>
         <Stepper activeStep={step} sx={{ mb: 3 }}>
@@ -190,8 +195,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               ? t("customers.addModal.stepHints.step2")
               : t("customers.addModal.stepHints.done")}
         </Typography>
-
-        {error ? <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert> : null}
 
         {step === 2 ? (
           <Box sx={{ textAlign: "center", py: 4 }}>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Alert,
   Box,
   Chip,
   CircularProgress,
@@ -15,46 +14,42 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ArrowBackIcon      from "@mui/icons-material/ArrowBack";
+import WhatsAppIcon       from "@mui/icons-material/WhatsApp";
+import MoreVertIcon       from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 
-import { useCustomerDetail } from "../hooks/useCustomerDetail";
-import { useCities } from "../hooks/useCities";
-import { CustomerGeneralTab } from "../components/tabs/CustomerGeneralTab";
-import { CustomerAddressTab } from "../components/tabs/CustomerAddressTab";
-import { CustomerInspectionsTab } from "../components/tabs/CustomerInspectionsTab";
-import { CustomerMovementsTab } from "../components/tabs/CustomerMovementsTab";
-import type { CustomerUpdateGeneralRequestDTO, CustomerUpdateContactsRequestDTO, CustomerUpdateAddressRequestDTO } from "../api/customers.detail.api";
+import { useCustomerDetail }       from "../hooks/useCustomerDetail";
+import { useCities }               from "../hooks/useCities";
+import { CustomerGeneralTab }      from "../components/tabs/CustomerGeneralTab";
+import { CustomerAddressTab }      from "../components/tabs/CustomerAddressTab";
+import { CustomerInspectionsTab }  from "../components/tabs/CustomerInspectionsTab";
+import { CustomerMovementsTab }    from "../components/tabs/CustomerMovementsTab";
+import type {
+  CustomerUpdateGeneralRequestDTO,
+  CustomerUpdateContactsRequestDTO,
+  CustomerUpdateAddressRequestDTO,
+} from "../api/customers.detail.api";
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
 export default function CustomerDetailsPage() {
-  const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const cities = useCities();
+  const { t }        = useTranslation();
+  const { id }       = useParams();
+  const navigate     = useNavigate();
+  const cities       = useCities();
 
   const {
-    view,
-    isLoading,
-    error,
-    setError,
-    updateField,
-    updateAddress,
-    resetDraft,
-    handleCepFound,
+    view, isLoading,
+    editingGeneral,  setEditingGeneral,
+    editingContacts, setEditingContacts,
+    editingAddress,  setEditingAddress,
+    updateField, updateAddress, resetDraft, handleCepFound,
     mutations,
   } = useCustomerDetail(Number(id));
 
-  const [tab, setTab] = useState<TabKey>("general");
+  const [tab,    setTab]    = useState<TabKey>("general");
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
-
-  // Estados de edição por seção
-  const [editingGeneral, setEditingGeneral] = useState(false);
-  const [editingContacts, setEditingContacts] = useState(false);
-  const [editingAddress, setEditingAddress] = useState(false);
 
   if (isLoading || !view) {
     return (
@@ -67,32 +62,20 @@ export default function CustomerDetailsPage() {
     );
   }
 
-  const statusLabel = view.isCustomer
-    ? t("customerDetails.status.active")
-    : t("customerDetails.status.inactive");
-
   return (
     <Box sx={{ maxWidth: 1200 }}>
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
 
-      {/* Cabeçalho com breadcrumb, status e menu de ações */}
+      {/* ── Cabeçalho ──────────────────────────────────────────────────── */}
       <Paper elevation={1} sx={{ borderRadius: 2, mb: 2 }}>
         <Box sx={{ px: 2, py: 1.5 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <IconButton
-                  size="small"
-                  onClick={() => navigate("/customers")}
-                  aria-label={t("customerDetails.actions.back")}
-                >
+                <IconButton size="small" onClick={() => navigate("/customers")}
+                  aria-label={t("customerDetails.actions.back")}>
                   <ArrowBackIcon fontSize="small" />
                 </IconButton>
-                <Typography fontWeight={700} color="text.primary" noWrap sx={{ minWidth: 0 }}>
+                <Typography fontWeight={700} color="text.primary" noWrap>
                   {view.legalName}
                 </Typography>
               </Stack>
@@ -101,7 +84,11 @@ export default function CustomerDetailsPage() {
                 <Typography variant="body2" color="text.secondary">
                   {t("customerDetails.summary.cnpj")} {view.cnpj}
                 </Typography>
-                <Chip size="small" label={statusLabel} color={view.isCustomer ? "success" : "default"} />
+                <Chip
+                  size="small"
+                  label={view.isCustomer ? t("customerDetails.status.active") : t("customerDetails.status.inactive")}
+                  color={view.isCustomer ? "success" : "default"}
+                />
                 <Typography variant="body2" color="text.secondary">
                   {t("customerDetails.summary.phone")}: {view.phone || "—"}
                 </Typography>
@@ -111,9 +98,7 @@ export default function CustomerDetailsPage() {
                 <IconButton
                   size="small"
                   aria-label={t("customerDetails.actions.whatsapp")}
-                  onClick={() =>
-                    window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")
-                  }
+                  onClick={() => window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")}
                   disabled={!view.mobilePhone}
                 >
                   <WhatsAppIcon fontSize="small" />
@@ -130,12 +115,7 @@ export default function CustomerDetailsPage() {
                 <MoreVertIcon />
               </IconButton>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
-                <MenuItem
-                  onClick={() => {
-                    setMenuEl(null);
-                    mutations.deactivate.mutate();
-                  }}
-                >
+                <MenuItem onClick={() => { setMenuEl(null); mutations.deactivate.mutate(); }}>
                   {t("customerDetails.actions.deactivate")}
                 </MenuItem>
               </Menu>
@@ -145,13 +125,8 @@ export default function CustomerDetailsPage() {
 
         <Divider />
 
-        <Tabs
-          value={tab}
-          onChange={(_, v) => setTab(v)}
-          sx={{ px: 2 }}
-          textColor="primary"
-          indicatorColor="primary"
-        >
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 2 }}
+          textColor="primary" indicatorColor="primary">
           <Tab value="general"     label={t("customerDetails.tabs.general")} />
           <Tab value="address"     label={t("customerDetails.tabs.address")} />
           <Tab value="inspections" label={t("customerDetails.tabs.inspections")} />
@@ -159,7 +134,7 @@ export default function CustomerDetailsPage() {
         </Tabs>
       </Paper>
 
-      {/* Conteúdo da aba ativa */}
+      {/* ── Abas ───────────────────────────────────────────────────────── */}
       {tab === "general" && (
         <CustomerGeneralTab
           view={view}
@@ -171,10 +146,10 @@ export default function CustomerDetailsPage() {
           onSaveGeneral={() =>
             mutations.general.mutate({
               fantasyName: view.fantasyName,
-              legalName: view.legalName,
-              cnpj: view.cnpj,
-              isCustomer: view.isCustomer,
-              abvtexSeal: view.abvtexSeal,
+              legalName:   view.legalName,
+              cnpj:        view.cnpj,
+              isCustomer:  view.isCustomer,
+              abvtexSeal:  view.abvtexSeal,
             } satisfies CustomerUpdateGeneralRequestDTO)
           }
           editingContacts={editingContacts}
@@ -183,9 +158,9 @@ export default function CustomerDetailsPage() {
           onCancelContacts={() => { resetDraft(); setEditingContacts(false); }}
           onSaveContacts={() =>
             mutations.contacts.mutate({
-              phone: view.phone,
+              phone:       view.phone,
               mobilePhone: view.mobilePhone,
-              email: view.email,
+              email:       view.email,
             } satisfies CustomerUpdateContactsRequestDTO)
           }
         />
@@ -203,24 +178,20 @@ export default function CustomerDetailsPage() {
           onCancel={() => { resetDraft(); setEditingAddress(false); }}
           onSave={() =>
             mutations.address.mutate({
-              zipCode: view.address.zipCode,
-              street: view.address.street,
-              number: view.address.number,
-              complement: view.address.complement,
+              zipCode:      view.address.zipCode,
+              street:       view.address.street,
+              number:       view.address.number,
+              complement:   view.address.complement,
               neighborhood: view.address.neighborhood,
-              cityId: view.address.city.id,
+              cityId:       view.address.city.id,
             } satisfies CustomerUpdateAddressRequestDTO)
           }
         />
       )}
 
-      {tab === "inspections" && (
-        <CustomerInspectionsTab inspections={view.inspections} />
-      )}
+      {tab === "inspections" && <CustomerInspectionsTab inspections={view.inspections} />}
+      {tab === "movements"   && <CustomerMovementsTab   view={view} />}
 
-      {tab === "movements" && (
-        <CustomerMovementsTab view={view} />
-      )}
     </Box>
   );
 }

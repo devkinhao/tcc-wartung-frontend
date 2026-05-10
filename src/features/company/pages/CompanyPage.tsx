@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   Box,
   Card,
   CircularProgress,
@@ -22,6 +21,7 @@ import { useCities } from "@/features/customers/hooks/useCities";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { useNotify } from "@/hooks/useNotify";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import {
   getCompany,
@@ -94,9 +94,10 @@ export default function CompanyPage() {
   const qc = useQueryClient();
   const cities = useCities();
 
+  const notify = useNotify();
+
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<CompanyDraft | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: qk.company(),
@@ -111,19 +112,11 @@ export default function CompanyPage() {
   const { mutate: save, isPending: isSaving } = useMutation({
     mutationFn: (dto: CompanyUpdateRequestDTO) => updateCompany(dto),
     onSuccess: () => {
-      // Invalida o cache para refletir os dados salvos
       qc.invalidateQueries({ queryKey: qk.company() });
       setIsEditing(false);
-      setError(null);
+      notify.success("notify.success.saved");
     },
-    onError: (err: any) => {
-      const msg =
-        err?.response?.data?.message ||
-        err?.response?.data?.errors?.[0] ||
-        err?.message ||
-        t("company.errors.saveFailed");
-      setError(String(msg));
-    },
+    onError: (err) => notify.fromError(err),
   });
 
   // ---- Handlers de mudança no draft ----
@@ -145,9 +138,8 @@ export default function CompanyPage() {
   }
 
   function handleCancel() {
-    if (data) setDraft(toDraft(data)); // descarta alterações
+    if (data) setDraft(toDraft(data));
     setIsEditing(false);
-    setError(null);
   }
 
   function handleSave() {
@@ -211,12 +203,6 @@ export default function CompanyPage() {
           onSave={handleSave}
         />
       </Stack>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
 
       {/* Dados da empresa */}
       <Card sx={{ ...cardSx, mb: 3 }}>

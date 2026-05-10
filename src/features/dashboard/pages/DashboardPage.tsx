@@ -1,4 +1,4 @@
-import { Alert, Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,7 +12,7 @@ import { CustomersByCityChart } from "../components/CustomersByCityChart";
 export default function DashboardPage() {
   const { t } = useTranslation();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: qk.dashboard(),
     queryFn: getDashboard,
     staleTime: 1000 * 60 * 5, // 5 min — dados analíticos não mudam a cada segundo
@@ -23,12 +23,6 @@ export default function DashboardPage() {
       <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 3 }}>
         {t("dashboard.title")}
       </Typography>
-
-      {isError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {t("common.noDataAvailable")}
-        </Alert>
-      )}
 
       <Grid container spacing={2.5}>
 

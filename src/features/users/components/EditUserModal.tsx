@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   Box,
   Button,
   Checkbox,
@@ -23,6 +22,7 @@ import { useTranslation } from "react-i18next";
 
 import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/usersApi";
 import { permissionsApi, type PermissionResponseDTO } from "../api/permissionsApi";
+import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 
 type Props = {
@@ -40,6 +40,7 @@ function TabPanel(props: { value: number; index: number; children: React.ReactNo
 
 export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const { t } = useTranslation();
+  const notify = useNotify();
 
   const [tab, setTab] = useState(0);
 
@@ -48,7 +49,6 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const [savingPerms, setSavingPerms] = useState(false);
   const [savingPwd, setSavingPwd] = useState(false);
 
-  const [error, setError] = useState<string | null>(null);
 
   const [user, setUser] = useState<UserResponseDTO | null>(null);
   const [allPermissions, setAllPermissions] = useState<PermissionResponseDTO[]>([]);
@@ -70,7 +70,6 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
     setTab(0);
     setLoading(true);
-    setError(null);
 
     try {
       const [u, perms] = await Promise.all([usersApi.findById(userId), permissionsApi.findAll()]);
@@ -87,7 +86,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setNewPassword("");
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || t("common.noDataAvailable");
-      setError(String(msg));
+      notify.fromError(e);
       setUser(null);
       setAllPermissions([]);
     } finally {
@@ -110,7 +109,6 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     if (userId == null) return;
 
     setSavingProfile(true);
-    setError(null);
     try {
       const dto: UserUpdateRequestDTO = {
         fullName: fullName.trim(),
@@ -130,7 +128,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       onChanged?.();
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || "Failed to update user";
-      setError(String(msg));
+      notify.fromError(e);
     } finally {
       setSavingProfile(false);
     }
@@ -140,7 +138,6 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     if (userId == null) return;
 
     setSavingPerms(true);
-    setError(null);
     try {
       await usersApi.updatePermissions(userId, { permissions: selectedPermissions });
 
@@ -152,7 +149,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       onChanged?.();
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || "Failed to update permissions";
-      setError(String(msg));
+      notify.fromError(e);
     } finally {
       setSavingPerms(false);
     }
@@ -162,13 +159,12 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     if (userId == null) return;
 
     setSavingPwd(true);
-    setError(null);
     try {
       await usersApi.resetPassword(userId, { newPassword: newPassword.trim() });
       setNewPassword("");
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || "Failed to reset password";
-      setError(String(msg));
+      notify.fromError(e);
     } finally {
       setSavingPwd(false);
     }
@@ -199,18 +195,15 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       </DialogTitle>
 
       <DialogContent dividers sx={{ pt: 1 }}>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
 
         {loading ? (
           <Box sx={{ py: 6, display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
         ) : !user ? (
-          <Alert severity="warning">User not found.</Alert>
+          <Typography color="warning.main" sx={{ py: 2 }}>
+            {t("users.edit.notFound") || "User not found."}
+          </Typography>
         ) : (
           <>
             <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ borderBottom: 1, borderColor: "divider" }}>

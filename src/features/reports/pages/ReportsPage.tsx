@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -18,6 +17,7 @@ import {
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useTranslation } from "react-i18next";
 
+import { useNotify } from "@/hooks/useNotify";
 import { useCities } from "@/features/customers/hooks/useCities";
 import {
   generateCompanyReport,
@@ -31,6 +31,7 @@ const ABVTEX_SEALS = ["NAO_POSSUI", "COBRE", "BRONZE", "PRATA", "OURO"] as const
 
 export default function ReportsPage() {
   const { t } = useTranslation();
+  const notify = useNotify();
   const cities = useCities();
 
   // Filtros do Relatório 1
@@ -42,19 +43,13 @@ export default function ReportsPage() {
 
   // Loading e erro independentes por relatório
   const [loading, setLoading] = useState<Record<string, boolean>>({});
-  const [error, setError]     = useState<Record<string, string | null>>({});
 
   async function handleGenerate(reportId: string, fn: () => Promise<void>) {
     setLoading((p) => ({ ...p, [reportId]: true }));
-    setError((p) => ({ ...p, [reportId]: null }));
     try {
       await fn();
-    } catch (e: any) {
-      const msg =
-        e?.response?.data?.message ||
-        e?.message ||
-        t("common.noDataAvailable");
-      setError((p) => ({ ...p, [reportId]: String(msg) }));
+    } catch (e) {
+      notify.fromError(e);
     } finally {
       setLoading((p) => ({ ...p, [reportId]: false }));
     }
@@ -167,12 +162,6 @@ export default function ReportsPage() {
               </FormControl>
             </Stack>
 
-            {error.companies && (
-              <Alert severity="error" sx={{ mb: 1.5 }} onClose={() => setError((p) => ({ ...p, companies: null }))}>
-                {error.companies}
-              </Alert>
-            )}
-
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
@@ -206,12 +195,6 @@ export default function ReportsPage() {
               {t("reports.items.expiringInspections.description")}
             </Typography>
 
-            {error.expiring && (
-              <Alert severity="error" sx={{ mb: 1.5 }} onClose={() => setError((p) => ({ ...p, expiring: null }))}>
-                {error.expiring}
-              </Alert>
-            )}
-
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
@@ -242,12 +225,6 @@ export default function ReportsPage() {
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
               {t("reports.items.overdueInspections.description")}
             </Typography>
-
-            {error.overdue && (
-              <Alert severity="error" sx={{ mb: 1.5 }} onClose={() => setError((p) => ({ ...p, overdue: null }))}>
-                {error.overdue}
-              </Alert>
-            )}
 
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button

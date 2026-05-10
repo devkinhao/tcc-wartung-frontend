@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -28,12 +27,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
 import { User } from "@/types/User";
 import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
+import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
 
 export default function UserProfile() {
   const { t } = useTranslation();
+  const notify = useNotify();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,7 +45,6 @@ export default function UserProfile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -79,6 +79,7 @@ export default function UserProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.me() });
       setIsEditing(false);
+      notify.success("notify.success.saved");
     },
   });
 
@@ -98,6 +99,7 @@ export default function UserProfile() {
     },
 
     onError(_, __, context) {
+      notify.error("notify.error.saveFailed");
       if (context?.previousUser) queryClient.setQueryData(["me"], context.previousUser);
     },
 
@@ -113,11 +115,8 @@ export default function UserProfile() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setPasswordError("");
     },
-    onError: (err: any) => {
-      setPasswordError(err?.response?.data?.message ?? t("userProfile.password.errors.changeFailed"));
-    },
+    onError: (err) => notify.fromError(err),
   });
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -144,7 +143,7 @@ export default function UserProfile() {
 
   function handleChangePassword() {
     if (newPassword !== confirmPassword) {
-      setPasswordError(t("userProfile.password.errors.mismatch"));
+      notify.error(t("userProfile.password.errors.mismatch"));
       return;
     }
 
@@ -389,8 +388,6 @@ export default function UserProfile() {
                 ),
               }}
             />
-
-            {passwordError ? <Alert severity="error">{passwordError}</Alert> : null}
           </Stack>
         </DialogContent>
 
