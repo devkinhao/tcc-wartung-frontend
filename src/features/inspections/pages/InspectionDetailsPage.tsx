@@ -316,6 +316,7 @@ export default function InspectionDetailsPage() {
                   label={t("inspectionDetails.fields.inspectionDate")}
                   size="small"
                   fullWidth
+                  required
                   type={editing ? "date" : "text"}
                   InputLabelProps={{ shrink: true }}
                   value={editing ? toISODate(draft?.inspectionDate) : formatDateBR(view.inspectionDate)}
@@ -336,6 +337,7 @@ export default function InspectionDetailsPage() {
                   label={t("inspectionDetails.fields.expirationDate")}
                   size="small"
                   fullWidth
+                  required
                   type={editing ? "date" : "text"}
                   InputLabelProps={{ shrink: true }}
                   value={editing ? toISODate(draft?.expirationDate) : formatDateBR(view.expirationDate)}
@@ -509,6 +511,7 @@ export default function InspectionDetailsPage() {
               label={t("inspectionDetails.documents.uploadDialog.description")}
               size="small"
               fullWidth
+              required
               value={uploadDescription}
               onChange={(e) => setUploadDescription(e.target.value)}
             />

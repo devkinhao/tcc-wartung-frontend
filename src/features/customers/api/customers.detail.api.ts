@@ -4,7 +4,6 @@ import type { CustomerDetailResponseDTO } from "../types/customerDetail";
 export type CustomerUpdateGeneralRequestDTO = {
   fantasyName: string;
   legalName: string;
-  cnpj: string;
   isCustomer: boolean;
   abvtexSeal: CustomerDetailResponseDTO["abvtexSeal"];
 };

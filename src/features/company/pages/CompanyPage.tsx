@@ -99,6 +99,17 @@ export default function CompanyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<CompanyDraft | null>(null);
 
+  const CNPJ_REGEX   = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+  const CEP_REGEX    = /^\d{5}-\d{3}$/;
+  const EMAIL_REGEX  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PHONE_REGEX  = /^\(\d{2}\) \d{4}-\d{4}$/;
+  const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;
+
+  const cnpjError   = isEditing && (draft?.cnpj ?? "").trim()        !== "" && !CNPJ_REGEX.test(draft?.cnpj ?? "");
+  const emailError  = isEditing && (draft?.email ?? "").trim()        !== "" && !EMAIL_REGEX.test(draft?.email ?? "");
+  const phoneError  = isEditing && (draft?.phone ?? "").trim()        !== "" && !PHONE_REGEX.test(draft?.phone ?? "");
+  const mobileError = isEditing && (draft?.mobilePhone ?? "").trim()  !== "" && !MOBILE_REGEX.test(draft?.mobilePhone ?? "");
+
   const { data, isLoading } = useQuery({
     queryKey: qk.company(),
     queryFn: getCompany,
@@ -214,6 +225,7 @@ export default function CompanyPage() {
               value={draft.fantasyName}
               onChange={(e) => updateField("fantasyName", e.target.value)}
               disabled={!isEditing}
+              inputProps={{ maxLength: 100 }}
             />
           </Grid>
 
@@ -225,6 +237,7 @@ export default function CompanyPage() {
               onChange={(e) => updateField("legalName", e.target.value)}
               disabled={!isEditing}
               required
+              inputProps={{ maxLength: 100 }}
             />
           </Grid>
 
@@ -237,6 +250,8 @@ export default function CompanyPage() {
               onChange={(v) => updateField("cnpj", v)}
               disabled={!isEditing}
               required
+              error={cnpjError}
+              helperText={cnpjError ? t("validation.cnpjInvalid", "CNPJ inválido") : undefined}
             />
           </Grid>
 
@@ -248,6 +263,8 @@ export default function CompanyPage() {
               value={draft.phone}
               onChange={(v) => updateField("phone", v)}
               disabled={!isEditing}
+              error={phoneError}
+              helperText={phoneError ? t("validation.phoneInvalid", "Telefone inválido") : undefined}
             />
           </Grid>
 
@@ -259,6 +276,8 @@ export default function CompanyPage() {
               value={draft.mobilePhone}
               onChange={(v) => updateField("mobilePhone", v)}
               disabled={!isEditing}
+              error={mobileError}
+              helperText={mobileError ? t("validation.mobileInvalid", "Celular inválido") : undefined}
             />
           </Grid>
 
@@ -269,6 +288,9 @@ export default function CompanyPage() {
               value={draft.email}
               onChange={(e) => updateField("email", e.target.value)}
               disabled={!isEditing}
+              error={emailError}
+              helperText={emailError ? t("validation.emailInvalid", "E-mail inválido") : undefined}
+              inputProps={{ maxLength: 75 }}
             />
           </Grid>
         </Grid>
@@ -285,9 +307,11 @@ export default function CompanyPage() {
             <TextField
               label={t("company.address.fields.street")}
               fullWidth size="small"
+              required
               value={draft.address.street}
               onChange={(e) => updateAddress("street", e.target.value)}
               disabled={!isEditing}
+              inputProps={{ maxLength: 100 }}
             />
           </Grid>
 
@@ -298,6 +322,7 @@ export default function CompanyPage() {
               value={draft.address.number}
               onChange={(e) => updateAddress("number", e.target.value)}
               disabled={!isEditing}
+              inputProps={{ maxLength: 20 }}
             />
           </Grid>
 
@@ -308,6 +333,7 @@ export default function CompanyPage() {
               value={draft.address.complement}
               onChange={(e) => updateAddress("complement", e.target.value)}
               disabled={!isEditing}
+              inputProps={{ maxLength: 75 }}
             />
           </Grid>
 
@@ -318,6 +344,7 @@ export default function CompanyPage() {
               value={draft.address.neighborhood}
               onChange={(e) => updateAddress("neighborhood", e.target.value)}
               disabled={!isEditing}
+              inputProps={{ maxLength: 75 }}
             />
           </Grid>
 
@@ -328,12 +355,13 @@ export default function CompanyPage() {
               onAddressFound={handleCepFound}
               label={t("company.address.fields.zipCode")}
               disabled={!isEditing}
+              required
             />
           </Grid>
 
           <Grid item xs={12} md={5}>
             <FormControl fullWidth size="small" disabled={!isEditing}>
-              <InputLabel id="company-city-label">
+              <InputLabel id="company-city-label" required>
                 {t("company.address.fields.city")}
               </InputLabel>
               <Select

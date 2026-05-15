@@ -109,6 +109,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             helperText={t("users.create.helpers.username")}
             disabled={submitting}
             autoFocus
+            required
           />
 
           <TextField
@@ -118,6 +119,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             value={form.password}
             onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
             disabled={submitting}
+            required
           />
 
           <TextField
@@ -126,6 +128,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             value={form.fullName}
             onChange={(e) => setForm((p) => ({ ...p, fullName: e.target.value }))}
             disabled={submitting}
+            required
           />
 
           <MaskedTextField

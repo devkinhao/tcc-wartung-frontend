@@ -246,6 +246,7 @@ export default function UserProfile() {
                 onChange={(e) => setFullName(e.target.value)}
                 size="small"
                 disabled={!isEditing}
+                required
               />
             </Grid>
 

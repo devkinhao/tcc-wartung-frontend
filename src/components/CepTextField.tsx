@@ -16,6 +16,7 @@ type Props = {
   size?: "small" | "medium";
   helperText?: string;
   required?: boolean;
+  error?: boolean;
 };
 
 /** CEP normalizado para 8 dígitos — pronto para consulta */
@@ -39,6 +40,7 @@ export function CepTextField({
   size = "small",
   helperText,
   required = false,
+  error: externalError = false,
 }: Props) {
   const { t } = useTranslation();
   const normalizedCep = normalizeCep(value);
@@ -63,6 +65,7 @@ export function CepTextField({
 
   const errorMessage = isError ? t("common.cep.notFound", "CEP não encontrado") : undefined;
   const displayHelper = errorMessage ?? helperText;
+  const hasError = isError || externalError;
 
   return (
     <TextField
@@ -75,7 +78,7 @@ export function CepTextField({
       inputMode="numeric"
       inputProps={{ inputMode: "numeric" }}
       disabled={disabled}
-      error={isError}
+      error={hasError}
       helperText={displayHelper}
       placeholder="00000-000"
       InputProps={{

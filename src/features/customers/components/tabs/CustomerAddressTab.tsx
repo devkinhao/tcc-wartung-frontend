@@ -77,12 +77,13 @@ export function CustomerAddressTab({
                   onAddressFound={onCepFound}
                   label={t("customerDetails.address.fields.zipCode")}
                   disabled={!editing}
+                  required
                 />
               </Grid>
 
               <Grid item xs={12} md={8}>
                 <FormControl fullWidth size="small" disabled={!editing}>
-                  <InputLabel id="city-label">{t("customerDetails.address.fields.city")}</InputLabel>
+                  <InputLabel id="city-label" required>{t("customerDetails.address.fields.city")}</InputLabel>
                   <Select
                     labelId="city-label"
                     label={t("customerDetails.address.fields.city")}
@@ -106,6 +107,7 @@ export function CustomerAddressTab({
                 <TextField
                   label={t("customerDetails.address.fields.street")}
                   size="small" fullWidth disabled={!editing}
+                  required
                   value={view.address.street ?? ""}
                   onChange={(e) => updateAddress("street", e.target.value)}
                 />

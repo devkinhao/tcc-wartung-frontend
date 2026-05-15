@@ -101,24 +101,31 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     onClose();
   };
 
-  const CNPJ_REGEX = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
-  const CEP_REGEX = /^\d{5}-\d{3}$/;
+  const CNPJ_REGEX  = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+  const CEP_REGEX   = /^\d{5}-\d{3}$/;
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PHONE_REGEX  = /^\(\d{2}\) \d{4}-\d{4}$/;   // 10 dígitos — fixo
+  const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;   // 11 dígitos — celular
 
+  // Erros de formato — visíveis quando o campo está preenchido mas inválido
+  const cnpjError   = form.cnpj.trim()    !== "" && !CNPJ_REGEX.test(form.cnpj.trim());
+  const zipError    = form.zipCode.trim() !== "" && !CEP_REGEX.test(form.zipCode.trim());
+  const emailError  = form.email.trim()   !== "" && !EMAIL_REGEX.test(form.email.trim());
+  const phoneError  = form.phone.trim()   !== "" && !PHONE_REGEX.test(form.phone.trim());
+  const mobileError = form.mobile.trim()  !== "" && !MOBILE_REGEX.test(form.mobile.trim());
+
+  // Só os obrigatórios bloqueiam o avanço de etapa
   const step1Valid =
-    form.fantasyName.trim() !== "" &&
     form.legalName.trim() !== "" &&
     CNPJ_REGEX.test(form.cnpj.trim()) &&
     form.abvtexSeal !== "" &&
-    form.phone.trim() !== "" &&
-    form.mobile.trim() !== "" &&
-    EMAIL_REGEX.test(form.email.trim());
+    !emailError &&
+    !phoneError &&
+    !mobileError;
 
   const step2Valid =
     CEP_REGEX.test(form.zipCode.trim()) &&
     form.street.trim() !== "" &&
-    form.number.trim() !== "" &&
-    form.neighborhood.trim() !== "" &&
     form.cityId !== "";
 
   const onSubmit = async () => {
@@ -222,6 +229,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, fantasyName: e.target.value }))}
                 fullWidth
                 size="small"
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 
@@ -232,7 +240,10 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.cnpj}
                 onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
                 fullWidth
-                size="small"               
+                size="small"
+                required
+                error={cnpjError}
+                helperText={cnpjError ? t("validation.cnpjInvalid", "CNPJ inválido") : undefined}
               />
             </Grid>
 
@@ -244,12 +255,14 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, legalName: e.target.value }))}
                 fullWidth
                 size="small"
+                required
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 
             <Grid item xs={12} md={4}>
               <FormControl fullWidth size="small">
-                <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
+                <InputLabel id="abvtex" required>{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex"
                   label={t("customers.addModal.fields.abvtexSeal")}
@@ -276,6 +289,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(v) => setForm((p) => ({ ...p, phone: v }))}
                 fullWidth
                 size="small"
+                error={phoneError}
+                helperText={phoneError ? t("validation.phoneInvalid", "Telefone inválido") : undefined}
               />
             </Grid>
 
@@ -287,6 +302,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(v) => setForm((p) => ({ ...p, mobile: v }))}
                 fullWidth
                 size="small"
+                error={mobileError}
+                helperText={mobileError ? t("validation.mobileInvalid", "Celular inválido") : undefined}
               />
             </Grid>
 
@@ -297,7 +314,10 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.email}
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 fullWidth
-                size="small"                
+                size="small"
+                error={emailError}
+                helperText={emailError ? t("validation.emailInvalid", "E-mail inválido") : undefined}
+                inputProps={{ maxLength: 75 }}
               />
             </Grid>
           </Grid>
@@ -308,7 +328,10 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.zipCode}
                 onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
                 onAddressFound={handleCepFound}
-                label={t("customers.addModal.fields.zipCode")}              
+                label={t("customers.addModal.fields.zipCode")}
+                required
+                error={zipError}
+                helperText={zipError ? t("validation.cepInvalid", "CEP inválido") : undefined}
               />
             </Grid>
 
@@ -320,6 +343,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, street: e.target.value }))}
                 fullWidth
                 size="small"
+                required
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 
@@ -331,6 +356,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))}
                 fullWidth
                 size="small"
+                inputProps={{ maxLength: 20 }}
               />
             </Grid>
 
@@ -342,6 +368,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))}
                 fullWidth
                 size="small"
+                inputProps={{ maxLength: 75 }}
               />
             </Grid>
 
@@ -353,12 +380,13 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))}
                 fullWidth
                 size="small"
+                inputProps={{ maxLength: 75 }}
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <FormControl fullWidth size="small">
-                <InputLabel id="city">{t("customers.addModal.fields.city")}</InputLabel>
+                <InputLabel id="city" required>{t("customers.addModal.fields.city")}</InputLabel>
                 <Select
                   labelId="city"
                   label={t("customers.addModal.fields.city")}

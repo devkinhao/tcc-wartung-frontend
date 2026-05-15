@@ -147,7 +147,6 @@ export default function CustomerDetailsPage() {
             mutations.general.mutate({
               fantasyName: view.fantasyName,
               legalName:   view.legalName,
-              cnpj:        view.cnpj,
               isCustomer:  view.isCustomer,
               abvtexSeal:  view.abvtexSeal,
             } satisfies CustomerUpdateGeneralRequestDTO)

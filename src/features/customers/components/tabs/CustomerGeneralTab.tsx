@@ -82,6 +82,7 @@ export function CustomerGeneralTab({
                 value={view.legalName}
                 size="small" fullWidth
                 disabled={!editingGeneral}
+                required
                 onChange={(e) => updateField("legalName", e.target.value)}
               />
             </Grid>
@@ -112,8 +113,8 @@ export function CustomerGeneralTab({
                 label={t("customerDetails.general.fields.cnpj")}
                 value={view.cnpj}
                 size="small" fullWidth
-                disabled={!editingGeneral}
-                onChange={(v) => updateField("cnpj", v)}
+                disabled
+                onChange={() => {}}
               />
             </Grid>
 

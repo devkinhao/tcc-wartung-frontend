@@ -221,6 +221,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={savingProfile}
+                  required
                 />
                 <MaskedTextField
                   mask="cpf"
