@@ -44,12 +44,12 @@ export default function InspectionsListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [filters, setFilters] = useState<InspectionListFilters>(INITIAL_FILTERS);
-  const [page, setPage]       = useState(1);
-  const pageSize              = 15;
+  const [filters, setFilters]   = useState<InspectionListFilters>(INITIAL_FILTERS);
+  const [page, setPage]         = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const { data, isLoading } = useQuery({
-    queryKey: qk.inspectionsList({ ...filters, page }),
+    queryKey: qk.inspectionsList({ ...filters, page, pageSize }),
     queryFn:  () => listAllInspections(filters, page, pageSize),
     placeholderData: (prev) => prev,
   });
@@ -99,7 +99,7 @@ export default function InspectionsListPage() {
       </Card>
 
       {/* Tabela */}
-      <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden" }}>
+      <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden", bgcolor: "background.paper" }}>
         <Table size="small">
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
@@ -136,10 +136,10 @@ export default function InspectionsListPage() {
                 key={item.id}
                 hover
                 sx={{ cursor: "pointer" }}
-                onClick={() => navigate(`/customers/${item.customerId}/inspections/${item.id}`)}
+                onClick={() => navigate(`/inspections/${item.id}`)}
               >
-                <TableCell>{item.customerName}</TableCell>
-                <TableCell>{item.serviceName}</TableCell>
+                <TableCell>{item.customerLegalName}</TableCell>
+                <TableCell>{item.serviceTypeName}</TableCell>
                 <TableCell>{formatDateBR(item.inspectionDate)}</TableCell>
                 <TableCell>{formatDateBR(item.expirationDate)}</TableCell>
                 <TableCell align="center">
@@ -157,7 +157,10 @@ export default function InspectionsListPage() {
           pageSize={pageSize}
           total={total}
           onPageChange={setPage}
-          onPageSizeChange={() => {}}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setPage(1);
+          }}
         />
       </Box>
     </Paper>

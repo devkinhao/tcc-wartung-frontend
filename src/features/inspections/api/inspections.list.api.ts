@@ -2,14 +2,11 @@ import { api } from "@/api/client";
 
 export type InspectionListItem = {
   id: number;
-  customerId: number;
-  customerName: string;
+  customerLegalName: string;
   inspectionDate: string;
-  serviceName: string;
+  serviceTypeName: string;
   notes: string | null;
   expirationDate: string;
-  isActive: boolean;
-  isRenewed: boolean;
 };
 
 export type InspectionStatus = "expired" | "near" | "ok";

@@ -38,6 +38,7 @@ export default function App() {
                   <Route path="customers/:customerId/inspections/:id" element={<InspectionDetailsPage />} />
                   {/* Visão operacional transversal — todas as inspeções */}
                   <Route path="inspections"          element={<InspectionsListPage />} />
+                  <Route path="inspections/:id"      element={<InspectionDetailsPage />} />
                   <Route path="reports"              element={<Reports />} />
                   <Route path="company"              element={<Company />} />
                   <Route path="users"                element={<Users />} />

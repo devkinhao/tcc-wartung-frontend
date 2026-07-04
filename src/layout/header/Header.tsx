@@ -16,11 +16,12 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
   const pathname   = location.pathname;
 
   // Parse dynamic route params from pathname
-  const inspMatch  = pathname.match(/^\/customers\/(\d+)\/inspections\/(\d+)/);
-  const custMatch  = pathname.match(/^\/customers\/(\d+)/);
+  const inspMatch     = pathname.match(/^\/customers\/(\d+)\/inspections\/(\d+)/);
+  const custMatch     = pathname.match(/^\/customers\/(\d+)/);
+  const stdInspMatch  = pathname.match(/^\/inspections\/(\d+)/);
 
   const customerId    = inspMatch ? Number(inspMatch[1]) : custMatch ? Number(custMatch[1]) : null;
-  const inspectionId  = inspMatch ? Number(inspMatch[2]) : null;
+  const inspectionId  = inspMatch ? Number(inspMatch[2]) : stdInspMatch ? Number(stdInspMatch[1]) : null;
 
   const { data: customer } = useQuery({
     queryKey: qk.customerDetail(customerId!),
@@ -56,6 +57,13 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
         { label: "nav.home",          path: "/dashboard" },
         { label: "nav.customersList", path: "/customers" },
         { label: customerName },
+      ];
+    } else if (stdInspMatch) {
+      // /inspections/:id
+      crumbs = [
+        { label: "nav.home",            path: "/dashboard" },
+        { label: "nav.inspectionsList", path: "/inspections" },
+        { label: inspection ? `${t("nav.inspectionDetails")} #${inspectionId}` : t("nav.inspectionDetails") },
       ];
     } else {
       crumbs = [{ label: "nav.home", path: "/dashboard" }];
