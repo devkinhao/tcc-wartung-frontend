@@ -23,6 +23,7 @@ import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { PreferenceName } from "@/types/Preferences";
+import { toCamelCase } from "@/utils/strings";
 
 // ── Ícones por opção ────────────────────────────────────────────────────────
 
@@ -41,13 +42,6 @@ const OPTION_ICONS: Record<string, Record<string, React.ReactNode>> = {
     false: <NotificationsOffIcon fontSize="small" sx={{ color: "text.disabled" }} />,
   },
 };
-
-/** Converte SNAKE_CASE para camelCase: SHOW_NOTIFICATIONS → showNotifications */
-function toCamelCase(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase());
-}
 
 // ── Ordem de exibição das preferências ─────────────────────────────────────
 

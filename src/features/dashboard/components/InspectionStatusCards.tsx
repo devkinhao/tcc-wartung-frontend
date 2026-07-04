@@ -10,6 +10,7 @@ import { useTheme } from "@mui/material/styles";
 type Props = {
   data: InspectionStatus | undefined;
   loading: boolean;
+  alertDays: number;
 };
 
 type StatCardProps = {
@@ -51,7 +52,7 @@ function StatCard({ label, value, color, icon, total }: StatCardProps) {
   );
 }
 
-export function InspectionStatusCards({ data, loading }: Props) {
+export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -75,7 +76,7 @@ export function InspectionStatusCards({ data, loading }: Props) {
 
   const pieData = [
     { name: t("dashboard.cards.inspectionStatus.expired"),       value: data.expired,        color: colors.expired },
-    { name: t("dashboard.cards.inspectionStatus.nearExpiration"), value: data.nearExpiration, color: colors.nearExpiration },
+    { name: t("dashboard.cards.inspectionStatus.nearExpiration", { days: alertDays }), value: data.nearExpiration, color: colors.nearExpiration },
     { name: t("dashboard.cards.inspectionStatus.onTrack"),        value: data.onTrack,        color: colors.onTrack },
   ].filter((d) => d.value > 0);
 
@@ -107,7 +108,7 @@ export function InspectionStatusCards({ data, loading }: Props) {
               total={total}
             />
             <StatCard
-              label={t("dashboard.cards.inspectionStatus.nearExpiration")}
+              label={t("dashboard.cards.inspectionStatus.nearExpiration", { days: alertDays })}
               value={data.nearExpiration}
               color={colors.nearExpiration}
               icon={<WarningAmberIcon />}

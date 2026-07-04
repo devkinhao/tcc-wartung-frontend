@@ -91,7 +91,7 @@
       "inspectionStatus": {
         "title": "Status das Inspeções",
         "expired": "Vencidas",
-        "nearExpiration": "Vencem em 30 dias",
+        "nearExpiration": "Vencem em {{days}} dias",
         "onTrack": "Em dia",
         "total": "total"
       },
@@ -140,6 +140,10 @@
   "configurations": {
     "title": "Configurações do sistema",
     "description": "Ajustes gerais que controlam o comportamento do sistema.",
+    "fields": {
+      "diasAlertaVencimento": "Dias de alerta de vencimento",
+      "diasAlertaVencimentoDescription": "Quantidade de dias antes do vencimento em que a inspeção passa a ser sinalizada como próxima do vencimento"
+    },
     "actions": {
       "save": "Salvar configurações"
     }
@@ -643,7 +647,7 @@
     "empty": "Nenhuma inspeção encontrada.",
     "status": {
       "expired": "Vencida",
-      "nearExpiration": "Vence em 30 dias",
+      "nearExpiration": "Vence em {{days}} dias",
       "onTrack": "Em dia"
     },
     "filters": {

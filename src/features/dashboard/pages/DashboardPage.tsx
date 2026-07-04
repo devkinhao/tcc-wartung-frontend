@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
 import { qk } from "@/api/keys";
+import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { getDashboard } from "../api/dashboard.api";
 import { InspectionStatusCards } from "../components/InspectionStatusCards";
 import { ExpirationsByMonthChart } from "../components/ExpirationsByMonthChart";
@@ -18,6 +19,8 @@ export default function DashboardPage() {
     staleTime: 1000 * 60 * 5, // 5 min — dados analíticos não mudam a cada segundo
   });
 
+  const alertDays = useAlertDays();
+
   return (
     <Box sx={{ maxWidth: 1200, width: "100%" }}>
       <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 3 }}>
@@ -31,6 +34,7 @@ export default function DashboardPage() {
           <InspectionStatusCards
             data={data?.inspectionStatus}
             loading={isLoading}
+            alertDays={alertDays}
           />
         </Grid>
 

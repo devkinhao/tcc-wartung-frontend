@@ -91,7 +91,7 @@
       "inspectionStatus": {
         "title": "Status der Inspektionen",
         "expired": "Abgelaufen",
-        "nearExpiration": "Läuft in 30 Tagen ab",
+        "nearExpiration": "Läuft in {{days}} Tagen ab",
         "onTrack": "Aktuell",
         "total": "gesamt"
       },
@@ -140,6 +140,10 @@
   "configurations": {
     "title": "Systemeinstellungen",
     "description": "Allgemeine Einstellungen, die das Systemverhalten steuern.",
+    "fields": {
+      "diasAlertaVencimento": "Tage bis zur Ablaufwarnung",
+      "diasAlertaVencimentoDescription": "Anzahl der Tage vor Ablauf, ab der eine Inspektion als bald ablaufend markiert wird"
+    },
     "actions": {
       "save": "Einstellungen speichern"
     }
@@ -643,7 +647,7 @@
     "empty": "Keine Inspektionen gefunden.",
     "status": {
       "expired": "Abgelaufen",
-      "nearExpiration": "Läuft in 30 Tagen ab",
+      "nearExpiration": "Läuft in {{days}} Tagen ab",
       "onTrack": "Aktuell"
     },
     "filters": {

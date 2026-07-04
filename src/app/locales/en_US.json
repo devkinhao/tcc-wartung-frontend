@@ -91,7 +91,7 @@
       "inspectionStatus": {
         "title": "Inspection Status",
         "expired": "Expired",
-        "nearExpiration": "Expiring in 30 days",
+        "nearExpiration": "Expiring in {{days}} days",
         "onTrack": "On Track",
         "total": "total"
       },
@@ -140,6 +140,10 @@
   "configurations": {
     "title": "System settings",
     "description": "General settings that control the system behavior.",
+    "fields": {
+      "diasAlertaVencimento": "Expiration alert days",
+      "diasAlertaVencimentoDescription": "Number of days before expiration when an inspection starts being flagged as near expiration"
+    },
     "actions": {
       "save": "Save settings"
     }
@@ -643,7 +647,7 @@
     "empty": "No inspections found.",
     "status": {
       "expired": "Expired",
-      "nearExpiration": "Expiring in 30 days",
+      "nearExpiration": "Expiring in {{days}} days",
       "onTrack": "On Track"
     },
     "filters": {

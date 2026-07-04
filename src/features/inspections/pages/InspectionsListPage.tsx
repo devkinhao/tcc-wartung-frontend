@@ -24,20 +24,21 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
 import { formatDateBR } from "@/utils/date";
+import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { listAllInspections, type InspectionListFilters, type InspectionStatus } from "../api/inspections.list.api";
 
 const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
 
-function StatusChip({ expirationDate }: { expirationDate: string }) {
+function StatusChip({ expirationDate, alertDays }: { expirationDate: string; alertDays: number }) {
   const { t } = useTranslation();
-  const today = new Date();
-  const exp   = new Date(expirationDate);
-  const in30  = new Date(today);
-  in30.setDate(in30.getDate() + 30);
+  const today          = new Date();
+  const exp            = new Date(expirationDate);
+  const alertThreshold = new Date(today);
+  alertThreshold.setDate(alertThreshold.getDate() + alertDays);
 
-  if (exp < today)  return <Chip size="small" label={t("inspections.status.expired")}        color="error"   />;
-  if (exp <= in30)  return <Chip size="small" label={t("inspections.status.nearExpiration")}  color="warning" />;
-  return              <Chip size="small" label={t("inspections.status.onTrack")}              color="success" variant="outlined" />;
+  if (exp < today)             return <Chip size="small" label={t("inspections.status.expired")}                          color="error"   />;
+  if (exp <= alertThreshold)    return <Chip size="small" label={t("inspections.status.nearExpiration", { days: alertDays })} color="warning" />;
+  return                        <Chip size="small" label={t("inspections.status.onTrack")}                                color="success" variant="outlined" />;
 }
 
 export default function InspectionsListPage() {
@@ -53,6 +54,8 @@ export default function InspectionsListPage() {
     queryFn:  () => listAllInspections(filters, page, pageSize),
     placeholderData: (prev) => prev,
   });
+
+  const alertDays = useAlertDays();
 
   const items = data?.content ?? [];
   const total = data?.page.totalElements ?? 0;
@@ -91,7 +94,7 @@ export default function InspectionsListPage() {
             >
               <MenuItem value="">{t("inspections.filters.allStatuses")}</MenuItem>
               <MenuItem value="expired">{t("inspections.status.expired")}</MenuItem>
-              <MenuItem value="near">{t("inspections.status.nearExpiration")}</MenuItem>
+              <MenuItem value="near">{t("inspections.status.nearExpiration", { days: alertDays })}</MenuItem>
               <MenuItem value="ok">{t("inspections.status.onTrack")}</MenuItem>
             </Select>
           </FormControl>
@@ -143,7 +146,7 @@ export default function InspectionsListPage() {
                 <TableCell>{formatDateBR(item.inspectionDate)}</TableCell>
                 <TableCell>{formatDateBR(item.expirationDate)}</TableCell>
                 <TableCell align="center">
-                  <StatusChip expirationDate={item.expirationDate} />
+                  <StatusChip expirationDate={item.expirationDate} alertDays={alertDays} />
                 </TableCell>
               </TableRow>
             ))}
