@@ -18,6 +18,8 @@ import {
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { PreferenceName } from "@/types/Preferences";
@@ -34,11 +36,26 @@ const OPTION_ICONS: Record<string, Record<string, React.ReactNode>> = {
     en_US: <span style={{ fontSize: 16, lineHeight: 1 }}>🇺🇸</span>,
     de_DE: <span style={{ fontSize: 16, lineHeight: 1 }}>🇩🇪</span>,
   },
+  SHOW_NOTIFICATIONS: {
+    true: <NotificationsActiveIcon fontSize="small" sx={{ color: "primary.main" }} />,
+    false: <NotificationsOffIcon fontSize="small" sx={{ color: "text.disabled" }} />,
+  },
 };
+
+/** Converte SNAKE_CASE para camelCase: SHOW_NOTIFICATIONS → showNotifications */
+function toCamelCase(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase());
+}
 
 // ── Ordem de exibição das preferências ─────────────────────────────────────
 
-const PREFERENCE_ORDER = [PreferenceName.LANGUAGE, PreferenceName.THEME];
+const PREFERENCE_ORDER = [
+  PreferenceName.LANGUAGE,
+  PreferenceName.THEME,
+  PreferenceName.SHOW_NOTIFICATIONS,
+];
 
 // ── Componente ───────────────────────────────────────────────────────────────
 
@@ -73,7 +90,7 @@ export default function UserPreferencesPage() {
         <Skeleton variant="text" width={180} height={32} sx={{ mb: 1 }} />
         <Skeleton variant="text" width={320} height={20} sx={{ mb: 3 }} />
         <Stack spacing={2}>
-          {[0, 1].map((i) => (
+          {[0, 1, 2].map((i) => (
             <Skeleton key={i} variant="rounded" height={80} />
           ))}
         </Stack>
@@ -121,13 +138,14 @@ export default function UserPreferencesPage() {
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
                     {name === "THEME" && <LightModeIcon fontSize="small" color="action" />}
                     {name === "LANGUAGE" && <LanguageIcon fontSize="small" color="action" />}
+                    {name === "SHOW_NOTIFICATIONS" && <NotificationsActiveIcon fontSize="small" color="action" />}
                     <Typography fontWeight={600} color="text.primary">
-                      {t(`preferences.${name.toLowerCase()}`, { defaultValue: name })}
+                      {t(`preferences.${toCamelCase(name)}`, { defaultValue: name })}
                     </Typography>
                   </Stack>
 
                   <Typography variant="body2" color="text.secondary">
-                    {t(`preferences.${name.toLowerCase()}Description`, { defaultValue: "" })}
+                    {t(`preferences.${toCamelCase(name)}Description`, { defaultValue: "" })}
                   </Typography>
                 </Box>
 

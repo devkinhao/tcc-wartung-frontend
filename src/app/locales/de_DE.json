@@ -119,6 +119,8 @@
     "languageDescription": "Sprache der Systemoberfläche",
     "theme": "Design",
     "themeDescription": "Visuelles Design des Systems",
+    "showNotifications": "Benachrichtigungen",
+    "showNotificationsDescription": "Benachrichtigungen im System anzeigen",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -128,6 +130,10 @@
       "THEME": {
         "light": "Hell",
         "dark": "Dunkel"
+      },
+      "SHOW_NOTIFICATIONS": {
+        "true": "Aktiviert",
+        "false": "Deaktiviert"
       }
     }
   },

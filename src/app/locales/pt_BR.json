@@ -119,6 +119,8 @@
     "languageDescription": "Idioma utilizado na interface do sistema",
     "theme": "Tema",
     "themeDescription": "Tema visual do sistema",
+    "showNotifications": "Notificações",
+    "showNotificationsDescription": "Exibir notificações no sistema",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -128,6 +130,10 @@
       "THEME": {
         "light": "Claro",
         "dark": "Escuro"
+      },
+      "SHOW_NOTIFICATIONS": {
+        "true": "Ativadas",
+        "false": "Desativadas"
       }
     }
   },

@@ -9,11 +9,14 @@ import { useQuery } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { getCustomerDetail } from "@/features/customers/api/customers.detail.api";
 import { getInspectionDetail } from "@/features/inspections/api/inspections.detail.api";
+import { usePreferences } from "@/features/preferences/PreferencesContext";
 
 export default function Header({ drawerWidth }: { drawerWidth: number }) {
   const { t }      = useTranslation();
   const location   = useLocation();
   const pathname   = location.pathname;
+  const { preferences } = usePreferences();
+  const showNotifications = preferences.SHOW_NOTIFICATIONS !== "false";
 
   // Parse dynamic route params from pathname
   const inspMatch     = pathname.match(/^\/customers\/(\d+)\/inspections\/(\d+)/);
@@ -88,7 +91,7 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
         <Breadcrumb items={crumbs} />
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <NotificationsMenu />
+          {showNotifications && <NotificationsMenu />}
           <UserMenu />
         </Box>
       </Toolbar>

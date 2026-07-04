@@ -1,6 +1,7 @@
 export enum PreferenceName {
   LANGUAGE = "LANGUAGE",
   THEME = "THEME",
+  SHOW_NOTIFICATIONS = "SHOW_NOTIFICATIONS",
 }
 
 export type UserPreference = {
