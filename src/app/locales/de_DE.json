@@ -655,6 +655,34 @@
       "status": "Status",
       "allStatuses": "Alle Status"
     },
+    "actions": {
+      "addInspection": "Neue Inspektion"
+    },
+    "addModal": {
+      "title": "Neue Inspektion",
+      "fields": {
+        "customer": "Kunde"
+      },
+      "customerNoOptions": "Tippen Sie, um einen Kunden zu suchen",
+      "errors": {
+        "expirationBeforeInspection": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen"
+      },
+      "documents": {
+        "title": "Dokumente (optional)",
+        "add": "Hinzufügen"
+      },
+      "success": {
+        "title": "Inspektion erfolgreich erstellt!",
+        "idLabel": "ID",
+        "uploadFailures": "{{count}} Dokument(e) konnten nicht hochgeladen werden. Sie können es auf der Inspektionsseite erneut versuchen."
+      },
+      "actions": {
+        "create": "Inspektion erstellen",
+        "saving": "Speichern...",
+        "close": "Schließen",
+        "openRecord": "Inspektion öffnen"
+      }
+    },
     "table": {
       "customer": "Kunde",
       "service": "Dienstleistung",

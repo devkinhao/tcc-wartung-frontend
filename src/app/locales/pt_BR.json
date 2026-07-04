@@ -655,6 +655,34 @@
       "status": "Status",
       "allStatuses": "Todos os status"
     },
+    "actions": {
+      "addInspection": "Nova inspeção"
+    },
+    "addModal": {
+      "title": "Nova inspeção",
+      "fields": {
+        "customer": "Cliente"
+      },
+      "customerNoOptions": "Digite para buscar um cliente",
+      "errors": {
+        "expirationBeforeInspection": "O vencimento não pode ser anterior à data da inspeção"
+      },
+      "documents": {
+        "title": "Documentos (opcional)",
+        "add": "Adicionar"
+      },
+      "success": {
+        "title": "Inspeção criada com sucesso!",
+        "idLabel": "ID",
+        "uploadFailures": "{{count}} documento(s) não puderam ser enviados. Você pode tentar novamente na tela da inspeção."
+      },
+      "actions": {
+        "create": "Criar inspeção",
+        "saving": "Salvando...",
+        "close": "Fechar",
+        "openRecord": "Abrir inspeção"
+      }
+    },
     "table": {
       "customer": "Cliente",
       "service": "Serviço",

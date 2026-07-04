@@ -15,4 +15,6 @@ export const qk = {
   dashboard: () => ["dashboard"] as const,
   inspectionsList: (params: Record<string, unknown> = {}) => ["inspections-list", params] as const,
   configurations: () => ["configurations"] as const,
+  serviceTypes: () => ["service-types"] as const,
+  customerSearch: (search: string) => ["customer-search", search] as const,
 };

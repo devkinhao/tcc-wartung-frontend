@@ -655,6 +655,34 @@
       "status": "Status",
       "allStatuses": "All statuses"
     },
+    "actions": {
+      "addInspection": "New inspection"
+    },
+    "addModal": {
+      "title": "New inspection",
+      "fields": {
+        "customer": "Customer"
+      },
+      "customerNoOptions": "Type to search for a customer",
+      "errors": {
+        "expirationBeforeInspection": "Expiration date cannot be before the inspection date"
+      },
+      "documents": {
+        "title": "Documents (optional)",
+        "add": "Add"
+      },
+      "success": {
+        "title": "Inspection created successfully!",
+        "idLabel": "ID",
+        "uploadFailures": "{{count}} document(s) could not be uploaded. You can try again from the inspection page."
+      },
+      "actions": {
+        "create": "Create inspection",
+        "saving": "Saving...",
+        "close": "Close",
+        "openRecord": "Open inspection"
+      }
+    },
     "table": {
       "customer": "Customer",
       "service": "Service",

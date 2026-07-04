@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
+  Button,
   Card,
   Chip,
   CircularProgress,
@@ -19,12 +20,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
+import { AddInspectionModal } from "../components/AddInspectionModal";
 import { listAllInspections, type InspectionListFilters, type InspectionStatus } from "../api/inspections.list.api";
 
 const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
@@ -48,6 +51,7 @@ export default function InspectionsListPage() {
   const [filters, setFilters]   = useState<InspectionListFilters>(INITIAL_FILTERS);
   const [page, setPage]         = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionsList({ ...filters, page, pageSize }),
@@ -67,12 +71,28 @@ export default function InspectionsListPage() {
 
   return (
     <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 0.5 }}>
-        {t("inspections.title")}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {t("inspections.description")}
-      </Typography>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ sm: "center" }}
+        spacing={2}
+        sx={{ mb: 3 }}
+      >
+        <Box>
+          <Typography variant="h6" fontWeight={600} color="primary.main">
+            {t("inspections.title")}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {t("inspections.description")}
+          </Typography>
+        </Box>
+
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+          {t("inspections.actions.addInspection")}
+        </Button>
+      </Stack>
+
+      <AddInspectionModal open={isAddOpen} onClose={() => setIsAddOpen(false)} />
 
       {/* Filtros */}
       <Card variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
