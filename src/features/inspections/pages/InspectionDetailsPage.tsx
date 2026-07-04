@@ -58,11 +58,22 @@ function toISODate(value?: string | null) {
 
 export default function InspectionDetailsPage() {
   const { t } = useTranslation();
-  const { id } = useParams();
+  const { id, customerId: customerIdParam } = useParams();
   const inspectionId = Number(id);
+  // customerId present when accessed via /customers/:customerId/inspections/:id
+  const customerId   = customerIdParam ? Number(customerIdParam) : null;
   const navigate = useNavigate();
   const qc = useQueryClient();
   const notify = useNotify();
+
+  // Back navigation: return to customer inspections tab if context available
+  const handleBack = () => {
+    if (customerId) {
+      navigate(`/customers/${customerId}?tab=inspections`);
+    } else {
+      navigate("/inspections");
+    }
+  };
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<InspectionDetailResponseDTO | null>(null);
@@ -216,7 +227,7 @@ export default function InspectionDetailsPage() {
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
                 <IconButton
                   size="small"
-                  onClick={() => navigate(-1)}
+                  onClick={handleBack}
                   aria-label={t("inspectionDetails.actions.back")}
                 >
                   <ArrowBackIcon fontSize="small" />

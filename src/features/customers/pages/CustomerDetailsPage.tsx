@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Box,
   Chip,
@@ -37,6 +37,7 @@ export default function CustomerDetailsPage() {
   const { t }        = useTranslation();
   const { id }       = useParams();
   const navigate     = useNavigate();
+  const [searchParams] = useSearchParams();
   const cities       = useCities();
 
   const {
@@ -48,7 +49,9 @@ export default function CustomerDetailsPage() {
     mutations,
   } = useCustomerDetail(Number(id));
 
-  const [tab,    setTab]    = useState<TabKey>("general");
+  // Inicia na aba indicada pela URL (?tab=inspections)
+  const initialTab = (searchParams.get("tab") as TabKey) || "general";
+  const [tab,    setTab]    = useState<TabKey>(initialTab);
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
 
   if (isLoading || !view) {
@@ -188,7 +191,7 @@ export default function CustomerDetailsPage() {
         />
       )}
 
-      {tab === "inspections" && <CustomerInspectionsTab inspections={view.inspections} />}
+      {tab === "inspections" && <CustomerInspectionsTab customerId={Number(id)} inspections={view.inspections} />}
       {tab === "movements"   && <CustomerMovementsTab   view={view} />}
 
     </Box>

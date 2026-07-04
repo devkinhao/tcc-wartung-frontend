@@ -1,12 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
+import MoreVertIcon   from "@mui/icons-material/MoreVert";
+import FactCheckIcon  from "@mui/icons-material/FactCheck";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { InspectionsQuickViewDialog } from "./components/InspectionsQuickViewDialog";
 
 type Props = {
   customerId: number;
@@ -15,11 +12,19 @@ type Props = {
   onToggle: () => void;
 };
 
+/**
+ * Menu de ações da linha — simplificado.
+ *
+ * "Ver cliente" foi removido por ser redundante com o clique na linha da tabela
+ * (Heurística Nielsen #8 — minimalismo).
+ *
+ * "Inspeções" navega diretamente para a aba de inspeções do cliente,
+ * eliminando o modal que quebrava o contexto de navegação.
+ */
 export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [quickViewOpen, setQuickViewOpen] = useState(false);
 
   useEffect(() => {
     if (!open) setAnchorEl(null);
@@ -51,19 +56,7 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
         <MenuItem
           onClick={() => {
             handleClose();
-            navigate(`/customers/${customerId}`);
-          }}
-        >
-          <ListItemIcon>
-            <VisibilityIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{t("customers.rowMenu.view")}</ListItemText>
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            setQuickViewOpen(true);
+            navigate(`/customers/${customerId}?tab=inspections`);
           }}
         >
           <ListItemIcon>
@@ -72,8 +65,6 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
           <ListItemText>{t("customers.rowMenu.inspections")}</ListItemText>
         </MenuItem>
       </Menu>
-
-      <InspectionsQuickViewDialog open={quickViewOpen} customerId={customerId} onClose={() => setQuickViewOpen(false)} />
     </>
   );
 }

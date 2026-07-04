@@ -13,4 +13,5 @@ export const qk = {
   inspectionDocuments: (id: number) => ["inspection-documents", id] as const,
   users: () => ["users"] as const,
   dashboard: () => ["dashboard"] as const,
+  inspectionsList: (params: Record<string, unknown> = {}) => ["inspections-list", params] as const,
 };

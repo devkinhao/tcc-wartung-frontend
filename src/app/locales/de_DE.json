@@ -19,7 +19,8 @@
       "save": "Speichern",
       "close": "Schließen",
       "retry": "Erneut versuchen"
-    }
+    },
+    "loading": "Wird geladen..."
   },
   "months": {
     "january": "Januar",
@@ -43,15 +44,15 @@
     "gold": "Gold"
   },
   "nav": {
-    "home": "Start",
-    "customersList": "Unternehmensliste",
+    "home": "Startseite",
+    "customersList": "Kunden",
     "inspections": "Inspektionen",
-    "inspectionsList": "Inspektionsliste",
-    "inspectionDetails": "Inspektionsdetails",
+    "inspectionsList": "Inspektionen",
+    "inspectionDetails": "Inspektion",
     "reports": "Berichte",
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
-    "configurations": "Einstellungen",
+    "configurations": "Konfigurationen",
     "help": "Hilfe",
     "myProfile": "Mein Profil",
     "preferences": "Einstellungen",
@@ -317,7 +318,7 @@
     "rowMenu": {
       "actionsLabel": "Aktionen",
       "view": "Kunde anzeigen",
-      "inspections": "Inspektionen"
+      "inspections": "Inspektionen anzeigen"
     },
     "quickView": {
       "title": "Inspektionen (Schnellansicht)",
@@ -505,10 +506,11 @@
       "title": "Inspektionen",
       "empty": "Keine Inspektionen gefunden.",
       "table": {
+        "open": "Öffnen",
         "inspectionDate": "Inspektionsdatum",
-        "service": "Service",
+        "service": "Dienstleistung",
         "notes": "Notizen",
-        "expiration": "Ablauf",
+        "expiration": "Ablaufdatum",
         "documents": "Dokumente"
       },
       "status": {
@@ -627,6 +629,28 @@
       "500": "Interner Serverfehler. Bitte versuchen Sie es später erneut.",
       "network": "Keine Verbindung zum Server. Prüfen Sie Ihre Internetverbindung.",
       "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    }
+  },
+  "inspections": {
+    "title": "Inspektionen",
+    "description": "Betriebliche Übersicht aller aktiven Inspektionen.",
+    "empty": "Keine Inspektionen gefunden.",
+    "status": {
+      "expired": "Abgelaufen",
+      "nearExpiration": "Läuft in 30 Tagen ab",
+      "onTrack": "Aktuell"
+    },
+    "filters": {
+      "search": "Nach Kunde oder Service suchen",
+      "status": "Status",
+      "allStatuses": "Alle Status"
+    },
+    "table": {
+      "customer": "Kunde",
+      "service": "Dienstleistung",
+      "inspectionDate": "Inspektionsdatum",
+      "expirationDate": "Ablaufdatum",
+      "status": "Status"
     }
   }
 }

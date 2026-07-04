@@ -19,7 +19,8 @@
       "save": "Save",
       "close": "Close",
       "retry": "Retry"
-    }
+    },
+    "loading": "Loading..."
   },
   "months": {
     "january": "January",
@@ -44,18 +45,18 @@
   },
   "nav": {
     "home": "Home",
-    "customersList": "Companies list",
+    "customersList": "Customers",
     "inspections": "Inspections",
-    "inspectionsList": "Inspections list",
-    "inspectionDetails": "Inspection details",
+    "inspectionsList": "Inspections",
+    "inspectionDetails": "Inspection",
     "reports": "Reports",
-    "myCompany": "My company",
+    "myCompany": "My Company",
     "users": "Users",
-    "configurations": "Settings",
+    "configurations": "Configurations",
     "help": "Help",
-    "myProfile": "My profile",
+    "myProfile": "My Profile",
     "preferences": "Preferences",
-    "customerDetails": "Customer details"
+    "customerDetails": "Customer Details"
   },
   "sidebar": {
     "actions": {
@@ -317,7 +318,7 @@
     "rowMenu": {
       "actionsLabel": "Actions",
       "view": "View customer",
-      "inspections": "Inspections"
+      "inspections": "View Inspections"
     },
     "quickView": {
       "title": "Inspections (quick view)",
@@ -505,7 +506,8 @@
       "title": "Inspections",
       "empty": "No inspections found.",
       "table": {
-        "inspectionDate": "Inspection date",
+        "open": "Open",
+        "inspectionDate": "Inspection Date",
         "service": "Service",
         "notes": "Notes",
         "expiration": "Expiration",
@@ -627,6 +629,28 @@
       "500": "Internal server error. Please try again later.",
       "network": "Cannot reach the server. Check your internet connection.",
       "unknown": "An unexpected error occurred. Please try again."
+    }
+  },
+  "inspections": {
+    "title": "Inspections",
+    "description": "Operational view of all active inspections.",
+    "empty": "No inspections found.",
+    "status": {
+      "expired": "Expired",
+      "nearExpiration": "Expiring in 30 days",
+      "onTrack": "On Track"
+    },
+    "filters": {
+      "search": "Search by customer or service",
+      "status": "Status",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "customer": "Customer",
+      "service": "Service",
+      "inspectionDate": "Inspection Date",
+      "expirationDate": "Expiration",
+      "status": "Status"
     }
   }
 }

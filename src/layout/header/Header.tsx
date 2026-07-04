@@ -1,47 +1,66 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { AppBar, Box, Toolbar } from "@mui/material";
 import { Breadcrumb } from "./Breadcrumb";
 import { UserMenu } from "./UserMenu";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { breadcrumbMap } from "./breadcrumbMap";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { qk } from "@/api/keys";
+import { getCustomerDetail } from "@/features/customers/api/customers.detail.api";
+import { getInspectionDetail } from "@/features/inspections/api/inspections.detail.api";
 
 export default function Header({ drawerWidth }: { drawerWidth: number }) {
-  const { t } = useTranslation();
-  const location = useLocation();
-  const pathname = location.pathname;
+  const { t }      = useTranslation();
+  const location   = useLocation();
+  const pathname   = location.pathname;
 
-  // Static crumbs (exact match)
+  // Parse dynamic route params from pathname
+  const inspMatch  = pathname.match(/^\/customers\/(\d+)\/inspections\/(\d+)/);
+  const custMatch  = pathname.match(/^\/customers\/(\d+)/);
+
+  const customerId    = inspMatch ? Number(inspMatch[1]) : custMatch ? Number(custMatch[1]) : null;
+  const inspectionId  = inspMatch ? Number(inspMatch[2]) : null;
+
+  const { data: customer } = useQuery({
+    queryKey: qk.customerDetail(customerId!),
+    queryFn:  () => getCustomerDetail(customerId!),
+    enabled:  !!customerId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: inspection } = useQuery({
+    queryKey: qk.inspectionDetail(inspectionId!),
+    queryFn:  () => getInspectionDetail(inspectionId!),
+    enabled:  !!inspectionId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  // Build crumbs for dynamic routes
   let crumbs = breadcrumbMap[pathname];
 
-  // Dynamic crumbs (pattern match)
   if (!crumbs) {
-    // Customers details: /customers/:id
-    if (/^\/customers\/\d+$/.test(pathname)) {
-      crumbs = [
-        { label: "nav.home", path: "/dashboard" },
-        { label: "nav.customersList", path: "/customers" },
-        { label: "nav.customerDetails" },
-      ];
-    }
+    const customerName = customer?.legalName ?? t("nav.customerDetails");
 
-    // Inspection details: /inspections/:id
-    if (/^\/inspections\/\d+$/.test(pathname)) {
+    if (inspMatch && customerId) {
+      // /customers/:customerId/inspections/:id
       crumbs = [
-        { label: "nav.home", path: "/dashboard" },
-        { label: "nav.inspectionsList", path: "/inspections" },
-        { label: "nav.inspectionDetails" },
+        { label: "nav.home",          path: "/dashboard" },
+        { label: "nav.customersList", path: "/customers" },
+        { label: customerName,        path: `/customers/${customerId}?tab=inspections` },
+        { label: inspection ? `${t("nav.inspectionDetails")} #${inspectionId}` : t("nav.inspectionDetails") },
       ];
+    } else if (custMatch && customerId) {
+      // /customers/:id
+      crumbs = [
+        { label: "nav.home",          path: "/dashboard" },
+        { label: "nav.customersList", path: "/customers" },
+        { label: customerName },
+      ];
+    } else {
+      crumbs = [{ label: "nav.home", path: "/dashboard" }];
     }
   }
-
-  if (!crumbs) crumbs = [{ label: "nav.home", path: "/dashboard" }];
-
-  // Translate labels before passing to Breadcrumb
-  const translatedCrumbs = crumbs.map((c) => ({
-    ...c,
-    label: t(c.label),
-  }));
 
   return (
     <AppBar
@@ -51,15 +70,15 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
       sx={{
         ml: `${drawerWidth}px`,
         width: `calc(100% - ${drawerWidth}px)`,
-        zIndex: (t) => t.zIndex.drawer + 1,
-        transition: (t) =>
-          t.transitions.create(["margin-left", "width"], {
-            duration: t.transitions.duration.standard,
+        zIndex: (th) => th.zIndex.drawer + 1,
+        transition: (th) =>
+          th.transitions.create(["margin-left", "width"], {
+            duration: th.transitions.duration.standard,
           }),
       }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-        <Breadcrumb items={translatedCrumbs} />
+        <Breadcrumb items={crumbs} />
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <NotificationsMenu />
           <UserMenu />

@@ -19,7 +19,8 @@
       "save": "Salvar",
       "close": "Fechar",
       "retry": "Tentar novamente"
-    }
+    },
+    "loading": "Carregando..."
   },
   "months": {
     "january": "Janeiro",
@@ -44,10 +45,10 @@
   },
   "nav": {
     "home": "Início",
-    "customersList": "Lista de Empresas",
+    "customersList": "Clientes",
     "inspections": "Inspeções",
-    "inspectionsList": "Lista de Inspeções",
-    "inspectionDetails": "Detalhes da inspeção",
+    "inspectionsList": "Inspeções",
+    "inspectionDetails": "Inspeção",
     "reports": "Relatórios",
     "myCompany": "Minha Empresa",
     "users": "Usuários",
@@ -55,7 +56,7 @@
     "help": "Ajuda",
     "myProfile": "Meu Perfil",
     "preferences": "Preferências",
-    "customerDetails": "Detalhes do cliente"
+    "customerDetails": "Detalhes do Cliente"
   },
   "sidebar": {
     "actions": {
@@ -317,7 +318,7 @@
     "rowMenu": {
       "actionsLabel": "Ações",
       "view": "Ver cliente",
-      "inspections": "Inspeções"
+      "inspections": "Ver Inspeções"
     },
     "quickView": {
       "title": "Inspeções (visualização rápida)",
@@ -505,7 +506,8 @@
       "title": "Inspeções",
       "empty": "Nenhuma inspeção encontrada.",
       "table": {
-        "inspectionDate": "Data da inspeção",
+        "open": "Abrir",
+        "inspectionDate": "Data da Inspeção",
         "service": "Serviço",
         "notes": "Observações",
         "expiration": "Vencimento",
@@ -627,6 +629,28 @@
       "500": "Erro interno do servidor. Tente novamente mais tarde.",
       "network": "Sem conexão com o servidor. Verifique sua internet.",
       "unknown": "Ocorreu um erro inesperado. Tente novamente."
+    }
+  },
+  "inspections": {
+    "title": "Inspeções",
+    "description": "Visão operacional de todas as inspeções ativas.",
+    "empty": "Nenhuma inspeção encontrada.",
+    "status": {
+      "expired": "Vencida",
+      "nearExpiration": "Vence em 30 dias",
+      "onTrack": "Em dia"
+    },
+    "filters": {
+      "search": "Buscar por cliente ou serviço",
+      "status": "Status",
+      "allStatuses": "Todos os status"
+    },
+    "table": {
+      "customer": "Cliente",
+      "service": "Serviço",
+      "inspectionDate": "Data da Inspeção",
+      "expirationDate": "Vencimento",
+      "status": "Status"
     }
   }
 }

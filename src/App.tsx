@@ -12,6 +12,7 @@ import Reports from "./features/reports/pages/ReportsPage";
 import Users from "./features/users/pages/UsersPage";
 import CustomerDetailsPage from "./features/customers/pages/CustomerDetailsPage";
 import InspectionDetailsPage from "./features/inspections/pages/InspectionDetailsPage";
+import InspectionsListPage from "./features/inspections/pages/InspectionsListPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { PreferencesProvider } from "./features/preferences/PreferencesContext";
 import { ThemeSync } from "./app/ThemeSync";
@@ -22,34 +23,28 @@ export default function App() {
   return (
     <PreferencesProvider>
       <ThemeSync />
-
       <MuiThemeProvider>
-        {/* SnackbarProvider dentro do MuiThemeProvider herda o tema (dark/light) */}
-        <SnackbarProvider
-          maxSnack={4}
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        >
+        <SnackbarProvider maxSnack={4} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
-
               <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
                   <Route index element={<Navigate to="/dashboard" />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="customers" element={<Customers />} />
-                  <Route path="reports" element={<Reports />} />
-                  <Route path="company" element={<Company />} />
-                  <Route path="users" element={<Users />} />
-                  <Route path="configurations" element={<Configurations />} />
-                  <Route path="help" element={<Help />} />
-                  <Route path="users/me" element={<UserProfile />} />
-                  <Route path="/customers/:id" element={<CustomerDetailsPage />} />
-                  <Route path="/inspections/:id" element={<InspectionDetailsPage />} />
-                  <Route
-                    path="users/me/preferences"
-                    element={<UserPreferences />}
-                  />
+                  <Route path="dashboard"            element={<Dashboard />} />
+                  <Route path="customers"            element={<Customers />} />
+                  <Route path="customers/:id"        element={<CustomerDetailsPage />} />
+                  {/* Inspeção aninhada sob o cliente — preserva contexto hierárquico */}
+                  <Route path="customers/:customerId/inspections/:id" element={<InspectionDetailsPage />} />
+                  {/* Visão operacional transversal — todas as inspeções */}
+                  <Route path="inspections"          element={<InspectionsListPage />} />
+                  <Route path="reports"              element={<Reports />} />
+                  <Route path="company"              element={<Company />} />
+                  <Route path="users"                element={<Users />} />
+                  <Route path="configurations"       element={<Configurations />} />
+                  <Route path="help"                 element={<Help />} />
+                  <Route path="users/me"             element={<UserProfile />} />
+                  <Route path="users/me/preferences" element={<UserPreferences />} />
                 </Route>
               </Route>
             </Routes>

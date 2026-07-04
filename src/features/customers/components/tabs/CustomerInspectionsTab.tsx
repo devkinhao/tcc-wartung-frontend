@@ -10,19 +10,24 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
+import OpenInNewIcon    from "@mui/icons-material/OpenInNew";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { formatDateBR } from "@/utils/date";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
 
 type Props = {
+  customerId: number;
   inspections?: InspectionSummaryResponseDTO[];
 };
 
-export function CustomerInspectionsTab({ inspections }: Props) {
+export function CustomerInspectionsTab({ customerId, inspections }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
@@ -39,13 +44,19 @@ export function CustomerInspectionsTab({ inspections }: Props) {
               <TableCell><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
               <TableCell><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
               <TableCell align="center"><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
+              <TableCell align="center"><b>{t("customerDetails.inspections.table.open")}</b></TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {inspections?.length ? (
               inspections.map((i) => (
-                <TableRow key={i.id} hover>
+                <TableRow
+                  key={i.id}
+                  hover
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
+                >
                   <TableCell>{formatDateBR(i.inspectionDate)}</TableCell>
 
                   <TableCell>
@@ -73,25 +84,30 @@ export function CustomerInspectionsTab({ inspections }: Props) {
 
                   <TableCell>{formatDateBR(i.expirationDate)}</TableCell>
 
-                  <TableCell align="center">
+                  <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                     {i.documents?.length ? (
+                      <Badge badgeContent={i.documents.length} color="primary">
+                        <DescriptionIcon fontSize="small" />
+                      </Badge>
+                    ) : "—"}
+                  </TableCell>
+
+                  <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                    <Tooltip title={t("customerDetails.inspections.actions.open")}>
                       <IconButton
                         size="small"
-                        aria-label={t("customerDetails.inspections.actions.openDocuments")}
+                        onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
+                        aria-label={t("customerDetails.inspections.actions.open")}
                       >
-                        <Badge badgeContent={i.documents.length} color="primary">
-                          <DescriptionIcon fontSize="small" />
-                        </Badge>
+                        <OpenInNewIcon fontSize="small" />
                       </IconButton>
-                    ) : (
-                      "—"
-                    )}
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} sx={{ py: 2, color: "text.secondary" }}>
+                <TableCell colSpan={6} sx={{ py: 2, color: "text.secondary" }}>
                   {t("customerDetails.inspections.empty")}
                 </TableCell>
               </TableRow>
