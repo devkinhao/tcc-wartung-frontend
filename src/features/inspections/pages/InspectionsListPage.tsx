@@ -25,7 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
-import { formatDateBR } from "@/utils/date";
+import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "../components/AddInspectionModal";
 import { listAllInspections, type InspectionListFilters, type InspectionStatus } from "../api/inspections.list.api";
@@ -34,12 +34,14 @@ const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
 
 function StatusChip({ expirationDate, alertDays }: { expirationDate: string; alertDays: number }) {
   const { t } = useTranslation();
-  const today          = new Date();
-  const exp            = new Date(expirationDate);
-  const alertThreshold = new Date(today);
-  alertThreshold.setDate(alertThreshold.getDate() + alertDays);
+  // Comparação por string yyyy-mm-dd (ordem lexicográfica == ordem cronológica),
+  // igual à semântica de LocalDate no backend — evita bugs de fuso horário que
+  // surgiriam ao usar objetos Date (new Date(isoString) interpreta como UTC).
+  const exp            = expirationDate.split("T")[0];
+  const today           = todayISODate();
+  const alertThreshold  = addDaysISODate(today, alertDays);
 
-  if (exp < today)             return <Chip size="small" label={t("inspections.status.expired")}                          color="error"   />;
+  if (exp < today)              return <Chip size="small" label={t("inspections.status.expired")}                          color="error"   />;
   if (exp <= alertThreshold)    return <Chip size="small" label={t("inspections.status.nearExpiration", { days: alertDays })} color="warning" />;
   return                        <Chip size="small" label={t("inspections.status.onTrack")}                                color="success" variant="outlined" />;
 }
