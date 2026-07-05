@@ -13,6 +13,7 @@ import Users from "./features/users/pages/UsersPage";
 import CustomerDetailsPage from "./features/customers/pages/CustomerDetailsPage";
 import InspectionDetailsPage from "./features/inspections/pages/InspectionDetailsPage";
 import InspectionsListPage from "./features/inspections/pages/InspectionsListPage";
+import NotificationsPage from "./features/notifications/pages/NotificationsPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { PreferencesProvider } from "./features/preferences/PreferencesContext";
 import { ThemeSync } from "./app/ThemeSync";
@@ -39,6 +40,7 @@ export default function App() {
                   {/* Visão operacional transversal — todas as inspeções */}
                   <Route path="inspections"          element={<InspectionsListPage />} />
                   <Route path="inspections/:id"      element={<InspectionDetailsPage />} />
+                  <Route path="notifications"        element={<NotificationsPage />} />
                   <Route path="reports"              element={<Reports />} />
                   <Route path="company"              element={<Company />} />
                   <Route path="users"                element={<Users />} />

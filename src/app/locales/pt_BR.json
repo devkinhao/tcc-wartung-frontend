@@ -50,6 +50,7 @@
     "inspections": "Inspeções",
     "inspectionsList": "Inspeções",
     "inspectionDetails": "Inspeção",
+    "notificationsList": "Notificações",
     "reports": "Relatórios",
     "myCompany": "Minha Empresa",
     "users": "Usuários",
@@ -73,8 +74,15 @@
   "notifications": {
     "ariaLabel": "Notificações",
     "title": "Notificações",
-    "empty": "Nenhuma notificação no momento",
-    "markAllRead": "Marcar todas como lidas"
+    "description": "Histórico de notificações do sistema.",
+    "empty": "Nenhuma notificação encontrada",
+    "emptyUnread": "Nenhuma notificação não lida",
+    "markAllRead": "Marcar todas como lidas",
+    "viewAll": "Ver todas",
+    "filters": {
+      "unread": "Não lidas",
+      "all": "Todas"
+    }
   },
   "pagination": {
     "rowsPerPage": "Registros por página:",

@@ -50,6 +50,7 @@
     "inspections": "Inspections",
     "inspectionsList": "Inspections",
     "inspectionDetails": "Inspection",
+    "notificationsList": "Notifications",
     "reports": "Reports",
     "myCompany": "My Company",
     "users": "Users",
@@ -73,8 +74,15 @@
   "notifications": {
     "ariaLabel": "Notifications",
     "title": "Notifications",
-    "empty": "No notifications at the moment",
-    "markAllRead": "Mark all as read"
+    "description": "History of system notifications.",
+    "empty": "No notifications found",
+    "emptyUnread": "No unread notifications",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all",
+    "filters": {
+      "unread": "Unread",
+      "all": "All"
+    }
   },
   "pagination": {
     "rowsPerPage": "Rows per page:",

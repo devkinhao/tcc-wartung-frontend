@@ -50,6 +50,7 @@
     "inspections": "Inspektionen",
     "inspectionsList": "Inspektionen",
     "inspectionDetails": "Inspektion",
+    "notificationsList": "Benachrichtigungen",
     "reports": "Berichte",
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
@@ -73,8 +74,15 @@
   "notifications": {
     "ariaLabel": "Benachrichtigungen",
     "title": "Benachrichtigungen",
-    "empty": "Derzeit keine Benachrichtigungen",
-    "markAllRead": "Alle als gelesen markieren"
+    "description": "Verlauf der Systembenachrichtigungen.",
+    "empty": "Keine Benachrichtigungen gefunden",
+    "emptyUnread": "Keine ungelesenen Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "viewAll": "Alle anzeigen",
+    "filters": {
+      "unread": "Ungelesen",
+      "all": "Alle"
+    }
   },
   "pagination": {
     "rowsPerPage": "Zeilen pro Seite:",

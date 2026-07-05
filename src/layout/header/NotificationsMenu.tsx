@@ -25,21 +25,9 @@ import {
   markNotificationAsRead,
   type NotificationResponseDTO,
 } from "@/features/notifications/api/notifications.api";
+import { resolveNotificationLink } from "@/features/notifications/utils";
 
-const PAGE_SIZE = 10;
-
-/** Rotas para onde cada tipo de notificação deve levar ao ser clicada */
-function resolveNotificationLink(notification: NotificationResponseDTO): string | null {
-  if (notification.referenceId == null) return null;
-
-  switch (notification.type) {
-    case "INSPECTION_NEAR_EXPIRATION":
-    case "INSPECTION_EXPIRED":
-      return `/inspections/${notification.referenceId}`;
-    default:
-      return null;
-  }
-}
+const PREVIEW_SIZE = 5;
 
 export function NotificationsMenu() {
   const { t } = useTranslation();
@@ -55,8 +43,8 @@ export function NotificationsMenu() {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: qk.notifications({ page: 1, pageSize: PAGE_SIZE }),
-    queryFn: () => listNotifications({ page: 1, pageSize: PAGE_SIZE }),
+    queryKey: qk.notifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
+    queryFn: () => listNotifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
     enabled: open,
   });
 
@@ -124,7 +112,7 @@ export function NotificationsMenu() {
         ) : items.length === 0 ? (
           <MenuItem disabled>
             <Typography variant="body2" color="text.secondary">
-              {t("notifications.empty")}
+              {t("notifications.emptyUnread")}
             </Typography>
           </MenuItem>
         ) : (
@@ -158,6 +146,20 @@ export function NotificationsMenu() {
             </MenuItem>
           ))
         )}
+
+        <Divider />
+
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            navigate("/notifications");
+          }}
+          sx={{ justifyContent: "center" }}
+        >
+          <Typography variant="body2" color="primary" fontWeight={600}>
+            {t("notifications.viewAll")}
+          </Typography>
+        </MenuItem>
       </Menu>
     </>
   );
