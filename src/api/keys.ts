@@ -17,4 +17,6 @@ export const qk = {
   configurations: () => ["configurations"] as const,
   serviceTypes: () => ["service-types"] as const,
   customerSearch: (search: string) => ["customer-search", search] as const,
+  notifications: (params: Record<string, unknown> = {}) => ["notifications", params] as const,
+  notificationsUnreadCount: () => ["notifications-unread-count"] as const,
 };

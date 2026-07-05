@@ -73,7 +73,8 @@
   "notifications": {
     "ariaLabel": "Notifications",
     "title": "Notifications",
-    "empty": "No notifications at the moment"
+    "empty": "No notifications at the moment",
+    "markAllRead": "Mark all as read"
   },
   "pagination": {
     "rowsPerPage": "Rows per page:",

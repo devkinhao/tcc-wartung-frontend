@@ -73,7 +73,8 @@
   "notifications": {
     "ariaLabel": "Notificações",
     "title": "Notificações",
-    "empty": "Nenhuma notificação no momento"
+    "empty": "Nenhuma notificação no momento",
+    "markAllRead": "Marcar todas como lidas"
   },
   "pagination": {
     "rowsPerPage": "Registros por página:",

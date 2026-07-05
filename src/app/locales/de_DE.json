@@ -73,7 +73,8 @@
   "notifications": {
     "ariaLabel": "Benachrichtigungen",
     "title": "Benachrichtigungen",
-    "empty": "Derzeit keine Benachrichtigungen"
+    "empty": "Derzeit keine Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren"
   },
   "pagination": {
     "rowsPerPage": "Zeilen pro Seite:",
