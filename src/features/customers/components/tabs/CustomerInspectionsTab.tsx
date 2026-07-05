@@ -1,6 +1,8 @@
+import { useState } from "react";
 import {
   Badge,
   Box,
+  Button,
   Chip,
   IconButton,
   Paper,
@@ -13,27 +15,44 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import DescriptionIcon from "@mui/icons-material/Description";
 import OpenInNewIcon    from "@mui/icons-material/OpenInNew";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { formatDateBR } from "@/utils/date";
+import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
 
 type Props = {
   customerId: number;
+  customerLegalName: string;
+  customerCnpj: string;
   inspections?: InspectionSummaryResponseDTO[];
 };
 
-export function CustomerInspectionsTab({ customerId, inspections }: Props) {
+export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
-      <Typography fontWeight={700} sx={{ mb: 2 }}>
-        {t("customerDetails.inspections.title")}
-      </Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Typography fontWeight={700}>
+          {t("customerDetails.inspections.title")}
+        </Typography>
+
+        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+          {t("inspections.actions.addInspection")}
+        </Button>
+      </Stack>
+
+      <AddInspectionModal
+        open={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        lockedCustomer={{ id: customerId, legalName: customerLegalName, cnpj: customerCnpj }}
+      />
 
       <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden" }}>
         <Table size="small">

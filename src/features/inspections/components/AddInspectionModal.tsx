@@ -44,6 +44,8 @@ type PendingDocument = {
 type AddInspectionModalProps = {
   open: boolean;
   onClose: () => void;
+  /** Quando informado, pré-preenche e trava o campo de cliente (ex: aberto a partir da própria ficha do cliente) */
+  lockedCustomer?: CustomerOption;
 };
 
 type NewInspectionForm = {
@@ -62,13 +64,16 @@ const defaultForm: NewInspectionForm = {
   notes: "",
 };
 
-export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
+export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspectionModalProps) {
   const { t } = useTranslation();
   const notify = useNotify();
   const navigate = useNavigate();
   const qc = useQueryClient();
 
-  const [form, setForm] = useState<NewInspectionForm>(defaultForm);
+  const [form, setForm] = useState<NewInspectionForm>(() => ({
+    ...defaultForm,
+    customer: lockedCustomer ?? null,
+  }));
   const [step, setStep] = useState<0 | 1>(0);
   const [createdId, setCreatedId] = useState<number | null>(null);
   const [failedUploads, setFailedUploads] = useState(0);
@@ -89,7 +94,7 @@ export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
   const { data: customerOptions = [], isFetching: loadingCustomers } = useQuery({
     queryKey: qk.customerSearch(debouncedInput),
     queryFn: () => searchCustomers(debouncedInput),
-    enabled: open,
+    enabled: open && !lockedCustomer,
   });
 
   const { data: serviceTypes = [], isLoading: loadingServiceTypes } = useQuery({
@@ -100,7 +105,7 @@ export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
   });
 
   const closeAndReset = () => {
-    setForm(defaultForm);
+    setForm({ ...defaultForm, customer: lockedCustomer ?? null });
     setStep(0);
     setCreatedId(null);
     setFailedUploads(0);
@@ -162,6 +167,9 @@ export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
     onSuccess: ({ created, failed }) => {
       qc.invalidateQueries({ queryKey: ["inspections-list"] });
       qc.invalidateQueries({ queryKey: qk.dashboard() });
+      if (form.customer) {
+        qc.invalidateQueries({ queryKey: qk.customerDetail(form.customer.id) });
+      }
       setCreatedId(created.id);
       setFailedUploads(failed);
       setStep(1);
@@ -170,7 +178,13 @@ export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
   });
 
   const goToInspection = () => {
-    if (createdId) navigate(`/inspections/${createdId}`);
+    if (createdId) {
+      navigate(
+        lockedCustomer
+          ? `/customers/${lockedCustomer.id}/inspections/${createdId}`
+          : `/inspections/${createdId}`
+      );
+    }
     closeAndReset();
   };
 
@@ -205,34 +219,44 @@ export function AddInspectionModal({ open, onClose }: AddInspectionModalProps) {
         ) : (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Autocomplete
-                options={customerOptions}
-                loading={loadingCustomers}
-                value={form.customer}
-                onChange={(_, value) => setForm((p) => ({ ...p, customer: value }))}
-                inputValue={customerInput}
-                onInputChange={(_, value) => setCustomerInput(value)}
-                getOptionLabel={(o) => `${o.legalName} — ${o.cnpj}`}
-                isOptionEqualToValue={(o, v) => o.id === v.id}
-                noOptionsText={t("inspections.addModal.customerNoOptions")}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t("inspections.addModal.fields.customer")}
-                    required
-                    size="small"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loadingCustomers ? <CircularProgress size={16} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-              />
+              {lockedCustomer ? (
+                <TextField
+                  label={t("inspections.addModal.fields.customer")}
+                  value={`${lockedCustomer.legalName} — ${lockedCustomer.cnpj}`}
+                  size="small"
+                  fullWidth
+                  disabled
+                />
+              ) : (
+                <Autocomplete
+                  options={customerOptions}
+                  loading={loadingCustomers}
+                  value={form.customer}
+                  onChange={(_, value) => setForm((p) => ({ ...p, customer: value }))}
+                  inputValue={customerInput}
+                  onInputChange={(_, value) => setCustomerInput(value)}
+                  getOptionLabel={(o) => `${o.legalName} — ${o.cnpj}`}
+                  isOptionEqualToValue={(o, v) => o.id === v.id}
+                  noOptionsText={t("inspections.addModal.customerNoOptions")}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("inspections.addModal.fields.customer")}
+                      required
+                      size="small"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingCustomers ? <CircularProgress size={16} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              )}
             </Grid>
 
             <Grid item xs={12}>

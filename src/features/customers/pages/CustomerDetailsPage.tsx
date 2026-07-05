@@ -191,7 +191,14 @@ export default function CustomerDetailsPage() {
         />
       )}
 
-      {tab === "inspections" && <CustomerInspectionsTab customerId={Number(id)} inspections={view.inspections} />}
+      {tab === "inspections" && (
+        <CustomerInspectionsTab
+          customerId={Number(id)}
+          customerLegalName={view.legalName}
+          customerCnpj={view.cnpj}
+          inspections={view.inspections}
+        />
+      )}
       {tab === "movements"   && <CustomerMovementsTab   view={view} />}
 
     </Box>

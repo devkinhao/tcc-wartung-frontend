@@ -30,14 +30,19 @@ export function useCustomerDetail(customerId: number) {
 
   const [draft, setDraft] = useState<CustomerDetailResponseDTO | null>(null);
 
-  useEffect(() => {
-    if (data) setDraft((prev) => prev ?? data);
-  }, [data]);
-
   // ── Estados de edição — ficam no hook para o onSuccess poder fechá-los ────
   const [editingGeneral,  setEditingGeneral]  = useState(false);
   const [editingContacts, setEditingContacts] = useState(false);
   const [editingAddress,  setEditingAddress]  = useState(false);
+
+  // Ressincroniza o draft sempre que dados novos chegam (ex: invalidação após
+  // criar uma inspeção), exceto durante uma edição em andamento — nesse caso
+  // sobrescrever o draft descartaria alterações não salvas do usuário.
+  useEffect(() => {
+    if (!data) return;
+    if (editingGeneral || editingContacts || editingAddress) return;
+    setDraft(data);
+  }, [data, editingGeneral, editingContacts, editingAddress]);
 
   // ── onSuccess comum: atualiza cache + draft + fecha edição + toast ─────────
   function makeOnSuccess(closeEditing: () => void) {
