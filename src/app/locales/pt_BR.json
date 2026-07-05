@@ -18,6 +18,7 @@
       "cancel": "Cancelar",
       "save": "Salvar",
       "close": "Fechar",
+      "confirm": "Confirmar",
       "retry": "Tentar novamente"
     },
     "loading": "Carregando..."
@@ -460,9 +461,13 @@
     "actions": {
       "back": "Voltar",
       "actions": "Ações",
-      "deactivate": "Inativar cliente",
+      "delete": "Excluir cliente",
       "whatsapp": "WhatsApp",
       "email": "E-mail"
+    },
+    "confirmDelete": {
+      "title": "Excluir cliente",
+      "message": "Tem certeza que deseja excluir o cliente \"{{name}}\"? Ele deixará de aparecer nas listagens do sistema."
     },
     "summary": {
       "cnpj": "CNPJ",
@@ -479,7 +484,7 @@
       "updateGeneral": "Não foi possível atualizar os dados gerais.",
       "updateContacts": "Não foi possível atualizar os contatos.",
       "updateAddress": "Não foi possível atualizar o endereço.",
-      "deactivate": "Não foi possível inativar o cliente."
+      "delete": "Não foi possível excluir o cliente."
     },
     "general": {
       "title": "Dados gerais",
@@ -549,7 +554,13 @@
     "title": "Inspeção",
     "titleWithService": "Inspeção • {{service}}",
     "actions": {
-      "back": "Voltar"
+      "back": "Voltar",
+      "actions": "Ações",
+      "delete": "Excluir inspeção"
+    },
+    "confirmDelete": {
+      "title": "Excluir inspeção",
+      "message": "Tem certeza que deseja excluir esta inspeção?"
     },
     "summary": {
       "id": "ID",
@@ -588,6 +599,7 @@
         "delete": "Excluir",
         "upload": "Enviar documento"
       },
+      "confirmDeleteTitle": "Excluir documento",
       "confirmDelete": "Tem certeza que deseja excluir este documento?",
       "uploadDialog": {
         "title": "Enviar documento",

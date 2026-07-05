@@ -18,6 +18,7 @@
       "cancel": "Abbrechen",
       "save": "Speichern",
       "close": "Schließen",
+      "confirm": "Bestätigen",
       "retry": "Erneut versuchen"
     },
     "loading": "Wird geladen..."
@@ -460,9 +461,13 @@
     "actions": {
       "back": "Zurück",
       "actions": "Aktionen",
-      "deactivate": "Kunden deaktivieren",
+      "delete": "Kunden löschen",
       "whatsapp": "WhatsApp",
       "email": "E-Mail"
+    },
+    "confirmDelete": {
+      "title": "Kunden löschen",
+      "message": "Sind Sie sicher, dass Sie den Kunden \"{{name}}\" löschen möchten? Er wird nicht mehr in den Listen des Systems angezeigt."
     },
     "summary": {
       "cnpj": "CNPJ",
@@ -479,7 +484,7 @@
       "updateGeneral": "Allgemeine Daten konnten nicht aktualisiert werden.",
       "updateContacts": "Kontakte konnten nicht aktualisiert werden.",
       "updateAddress": "Adresse konnte nicht aktualisiert werden.",
-      "deactivate": "Kunde konnte nicht deaktiviert werden."
+      "delete": "Kunde konnte nicht gelöscht werden."
     },
     "general": {
       "title": "Allgemeine Daten",
@@ -549,7 +554,13 @@
     "title": "Inspektion",
     "titleWithService": "Inspektion • {{service}}",
     "actions": {
-      "back": "Zurück"
+      "back": "Zurück",
+      "actions": "Aktionen",
+      "delete": "Inspektion löschen"
+    },
+    "confirmDelete": {
+      "title": "Inspektion löschen",
+      "message": "Sind Sie sicher, dass Sie diese Inspektion löschen möchten?"
     },
     "summary": {
       "id": "ID",
@@ -588,6 +599,7 @@
         "delete": "Löschen",
         "upload": "Dokument hochladen"
       },
+      "confirmDeleteTitle": "Dokument löschen",
       "confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
       "uploadDialog": {
         "title": "Dokument hochladen",

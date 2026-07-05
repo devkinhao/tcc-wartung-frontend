@@ -18,6 +18,7 @@
       "cancel": "Cancel",
       "save": "Save",
       "close": "Close",
+      "confirm": "Confirm",
       "retry": "Retry"
     },
     "loading": "Loading..."
@@ -460,9 +461,13 @@
     "actions": {
       "back": "Back",
       "actions": "Actions",
-      "deactivate": "Deactivate customer",
+      "delete": "Delete customer",
       "whatsapp": "WhatsApp",
       "email": "Email"
+    },
+    "confirmDelete": {
+      "title": "Delete customer",
+      "message": "Are you sure you want to delete customer \"{{name}}\"? They will no longer appear in the system's listings."
     },
     "summary": {
       "cnpj": "CNPJ",
@@ -479,7 +484,7 @@
       "updateGeneral": "Could not update general information.",
       "updateContacts": "Could not update contacts.",
       "updateAddress": "Could not update the address.",
-      "deactivate": "Could not deactivate the customer."
+      "delete": "Could not delete the customer."
     },
     "general": {
       "title": "General information",
@@ -549,7 +554,13 @@
     "title": "Inspection",
     "titleWithService": "Inspection • {{service}}",
     "actions": {
-      "back": "Back"
+      "back": "Back",
+      "actions": "Actions",
+      "delete": "Delete inspection"
+    },
+    "confirmDelete": {
+      "title": "Delete inspection",
+      "message": "Are you sure you want to delete this inspection?"
     },
     "summary": {
       "id": "ID",
@@ -588,6 +599,7 @@
         "delete": "Delete",
         "upload": "Upload document"
       },
+      "confirmDeleteTitle": "Delete document",
       "confirmDelete": "Are you sure you want to delete this document?",
       "uploadDialog": {
         "title": "Upload document",

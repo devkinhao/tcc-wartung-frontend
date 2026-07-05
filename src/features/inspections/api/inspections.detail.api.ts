@@ -14,3 +14,7 @@ export async function updateInspection(id: number, dto: InspectionUpdateRequestD
   const { data } = await api.patch<InspectionDetailResponseDTO>(`/inspections/${id}`, dto);
   return data;
 }
+
+export async function deleteInspection(id: number) {
+  await api.delete(`/inspections/${id}`);
+}

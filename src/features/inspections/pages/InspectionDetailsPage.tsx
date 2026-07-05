@@ -14,6 +14,8 @@ import {
   DialogTitle,
   IconButton,
   Link,
+  Menu,
+  MenuItem,
   Paper,
   Stack,
   Table,
@@ -26,9 +28,7 @@ import {
 } from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import CloseIcon from "@mui/icons-material/Close";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -36,7 +36,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { getInspectionDetail, updateInspection } from "../api/inspections.detail.api";
+import { deleteInspection, getInspectionDetail, updateInspection } from "../api/inspections.detail.api";
 import {
   deleteInspectionDocument,
   downloadInspectionDocument,
@@ -49,6 +49,7 @@ import type {
 } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
+import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 
 function toISODate(value?: string | null) {
@@ -82,6 +83,9 @@ export default function InspectionDetailsPage() {
   const [uploadDescription, setUploadDescription] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+
+  const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
+  const [confirmDeleteInspectionOpen, setConfirmDeleteInspectionOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionDetail(inspectionId),
@@ -139,6 +143,21 @@ export default function InspectionDetailsPage() {
     onError: (err) => notify.fromError(err),
   });
 
+  const deleteInspectionMutation = useMutation({
+    mutationFn: () => deleteInspection(inspectionId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["inspections-list"] });
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
+      if (customerId) {
+        qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
+        navigate(`/customers/${customerId}?tab=inspections`);
+      } else {
+        navigate("/inspections");
+      }
+    },
+    onError: (err) => notify.fromError(err),
+  });
+
   const view = draft ?? data;
 
   const documents = docsQuery.data ?? view?.documents ?? [];
@@ -173,8 +192,6 @@ export default function InspectionDetailsPage() {
   const title = view.serviceType?.name
     ? t("inspectionDetails.titleWithService", { service: view.serviceType.name })
     : t("inspectionDetails.title");
-
-  const disableActions = mutation.isPending;
 
   const handleDownload = async (docId: number, name: string) => {
     try {
@@ -213,6 +230,34 @@ export default function InspectionDetailsPage() {
             onClick={() => {
               if (confirmDeleteId !== null) deleteMutation.mutate(confirmDeleteId);
               setConfirmDeleteId(null);
+            }}
+          >
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirmação de exclusão da inspeção — substitui window.confirm */}
+      <Dialog
+        open={confirmDeleteInspectionOpen}
+        onClose={() => setConfirmDeleteInspectionOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>{t("inspectionDetails.confirmDelete.title")}</DialogTitle>
+        <DialogContent>
+          <Typography>{t("inspectionDetails.confirmDelete.message")}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteInspectionOpen(false)}>
+            {t("common.actions.cancel")}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              setConfirmDeleteInspectionOpen(false);
+              deleteInspectionMutation.mutate();
             }}
           >
             {t("common.actions.confirm")}
@@ -268,40 +313,25 @@ export default function InspectionDetailsPage() {
               </Stack>
             </Box>
 
-            <Stack direction="row" spacing={1} alignItems="center">
-              {editing ? (
-                <>
-                  <Button
-                    variant="outlined"
-                    startIcon={<CloseIcon />}
-                    onClick={() => {
-                      setDraft(data ?? null);
-                      setEditing(false);
-                    }}
-                    disabled={disableActions}
-                  >
-                    {t("common.actions.cancel")}
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    startIcon={mutation.isPending ? <CircularProgress size={16} /> : <SaveIcon />}
-                    onClick={handleSave}
-                    disabled={disableActions}
-                  >
-                    {t("common.actions.save")}
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  variant="outlined"
-                  startIcon={<EditIcon />}
-                  onClick={() => setEditing(true)}
+            <Box>
+              <IconButton
+                aria-label={t("inspectionDetails.actions.actions")}
+                onClick={(e) => setMenuEl(e.currentTarget)}
+                disabled={deleteInspectionMutation.isPending}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
+                <MenuItem
+                  onClick={() => {
+                    setMenuEl(null);
+                    setConfirmDeleteInspectionOpen(true);
+                  }}
                 >
-                  {t("common.actions.edit")}
-                </Button>
-              )}
-            </Stack>
+                  {t("inspectionDetails.actions.delete")}
+                </MenuItem>
+              </Menu>
+            </Box>
           </Stack>
         </Box>
       </Paper>
@@ -309,9 +339,17 @@ export default function InspectionDetailsPage() {
       <Stack spacing={2}>
         <Card sx={{ borderRadius: 2 }}>
           <CardContent>
-            <Typography fontWeight={700} sx={{ mb: 2 }}>
-              {t("inspectionDetails.sections.general")}
-            </Typography>
+            <EditableCardHeader
+              title={t("inspectionDetails.sections.general")}
+              editing={editing}
+              saving={mutation.isPending}
+              onEdit={() => setEditing(true)}
+              onCancel={() => {
+                setDraft(data ?? null);
+                setEditing(false);
+              }}
+              onSave={handleSave}
+            />
 
             <Stack spacing={2}>
               <Stack direction={{ xs: "column", md: "row" }} spacing={2}>

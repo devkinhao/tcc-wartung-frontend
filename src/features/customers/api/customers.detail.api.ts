@@ -43,6 +43,6 @@ export async function updateCustomerAddress(id: number, dto: CustomerUpdateAddre
   return data;
 }
 
-export async function deactivateCustomer(id: number) {
+export async function deleteCustomer(id: number) {
   await api.delete(`/customers/${id}`);
 }

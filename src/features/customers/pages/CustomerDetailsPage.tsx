@@ -2,8 +2,13 @@ import { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Box,
+  Button,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
   Menu,
@@ -53,6 +58,7 @@ export default function CustomerDetailsPage() {
   const initialTab = (searchParams.get("tab") as TabKey) || "general";
   const [tab,    setTab]    = useState<TabKey>(initialTab);
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   if (isLoading || !view) {
     return (
@@ -67,6 +73,29 @@ export default function CustomerDetailsPage() {
 
   return (
     <Box sx={{ maxWidth: 1200 }}>
+
+      {/* Confirmação de exclusão — substitui window.confirm */}
+      <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>{t("customerDetails.confirmDelete.title")}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t("customerDetails.confirmDelete.message", { name: view.legalName })}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteOpen(false)}>{t("common.actions.cancel")}</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              setConfirmDeleteOpen(false);
+              mutations.delete.mutate();
+            }}
+          >
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* ── Cabeçalho ──────────────────────────────────────────────────── */}
       <Paper elevation={1} sx={{ borderRadius: 2, mb: 2 }}>
@@ -113,13 +142,13 @@ export default function CustomerDetailsPage() {
               <IconButton
                 aria-label={t("customerDetails.actions.actions")}
                 onClick={(e) => setMenuEl(e.currentTarget)}
-                disabled={mutations.deactivate.isPending}
+                disabled={mutations.delete.isPending}
               >
                 <MoreVertIcon />
               </IconButton>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
-                <MenuItem onClick={() => { setMenuEl(null); mutations.deactivate.mutate(); }}>
-                  {t("customerDetails.actions.deactivate")}
+                <MenuItem onClick={() => { setMenuEl(null); setConfirmDeleteOpen(true); }}>
+                  {t("customerDetails.actions.delete")}
                 </MenuItem>
               </Menu>
             </Box>

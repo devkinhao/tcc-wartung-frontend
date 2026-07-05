@@ -6,7 +6,7 @@ import { useNotify } from "@/hooks/useNotify";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import type { CustomerDetailResponseDTO, AddressResponseDTO } from "../types/customerDetail";
 import {
-  deactivateCustomer,
+  deleteCustomer,
   getCustomerDetail,
   updateCustomerAddress,
   updateCustomerContacts,
@@ -76,8 +76,8 @@ export function useCustomerDetail(customerId: number) {
     onError:   (err) => notify.fromError(err),
   });
 
-  const deactivateMutation = useMutation({
-    mutationFn: () => deactivateCustomer(customerId),
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteCustomer(customerId),
     onSuccess:  () => navigate("/customers"),
     onError:    (err) => notify.fromError(err),
   });
@@ -137,10 +137,10 @@ export function useCustomerDetail(customerId: number) {
     handleCepFound,
     // mutations
     mutations: {
-      general:    generalMutation,
-      contacts:   contactsMutation,
-      address:    addressMutation,
-      deactivate: deactivateMutation,
+      general:  generalMutation,
+      contacts: contactsMutation,
+      address:  addressMutation,
+      delete:   deleteMutation,
     },
   };
 }
