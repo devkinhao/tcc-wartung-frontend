@@ -68,8 +68,4 @@ export const usersApi = {
   async delete(id: number): Promise<void> {
     await api.delete(`/users/${id}`);
   },
-
-  async activate(id: number): Promise<void> {
-    await api.patch(`/users/${id}/activate`);
-  },
 };

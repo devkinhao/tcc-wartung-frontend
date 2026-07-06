@@ -234,13 +234,16 @@
     "actions": {
       "newUser": "Neuer Benutzer",
       "viewEdit": "Ansehen / Bearbeiten",
-      "inactivate": "Benutzer deaktivieren",
-      "activate": "Benutzer aktivieren"
+      "delete": "Benutzer löschen"
+    },
+    "confirmDelete": {
+      "title": "Benutzer löschen",
+      "message": "Sind Sie sicher, dass Sie den Benutzer \"{{name}}\" löschen möchten?"
     },
     "table": {
-      "name": "Name",
+      "username": "Benutzername",
+      "fullName": "Vollständiger Name",
       "email": "E-Mail",
-      "role": "Rolle",
       "status": "Status",
       "actions": "Aktionen"
     },

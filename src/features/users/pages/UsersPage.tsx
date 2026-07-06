@@ -4,6 +4,10 @@ import {
   Button,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Menu,
   MenuItem,
@@ -28,11 +32,12 @@ export default function UsersPage() {
   const { t } = useTranslation();
 
   const [query, setQuery] = useState("");
-  const { users, isLoading, error, reload, toggleActive, isTogglingActive } = useUsers(query);
+  const { users, isLoading, error, reload, deleteUser, isDeleting } = useUsers(query);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
 
   // Estado do row-menu
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
@@ -55,10 +60,16 @@ export default function UsersPage() {
     closeMenu();
   }
 
-  function handleToggleActive() {
+  function handleDelete() {
     if (!menuUser) return;
-    toggleActive(menuUser);
+    setDeleteTarget(menuUser);
     closeMenu();
+  }
+
+  function handleConfirmDelete() {
+    if (!deleteTarget) return;
+    deleteUser(deleteTarget);
+    setDeleteTarget(null);
   }
 
   return (
@@ -108,7 +119,7 @@ export default function UsersPage() {
           position: "relative",
         }}
       >
-        {(isLoading || isTogglingActive) && (
+        {(isLoading || isDeleting) && (
           <Box
             sx={{
               position: "absolute",
@@ -128,9 +139,9 @@ export default function UsersPage() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell><b>{t("users.table.name")}</b></TableCell>
+              <TableCell><b>{t("users.table.username")}</b></TableCell>
+              <TableCell><b>{t("users.table.fullName")}</b></TableCell>
               <TableCell><b>{t("users.table.email")}</b></TableCell>
-              <TableCell><b>{t("users.table.role")}</b></TableCell>
               <TableCell><b>{t("users.table.status")}</b></TableCell>
               <TableCell align="center"><b>{t("users.table.actions")}</b></TableCell>
             </TableRow>
@@ -139,9 +150,9 @@ export default function UsersPage() {
           <TableBody>
             {users.map((u) => (
               <TableRow key={u.id} hover>
+                <TableCell>{u.username}</TableCell>
                 <TableCell>{u.fullName}</TableCell>
                 <TableCell>{u.email}</TableCell>
-                <TableCell>{u.role}</TableCell>
                 <TableCell>
                   <Chip
                     size="small"
@@ -173,10 +184,23 @@ export default function UsersPage() {
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
         <MenuItem onClick={handleViewEdit}>{t("users.actions.viewEdit")}</MenuItem>
-        <MenuItem onClick={handleToggleActive}>
-          {menuUser?.isActive ? t("users.actions.inactivate") : t("users.actions.activate")}
-        </MenuItem>
+        <MenuItem onClick={handleDelete}>{t("users.actions.delete")}</MenuItem>
       </Menu>
+
+      <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>{t("users.confirmDelete.title")}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t("users.confirmDelete.message", { name: deleteTarget?.fullName ?? "" })}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteTarget(null)}>{t("common.actions.cancel")}</Button>
+          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <EditUserModal
         open={editOpen}

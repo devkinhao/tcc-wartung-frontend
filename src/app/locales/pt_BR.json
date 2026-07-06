@@ -234,13 +234,16 @@
     "actions": {
       "newUser": "Novo usuário",
       "viewEdit": "Ver / Editar",
-      "inactivate": "Inativar usuário",
-      "activate": "Ativar usuário"
+      "delete": "Excluir usuário"
+    },
+    "confirmDelete": {
+      "title": "Excluir usuário",
+      "message": "Tem certeza que deseja excluir o usuário \"{{name}}\"?"
     },
     "table": {
-      "name": "Nome",
+      "username": "Nome de usuário",
+      "fullName": "Nome completo",
       "email": "E-mail",
-      "role": "Perfil",
       "status": "Status",
       "actions": "Ações"
     },

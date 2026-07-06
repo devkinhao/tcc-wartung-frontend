@@ -234,13 +234,16 @@
     "actions": {
       "newUser": "New user",
       "viewEdit": "View / Edit",
-      "inactivate": "Inactivate user",
-      "activate": "Activate user"
+      "delete": "Delete user"
+    },
+    "confirmDelete": {
+      "title": "Delete user",
+      "message": "Are you sure you want to delete user \"{{name}}\"?"
     },
     "table": {
-      "name": "Name",
+      "username": "Username",
+      "fullName": "Full name",
       "email": "Email",
-      "role": "Role",
       "status": "Status",
       "actions": "Actions"
     },

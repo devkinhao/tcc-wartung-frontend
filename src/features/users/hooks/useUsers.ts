@@ -59,14 +59,8 @@ export function useUsers(search = "") {
 
   const reload = () => queryClient.invalidateQueries({ queryKey: qk.users() });
 
-  const toggleActiveMutation = useMutation({
-    mutationFn: async (user: UserRow) => {
-      if (user.isActive) {
-        await usersApi.delete(user.id);
-      } else {
-        await usersApi.activate(user.id);
-      }
-    },
+  const deleteMutation = useMutation({
+    mutationFn: (user: UserRow) => usersApi.delete(user.id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: qk.users() }),
   });
 
@@ -75,7 +69,7 @@ export function useUsers(search = "") {
     isLoading,
     error,
     reload,
-    toggleActive: toggleActiveMutation.mutate,
-    isTogglingActive: toggleActiveMutation.isPending,
+    deleteUser: deleteMutation.mutate,
+    isDeleting: deleteMutation.isPending,
   };
 }
