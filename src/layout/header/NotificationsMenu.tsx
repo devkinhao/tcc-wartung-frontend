@@ -39,13 +39,21 @@ export function NotificationsMenu() {
   const { data: unreadCount = 0 } = useQuery({
     queryKey: qk.notificationsUnreadCount(),
     queryFn: getUnreadNotificationCount,
-    refetchInterval: 60_000,
+    refetchInterval: 30_000,
+    // A configuração global desativa refetch no foco da janela; para notificações
+    // vale a pena reativar aqui — voltar para a aba é um gatilho natural e muito
+    // mais comum do que o usuário dar F5 manualmente.
+    refetchOnWindowFocus: true,
   });
 
   const { data, isLoading } = useQuery({
     queryKey: qk.notifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
     queryFn: () => listNotifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
     enabled: open,
+    // Sempre busca de novo ao abrir o menu — sem isso, reabrir dentro da janela de
+    // staleTime global (5 min) mostraria a lista em cache, já desatualizada.
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 
   const items = data?.content ?? [];

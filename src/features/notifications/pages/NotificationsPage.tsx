@@ -40,6 +40,8 @@ export default function NotificationsPage() {
     queryKey: qk.notifications({ onlyUnread: filter === "unread", page, pageSize }),
     queryFn: () => listNotifications({ onlyUnread: filter === "unread", page, pageSize }),
     placeholderData: (prev) => prev,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 
   const items = data?.content ?? [];
@@ -48,6 +50,8 @@ export default function NotificationsPage() {
   const { data: unreadCount = 0 } = useQuery({
     queryKey: qk.notificationsUnreadCount(),
     queryFn: getUnreadNotificationCount,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 
   const invalidateAll = () => {
