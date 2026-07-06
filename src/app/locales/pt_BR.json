@@ -714,5 +714,18 @@
       "expirationDate": "Vencimento",
       "status": "Status"
     }
+  },
+  "chatbot": {
+    "title": "Assistente",
+    "openLabel": "Abrir assistente",
+    "placeholder": "Digite um comando...",
+    "send": "Enviar",
+    "responses": {
+      "greeting": "Olá! Posso te ajudar a navegar pelo sistema. Digite \"ajuda\" para ver os comandos.",
+      "help": "Experimente comandos como: \"ir para clientes\", \"abrir inspeções\", \"notificações\", \"relatórios\", \"usuários\", \"configurações\", \"meu perfil\" ou \"preferências\".",
+      "navigated": "Abrindo {{page}}...",
+      "forbidden": "Você não tem permissão para acessar essa área.",
+      "fallback": "Não entendi. Digite \"ajuda\" para ver os comandos disponíveis."
+    }
   }
 }

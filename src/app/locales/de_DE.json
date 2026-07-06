@@ -714,5 +714,18 @@
       "expirationDate": "Ablaufdatum",
       "status": "Status"
     }
+  },
+  "chatbot": {
+    "title": "Assistent",
+    "openLabel": "Assistent öffnen",
+    "placeholder": "Befehl eingeben...",
+    "send": "Senden",
+    "responses": {
+      "greeting": "Hallo! Ich kann dir helfen, im System zu navigieren. Gib \"Hilfe\" ein, um die Befehle zu sehen.",
+      "help": "Probiere Befehle wie: \"zu Kunden gehen\", \"Inspektionen öffnen\", \"Benachrichtigungen\", \"Berichte\", \"Benutzer\", \"Konfigurationen\", \"mein Profil\" oder \"Einstellungen\".",
+      "navigated": "Öffne {{page}}...",
+      "forbidden": "Du hast keine Berechtigung für diesen Bereich.",
+      "fallback": "Das habe ich nicht verstanden. Gib \"Hilfe\" ein, um die Befehle zu sehen."
+    }
   }
 }

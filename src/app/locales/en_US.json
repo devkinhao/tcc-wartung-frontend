@@ -714,5 +714,18 @@
       "expirationDate": "Expiration",
       "status": "Status"
     }
+  },
+  "chatbot": {
+    "title": "Assistant",
+    "openLabel": "Open assistant",
+    "placeholder": "Type a command...",
+    "send": "Send",
+    "responses": {
+      "greeting": "Hi! I can help you navigate the system. Type \"help\" to see the available commands.",
+      "help": "Try commands like: \"go to customers\", \"open inspections\", \"notifications\", \"reports\", \"users\", \"configurations\", \"my profile\" or \"preferences\".",
+      "navigated": "Opening {{page}}...",
+      "forbidden": "You don't have permission to access this area.",
+      "fallback": "I didn't understand that. Type \"help\" to see the available commands."
+    }
   }
 }

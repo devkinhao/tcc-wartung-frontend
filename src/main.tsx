@@ -36,10 +36,10 @@ function AppProviders({ children }: { children: React.ReactNode }) {
         */}
         {children}
       </AuthProvider>
-
+      {/* 
       {import.meta.env.DEV && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      )}*/}
     </QueryClientProvider>
   );
 }
