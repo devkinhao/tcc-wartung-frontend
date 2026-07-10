@@ -710,6 +710,7 @@
     "table": {
       "customer": "Customer",
       "service": "Service",
+      "notes": "Notes",
       "inspectionDate": "Inspection Date",
       "expirationDate": "Expiration",
       "status": "Status"

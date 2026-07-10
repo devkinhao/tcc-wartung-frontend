@@ -670,8 +670,8 @@
     "description": "Visão operacional de todas as inspeções ativas.",
     "empty": "Nenhuma inspeção encontrada.",
     "status": {
-      "expired": "Vencida",
-      "nearExpiration": "Vence em {{days}} dias",
+      "expired": "Vencidas",
+      "nearExpiration": "Vencem nos próximos {{days}} dias",
       "onTrack": "Em dia"
     },
     "filters": {
@@ -710,6 +710,7 @@
     "table": {
       "customer": "Cliente",
       "service": "Serviço",
+      "notes": "Observações",
       "inspectionDate": "Data da Inspeção",
       "expirationDate": "Vencimento",
       "status": "Status"

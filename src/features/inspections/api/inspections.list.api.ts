@@ -16,10 +16,18 @@ export type InspectionListFilters = {
   search: string;
 };
 
+export type InspectionSortableColumn =
+  | "customer.legalName"
+  | "serviceType.name"
+  | "inspectionDate"
+  | "expirationDate";
+
 export async function listAllInspections(
   filters: InspectionListFilters,
   page: number,
-  pageSize: number
+  pageSize: number,
+  sortBy: InspectionSortableColumn | null = null,
+  sortDir: "asc" | "desc" = "asc"
 ) {
   const { data } = await api.get<{ content: InspectionListItem[]; page: { totalElements: number } }>(
     "/inspections",
@@ -29,6 +37,7 @@ export async function listAllInspections(
         size: pageSize,
         search: filters.search || undefined,
         status: filters.status || undefined,
+        sort: sortBy ? `${sortBy},${sortDir}` : undefined,
       },
     }
   );
