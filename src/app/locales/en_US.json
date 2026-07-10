@@ -101,7 +101,7 @@
       "inspectionStatus": {
         "title": "Inspection Status",
         "expired": "Expired",
-        "nearExpiration": "Expiring in {{days}} days",
+        "nearExpiration": "Expiring in the next {{days}} days",
         "onTrack": "On Track",
         "total": "total"
       },

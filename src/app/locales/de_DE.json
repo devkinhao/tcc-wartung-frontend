@@ -101,7 +101,7 @@
       "inspectionStatus": {
         "title": "Status der Inspektionen",
         "expired": "Abgelaufen",
-        "nearExpiration": "Läuft in {{days}} Tagen ab",
+        "nearExpiration": "Läuft in den nächsten {{days}} Tagen ab",
         "onTrack": "Aktuell",
         "total": "gesamt"
       },
