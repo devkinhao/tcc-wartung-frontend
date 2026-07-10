@@ -448,14 +448,14 @@ export default function InspectionDetailsPage() {
                 overflow: "hidden",
               }}
             >
-              <Table size="small">
+              <Table size="small" sx={{ tableLayout: "fixed" }}>
                 <TableHead sx={{ bgcolor: "background.default" }}>
                   <TableRow>
-                    <TableCell><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
-                    <TableCell><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
-                    <TableCell><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
-                    <TableCell><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
-                    <TableCell align="center"><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
+                    <TableCell sx={{ width: "50%" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
+                    <TableCell sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
+                    <TableCell sx={{ width: "8%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
+                    <TableCell sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
+                    <TableCell align="center" sx={{ width: "9%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
                   </TableRow>
                 </TableHead>
 
@@ -469,10 +469,14 @@ export default function InspectionDetailsPage() {
                   ) : documents?.length ? (
                     documents.map((d) => (
                       <TableRow key={d.id} hover>
-                        <TableCell>{d.description || "—"}</TableCell>
-                        <TableCell>{d.name}</TableCell>
-                        <TableCell>{formatFileSizeKB(d.size)}</TableCell>
-                        <TableCell>{formatDateTimeBR(d.uploadDate)}</TableCell>
+                        <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.description ?? ""}>
+                          {d.description || "—"}
+                        </TableCell>
+                        <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.name}>
+                          {d.name}
+                        </TableCell>
+                        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatFileSizeKB(d.size)}</TableCell>
+                        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
                             <IconButton

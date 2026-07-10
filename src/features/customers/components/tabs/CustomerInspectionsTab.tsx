@@ -55,15 +55,15 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
       />
 
       <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden" }}>
-        <Table size="small">
+        <Table size="small" sx={{ tableLayout: "fixed" }}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
-              <TableCell><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
-              <TableCell><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
-              <TableCell align="center"><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
-              <TableCell align="center"><b>{t("customerDetails.inspections.table.open")}</b></TableCell>
+              <TableCell sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
+              <TableCell sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
+              <TableCell sx={{ width: "39%" }}><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
+              <TableCell sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "11%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "6%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.open")}</b></TableCell>
             </TableRow>
           </TableHead>
 
@@ -76,11 +76,13 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   sx={{ cursor: "pointer" }}
                   onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
                 >
-                  <TableCell>{formatDateBR(i.inspectionDate)}</TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
 
                   <TableCell>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                      <Typography variant="body2">{i.serviceType?.name ?? "—"}</Typography>
+                      <Typography variant="body2" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {i.serviceType?.name ?? "—"}
+                      </Typography>
                       {!i.isActive && (
                         <Chip
                           size="small"
@@ -99,9 +101,11 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                     </Stack>
                   </TableCell>
 
-                  <TableCell sx={{ color: "text.secondary" }}>{i.notes || "—"}</TableCell>
+                  <TableCell sx={{ color: "text.secondary", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={i.notes ?? ""}>
+                    {i.notes || "—"}
+                  </TableCell>
 
-                  <TableCell>{formatDateBR(i.expirationDate)}</TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.expirationDate)}</TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                     {i.documents?.length ? (

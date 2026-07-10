@@ -18,21 +18,67 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
   TextField,
   Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 
 import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
 
+type SortableHeaderProps = {
+  label: string;
+  column: keyof UserRow;
+  sortBy: keyof UserRow | null;
+  sortDir: "asc" | "desc";
+  onSort: (c: keyof UserRow) => void;
+  align?: "left" | "center" | "right";
+  width?: string;
+};
+
+function SortableHeader({ label, column, sortBy, sortDir, onSort, align = "left", width }: SortableHeaderProps) {
+  const active = sortBy === column;
+  return (
+    <TableCell
+      align={align}
+      onClick={() => onSort(column)}
+      sx={{
+        cursor: "pointer",
+        userSelect: "none",
+        width,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <TableSortLabel
+        active={active}
+        direction={active ? sortDir : "asc"}
+        sx={{
+          position: "relative",
+          "& .MuiTableSortLabel-icon": {
+            position: "absolute",
+            left: "100%",
+            marginLeft: "4px",
+          },
+        }}
+      >
+        <b>{label}</b>
+      </TableSortLabel>
+    </TableCell>
+  );
+}
+
 export default function UsersPage() {
   const { t } = useTranslation();
 
   const [query, setQuery] = useState("");
-  const { users, isLoading, error, reload, deleteUser, isDeleting } = useUsers(query);
+  const { users, isLoading, error, reload, deleteUser, isDeleting, sort } = useUsers(query);
+  const sharedSortProps = { sortBy: sort.by, sortDir: sort.dir, onSort: sort.handle };
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -105,7 +151,7 @@ export default function UsersPage() {
             sx={{ minWidth: 260 }}
             disabled={isLoading}
           />
-          <Button variant="contained" onClick={() => setCreateOpen(true)} disabled={isLoading}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setCreateOpen(true)} disabled={isLoading}>
             {t("users.actions.newUser")}
           </Button>
         </Stack>
@@ -136,23 +182,29 @@ export default function UsersPage() {
           </Box>
         )}
 
-        <Table size="small">
-          <TableHead>
+        <Table size="small" sx={{ tableLayout: "fixed" }}>
+          <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell><b>{t("users.table.username")}</b></TableCell>
-              <TableCell><b>{t("users.table.fullName")}</b></TableCell>
-              <TableCell><b>{t("users.table.email")}</b></TableCell>
-              <TableCell><b>{t("users.table.status")}</b></TableCell>
-              <TableCell align="center"><b>{t("users.table.actions")}</b></TableCell>
+              <SortableHeader label={t("users.table.username")} column="username" {...sharedSortProps} width="15%" />
+              <SortableHeader label={t("users.table.fullName")} column="fullName" {...sharedSortProps} width="40%" />
+              <SortableHeader label={t("users.table.email")} column="email" {...sharedSortProps} width="28%" />
+              <SortableHeader label={t("users.table.status")} column="isActive" {...sharedSortProps} width="9%" />
+              <TableCell align="center" sx={{ width: "8%" }} />
             </TableRow>
           </TableHead>
 
           <TableBody>
             {users.map((u) => (
               <TableRow key={u.id} hover>
-                <TableCell>{u.username}</TableCell>
-                <TableCell>{u.fullName}</TableCell>
-                <TableCell>{u.email}</TableCell>
+                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.username}>
+                  {u.username}
+                </TableCell>
+                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.fullName}>
+                  {u.fullName}
+                </TableCell>
+                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.email}>
+                  {u.email}
+                </TableCell>
                 <TableCell>
                   <Chip
                     size="small"

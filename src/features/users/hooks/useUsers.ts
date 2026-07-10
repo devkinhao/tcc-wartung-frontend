@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { usersApi, type UserResponseDTO } from "../api/usersApi";
@@ -43,8 +43,17 @@ function matchesSearch(u: UserRow, q: string): boolean {
 
 // --- Hook ---
 
+function compareValues(a: UserRow[keyof UserRow], b: UserRow[keyof UserRow]): number {
+  if (typeof a === "boolean" && typeof b === "boolean") {
+    return a === b ? 0 : a ? 1 : -1;
+  }
+  return String(a).localeCompare(String(b), "pt-BR", { sensitivity: "base" });
+}
+
 export function useUsers(search = "") {
   const queryClient = useQueryClient();
+  const [sortBy, setSortBy] = useState<keyof UserRow | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: qk.users(),
@@ -54,8 +63,18 @@ export function useUsers(search = "") {
   const rows = useMemo(() => {
     const q = search.trim().toLowerCase();
     const all = data.map(toRow);
-    return q ? all.filter((u) => matchesSearch(u, q)) : all;
-  }, [data, search]);
+    const filtered = q ? all.filter((u) => matchesSearch(u, q)) : all;
+
+    if (!sortBy) return filtered;
+
+    const sorted = [...filtered].sort((a, b) => compareValues(a[sortBy], b[sortBy]));
+    return sortDir === "asc" ? sorted : sorted.reverse();
+  }, [data, search, sortBy, sortDir]);
+
+  const handleSort = useCallback((column: keyof UserRow) => {
+    setSortBy(column);
+    setSortDir((prev) => (sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc"));
+  }, [sortBy]);
 
   const reload = () => queryClient.invalidateQueries({ queryKey: qk.users() });
 
@@ -71,5 +90,6 @@ export function useUsers(search = "") {
     reload,
     deleteUser: deleteMutation.mutate,
     isDeleting: deleteMutation.isPending,
+    sort: { by: sortBy, dir: sortDir, handle: handleSort },
   };
 }

@@ -107,29 +107,31 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
             {t("customers.quickView.empty")}
           </Typography>
         ) : (
-          <Table size="small">
+          <Table size="small" sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell sx={{ width: "13%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   <b>{t("customers.quickView.table.inspectionDate")}</b>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   <b>{t("customers.quickView.table.service")}</b>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ width: "54%" }}>
                   <b>{t("customers.quickView.table.notes")}</b>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ width: "13%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   <b>{t("customers.quickView.table.expiration")}</b>
                 </TableCell>
-                <TableCell align="right" />
+                <TableCell align="right" sx={{ width: "5%" }} />
               </TableRow>
             </TableHead>
             <TableBody>
               {sortedInspections.map((i) => (
                 <TableRow key={i.id} hover>
                   <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
-                  <TableCell>{i.serviceType?.name ?? "—"}</TableCell>
+                  <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={i.serviceType?.name ?? ""}>
+                    {i.serviceType?.name ?? "—"}
+                  </TableCell>
                   <TableCell sx={{ maxWidth: 420 }}>
                     <Typography variant="body2" noWrap title={i.notes ?? ""}>
                       {i.notes || "—"}

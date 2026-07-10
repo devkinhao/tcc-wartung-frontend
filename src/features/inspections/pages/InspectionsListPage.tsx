@@ -125,14 +125,14 @@ export default function InspectionsListPage() {
 
       {/* Tabela */}
       <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden", bgcolor: "background.paper" }}>
-        <Table size="small">
+        <Table size="small" sx={{ tableLayout: "fixed" }}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell><b>{t("inspections.table.customer")}</b></TableCell>
-              <TableCell><b>{t("inspections.table.service")}</b></TableCell>
-              <TableCell><b>{t("inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell><b>{t("inspections.table.expirationDate")}</b></TableCell>
-              <TableCell align="center"><b>{t("inspections.table.status")}</b></TableCell>
+              <TableCell sx={{ width: "50%" }}><b>{t("inspections.table.customer")}</b></TableCell>
+              <TableCell sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.service")}</b></TableCell>
+              <TableCell sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.inspectionDate")}</b></TableCell>
+              <TableCell sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.expirationDate")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "10%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.status")}</b></TableCell>
             </TableRow>
           </TableHead>
 
@@ -163,10 +163,14 @@ export default function InspectionsListPage() {
                 sx={{ cursor: "pointer" }}
                 onClick={() => navigate(`/inspections/${item.id}`)}
               >
-                <TableCell>{item.customerLegalName}</TableCell>
-                <TableCell>{item.serviceTypeName}</TableCell>
-                <TableCell>{formatDateBR(item.inspectionDate)}</TableCell>
-                <TableCell>{formatDateBR(item.expirationDate)}</TableCell>
+                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.customerLegalName}>
+                  {item.customerLegalName}
+                </TableCell>
+                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.serviceTypeName}>
+                  {item.serviceTypeName}
+                </TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.inspectionDate)}</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.expirationDate)}</TableCell>
                 <TableCell align="center">
                   <StatusChip expirationDate={item.expirationDate} alertDays={alertDays} />
                 </TableCell>
