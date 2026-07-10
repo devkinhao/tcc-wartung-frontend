@@ -3,7 +3,7 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, lighten } from "@mui/material/styles";
 import type { CustomersByCityItem } from "../api/dashboard.api";
 
 type Props = {
@@ -11,10 +11,17 @@ type Props = {
   loading: boolean;
 };
 
-const PALETTE = [
+// Paleta categórica derivada dos brand tokens do projeto
+const BASE_PALETTE = [
   "#2A4C61", "#78744C", "#4A7FA5", "#A0956B",
   "#3D6E8C", "#8F7E55", "#5B8FAF", "#B0A57A",
 ];
+
+// No tema escuro os tons originais (pensados para fundo claro) quase somem
+// no card quase preto — clareamos mantendo o matiz para preservar contraste.
+function getPalette(mode: "light" | "dark") {
+  return mode === "dark" ? BASE_PALETTE.map((c) => lighten(c, 0.35)) : BASE_PALETTE;
+}
 
 // Agrupa cidades com participação pequena em "Outros" para não poluir o gráfico
 function prepareData(raw: CustomersByCityItem[], t: (k: string) => string) {
@@ -50,6 +57,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
 
   const hasData = data.length > 0;
   const series = prepareData(data, t);
+  const palette = getPalette(theme.palette.mode);
 
   return (
     <Card
@@ -84,7 +92,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
                 label={renderCustomLabel}
               >
                 {series.map((_, i) => (
-                  <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
+                  <Cell key={i} fill={palette[i % palette.length]} />
                 ))}
               </Pie>
 

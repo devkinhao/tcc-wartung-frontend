@@ -4,7 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, lighten } from "@mui/material/styles";
 import type { ServiceRankingItem } from "../api/dashboard.api";
 
 type Props = {
@@ -13,10 +13,16 @@ type Props = {
 };
 
 // Paleta categórica derivada dos brand tokens do projeto
-const PALETTE = [
+const BASE_PALETTE = [
   "#2A4C61", "#78744C", "#4A7FA5", "#A0956B",
   "#3D6E8C", "#8F7E55", "#5B8FAF", "#B0A57A",
 ];
+
+// No tema escuro os tons originais (pensados para fundo claro) quase somem
+// no card quase preto — clareamos mantendo o matiz para preservar contraste.
+function getPalette(mode: "light" | "dark") {
+  return mode === "dark" ? BASE_PALETTE.map((c) => lighten(c, 0.35)) : BASE_PALETTE;
+}
 
 export function ServiceRankingChart({ data, loading }: Props) {
   const { t } = useTranslation();
@@ -27,6 +33,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
   }
 
   const hasData = data.length > 0;
+  const palette = getPalette(theme.palette.mode);
 
   // Trunca nomes longos no eixo Y para não quebrar o layout
   const series = data.map((d) => ({
@@ -108,7 +115,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
               />
               <Bar dataKey="count" radius={[0, 4, 4, 0]} maxBarSize={32}>
                 {series.map((_, i) => (
-                  <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
+                  <Cell key={i} fill={palette[i % palette.length]} />
                 ))}
               </Bar>
             </BarChart>

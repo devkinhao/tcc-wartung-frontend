@@ -1,4 +1,4 @@
-import { Chip } from "@mui/material";
+import { Chip, useTheme } from "@mui/material";
 import type { AbvtexSealType } from "../types/abvtexSeal";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,7 @@ type Props = {
 
 export function AbvtexChip({ seal, size = "small" }: Props) {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const getProps = () => {
     switch (seal) {
@@ -16,8 +17,8 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
         return {
           label: t("abvtex.none"),
           sx: {
-            bgcolor: "grey.200",
-            color: "grey.800",
+            bgcolor: theme.palette.mode === "dark" ? "grey.700" : "grey.200",
+            color: theme.palette.mode === "dark" ? "grey.100" : "grey.800",
             fontWeight: 600,
           },
         };
