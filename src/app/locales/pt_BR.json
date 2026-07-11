@@ -677,7 +677,8 @@
     "filters": {
       "search": "Buscar por cliente ou serviço",
       "status": "Status",
-      "allStatuses": "Todos os status"
+      "allStatuses": "Todos os status",
+      "clear": "Limpar filtros"
     },
     "actions": {
       "addInspection": "Nova inspeção"

@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { Customer } from "../types/customersList";
 import { qk } from "@/api/keys";
+import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import type { CustomerFilterValues } from "../CustomersFilters";
 
 interface SpringPageResponse {
@@ -45,11 +46,11 @@ const INITIAL_FILTERS: CustomerFilterValues = {
 };
 
 export function useCustomers() {
-  const [filters, setFilters] = useState<CustomerFilterValues>(INITIAL_FILTERS);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState<keyof Customer | null>("nextExpirationDate");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [filters, setFilters] = useSessionStorageState<CustomerFilterValues>("customers-list.filters", INITIAL_FILTERS);
+  const [page, setPage] = useSessionStorageState("customers-list.page", 1);
+  const [pageSize, setPageSize] = useSessionStorageState("customers-list.pageSize", 10);
+  const [sortBy, setSortBy] = useSessionStorageState<keyof Customer | null>("customers-list.sortBy", "nextExpirationDate");
+  const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("customers-list.sortDir", "asc");
 
   const { data, isLoading } = useQuery({
     queryKey: qk.customers({ page, pageSize, sortBy, sortDir, ...filters }),

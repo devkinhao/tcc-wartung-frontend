@@ -677,7 +677,8 @@
     "filters": {
       "search": "Search by customer or service",
       "status": "Status",
-      "allStatuses": "All statuses"
+      "allStatuses": "All statuses",
+      "clear": "Clear filters"
     },
     "actions": {
       "addInspection": "New inspection"

@@ -29,6 +29,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
+import { useSessionStorageState } from "@/hooks/useSessionStorageState";
+import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "../components/AddInspectionModal";
@@ -103,12 +105,12 @@ export default function InspectionsListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [filters, setFilters]   = useState<InspectionListFilters>(INITIAL_FILTERS);
-  const [page, setPage]         = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [filters, setFilters]   = useSessionStorageState<InspectionListFilters>("inspections-list.filters", INITIAL_FILTERS);
+  const [page, setPage]         = useSessionStorageState("inspections-list.page", 1);
+  const [pageSize, setPageSize] = useSessionStorageState("inspections-list.pageSize", 10);
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<InspectionSortableColumn | null>(null);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
+  const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuRowId, setMenuRowId] = useState<number | null>(null);
 
@@ -125,6 +127,8 @@ export default function InspectionsListPage() {
 
   const alertDays = useAlertDays();
 
+  useScrollRestoration("inspections-list.scrollY", !isLoading);
+
   const items = data?.content ?? [];
   const total = data?.page.totalElements ?? 0;
 
@@ -132,6 +136,13 @@ export default function InspectionsListPage() {
     setFilters((p) => ({ ...p, [key]: value }));
     setPage(1);
   }
+
+  function clearFilters() {
+    setFilters(INITIAL_FILTERS);
+    setPage(1);
+  }
+
+  const hasActiveFilters = Object.values(filters).some(Boolean);
 
   function handleSort(column: InspectionSortableColumn) {
     setSortDir((prev) => (sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc"));
@@ -188,6 +199,12 @@ export default function InspectionsListPage() {
               <MenuItem value="ok">{t("inspections.status.onTrack")}</MenuItem>
             </Select>
           </FormControl>
+
+          <Box sx={{ flex: 1 }} />
+
+          <Button variant="outlined" onClick={clearFilters} disabled={!hasActiveFilters}>
+            {t("inspections.filters.clear")}
+          </Button>
         </Stack>
       </Card>
 
@@ -234,7 +251,10 @@ export default function InspectionsListPage() {
                   key={item.id}
                   hover
                   sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/inspections/${item.id}`)}
+                  onClick={() => {
+                    saveScrollPosition("inspections-list.scrollY");
+                    navigate(`/inspections/${item.id}`);
+                  }}
                 >
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.inspectionDate)}</TableCell>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.serviceTypeName}>

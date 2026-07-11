@@ -10,6 +10,7 @@ import { CustomersTable } from "../CustomersTable";
 import { Pagination } from "../../../components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
+import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
 
 export default function CustomersListPage() {
   const { t } = useTranslation();
@@ -19,6 +20,8 @@ export default function CustomersListPage() {
 
   const { customers, loading, total, filters, setFilter, hasActiveFilters, clearFilters, pagination, sort } =
     useCustomers();
+
+  useScrollRestoration("customers-list.scrollY", !loading);
 
   return (
     <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
@@ -59,7 +62,10 @@ export default function CustomersListPage() {
         sortBy={sort.by}
         sortDir={sort.dir}
         onSort={sort.handle}
-        onRowClick={(id) => navigate(`/customers/${id}`)}
+        onRowClick={(id) => {
+          saveScrollPosition("customers-list.scrollY");
+          navigate(`/customers/${id}`);
+        }}
       />
 
       <Box sx={{ mt: 1 }}>
