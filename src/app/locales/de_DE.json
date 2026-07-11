@@ -333,11 +333,11 @@
       "city": "Stadt",
       "isCustomer": "Kunde?",
       "abvtex": "ABVTEX",
-      "activeInspections": "Aktive Inspektionen",
-      "nextExpiration": "Nächste Fälligkeit"
+      "activeInspections": "Aktive Insp.",
+      "nextExpiration": "Fälligkeit"
     },
     "loading": "Kunden werden geladen...",
-    "empty": "Keine Kunden gefunden",
+    "empty": "Keine Unternehmen gefunden.",
     "rowMenu": {
       "actionsLabel": "Aktionen",
       "view": "Kunde anzeigen",

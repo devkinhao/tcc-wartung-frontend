@@ -5,6 +5,8 @@ import {
   Button,
   Chip,
   IconButton,
+  Menu,
+  MenuItem,
   Paper,
   Stack,
   Table,
@@ -12,12 +14,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DescriptionIcon from "@mui/icons-material/Description";
-import OpenInNewIcon    from "@mui/icons-material/OpenInNew";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { formatDateBR } from "@/utils/date";
@@ -35,6 +36,13 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [menuRowId, setMenuRowId] = useState<number | null>(null);
+
+  function closeRowMenu() {
+    setMenuAnchor(null);
+    setMenuRowId(null);
+  }
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
@@ -58,12 +66,12 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         <Table size="small" sx={{ tableLayout: "fixed" }}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
-              <TableCell sx={{ width: "39%" }}><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
+              <TableCell sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
+              <TableCell sx={{ width: "22%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
+              <TableCell sx={{ width: "33%" }}><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
               <TableCell sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "11%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "6%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.open")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "6%" }} />
             </TableRow>
           </TableHead>
 
@@ -116,21 +124,22 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
-                    <Tooltip title={t("customerDetails.inspections.actions.open")}>
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
-                        aria-label={t("customerDetails.inspections.actions.open")}
-                      >
-                        <OpenInNewIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                    <IconButton
+                      size="small"
+                      aria-label={t("customerDetails.inspections.actions.open")}
+                      onClick={(e) => {
+                        setMenuAnchor(e.currentTarget);
+                        setMenuRowId(i.id);
+                      }}
+                    >
+                      <MoreVertIcon fontSize="small" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} sx={{ py: 2, color: "text.secondary" }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 2, color: "text.secondary" }}>
                   {t("customerDetails.inspections.empty")}
                 </TableCell>
               </TableRow>
@@ -138,6 +147,10 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
           </TableBody>
         </Table>
       </Box>
+
+      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
+        <MenuItem onClick={closeRowMenu}>Teste</MenuItem>
+      </Menu>
     </Paper>
   );
 }

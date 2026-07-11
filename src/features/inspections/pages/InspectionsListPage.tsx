@@ -196,7 +196,7 @@ export default function InspectionsListPage() {
         <Table size="small" sx={{ tableLayout: "fixed" }}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="12%" />
+              <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="15%" />
               <SortableHeader label={t("inspections.table.service")} column="serviceType.name" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="15%" />
               <TableCell sx={{ width: "29%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.notes")}</b></TableCell>
               <SortableHeader label={t("inspections.table.customer")} column="customer.legalName" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="26%" />

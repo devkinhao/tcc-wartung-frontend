@@ -451,18 +451,18 @@ export default function InspectionDetailsPage() {
               <Table size="small" sx={{ tableLayout: "fixed" }}>
                 <TableHead sx={{ bgcolor: "background.default" }}>
                   <TableRow>
-                    <TableCell sx={{ width: "50%" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
-                    <TableCell sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
-                    <TableCell sx={{ width: "8%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
-                    <TableCell sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
-                    <TableCell align="center" sx={{ width: "9%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
+                    <TableCell sx={{ width: "38%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
+                    <TableCell sx={{ width: "20%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
+                    <TableCell sx={{ width: "14%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
+                    <TableCell sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
+                    <TableCell align="center" sx={{ width: "10%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
                   {docsQuery.isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={5} sx={{ py: 2, color: "text.secondary" }}>
+                      <TableCell colSpan={5} align="center" sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.loading")}
                       </TableCell>
                     </TableRow>
@@ -500,7 +500,7 @@ export default function InspectionDetailsPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} sx={{ py: 2, color: "text.secondary" }}>
+                      <TableCell colSpan={5} align="center" sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.empty")}
                       </TableCell>
                     </TableRow>

@@ -333,11 +333,11 @@
       "city": "Cidade",
       "isCustomer": "Cliente?",
       "abvtex": "ABVTEX",
-      "activeInspections": "Inspeções Ativas",
-      "nextExpiration": "Próximo Vencimento"
+      "activeInspections": "Insp. Ativas",
+      "nextExpiration": "Vencimento"
     },
     "loading": "Carregando clientes...",
-    "empty": "Nenhum cliente encontrado",
+    "empty": "Nenhuma empresa encontrada.",
     "rowMenu": {
       "actionsLabel": "Ações",
       "view": "Ver cliente",

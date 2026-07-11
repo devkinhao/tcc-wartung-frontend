@@ -39,7 +39,14 @@ function SortableHeader({ label, column, sortBy, sortDir, onSort, align = "left"
     <TableCell
       align={align}
       onClick={() => onSort(column)}
-      sx={{ cursor: "pointer", userSelect: "none", width, whiteSpace: "nowrap" }}
+      sx={{
+        cursor: "pointer",
+        userSelect: "none",
+        width,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
     >
       <TableSortLabel
         active={active}
@@ -87,13 +94,13 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
       <Table size="small" sx={{ tableLayout: "fixed" }}>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="25%" />
-            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="12%" />
+            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="20%" />
+            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="17%" />
             <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="15%" />
-            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="7%" />
-            <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="10%" />
+            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="9%" />
+            <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="12%" />
             <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="12%" />
-            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="14%" />
+            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="12%" />
             <TableCell align="right" sx={{ width: "5%" }} />
           </TableRow>
         </TableHead>
@@ -125,7 +132,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.legalName}>
                     {c.legalName}
                   </TableCell>
-                  <TableCell sx={{ whiteSpace: "nowrap" }}>{c.cnpj}</TableCell>
+                  <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.cnpj}>{c.cnpj}</TableCell>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.city}>
                     {c.city}
                   </TableCell>

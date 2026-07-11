@@ -45,10 +45,10 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           placeholder={t("customers.filters.searchPlaceholder")}
           value={values.search}
           onChange={(e) => onChange("search", e.target.value)}
-          sx={{ minWidth: { xs: "100%", md: 340 } }}
+          sx={{ minWidth: { xs: "100%", md: 240 } }}
         />
 
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+        <FormControl size="small" sx={{ minWidth: 160 }}>
           <InputLabel id="customers-city">{t("customers.filters.city")}</InputLabel>
           <Select
             labelId="customers-city"
@@ -63,7 +63,7 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 190 }}>
+        <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel id="customers-isCustomer">{t("customers.filters.isCustomer")}</InputLabel>
           <Select
             labelId="customers-isCustomer"
@@ -77,7 +77,7 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ minWidth: 190 }}>
+        <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel id="customers-month">{t("customers.filters.month")}</InputLabel>
           <Select
             labelId="customers-month"

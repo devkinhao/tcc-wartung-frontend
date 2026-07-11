@@ -333,11 +333,11 @@
       "city": "City",
       "isCustomer": "Customer?",
       "abvtex": "ABVTEX",
-      "activeInspections": "Active inspections",
-      "nextExpiration": "Next expiration"
+      "activeInspections": "Active insp.",
+      "nextExpiration": "Expiration"
     },
     "loading": "Loading customers...",
-    "empty": "No customers found",
+    "empty": "No companies found.",
     "rowMenu": {
       "actionsLabel": "Actions",
       "view": "View customer",
