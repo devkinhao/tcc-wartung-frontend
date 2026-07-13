@@ -118,7 +118,9 @@ export default function CompanyPage() {
   const zipCodeFormatError = isEditing && addressZipCode !== "" && !CEP_REGEX.test(addressZipCode);
 
   const isFormValid =
-    !cnpjError && !emailError && !phoneError && !mobileError &&
+    (draft?.legalName ?? "").trim() !== "" &&
+    CNPJ_REGEX.test((draft?.cnpj ?? "").trim()) &&
+    !emailError && !phoneError && !mobileError &&
     addressStreet !== "" && CEP_REGEX.test(addressZipCode) && !!draft?.address.cityId;
 
   const { data, isLoading } = useQuery({
