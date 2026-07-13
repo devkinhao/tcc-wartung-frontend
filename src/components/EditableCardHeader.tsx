@@ -6,6 +6,8 @@ type Props = {
   title: string;
   editing: boolean;
   saving?: boolean;
+  /** true quando o formulário tem erros de validação — bloqueia o Salvar sem round-trip ao backend */
+  saveDisabled?: boolean;
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
@@ -15,7 +17,7 @@ type Props = {
  * Cabeçalho reutilizável para cards editáveis.
  * Exibe o título e alterna entre botão "Editar" e botões "Cancelar / Salvar".
  */
-export function EditableCardHeader({ title, editing, saving = false, onEdit, onCancel, onSave }: Props) {
+export function EditableCardHeader({ title, editing, saving = false, saveDisabled = false, onEdit, onCancel, onSave }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -33,7 +35,7 @@ export function EditableCardHeader({ title, editing, saving = false, onEdit, onC
           <Button variant="outlined" onClick={onCancel} disabled={saving}>
             {t("common.actions.cancel")}
           </Button>
-          <Button variant="contained" onClick={onSave} disabled={saving}>
+          <Button variant="contained" onClick={onSave} disabled={saving || saveDisabled}>
             {t("common.actions.save")}
           </Button>
         </Stack>

@@ -2,6 +2,14 @@
   "app": {
     "brandName": "Wartung"
   },
+  "validation": {
+    "required": "Required field",
+    "cnpjInvalid": "Invalid CNPJ",
+    "cepInvalid": "Invalid ZIP code. Use the format 00000-000",
+    "emailInvalid": "Invalid email",
+    "phoneInvalid": "Invalid phone number",
+    "mobileInvalid": "Invalid mobile number"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -21,7 +29,13 @@
       "confirm": "Confirm",
       "retry": "Retry"
     },
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "cep": {
+      "notFound": "ZIP code not found"
+    },
+    "fields": {
+      "zipCode": "ZIP code"
+    }
   },
   "months": {
     "january": "January",

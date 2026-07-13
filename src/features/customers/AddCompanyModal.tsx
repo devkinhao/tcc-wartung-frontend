@@ -243,7 +243,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 size="small"
                 required
                 error={cnpjError}
-                helperText={cnpjError ? t("validation.cnpjInvalid", "CNPJ inválido") : undefined}
+                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
               />
             </Grid>
 
@@ -290,7 +290,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 error={phoneError}
-                helperText={phoneError ? t("validation.phoneInvalid", "Telefone inválido") : undefined}
+                helperText={phoneError ? t("validation.phoneInvalid") : undefined}
               />
             </Grid>
 
@@ -303,7 +303,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 error={mobileError}
-                helperText={mobileError ? t("validation.mobileInvalid", "Celular inválido") : undefined}
+                helperText={mobileError ? t("validation.mobileInvalid") : undefined}
               />
             </Grid>
 
@@ -316,7 +316,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 error={emailError}
-                helperText={emailError ? t("validation.emailInvalid", "E-mail inválido") : undefined}
+                helperText={emailError ? t("validation.emailInvalid") : undefined}
                 inputProps={{ maxLength: 75 }}
               />
             </Grid>
@@ -331,7 +331,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 label={t("customers.addModal.fields.zipCode")}
                 required
                 error={zipError}
-                helperText={zipError ? t("validation.cepInvalid", "CEP inválido") : undefined}
+                helperText={zipError ? t("validation.cepInvalid") : undefined}
               />
             </Grid>
 

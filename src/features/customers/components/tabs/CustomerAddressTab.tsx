@@ -49,6 +49,16 @@ export function CustomerAddressTab({
   const addressString = `${view.address.street}, ${view.address.number} - ${view.address.neighborhood}, ${view.address.zipCode}`;
   const mapQuery = encodeURIComponent(addressString);
 
+  // Espelha as constraints do AddressRequestDTO do backend (@NotBlank street,
+  // @NotBlank + @Pattern zipCode, @NotNull cityId) — feedback instantâneo,
+  // sem depender de round-trip pro backend pra saber que algo está errado.
+  const CEP_REGEX = /^\d{5}-\d{3}$/;
+  const zipCode = view.address.zipCode?.trim() ?? "";
+  const street = view.address.street?.trim() ?? "";
+
+  const zipCodeFormatError = zipCode !== "" && !CEP_REGEX.test(zipCode);
+  const isAddressValid = street !== "" && CEP_REGEX.test(zipCode) && !!view.address.city?.id;
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
@@ -65,6 +75,7 @@ export function CustomerAddressTab({
               title={t("customerDetails.address.title")}
               editing={editing}
               saving={saving}
+              saveDisabled={!isAddressValid}
               onEdit={onEdit}
               onCancel={onCancel}
               onSave={onSave}
@@ -79,6 +90,8 @@ export function CustomerAddressTab({
                   label={t("customerDetails.address.fields.zipCode")}
                   disabled={!editing}
                   required
+                  error={zipCodeFormatError}
+                  helperText={zipCodeFormatError ? t("validation.cepInvalid") : undefined}
                 />
               </Grid>
 
@@ -111,6 +124,7 @@ export function CustomerAddressTab({
                   required
                   value={view.address.street ?? ""}
                   onChange={(e) => updateAddress("street", e.target.value)}
+                  inputProps={{ maxLength: 100 }}
                 />
               </Grid>
 
@@ -120,6 +134,7 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.complement ?? ""}
                   onChange={(e) => updateAddress("complement", e.target.value)}
+                  inputProps={{ maxLength: 75 }}
                 />
               </Grid>
 
@@ -129,6 +144,7 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.number ?? ""}
                   onChange={(e) => updateAddress("number", e.target.value)}
+                  inputProps={{ maxLength: 20 }}
                 />
               </Grid>
 
@@ -138,6 +154,7 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.neighborhood ?? ""}
                   onChange={(e) => updateAddress("neighborhood", e.target.value)}
+                  inputProps={{ maxLength: 75 }}
                 />
               </Grid>
             </Grid>

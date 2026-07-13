@@ -63,13 +63,13 @@ export function CepTextField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, data]);
 
-  const errorMessage = isError ? t("common.cep.notFound", "CEP não encontrado") : undefined;
+  const errorMessage = isError ? t("common.cep.notFound") : undefined;
   const displayHelper = errorMessage ?? helperText;
   const hasError = isError || externalError;
 
   return (
     <TextField
-      label={label ?? t("common.fields.zipCode", "CEP")}
+      label={label ?? t("common.fields.zipCode")}
       size={size}
       fullWidth
       required={required}
@@ -87,7 +87,7 @@ export function CepTextField({
             {isFetching ? (
               <CircularProgress size={16} />
             ) : isError ? (
-              <Tooltip title={t("common.cep.notFound", "CEP não encontrado")}>
+              <Tooltip title={t("common.cep.notFound")}>
                 <ErrorOutlineIcon fontSize="small" color="error" />
               </Tooltip>
             ) : isValidCep(value) ? (

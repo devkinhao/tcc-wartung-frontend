@@ -2,6 +2,14 @@
   "app": {
     "brandName": "Wartung"
   },
+  "validation": {
+    "required": "Campo obrigatório",
+    "cnpjInvalid": "CNPJ inválido",
+    "cepInvalid": "CEP inválido. Use o formato 00000-000",
+    "emailInvalid": "E-mail inválido",
+    "phoneInvalid": "Telefone inválido",
+    "mobileInvalid": "Celular inválido"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -21,7 +29,13 @@
       "confirm": "Confirmar",
       "retry": "Tentar novamente"
     },
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "cep": {
+      "notFound": "CEP não encontrado"
+    },
+    "fields": {
+      "zipCode": "CEP"
+    }
   },
   "months": {
     "january": "Janeiro",

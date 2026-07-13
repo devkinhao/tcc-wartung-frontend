@@ -110,6 +110,17 @@ export default function CompanyPage() {
   const phoneError  = isEditing && (draft?.phone ?? "").trim()        !== "" && !PHONE_REGEX.test(draft?.phone ?? "");
   const mobileError = isEditing && (draft?.mobilePhone ?? "").trim()  !== "" && !MOBILE_REGEX.test(draft?.mobilePhone ?? "");
 
+  // Espelha as constraints do AddressRequestDTO do backend (@NotBlank street,
+  // @NotBlank + @Pattern zipCode, @NotNull cityId) — feedback instantâneo,
+  // sem depender de round-trip pro backend pra saber que algo está errado.
+  const addressZipCode = (draft?.address.zipCode ?? "").trim();
+  const addressStreet  = (draft?.address.street ?? "").trim();
+  const zipCodeFormatError = isEditing && addressZipCode !== "" && !CEP_REGEX.test(addressZipCode);
+
+  const isFormValid =
+    !cnpjError && !emailError && !phoneError && !mobileError &&
+    addressStreet !== "" && CEP_REGEX.test(addressZipCode) && !!draft?.address.cityId;
+
   const { data, isLoading } = useQuery({
     queryKey: qk.company(),
     queryFn: getCompany,
@@ -209,6 +220,7 @@ export default function CompanyPage() {
           title=""
           editing={isEditing}
           saving={isSaving}
+          saveDisabled={!isFormValid}
           onEdit={() => setIsEditing(true)}
           onCancel={handleCancel}
           onSave={handleSave}
@@ -251,7 +263,7 @@ export default function CompanyPage() {
               disabled={!isEditing}
               required
               error={cnpjError}
-              helperText={cnpjError ? t("validation.cnpjInvalid", "CNPJ inválido") : undefined}
+              helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
             />
           </Grid>
 
@@ -264,7 +276,7 @@ export default function CompanyPage() {
               onChange={(v) => updateField("phone", v)}
               disabled={!isEditing}
               error={phoneError}
-              helperText={phoneError ? t("validation.phoneInvalid", "Telefone inválido") : undefined}
+              helperText={phoneError ? t("validation.phoneInvalid") : undefined}
             />
           </Grid>
 
@@ -277,7 +289,7 @@ export default function CompanyPage() {
               onChange={(v) => updateField("mobilePhone", v)}
               disabled={!isEditing}
               error={mobileError}
-              helperText={mobileError ? t("validation.mobileInvalid", "Celular inválido") : undefined}
+              helperText={mobileError ? t("validation.mobileInvalid") : undefined}
             />
           </Grid>
 
@@ -289,7 +301,7 @@ export default function CompanyPage() {
               onChange={(e) => updateField("email", e.target.value)}
               disabled={!isEditing}
               error={emailError}
-              helperText={emailError ? t("validation.emailInvalid", "E-mail inválido") : undefined}
+              helperText={emailError ? t("validation.emailInvalid") : undefined}
               inputProps={{ maxLength: 75 }}
             />
           </Grid>
@@ -356,6 +368,8 @@ export default function CompanyPage() {
               label={t("company.address.fields.zipCode")}
               disabled={!isEditing}
               required
+              error={zipCodeFormatError}
+              helperText={zipCodeFormatError ? t("validation.cepInvalid") : undefined}
             />
           </Grid>
 

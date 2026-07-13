@@ -2,6 +2,14 @@
   "app": {
     "brandName": "Wartung"
   },
+  "validation": {
+    "required": "Pflichtfeld",
+    "cnpjInvalid": "Ungültige CNPJ",
+    "cepInvalid": "Ungültige Postleitzahl. Format 00000-000 verwenden",
+    "emailInvalid": "Ungültige E-Mail",
+    "phoneInvalid": "Ungültige Telefonnummer",
+    "mobileInvalid": "Ungültige Handynummer"
+  },
   "common": {
     "logoAlt": "Logo",
     "avatarAlt": "Avatar",
@@ -21,7 +29,13 @@
       "confirm": "Bestätigen",
       "retry": "Erneut versuchen"
     },
-    "loading": "Wird geladen..."
+    "loading": "Wird geladen...",
+    "cep": {
+      "notFound": "Postleitzahl nicht gefunden"
+    },
+    "fields": {
+      "zipCode": "PLZ"
+    }
   },
   "months": {
     "january": "Januar",
