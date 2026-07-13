@@ -20,6 +20,7 @@ import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { AbvtexChip } from "../AbvtexChip";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
+import { buildWhatsAppLink } from "@/utils/whatsapp";
 
 type Props = {
   view: CustomerDetailResponseDTO;
@@ -190,9 +191,7 @@ export function CustomerGeneralTab({
                     <IconButton
                       size="small"
                       aria-label={t("customerDetails.actions.whatsapp")}
-                      onClick={() =>
-                        window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")
-                      }
+                      onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
                       disabled={!view.mobilePhone}
                     >
                       <WhatsAppIcon fontSize="small" />

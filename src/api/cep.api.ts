@@ -1,4 +1,5 @@
 import { api } from "./client";
+import { digitsOnly } from "@/utils/masks";
 
 export type ViaCepResponseDTO = {
   street: string;
@@ -10,7 +11,7 @@ export type ViaCepResponseDTO = {
 
 /** Normaliza para 8 dígitos — aceita "01310-100" ou "01310100" */
 export function normalizeCep(raw: string): string {
-  return raw.replace(/\D/g, "");
+  return digitsOnly(raw);
 }
 
 export async function fetchCep(cep: string): Promise<ViaCepResponseDTO> {

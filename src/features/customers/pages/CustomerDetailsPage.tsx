@@ -36,6 +36,7 @@ import type {
   CustomerUpdateAddressRequestDTO,
 } from "../api/customers.detail.api";
 import { paths } from "@/routes/paths";
+import { buildWhatsAppLink } from "@/utils/whatsapp";
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
@@ -131,7 +132,7 @@ export default function CustomerDetailsPage() {
                 <IconButton
                   size="small"
                   aria-label={t("customerDetails.actions.whatsapp")}
-                  onClick={() => window.open(`https://wa.me/${view.mobilePhone?.replace(/\D/g, "")}`, "_blank")}
+                  onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
                   disabled={!view.mobilePhone}
                 >
                   <WhatsAppIcon fontSize="small" />
