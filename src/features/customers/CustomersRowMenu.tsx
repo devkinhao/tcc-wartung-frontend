@@ -4,6 +4,7 @@ import FactCheckIcon  from "@mui/icons-material/FactCheck";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { paths } from "@/routes/paths";
 
 type Props = {
   customerId: number;
@@ -56,7 +57,7 @@ export function CustomersRowMenu({ customerId, open, onToggle, onClose }: Props)
         <MenuItem
           onClick={() => {
             handleClose();
-            navigate(`/customers/${customerId}?tab=inspections`);
+            navigate(paths.customerInspectionsTab(customerId));
           }}
         >
           <ListItemIcon>

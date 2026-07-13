@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { PreferenceOptionMap, UserPreference } from "@/types";
+import { PreferenceOptionMap, UserPreference } from "../types/Preferences";
 
 export async function getMyPreferences(): Promise<UserPreference[]> {
   const { data } = await api.get("/users/me/preferences");

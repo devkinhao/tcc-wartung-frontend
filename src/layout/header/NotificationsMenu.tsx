@@ -26,6 +26,7 @@ import {
   type NotificationResponseDTO,
 } from "@/features/notifications/api/notifications.api";
 import { resolveNotificationLink } from "@/features/notifications/utils";
+import { paths } from "@/routes/paths";
 
 const PREVIEW_SIZE = 5;
 
@@ -160,7 +161,7 @@ export function NotificationsMenu() {
         <MenuItem
           onClick={() => {
             setAnchorEl(null);
-            navigate("/notifications");
+            navigate(paths.notifications);
           }}
           sx={{ justifyContent: "center" }}
         >

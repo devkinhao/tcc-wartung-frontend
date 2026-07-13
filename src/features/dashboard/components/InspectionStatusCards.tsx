@@ -142,7 +142,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value: number, name: string) => [value, name]}
+                    formatter={(value, name) => [value, name]}
                     contentStyle={{
                       backgroundColor: theme.palette.background.paper,
                       border: `1px solid ${theme.palette.divider}`,

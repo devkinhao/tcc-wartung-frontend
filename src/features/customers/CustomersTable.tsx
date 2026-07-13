@@ -1,12 +1,13 @@
 import { useState } from "react";
 import {
   Box, Chip, CircularProgress, Table, TableBody,
-  TableCell, TableHead, TableRow, TableSortLabel, Typography,
+  TableCell, TableHead, TableRow, Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Customer } from "./types/customersList";
 import { CustomersRowMenu } from "./CustomersRowMenu";
 import { AbvtexChip } from "./components/AbvtexChip";
+import { SortableHeader } from "@/components/SortableHeader";
 import { formatDateBR, addDaysISODate, todayISODate } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 
@@ -21,49 +22,6 @@ function getExpirationStatus(expirationDate: string | null | undefined, alertDay
   if (exp < today)           return "expired";
   if (exp <= alertThreshold) return "near";
   return "ok";
-}
-
-type SortableHeaderProps = {
-  label: string;
-  column: keyof Customer;
-  sortBy: keyof Customer | null;
-  sortDir: "asc" | "desc";
-  onSort: (c: keyof Customer) => void;
-  align?: "left" | "center" | "right";
-  width?: string;
-};
-
-function SortableHeader({ label, column, sortBy, sortDir, onSort, align = "left", width }: SortableHeaderProps) {
-  const active = sortBy === column;
-  return (
-    <TableCell
-      align={align}
-      onClick={() => onSort(column)}
-      sx={{
-        cursor: "pointer",
-        userSelect: "none",
-        width,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <TableSortLabel
-        active={active}
-        direction={active ? sortDir : "asc"}
-        sx={{
-          position: "relative",
-          "& .MuiTableSortLabel-icon": {
-            position: "absolute",
-            left: "100%",
-            marginLeft: "4px",
-          },
-        }}
-      >
-        <b>{label}</b>
-      </TableSortLabel>
-    </TableCell>
-  );
 }
 
 type Props = {

@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { AppBar, Box, Toolbar } from "@mui/material";
 import { Breadcrumb } from "./Breadcrumb";
 import { UserMenu } from "./UserMenu";
@@ -9,7 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { getCustomerDetail } from "@/features/customers/api/customers.detail.api";
 import { getInspectionDetail } from "@/features/inspections/api/inspections.detail.api";
-import { usePreferences } from "@/features/preferences/PreferencesContext";
+import { usePreferences } from "@/features/preferences/usePreferences";
+import { paths } from "@/routes/paths";
 
 export default function Header({ drawerWidth }: { drawerWidth: number }) {
   const { t }      = useTranslation();
@@ -49,27 +50,27 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
     if (inspMatch && customerId) {
       // /customers/:customerId/inspections/:id
       crumbs = [
-        { label: "nav.home",          path: "/dashboard" },
-        { label: "nav.customersList", path: "/customers" },
-        { label: customerName,        path: `/customers/${customerId}?tab=inspections` },
+        { label: "nav.home",          path: paths.dashboard },
+        { label: "nav.customersList", path: paths.customers },
+        { label: customerName,        path: paths.customerInspectionsTab(customerId) },
         { label: inspection ? `${t("nav.inspectionDetails")} #${inspectionId}` : t("nav.inspectionDetails") },
       ];
     } else if (custMatch && customerId) {
       // /customers/:id
       crumbs = [
-        { label: "nav.home",          path: "/dashboard" },
-        { label: "nav.customersList", path: "/customers" },
+        { label: "nav.home",          path: paths.dashboard },
+        { label: "nav.customersList", path: paths.customers },
         { label: customerName },
       ];
     } else if (stdInspMatch) {
       // /inspections/:id
       crumbs = [
-        { label: "nav.home",            path: "/dashboard" },
-        { label: "nav.inspectionsList", path: "/inspections" },
+        { label: "nav.home",            path: paths.dashboard },
+        { label: "nav.inspectionsList", path: paths.inspections },
         { label: inspection ? `${t("nav.inspectionDetails")} #${inspectionId}` : t("nav.inspectionDetails") },
       ];
     } else {
-      crumbs = [{ label: "nav.home", path: "/dashboard" }];
+      crumbs = [{ label: "nav.home", path: paths.dashboard }];
     }
   }
 

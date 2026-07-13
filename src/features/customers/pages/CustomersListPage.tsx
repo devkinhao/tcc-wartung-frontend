@@ -11,6 +11,7 @@ import { Pagination } from "../../../components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
 import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
+import { paths } from "@/routes/paths";
 
 export default function CustomersListPage() {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export default function CustomersListPage() {
         onSort={sort.handle}
         onRowClick={(id) => {
           saveScrollPosition("customers-list.scrollY");
-          navigate(`/customers/${id}`);
+          navigate(paths.customerDetails(id));
         }}
       />
 

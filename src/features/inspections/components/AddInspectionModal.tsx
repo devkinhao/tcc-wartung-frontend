@@ -35,6 +35,7 @@ import {
   type CustomerOption,
   type InspectionCreateRequestDTO,
 } from "../api/inspections.create.api";
+import { paths } from "@/routes/paths";
 
 type PendingDocument = {
   description: string;
@@ -181,8 +182,8 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
     if (createdId) {
       navigate(
         lockedCustomer
-          ? `/customers/${lockedCustomer.id}/inspections/${createdId}`
-          : `/inspections/${createdId}`
+          ? paths.customerInspectionDetails(lockedCustomer.id, createdId)
+          : paths.inspectionDetails(createdId)
       );
     }
     closeAndReset();

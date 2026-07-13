@@ -1,6 +1,7 @@
 import { useSnackbar, type VariantType } from "notistack";
 import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
+import { isAxiosError } from "axios";
 
 /**
  * Extrai uma mensagem localizada a partir de um erro Axios/JS.
@@ -14,12 +15,11 @@ import { useCallback } from "react";
  * seja sempre no idioma selecionado pelo usuário.
  */
 function resolveErrorMessage(err: unknown, t: (k: string) => string): string {
-  const status: number | undefined = (err as any)?.response?.status;
-
-  // Sem resposta = erro de rede/timeout
-  if (!(err as any)?.response) {
+  if (!isAxiosError(err) || !err.response) {
     return t("notify.httpErrors.network");
   }
+
+  const status = err.response.status;
 
   const key = `notify.httpErrors.${status}`;
   const translated = t(key);
@@ -72,18 +72,23 @@ export function useNotify() {
     [t]
   );
 
-  return {
-    success: (key: string) => show(resolve(key), "success"),
-    error:   (key: string) => show(resolve(key), "error"),
-    warning: (key: string) => show(resolve(key), "warning"),
-    info:    (key: string) => show(resolve(key), "info"),
+  // Memoizado para que consumidores possam incluir `notify` em arrays de
+  // dependência (useEffect/useCallback) sem disparar reexecuções a cada render.
+  return useMemo(
+    () => ({
+      success: (key: string) => show(resolve(key), "success"),
+      error:   (key: string) => show(resolve(key), "error"),
+      warning: (key: string) => show(resolve(key), "warning"),
+      info:    (key: string) => show(resolve(key), "info"),
 
-    /**
-     * Exibe um toast de erro com mensagem localizada pelo status HTTP.
-     * Nunca exibe mensagens em inglês do backend ao usuário.
-     */
-    fromError: (err: unknown) => {
-      show(resolveErrorMessage(err, t), "error");
-    },
-  };
+      /**
+       * Exibe um toast de erro com mensagem localizada pelo status HTTP.
+       * Nunca exibe mensagens em inglês do backend ao usuário.
+       */
+      fromError: (err: unknown) => {
+        show(resolveErrorMessage(err, t), "error");
+      },
+    }),
+    [show, resolve, t]
+  );
 }

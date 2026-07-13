@@ -84,15 +84,14 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setSelectedPermissions(Array.isArray(u.permissions) ? u.permissions : []);
 
       setNewPassword("");
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || t("common.noDataAvailable");
+    } catch (e) {
       notify.fromError(e);
       setUser(null);
       setAllPermissions([]);
     } finally {
       setLoading(false);
     }
-  }, [open, userId, t]);
+  }, [open, userId, notify]);
 
   useEffect(() => {
     void load();
@@ -126,8 +125,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setCreaNumber(updated.creaNumber ?? "");
 
       onChanged?.();
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || "Failed to update user";
+    } catch (e) {
       notify.fromError(e);
     } finally {
       setSavingProfile(false);
@@ -147,8 +145,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setSelectedPermissions(refreshed.permissions ?? []);
 
       onChanged?.();
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || "Failed to update permissions";
+    } catch (e) {
       notify.fromError(e);
     } finally {
       setSavingPerms(false);
@@ -162,8 +159,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     try {
       await usersApi.resetPassword(userId, { newPassword: newPassword.trim() });
       setNewPassword("");
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || "Failed to reset password";
+    } catch (e) {
       notify.fromError(e);
     } finally {
       setSavingPwd(false);

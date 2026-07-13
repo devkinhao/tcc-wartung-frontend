@@ -62,18 +62,18 @@ export function useCustomers() {
   const setFilter = useCallback(<K extends keyof CustomerFilterValues>(key: K, value: CustomerFilterValues[K]) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1);
-  }, []);
+  }, [setFilters, setPage]);
 
   const handleSort = useCallback((column: keyof Customer) => {
     setSortBy(column);
     setSortDir((prev) => (sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc"));
     setPage(1);
-  }, [sortBy]);
+  }, [sortBy, setSortBy, setSortDir, setPage]);
 
   const clearFilters = useCallback(() => {
     setFilters(INITIAL_FILTERS);
     setPage(1);
-  }, []);
+  }, [setFilters, setPage]);
 
   const hasActiveFilters = Object.values(filters).some(Boolean);
 

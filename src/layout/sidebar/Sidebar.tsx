@@ -20,6 +20,7 @@ import { menuPrincipal, menuOutros } from "./menu";
 import { MenuItem } from "./menu.types";
 import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
+import { paths } from "@/routes/paths";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./constants";
 
 type SidebarProps = {
@@ -129,7 +130,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       {/* Logo */}
       <Box
         component={NavLink}
-        to="/dashboard"
+        to={paths.dashboard}
         sx={{
           display: "flex",
           alignItems: "center",

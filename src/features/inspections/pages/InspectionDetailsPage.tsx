@@ -51,6 +51,7 @@ import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
+import { paths } from "@/routes/paths";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -70,9 +71,9 @@ export default function InspectionDetailsPage() {
   // Back navigation: return to customer inspections tab if context available
   const handleBack = () => {
     if (customerId) {
-      navigate(`/customers/${customerId}?tab=inspections`);
+      navigate(paths.customerInspectionsTab(customerId));
     } else {
-      navigate("/inspections");
+      navigate(paths.inspections);
     }
   };
 
@@ -150,9 +151,9 @@ export default function InspectionDetailsPage() {
       qc.invalidateQueries({ queryKey: qk.dashboard() });
       if (customerId) {
         qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
-        navigate(`/customers/${customerId}?tab=inspections`);
+        navigate(paths.customerInspectionsTab(customerId));
       } else {
-        navigate("/inspections");
+        navigate(paths.inspections);
       }
     },
     onError: (err) => notify.fromError(err),
@@ -300,7 +301,7 @@ export default function InspectionDetailsPage() {
                   {view.customer ? (
                     <Link
                       component={RouterLink}
-                      to={`/customers/${view.customer.id}`}
+                      to={paths.customerDetails(view.customer.id)}
                       underline="hover"
                       color="inherit"
                       sx={{ fontWeight: 600 }}

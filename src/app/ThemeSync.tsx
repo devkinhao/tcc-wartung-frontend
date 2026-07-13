@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuth } from "@/features/auth/useAuth";
-import { usePreferences } from "@/features/preferences/PreferencesContext";
+import { usePreferences } from "@/features/preferences/usePreferences";
 
 /**
  * Single place that applies theme to the DOM.

@@ -25,6 +25,7 @@ import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
+import { paths } from "@/routes/paths";
 
 type ExpirationStatus = "expired" | "near" | "ok";
 
@@ -51,7 +52,8 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [menuRowId, setMenuRowId] = useState<number | null>(null);
+  // Reservado para as ações reais do menu (ainda não definidas) — só o setter é usado por enquanto.
+  const [_menuRowId, setMenuRowId] = useState<number | null>(null);
 
   function closeRowMenu() {
     setMenuAnchor(null);
@@ -103,7 +105,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   key={i.id}
                   hover
                   sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
+                  onClick={() => navigate(paths.customerInspectionDetails(customerId, i.id))}
                 >
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
 

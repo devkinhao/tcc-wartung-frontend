@@ -15,6 +15,7 @@ import {
   type CustomerUpdateContactsRequestDTO,
   type CustomerUpdateGeneralRequestDTO,
 } from "../api/customers.detail.api";
+import { paths } from "@/routes/paths";
 
 export function useCustomerDetail(customerId: number) {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export function useCustomerDetail(customerId: number) {
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteCustomer(customerId),
-    onSuccess:  () => navigate("/customers"),
+    onSuccess:  () => navigate(paths.customers),
     onError:    (err) => notify.fromError(err),
   });
 

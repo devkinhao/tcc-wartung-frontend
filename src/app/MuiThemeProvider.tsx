@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useAuth } from "@/features/auth/useAuth";
-import { usePreferences } from "@/features/preferences/PreferencesContext";
+import { usePreferences } from "@/features/preferences/usePreferences";
 import { tokens } from "@/styles/tokens";
 
 function buildTheme(mode: "light" | "dark") {

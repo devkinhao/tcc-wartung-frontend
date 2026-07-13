@@ -25,7 +25,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
-import { User } from "@/types/User";
+import { User } from "../types/User";
 import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
 import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";

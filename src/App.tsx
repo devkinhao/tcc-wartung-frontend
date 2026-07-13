@@ -15,7 +15,10 @@ import InspectionDetailsPage from "./features/inspections/pages/InspectionDetail
 import InspectionsListPage from "./features/inspections/pages/InspectionsListPage";
 import NotificationsPage from "./features/notifications/pages/NotificationsPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
-import { PreferencesProvider } from "./features/preferences/PreferencesContext";
+import { RequirePermission } from "./routes/RequirePermission";
+import { paths } from "./routes/paths";
+import { ROUTE_PERMISSIONS } from "./routes/routePermissions";
+import { PreferencesProvider } from "./features/preferences/PreferencesProvider";
 import { ThemeSync } from "./app/ThemeSync";
 import { MuiThemeProvider } from "./app/MuiThemeProvider";
 import { SnackbarProvider } from "notistack";
@@ -28,10 +31,10 @@ export default function App() {
         <SnackbarProvider maxSnack={4} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
           <BrowserRouter>
             <Routes>
-              <Route path="/login" element={<Login />} />
+              <Route path={paths.login} element={<Login />} />
               <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
-                  <Route index element={<Navigate to="/dashboard" />} />
+                  <Route index element={<Navigate to={paths.dashboard} />} />
                   <Route path="dashboard"            element={<Dashboard />} />
                   <Route path="customers"            element={<Customers />} />
                   <Route path="customers/:id"        element={<CustomerDetailsPage />} />
@@ -41,13 +44,19 @@ export default function App() {
                   <Route path="inspections"          element={<InspectionsListPage />} />
                   <Route path="inspections/:id"      element={<InspectionDetailsPage />} />
                   <Route path="notifications"        element={<NotificationsPage />} />
-                  <Route path="reports"              element={<Reports />} />
-                  <Route path="company"              element={<Company />} />
-                  <Route path="users"                element={<Users />} />
-                  <Route path="configurations"       element={<Configurations />} />
                   <Route path="help"                 element={<Help />} />
                   <Route path="users/me"             element={<UserProfile />} />
                   <Route path="users/me/preferences" element={<UserPreferences />} />
+
+                  <Route element={<RequirePermission permissions={ROUTE_PERMISSIONS.reports} />}>
+                    <Route path="reports" element={<Reports />} />
+                  </Route>
+
+                  <Route element={<RequirePermission permissions={ROUTE_PERMISSIONS.admin} />}>
+                    <Route path="company"        element={<Company />} />
+                    <Route path="users"          element={<Users />} />
+                    <Route path="configurations" element={<Configurations />} />
+                  </Route>
                 </Route>
               </Route>
             </Routes>

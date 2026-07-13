@@ -1,4 +1,4 @@
-import type { City } from "@/types/City";
+import type { City } from "./types/City";
 import {
   Box,
   Button,

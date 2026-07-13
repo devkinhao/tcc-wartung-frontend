@@ -18,7 +18,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,49 +28,7 @@ import { useTranslation } from "react-i18next";
 import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
-
-type SortableHeaderProps = {
-  label: string;
-  column: keyof UserRow;
-  sortBy: keyof UserRow | null;
-  sortDir: "asc" | "desc";
-  onSort: (c: keyof UserRow) => void;
-  align?: "left" | "center" | "right";
-  width?: string;
-};
-
-function SortableHeader({ label, column, sortBy, sortDir, onSort, align = "left", width }: SortableHeaderProps) {
-  const active = sortBy === column;
-  return (
-    <TableCell
-      align={align}
-      onClick={() => onSort(column)}
-      sx={{
-        cursor: "pointer",
-        userSelect: "none",
-        width,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <TableSortLabel
-        active={active}
-        direction={active ? sortDir : "asc"}
-        sx={{
-          position: "relative",
-          "& .MuiTableSortLabel-icon": {
-            position: "absolute",
-            left: "100%",
-            marginLeft: "4px",
-          },
-        }}
-      >
-        <b>{label}</b>
-      </TableSortLabel>
-    </TableCell>
-  );
-}
+import { SortableHeader } from "@/components/SortableHeader";
 
 export default function UsersPage() {
   const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { City } from "@/types/City";
+import type { City } from "./types/City";
 import type { AbvtexSealType } from "./types/abvtexSeal";
 import { api } from "@/api/client";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { paths } from "@/routes/paths";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 
 type AddCompanyModalProps = {
@@ -155,7 +156,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
       setCreatedId(id);
       setStep(2);
     } catch (e) {
-      console.error("Erro ao criar cliente:", e);
       notify.fromError(e);
     } finally {
       setSubmitting(false);
@@ -163,8 +163,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   };
 
   const goToCadastro = () => {
-    if (createdId) navigate(`/customers/${createdId}`);
-    else navigate("/customers");
+    if (createdId) navigate(paths.customerDetails(createdId));
+    else navigate(paths.customers);
     closeAndReset();
   };
 

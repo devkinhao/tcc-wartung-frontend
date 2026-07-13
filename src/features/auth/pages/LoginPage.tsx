@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
 import { useTranslation } from "react-i18next";
+import { paths } from "@/routes/paths";
 import {
   Box,
   Button,
@@ -31,7 +32,7 @@ export default function LoginPage() {
     try {
       const { token } = await loginRequest({ username, password });
       await login(token);
-      navigate("/dashboard");
+      navigate(paths.dashboard);
     } catch {
       setError(t("login.errors.invalidCredentials"));
     } finally {

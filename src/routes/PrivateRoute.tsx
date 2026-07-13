@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../features/auth/useAuth";
+import { paths } from "./paths";
 
 export function PrivateRoute() {
   const { isAuthenticated, loading } = useAuth();
@@ -9,7 +10,7 @@ export function PrivateRoute() {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={paths.login} replace />;
   }
 
   return <Outlet />;

@@ -24,6 +24,7 @@ import { useNotify } from "@/hooks/useNotify";
 import { getCustomerDetail } from "../api/customers.detail.api";
 import type { InspectionSummaryResponseDTO } from "../types/customerDetail";
 import { formatDateBR } from "@/utils/date";
+import { paths } from "@/routes/paths";
 
 type Props = {
   open: boolean;
@@ -72,22 +73,7 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
     return () => {
       mounted = false;
     };
-  }, [open, customerId, t]);
-
-  const handleRetry = () => {
-    // Trigger the effect again by toggling open state isn't possible here;
-    // we just re-run the same fetch inline.
-    setLoading(true);
-    getCustomerDetail(customerId)
-      .then((data) => {
-        setInspections(data.inspections ?? []);
-      })
-      .catch(() => {
-        notify.error("notify.error.loadFailed");
-        setInspections([]);
-      })
-      .finally(() => setLoading(false));
-  };
+  }, [open, customerId, notify]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -144,7 +130,7 @@ export function InspectionsQuickViewDialog({ open, customerId, onClose }: Props)
                         size="small"
                         onClick={() => {
                           onClose();
-                          navigate(`/inspections/${i.id}`);
+                          navigate(paths.inspectionDetails(i.id));
                         }}
                       >
                         <OpenInNewIcon fontSize="small" />

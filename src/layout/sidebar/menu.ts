@@ -9,37 +9,39 @@ import {
   Help as HelpIcon,
 } from "@mui/icons-material";
 import { MenuItem } from "./menu.types";
+import { paths } from "@/routes/paths";
+import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
 
 export const menuPrincipal: MenuItem[] = [
-  { label: "nav.home", to: "/dashboard", icon: HomeIcon },
-  { label: "nav.customersList", to: "/customers", icon: PeopleIcon },
-  { label: "nav.inspections", to: "/inspections", icon: ChecklistIcon },
+  { label: "nav.home", to: paths.dashboard, icon: HomeIcon },
+  { label: "nav.customersList", to: paths.customers, icon: PeopleIcon },
+  { label: "nav.inspections", to: paths.inspections, icon: ChecklistIcon },
   {
     label: "nav.reports",
-    to: "/reports",
+    to: paths.reports,
     icon: DescriptionIcon,
-    permissions: ["ROLE_ACCESS_REPORTS"],
+    permissions: ROUTE_PERMISSIONS.reports,
   },
 ];
 
 export const menuOutros: MenuItem[] = [
   {
     label: "nav.myCompany",
-    to: "/company",
+    to: paths.company,
     icon: ApartmentIcon,
-    permissions: ["ROLE_ADMIN"],
+    permissions: ROUTE_PERMISSIONS.admin,
   },
   {
     label: "nav.users",
-    to: "/users",
+    to: paths.users,
     icon: AdminIcon,
-    permissions: ["ROLE_ADMIN"],
+    permissions: ROUTE_PERMISSIONS.admin,
   },
   {
     label: "nav.configurations",
-    to: "/configurations",
+    to: paths.configurations,
     icon: SettingsIcon,
-    permissions: ["ROLE_ADMIN"],
+    permissions: ROUTE_PERMISSIONS.admin,
   },
-  { label: "nav.help", to: "/help", icon: HelpIcon },
+  { label: "nav.help", to: paths.help, icon: HelpIcon },
 ];

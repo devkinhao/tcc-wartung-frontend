@@ -16,6 +16,7 @@ import { useAuth } from "@/features/auth/useAuth";
 import { useMe } from "@/hooks/useMe";
 import { getAvatar } from "@/features/users/api/user.api";
 import { getFirstName } from "@/utils/getFirstName";
+import { paths } from "@/routes/paths";
 
 export function UserMenu() {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ export function UserMenu() {
   const handleLogout = () => {
     close();
     logout();
-    navigate("/login");
+    navigate(paths.login);
   };
 
   return (
@@ -91,14 +92,14 @@ export function UserMenu() {
       </Button>
 
       <Menu anchorEl={anchorEl} open={open} onClose={close} PaperProps={{ sx: { width: 220 } }}>
-        <MenuItem onClick={() => go("/users/me")}>
+        <MenuItem onClick={() => go(paths.userProfile)}>
           <ListItemIcon>
             <Person fontSize="small" />
           </ListItemIcon>
           {t("userMenu.myProfile")}
         </MenuItem>
 
-        <MenuItem onClick={() => go("/users/me/preferences")}>
+        <MenuItem onClick={() => go(paths.userPreferences)}>
           <ListItemIcon>
             <Tune fontSize="small" />
           </ListItemIcon>

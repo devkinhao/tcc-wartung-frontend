@@ -70,12 +70,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
       onCreated?.();
       resetForm();
       onClose();
-    } catch (e: any) {
-      const msg =
-        e?.response?.data?.message ||
-        e?.response?.data?.error ||
-        e?.message ||
-        t("common.noDataAvailable");
+    } catch (e) {
       notify.fromError(e);
     } finally {
       setSubmitting(false);

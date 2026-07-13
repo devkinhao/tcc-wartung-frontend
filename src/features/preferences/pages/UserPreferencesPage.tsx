@@ -1,4 +1,4 @@
-import { usePreferences } from "@/features/preferences/PreferencesContext";
+import { usePreferences } from "@/features/preferences/usePreferences";
 import { getPreferenceOptions } from "@/features/preferences/api/preferences.api";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -22,7 +22,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
-import { PreferenceName } from "@/types/Preferences";
+import { PreferenceName } from "../types/Preferences";
 import { toCamelCase } from "@/utils/strings";
 
 // ── Ícones por opção ────────────────────────────────────────────────────────

@@ -1,3 +1,5 @@
+import { paths } from "@/routes/paths";
+
 export type BreadcrumbItem = {
   label: string;
   path?: string;
@@ -9,56 +11,56 @@ export type BreadcrumbItem = {
  * são geradas em Header.tsx com dados reais das queries.
  */
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
-  "/dashboard": [{ label: "nav.home" }],
+  [paths.dashboard]: [{ label: "nav.home" }],
 
-  "/customers": [
-    { label: "nav.home",         path: "/dashboard" },
+  [paths.customers]: [
+    { label: "nav.home",         path: paths.dashboard },
     { label: "nav.customersList" },
   ],
 
-  "/inspections": [
-    { label: "nav.home",            path: "/dashboard" },
+  [paths.inspections]: [
+    { label: "nav.home",            path: paths.dashboard },
     { label: "nav.inspectionsList" },
   ],
 
-  "/notifications": [
-    { label: "nav.home",              path: "/dashboard" },
+  [paths.notifications]: [
+    { label: "nav.home",              path: paths.dashboard },
     { label: "nav.notificationsList" },
   ],
 
-  "/reports": [
-    { label: "nav.home",   path: "/dashboard" },
+  [paths.reports]: [
+    { label: "nav.home",   path: paths.dashboard },
     { label: "nav.reports" },
   ],
 
-  "/company": [
-    { label: "nav.home",      path: "/dashboard" },
+  [paths.company]: [
+    { label: "nav.home",      path: paths.dashboard },
     { label: "nav.myCompany" },
   ],
 
-  "/users": [
-    { label: "nav.home",  path: "/dashboard" },
+  [paths.users]: [
+    { label: "nav.home",  path: paths.dashboard },
     { label: "nav.users" },
   ],
 
-  "/configurations": [
-    { label: "nav.home",           path: "/dashboard" },
+  [paths.configurations]: [
+    { label: "nav.home",           path: paths.dashboard },
     { label: "nav.configurations" },
   ],
 
-  "/help": [
-    { label: "nav.home", path: "/dashboard" },
+  [paths.help]: [
+    { label: "nav.home", path: paths.dashboard },
     { label: "nav.help" },
   ],
 
-  "/users/me": [
-    { label: "nav.home",      path: "/dashboard" },
+  [paths.userProfile]: [
+    { label: "nav.home",      path: paths.dashboard },
     { label: "nav.myProfile" },
   ],
 
-  "/users/me/preferences": [
-    { label: "nav.home",        path: "/dashboard" },
-    { label: "nav.myProfile",   path: "/users/me" },
+  [paths.userPreferences]: [
+    { label: "nav.home",        path: paths.dashboard },
+    { label: "nav.myProfile",   path: paths.userProfile },
     { label: "nav.preferences" },
   ],
 };

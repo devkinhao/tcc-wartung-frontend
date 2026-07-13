@@ -19,7 +19,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,6 +28,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
+import { SortableHeader } from "@/components/SortableHeader";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
@@ -40,51 +40,9 @@ import {
   type InspectionSortableColumn,
   type InspectionStatus,
 } from "../api/inspections.list.api";
+import { paths } from "@/routes/paths";
 
 const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
-
-type SortableHeaderProps = {
-  label: string;
-  column: InspectionSortableColumn;
-  sortBy: InspectionSortableColumn | null;
-  sortDir: "asc" | "desc";
-  onSort: (c: InspectionSortableColumn) => void;
-  align?: "left" | "center" | "right";
-  width?: string;
-};
-
-function SortableHeader({ label, column, sortBy, sortDir, onSort, align = "left", width }: SortableHeaderProps) {
-  const active = sortBy === column;
-  return (
-    <TableCell
-      align={align}
-      onClick={() => onSort(column)}
-      sx={{
-        cursor: "pointer",
-        userSelect: "none",
-        width,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}
-    >
-      <TableSortLabel
-        active={active}
-        direction={active ? sortDir : "asc"}
-        sx={{
-          position: "relative",
-          "& .MuiTableSortLabel-icon": {
-            position: "absolute",
-            left: "100%",
-            marginLeft: "4px",
-          },
-        }}
-      >
-        <b>{label}</b>
-      </TableSortLabel>
-    </TableCell>
-  );
-}
 
 type InspectionRowStatus = "expired" | "near" | "ok";
 
@@ -112,7 +70,8 @@ export default function InspectionsListPage() {
   const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [menuRowId, setMenuRowId] = useState<number | null>(null);
+  // Reservado para as ações reais do menu (ainda não definidas) — só o setter é usado por enquanto.
+  const [_menuRowId, setMenuRowId] = useState<number | null>(null);
 
   function closeRowMenu() {
     setMenuAnchor(null);
@@ -253,7 +212,7 @@ export default function InspectionsListPage() {
                   sx={{ cursor: "pointer" }}
                   onClick={() => {
                     saveScrollPosition("inspections-list.scrollY");
-                    navigate(`/inspections/${item.id}`);
+                    navigate(paths.inspectionDetails(item.id));
                   }}
                 >
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.inspectionDate)}</TableCell>

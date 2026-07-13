@@ -4,5 +4,5 @@ export type MenuItem = {
   label: string;
   to: string;
   icon: SvgIconComponent;
-  permissions?: string[];
+  permissions?: readonly string[];
 };

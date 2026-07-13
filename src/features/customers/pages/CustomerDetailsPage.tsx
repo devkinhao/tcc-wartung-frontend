@@ -35,6 +35,7 @@ import type {
   CustomerUpdateContactsRequestDTO,
   CustomerUpdateAddressRequestDTO,
 } from "../api/customers.detail.api";
+import { paths } from "@/routes/paths";
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
@@ -103,7 +104,7 @@ export default function CustomerDetailsPage() {
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <IconButton size="small" onClick={() => navigate("/customers")}
+                <IconButton size="small" onClick={() => navigate(paths.customers)}
                   aria-label={t("customerDetails.actions.back")}>
                   <ArrowBackIcon fontSize="small" />
                 </IconButton>
