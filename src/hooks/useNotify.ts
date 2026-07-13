@@ -3,29 +3,47 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { isAxiosError } from "axios";
 
+// Corpo de erro no formato RFC 7807 (Problem Details) que o backend devolve.
+// `code` é um campo opcional e estável (ex: "CNPJ_ALREADY_EXISTS") que o
+// backend anexa às BusinessException — só existe para regras de negócio
+// conhecidas, então nem todo erro vai ter um.
+type BackendProblemDetail = {
+  code?: string;
+};
+
 /**
  * Extrai uma mensagem localizada a partir de um erro Axios/JS.
  *
  * Estratégia:
  * 1. Sem response (timeout, rede) → chave "network"
- * 2. Status HTTP conhecido (400, 403, 404…) → chave i18n correspondente
- * 3. Status desconhecido → chave "unknown"
+ * 2. `code` de negócio conhecido (ex: CNPJ_ALREADY_EXISTS) → mensagem
+ *    específica traduzida, uma por código, nas 3 línguas
+ * 3. Sem `code` (ou desconhecido) → status HTTP conhecido (400, 403, 404…)
+ *    → chave i18n genérica correspondente
+ * 4. Status desconhecido → chave "unknown"
  *
- * Nunca exibe a mensagem crua do backend — garante que o feedback
- * seja sempre no idioma selecionado pelo usuário.
+ * Nunca exibe a mensagem crua do backend (`detail`, sempre em inglês) —
+ * garante que o feedback seja sempre no idioma selecionado pelo usuário.
  */
 function resolveErrorMessage(err: unknown, t: (k: string) => string): string {
   if (!isAxiosError(err) || !err.response) {
     return t("notify.httpErrors.network");
   }
 
-  const status = err.response.status;
+  const code = (err.response.data as BackendProblemDetail | undefined)?.code;
+  if (code) {
+    const codeKey = `notify.errorCodes.${code}`;
+    const translatedCode = t(codeKey);
+    // chave não encontrada retorna a própria chave no react-i18next
+    if (translatedCode !== codeKey) {
+      return translatedCode;
+    }
+  }
 
+  const status = err.response.status;
   const key = `notify.httpErrors.${status}`;
   const translated = t(key);
 
-  // Se i18n encontrou uma tradução para este status, usa
-  // (chave não encontrada retorna a própria chave no react-i18next)
   if (translated !== key) {
     return translated;
   }

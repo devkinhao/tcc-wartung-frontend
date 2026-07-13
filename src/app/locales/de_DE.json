@@ -666,6 +666,18 @@
       "500": "Interner Serverfehler. Bitte versuchen Sie es später erneut.",
       "network": "Keine Verbindung zum Server. Prüfen Sie Ihre Internetverbindung.",
       "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "errorCodes": {
+      "CNPJ_ALREADY_EXISTS": "Diese CNPJ ist bereits registriert.",
+      "CUSTOMER_HAS_INSPECTIONS": "Löschen nicht möglich: Dieses Unternehmen hat verknüpfte Inspektionen.",
+      "INSPECTION_HAS_DOCUMENTS": "Löschen nicht möglich: Diese Inspektion hat verknüpfte Dokumente.",
+      "USERNAME_ALREADY_EXISTS": "Dieser Benutzername wird bereits verwendet.",
+      "INVALID_CURRENT_PASSWORD": "Aktuelles Passwort ist falsch.",
+      "AVATAR_FILE_REQUIRED": "Bitte wählen Sie eine Bilddatei aus.",
+      "INVALID_IMAGE_TYPE": "Ungültiges Bildformat.",
+      "AVATAR_PROCESSING_ERROR": "Das Bild konnte nicht verarbeitet werden.",
+      "INVALID_PERMISSIONS": "Eine oder mehrere angegebene Berechtigungen sind ungültig.",
+      "INVALID_EXPIRATION_DATE": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen."
     }
   },
   "inspections": {

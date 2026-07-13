@@ -666,6 +666,18 @@
       "500": "Erro interno do servidor. Tente novamente mais tarde.",
       "network": "Sem conexão com o servidor. Verifique sua internet.",
       "unknown": "Ocorreu um erro inesperado. Tente novamente."
+    },
+    "errorCodes": {
+      "CNPJ_ALREADY_EXISTS": "Este CNPJ já está cadastrado.",
+      "CUSTOMER_HAS_INSPECTIONS": "Não é possível excluir: esta empresa possui inspeções vinculadas.",
+      "INSPECTION_HAS_DOCUMENTS": "Não é possível excluir: esta inspeção possui documentos vinculados.",
+      "USERNAME_ALREADY_EXISTS": "Este nome de usuário já está em uso.",
+      "INVALID_CURRENT_PASSWORD": "Senha atual incorreta.",
+      "AVATAR_FILE_REQUIRED": "Selecione um arquivo de imagem.",
+      "INVALID_IMAGE_TYPE": "Formato de imagem inválido.",
+      "AVATAR_PROCESSING_ERROR": "Não foi possível processar a imagem.",
+      "INVALID_PERMISSIONS": "Uma ou mais permissões informadas são inválidas.",
+      "INVALID_EXPIRATION_DATE": "O vencimento não pode ser anterior à data da inspeção."
     }
   },
   "inspections": {
