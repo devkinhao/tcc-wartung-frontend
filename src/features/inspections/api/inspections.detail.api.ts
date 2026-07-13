@@ -1,8 +1,12 @@
 import { api } from "@/api/client";
-import type {
-  InspectionDetailResponseDTO,
-  InspectionUpdateRequestDTO,
-} from "../types/inspectionDetail";
+import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
+
+export type InspectionUpdateRequestDTO = {
+  inspectionDate: string; // ISO date
+  expirationDate: string; // ISO date
+  notes?: string | null;
+  isActive: boolean;
+};
 
 export async function getInspectionDetail(id: number) {
   const { data } = await api.get<InspectionDetailResponseDTO>(`/inspections/${id}`);

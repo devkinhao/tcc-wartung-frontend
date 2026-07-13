@@ -1,9 +1,5 @@
 import { AbvtexSealType } from "./abvtexSeal"
-
-export type CityResponseDTO = {
-  id: number;
-  name: string;
-};
+import type { City } from "./City";
 
 export type AddressResponseDTO = {
   street: string;
@@ -11,7 +7,7 @@ export type AddressResponseDTO = {
   neighborhood: string;
   number: string;
   zipCode: string;
-  city: CityResponseDTO;
+  city: City;
 };
 
 export type ServiceTypeResponseDTO = {

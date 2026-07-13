@@ -13,7 +13,8 @@ import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
-import type { CustomerDetailResponseDTO, CityResponseDTO } from "../../types/customerDetail";
+import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
+import type { City } from "../../types/City";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { CustomerUpdateAddressRequestDTO } from "../../api/customers.detail.api";
 
@@ -93,7 +94,7 @@ export function CustomerAddressTab({
                         ...(view.address.city ?? { id: 0, name: "" }),
                         id: Number(e.target.value),
                         name: cities.find((c) => c.id === Number(e.target.value))?.name ?? view.address.city?.name ?? "",
-                      } as CityResponseDTO)
+                      } as City)
                     }
                   >
                     {cities.map((c) => (

@@ -34,10 +34,3 @@ export type InspectionDetailResponseDTO = {
   updatedAt: string | null; // ISO date-time
   documents: InspectionDocumentResponseDTO[];
 };
-
-export type InspectionUpdateRequestDTO = {
-  inspectionDate: string; // ISO date
-  expirationDate: string; // ISO date
-  notes?: string | null;
-  isActive: boolean;
-};

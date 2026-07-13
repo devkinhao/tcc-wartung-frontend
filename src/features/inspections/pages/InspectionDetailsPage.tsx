@@ -18,7 +18,6 @@ import {
   MenuItem,
   Paper,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -36,22 +35,25 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { deleteInspection, getInspectionDetail, updateInspection } from "../api/inspections.detail.api";
+import {
+  deleteInspection,
+  getInspectionDetail,
+  updateInspection,
+  type InspectionUpdateRequestDTO,
+} from "../api/inspections.detail.api";
 import {
   deleteInspectionDocument,
   downloadInspectionDocument,
   listInspectionDocuments,
   uploadInspectionDocument,
 } from "../api/inspection.documents.api";
-import type {
-  InspectionDetailResponseDTO,
-  InspectionUpdateRequestDTO,
-} from "../types/inspectionDetail";
+import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
+import { DataTableContainer } from "@/components/DataTableContainer";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -463,14 +465,7 @@ export default function InspectionDetailsPage() {
               </Button>
             </Stack>
 
-            <Box
-              sx={{
-                border: (t) => `1px solid ${t.palette.divider}`,
-                borderRadius: 2,
-                overflow: "hidden",
-              }}
-            >
-              <Table size="small" sx={{ tableLayout: "fixed" }}>
+            <DataTableContainer>
                 <TableHead sx={{ bgcolor: "background.default" }}>
                   <TableRow>
                     <TableCell sx={{ width: "38%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
@@ -528,8 +523,7 @@ export default function InspectionDetailsPage() {
                     </TableRow>
                   )}
                 </TableBody>
-              </Table>
-            </Box>
+            </DataTableContainer>
           </CardContent>
         </Card>
 

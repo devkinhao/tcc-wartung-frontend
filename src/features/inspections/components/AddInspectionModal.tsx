@@ -32,9 +32,9 @@ import {
   createInspection,
   getServiceTypes,
   searchCustomers,
-  type CustomerOption,
   type InspectionCreateRequestDTO,
 } from "../api/inspections.create.api";
+import type { CustomerSummaryResponseDTO } from "../types/inspectionDetail";
 import { paths } from "@/routes/paths";
 
 type PendingDocument = {
@@ -46,11 +46,11 @@ type AddInspectionModalProps = {
   open: boolean;
   onClose: () => void;
   /** Quando informado, pré-preenche e trava o campo de cliente (ex: aberto a partir da própria ficha do cliente) */
-  lockedCustomer?: CustomerOption;
+  lockedCustomer?: CustomerSummaryResponseDTO;
 };
 
 type NewInspectionForm = {
-  customer: CustomerOption | null;
+  customer: CustomerSummaryResponseDTO | null;
   serviceTypeId: number | "";
   inspectionDate: string;
   expirationDate: string;

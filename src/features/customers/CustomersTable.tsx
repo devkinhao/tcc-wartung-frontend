@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Box, Chip, CircularProgress, Table, TableBody,
+  Box, Chip, CircularProgress, TableBody,
   TableCell, TableHead, TableRow, Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -8,21 +8,9 @@ import { Customer } from "./types/customersList";
 import { CustomersRowMenu } from "./CustomersRowMenu";
 import { AbvtexChip } from "./components/AbvtexChip";
 import { SortableHeader } from "@/components/SortableHeader";
-import { formatDateBR, addDaysISODate, todayISODate } from "@/utils/date";
+import { ExpirationChip } from "@/components/ExpirationChip";
+import { DataTableContainer } from "@/components/DataTableContainer";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
-
-type ExpirationStatus = "expired" | "near" | "ok";
-
-function getExpirationStatus(expirationDate: string | null | undefined, alertDays: number): ExpirationStatus | null {
-  if (!expirationDate) return null;
-  const exp           = expirationDate.split("T")[0];
-  const today          = todayISODate();
-  const alertThreshold = addDaysISODate(today, alertDays);
-
-  if (exp < today)           return "expired";
-  if (exp <= alertThreshold) return "near";
-  return "ok";
-}
 
 type Props = {
   customers: Customer[];
@@ -41,15 +29,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
   const sharedSortProps = { sortBy, sortDir, onSort };
 
   return (
-    <Box
-      sx={{
-        border: (t) => `1px solid ${t.palette.divider}`,
-        borderRadius: 2,
-        overflow: "hidden",
-        bgcolor: "background.paper",
-      }}
-    >
-      <Table size="small" sx={{ tableLayout: "fixed" }}>
+    <DataTableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
             <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="20%" />
@@ -80,12 +60,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
               </TableCell>
             </TableRow>
           ) : (
-            customers.map((c) => {
-              const expStatus = getExpirationStatus(c.nextExpirationDate, alertDays);
-              const chipColor =
-                expStatus === "expired" ? "#c65b4a" : expStatus === "near" ? "#e0a83f" : null;
-
-              return (
+            customers.map((c) => (
                 <TableRow key={c.id} hover sx={{ cursor: "pointer" }} onClick={() => onRowClick(c.id)}>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.legalName}>
                     {c.legalName}
@@ -105,19 +80,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
                   <TableCell align="center"><AbvtexChip seal={c.abvtexSeal} /></TableCell>
                   <TableCell align="center">{c.activeInspections}</TableCell>
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                    {chipColor ? (
-                      <Chip
-                        size="small"
-                        label={formatDateBR(c.nextExpirationDate)}
-                        sx={{
-                          bgcolor: chipColor,
-                          color: expStatus === "expired" ? "#fff" : "#000",
-                          fontWeight: 600,
-                        }}
-                      />
-                    ) : (
-                      formatDateBR(c.nextExpirationDate)
-                    )}
+                    <ExpirationChip date={c.nextExpirationDate} alertDays={alertDays} />
                   </TableCell>
                   <TableCell align="right" onClick={(e) => e.stopPropagation()} sx={{ width: "5%" }}>
                     <CustomersRowMenu
@@ -128,11 +91,9 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
                     />
                   </TableCell>
                 </TableRow>
-              );
-            })
+            ))
           )}
         </TableBody>
-      </Table>
-    </Box>
+    </DataTableContainer>
   );
 }

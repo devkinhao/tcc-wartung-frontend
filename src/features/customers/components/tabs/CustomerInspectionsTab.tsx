@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Badge,
-  Box,
   Button,
   Chip,
   IconButton,
@@ -9,7 +8,6 @@ import {
   MenuItem,
   Paper,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -21,23 +19,13 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
+import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
+import { ExpirationChip } from "@/components/ExpirationChip";
+import { DataTableContainer } from "@/components/DataTableContainer";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
 import { paths } from "@/routes/paths";
-
-type ExpirationStatus = "expired" | "near" | "ok";
-
-function getExpirationStatus(expirationDate: string, alertDays: number): ExpirationStatus {
-  const exp           = expirationDate.split("T")[0];
-  const today          = todayISODate();
-  const alertThreshold = addDaysISODate(today, alertDays);
-
-  if (exp < today)           return "expired";
-  if (exp <= alertThreshold) return "near";
-  return "ok";
-}
 
 type Props = {
   customerId: number;
@@ -78,8 +66,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         lockedCustomer={{ id: customerId, legalName: customerLegalName, cnpj: customerCnpj }}
       />
 
-      <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden" }}>
-        <Table size="small" sx={{ tableLayout: "fixed" }}>
+      <DataTableContainer>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <TableCell align="center" sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
@@ -95,11 +82,6 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
           <TableBody>
             {inspections?.length ? (
               inspections.map((i) => {
-                const expStatus = getExpirationStatus(i.expirationDate, alertDays);
-                const chipColor = !i.isActive
-                  ? null
-                  : expStatus === "expired" ? "#c65b4a" : expStatus === "near" ? "#e0a83f" : null;
-
                 return (
                 <TableRow
                   key={i.id}
@@ -129,19 +111,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   </TableCell>
 
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                    {chipColor ? (
-                      <Chip
-                        size="small"
-                        label={formatDateBR(i.expirationDate)}
-                        sx={{
-                          bgcolor: chipColor,
-                          color: expStatus === "expired" ? "#fff" : "#000",
-                          fontWeight: 600,
-                        }}
-                      />
-                    ) : (
-                      formatDateBR(i.expirationDate)
-                    )}
+                    <ExpirationChip date={i.expirationDate} alertDays={alertDays} active={i.isActive} />
                   </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
@@ -184,8 +154,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
               </TableRow>
             )}
           </TableBody>
-        </Table>
-      </Box>
+      </DataTableContainer>
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
         <MenuItem onClick={closeRowMenu}>Teste</MenuItem>

@@ -14,7 +14,6 @@ import {
   Paper,
   Select,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -29,9 +28,11 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
 import { SortableHeader } from "@/components/SortableHeader";
+import { ExpirationChip } from "@/components/ExpirationChip";
+import { DataTableContainer } from "@/components/DataTableContainer";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
-import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
+import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "../components/AddInspectionModal";
 import {
@@ -43,21 +44,6 @@ import {
 import { paths } from "@/routes/paths";
 
 const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
-
-type InspectionRowStatus = "expired" | "near" | "ok";
-
-function getInspectionRowStatus(expirationDate: string, alertDays: number): InspectionRowStatus {
-  // Comparação por string yyyy-mm-dd (ordem lexicográfica == ordem cronológica),
-  // igual à semântica de LocalDate no backend — evita bugs de fuso horário que
-  // surgiriam ao usar objetos Date (new Date(isoString) interpreta como UTC).
-  const exp            = expirationDate.split("T")[0];
-  const today           = todayISODate();
-  const alertThreshold  = addDaysISODate(today, alertDays);
-
-  if (exp < today)           return "expired";
-  if (exp <= alertThreshold) return "near";
-  return "ok";
-}
 
 export default function InspectionsListPage() {
   const { t } = useTranslation();
@@ -168,8 +154,7 @@ export default function InspectionsListPage() {
       </Card>
 
       {/* Tabela */}
-      <Box sx={{ border: (th) => `1px solid ${th.palette.divider}`, borderRadius: 2, overflow: "hidden", bgcolor: "background.paper" }}>
-        <Table size="small" sx={{ tableLayout: "fixed" }}>
+      <DataTableContainer>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="15%" />
@@ -202,9 +187,6 @@ export default function InspectionsListPage() {
                 </TableCell>
               </TableRow>
             ) : items.map((item) => {
-              const status = getInspectionRowStatus(item.expirationDate, alertDays);
-              const statusColor =
-                status === "expired" ? "#c65b4a" : status === "near" ? "#e0a83f" : null;
               return (
                 <TableRow
                   key={item.id}
@@ -234,19 +216,7 @@ export default function InspectionsListPage() {
                     {item.customerLegalName}
                   </TableCell>
                   <TableCell sx={{ whiteSpace: "nowrap" }}>
-                    {statusColor ? (
-                      <Chip
-                        size="small"
-                        label={formatDateBR(item.expirationDate)}
-                        sx={{
-                          bgcolor: statusColor,
-                          color: status === "expired" ? "#fff" : "#000",
-                          fontWeight: 600,
-                        }}
-                      />
-                    ) : (
-                      formatDateBR(item.expirationDate)
-                    )}
+                    <ExpirationChip date={item.expirationDate} alertDays={alertDays} />
                   </TableCell>
                   <TableCell align="right" onClick={(e) => e.stopPropagation()}>
                     <IconButton
@@ -264,8 +234,7 @@ export default function InspectionsListPage() {
               );
             })}
           </TableBody>
-        </Table>
-      </Box>
+      </DataTableContainer>
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
         <MenuItem onClick={closeRowMenu}>Teste</MenuItem>
