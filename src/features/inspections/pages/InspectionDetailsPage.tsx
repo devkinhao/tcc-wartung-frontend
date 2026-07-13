@@ -180,6 +180,7 @@ export default function InspectionDetailsPage() {
       inspectionDate: toISODate(draft.inspectionDate),
       expirationDate: toISODate(draft.expirationDate),
       notes: draft.notes ?? "",
+      isActive: draft.isActive,
     };
 
     mutation.mutate(payload);
@@ -352,7 +353,7 @@ export default function InspectionDetailsPage() {
             />
 
             <Stack spacing={2}>
-              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }}>
                 <TextField
                   label={t("inspectionDetails.fields.service")}
                   size="small"
@@ -402,6 +403,26 @@ export default function InspectionDetailsPage() {
                   }
                   disabled={!editing}
                 />
+
+                <Stack spacing={0.5} sx={{ minWidth: 110, flexShrink: 0 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    {t("inspectionDetails.fields.isActive")}
+                  </Typography>
+                  <Chip
+                    label={(editing ? draft?.isActive : view.isActive) ? t("common.yes") : t("common.no")}
+                    color={(editing ? draft?.isActive : view.isActive) ? "success" : "default"}
+                    variant={(editing ? draft?.isActive : view.isActive) ? "filled" : "outlined"}
+                    sx={{ width: "fit-content" }}
+                    onClick={
+                      editing
+                        ? () =>
+                            setDraft((prev) =>
+                              prev ? { ...prev, isActive: !prev.isActive } : prev
+                            )
+                        : undefined
+                    }
+                  />
+                </Stack>
               </Stack>
 
               <TextField
@@ -453,8 +474,8 @@ export default function InspectionDetailsPage() {
                   <TableRow>
                     <TableCell sx={{ width: "38%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
                     <TableCell sx={{ width: "20%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
-                    <TableCell sx={{ width: "14%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
-                    <TableCell sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
+                    <TableCell align="center" sx={{ width: "14%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
+                    <TableCell align="center" sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
                     <TableCell align="center" sx={{ width: "10%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
                   </TableRow>
                 </TableHead>
@@ -475,8 +496,8 @@ export default function InspectionDetailsPage() {
                         <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.name}>
                           {d.name}
                         </TableCell>
-                        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatFileSizeKB(d.size)}</TableCell>
-                        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
+                        <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatFileSizeKB(d.size)}</TableCell>
+                        <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
                             <IconButton

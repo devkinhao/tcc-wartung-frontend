@@ -21,9 +21,22 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { formatDateBR } from "@/utils/date";
+import { addDaysISODate, formatDateBR, todayISODate } from "@/utils/date";
+import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
+
+type ExpirationStatus = "expired" | "near" | "ok";
+
+function getExpirationStatus(expirationDate: string, alertDays: number): ExpirationStatus {
+  const exp           = expirationDate.split("T")[0];
+  const today          = todayISODate();
+  const alertThreshold = addDaysISODate(today, alertDays);
+
+  if (exp < today)           return "expired";
+  if (exp <= alertThreshold) return "near";
+  return "ok";
+}
 
 type Props = {
   customerId: number;
@@ -35,6 +48,7 @@ type Props = {
 export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuRowId, setMenuRowId] = useState<number | null>(null);
@@ -66,39 +80,38 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         <Table size="small" sx={{ tableLayout: "fixed" }}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell sx={{ width: "22%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
-              <TableCell sx={{ width: "33%" }}><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
-              <TableCell sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
+              <TableCell sx={{ width: "20%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
+              <TableCell sx={{ width: "24%" }}><b>{t("customerDetails.inspections.table.notes")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
               <TableCell align="center" sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
+              <TableCell align="center" sx={{ width: "11%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.status")}</b></TableCell>
               <TableCell align="center" sx={{ width: "6%" }} />
             </TableRow>
           </TableHead>
 
           <TableBody>
             {inspections?.length ? (
-              inspections.map((i) => (
+              inspections.map((i) => {
+                const expStatus = getExpirationStatus(i.expirationDate, alertDays);
+                const chipColor = !i.isActive
+                  ? null
+                  : expStatus === "expired" ? "#c65b4a" : expStatus === "near" ? "#e0a83f" : null;
+
+                return (
                 <TableRow
                   key={i.id}
                   hover
                   sx={{ cursor: "pointer" }}
                   onClick={() => navigate(`/customers/${customerId}/inspections/${i.id}`)}
                 >
-                  <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
 
                   <TableCell>
                     <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
                       <Typography variant="body2" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {i.serviceType?.name ?? "—"}
                       </Typography>
-                      {!i.isActive && (
-                        <Chip
-                          size="small"
-                          label={t("customerDetails.inspections.status.inactive")}
-                          color="default"
-                          variant="outlined"
-                        />
-                      )}
                       {i.isRenewed && (
                         <Chip
                           size="small"
@@ -113,7 +126,21 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                     {i.notes || "—"}
                   </TableCell>
 
-                  <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.expirationDate)}</TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {chipColor ? (
+                      <Chip
+                        size="small"
+                        label={formatDateBR(i.expirationDate)}
+                        sx={{
+                          bgcolor: chipColor,
+                          color: expStatus === "expired" ? "#fff" : "#000",
+                          fontWeight: 600,
+                        }}
+                      />
+                    ) : (
+                      formatDateBR(i.expirationDate)
+                    )}
+                  </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                     {i.documents?.length ? (
@@ -121,6 +148,15 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                         <DescriptionIcon fontSize="small" />
                       </Badge>
                     ) : "—"}
+                  </TableCell>
+
+                  <TableCell align="center">
+                    <Chip
+                      size="small"
+                      label={i.isActive ? t("customerDetails.inspections.status.active") : t("customerDetails.inspections.status.inactive")}
+                      color={i.isActive ? "success" : "default"}
+                      variant={i.isActive ? "filled" : "outlined"}
+                    />
                   </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
@@ -136,10 +172,11 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))
+                );
+              })
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 2, color: "text.secondary" }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 2, color: "text.secondary" }}>
                   {t("customerDetails.inspections.empty")}
                 </TableCell>
               </TableRow>

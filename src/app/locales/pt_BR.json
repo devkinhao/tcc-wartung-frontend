@@ -538,9 +538,11 @@
         "service": "Serviço",
         "notes": "Observações",
         "expiration": "Vencimento",
-        "documents": "Documentos"
+        "documents": "Documentos",
+        "status": "Status"
       },
       "status": {
+        "active": "Ativa",
         "inactive": "Inativa",
         "renewed": "Renovada"
       },
@@ -593,7 +595,8 @@
       "service": "Serviço",
       "inspectionDate": "Data da inspeção",
       "expirationDate": "Data de vencimento",
-      "notes": "Observações"
+      "notes": "Observações",
+      "isActive": "Ativa?"
     },
     "documents": {
       "loading": "Carregando documentos...",

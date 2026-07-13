@@ -538,9 +538,11 @@
         "service": "Dienstleistung",
         "notes": "Notizen",
         "expiration": "Ablaufdatum",
-        "documents": "Dokumente"
+        "documents": "Dokumente",
+        "status": "Status"
       },
       "status": {
+        "active": "Aktiv",
         "inactive": "Inaktiv",
         "renewed": "Erneuert"
       },
@@ -593,7 +595,8 @@
       "service": "Dienst",
       "inspectionDate": "Inspektionsdatum",
       "expirationDate": "Ablaufdatum",
-      "notes": "Notizen"
+      "notes": "Notizen",
+      "isActive": "Aktiv?"
     },
     "documents": {
       "loading": "Dokumente werden geladen...",
