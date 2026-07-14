@@ -46,6 +46,13 @@ const cardSx = {
   "&:hover": { boxShadow: 4 },
 } as const;
 
+// Espelha as constraints do CustomerUpdateContactsRequestDTO do backend
+// (@Pattern phone/mobilePhone, @Email email) — feedback instantâneo, sem
+// depender de round-trip pro backend pra saber que algo está errado.
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^\(\d{2}\) \d{4}-\d{4}$/;
+const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;
+
 export function CustomerGeneralTab({
   view,
   editingGeneral, savingGeneral, onEditGeneral, onCancelGeneral, onSaveGeneral,
@@ -53,6 +60,16 @@ export function CustomerGeneralTab({
   updateField,
 }: Props) {
   const { t } = useTranslation();
+
+  const isGeneralValid = view.legalName.trim() !== "";
+
+  const phone = view.phone?.trim() ?? "";
+  const mobile = view.mobilePhone?.trim() ?? "";
+  const email = view.email?.trim() ?? "";
+  const phoneError = phone !== "" && !PHONE_REGEX.test(phone);
+  const mobileError = mobile !== "" && !MOBILE_REGEX.test(mobile);
+  const emailError = email !== "" && !EMAIL_REGEX.test(email);
+  const isContactsValid = !phoneError && !mobileError && !emailError;
 
   return (
     <Stack spacing={2}>
@@ -63,6 +80,7 @@ export function CustomerGeneralTab({
             title={t("customerDetails.general.title")}
             editing={editingGeneral}
             saving={savingGeneral}
+            saveDisabled={!isGeneralValid}
             onEdit={onEditGeneral}
             onCancel={onCancelGeneral}
             onSave={onSaveGeneral}
@@ -85,6 +103,7 @@ export function CustomerGeneralTab({
                 disabled={!editingGeneral}
                 required
                 onChange={(e) => updateField("legalName", e.target.value)}
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 
@@ -126,6 +145,7 @@ export function CustomerGeneralTab({
                 size="small" fullWidth
                 disabled={!editingGeneral}
                 onChange={(e) => updateField("fantasyName", e.target.value)}
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 
@@ -161,6 +181,7 @@ export function CustomerGeneralTab({
             title={t("customerDetails.contacts.title")}
             editing={editingContacts}
             saving={savingContacts}
+            saveDisabled={!isContactsValid}
             onEdit={onEditContacts}
             onCancel={onCancelContacts}
             onSave={onSaveContacts}
@@ -175,6 +196,8 @@ export function CustomerGeneralTab({
                 size="small" fullWidth
                 disabled={!editingContacts}
                 onChange={(v) => updateField("phone", v)}
+                error={phoneError}
+                helperText={phoneError ? t("validation.phoneInvalid") : undefined}
               />
             </Grid>
 
@@ -186,6 +209,8 @@ export function CustomerGeneralTab({
                 size="small" fullWidth
                 disabled={!editingContacts}
                 onChange={(v) => updateField("mobilePhone", v)}
+                error={mobileError}
+                helperText={mobileError ? t("validation.mobileInvalid") : undefined}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -208,6 +233,9 @@ export function CustomerGeneralTab({
                 size="small" fullWidth
                 disabled={!editingContacts}
                 onChange={(e) => updateField("email", e.target.value)}
+                error={emailError}
+                helperText={emailError ? t("validation.emailInvalid") : undefined}
+                inputProps={{ maxLength: 75 }}
                 InputProps={{
                   endAdornment: (
                     <IconButton
