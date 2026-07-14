@@ -17,7 +17,6 @@ export type UserRow = {
 function roleFromPermissions(perms: string[] | undefined): string {
   const p = perms ?? [];
   if (p.includes("ROLE_ADMIN")) return "ADMIN";
-  if (p.includes("ROLE_USER")) return "USER";
   return p[0]?.replace("ROLE_", "") ?? "—";
 }
 
