@@ -124,9 +124,14 @@ export function useCustomerDetail(customerId: number) {
     });
   }, []);
 
+  // Backend desativa automaticamente as inspeções ativas do cliente quando
+  // ele deixa de ser marcado como cliente — avisamos o usuário antes de salvar.
+  const willDeactivateInspections = Boolean(data?.isCustomer) && draft?.isCustomer === false;
+
   return {
     view: draft ?? data,
     isLoading,
+    willDeactivateInspections,
     // edição
     editingGeneral,  setEditingGeneral,
     editingContacts, setEditingContacts,

@@ -502,6 +502,10 @@
       "title": "Delete customer",
       "message": "Are you sure you want to delete customer \"{{name}}\"? They will no longer appear in the system's listings."
     },
+    "confirmDeactivate": {
+      "title": "Mark as non-customer",
+      "message": "This company will no longer be a customer. All of its active inspections will be automatically deactivated. Do you want to continue?"
+    },
     "summary": {
       "cnpj": "CNPJ",
       "phone": "Phone",

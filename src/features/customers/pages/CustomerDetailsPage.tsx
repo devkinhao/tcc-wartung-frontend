@@ -49,6 +49,7 @@ export default function CustomerDetailsPage() {
 
   const {
     view, isLoading,
+    willDeactivateInspections,
     editingGeneral,  setEditingGeneral,
     editingContacts, setEditingContacts,
     editingAddress,  setEditingAddress,
@@ -61,6 +62,7 @@ export default function CustomerDetailsPage() {
   const [tab,    setTab]    = useState<TabKey>(initialTab);
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [confirmDeactivateOpen, setConfirmDeactivateOpen] = useState(false);
 
   if (isLoading || !view) {
     return (
@@ -73,8 +75,46 @@ export default function CustomerDetailsPage() {
     );
   }
 
+  const saveGeneral = () => {
+    mutations.general.mutate({
+      fantasyName: view.fantasyName,
+      legalName:   view.legalName,
+      isCustomer:  view.isCustomer,
+      abvtexSeal:  view.abvtexSeal,
+    } satisfies CustomerUpdateGeneralRequestDTO);
+  };
+
+  const handleSaveGeneral = () => {
+    if (willDeactivateInspections) {
+      setConfirmDeactivateOpen(true);
+      return;
+    }
+    saveGeneral();
+  };
+
   return (
     <Box sx={{ maxWidth: 1200 }}>
+
+      {/* Aviso: desativar o cliente desativa automaticamente as inspeções ativas dele */}
+      <Dialog open={confirmDeactivateOpen} onClose={() => setConfirmDeactivateOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>{t("customerDetails.confirmDeactivate.title")}</DialogTitle>
+        <DialogContent>
+          <Typography>{t("customerDetails.confirmDeactivate.message")}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeactivateOpen(false)}>{t("common.actions.cancel")}</Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              setConfirmDeactivateOpen(false);
+              saveGeneral();
+            }}
+          >
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Confirmação de exclusão — substitui window.confirm */}
       <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)} maxWidth="xs" fullWidth>
@@ -177,14 +217,7 @@ export default function CustomerDetailsPage() {
           savingGeneral={mutations.general.isPending}
           onEditGeneral={() => setEditingGeneral(true)}
           onCancelGeneral={() => { resetDraft(); setEditingGeneral(false); }}
-          onSaveGeneral={() =>
-            mutations.general.mutate({
-              fantasyName: view.fantasyName,
-              legalName:   view.legalName,
-              isCustomer:  view.isCustomer,
-              abvtexSeal:  view.abvtexSeal,
-            } satisfies CustomerUpdateGeneralRequestDTO)
-          }
+          onSaveGeneral={handleSaveGeneral}
           editingContacts={editingContacts}
           savingContacts={mutations.contacts.isPending}
           onEditContacts={() => setEditingContacts(true)}

@@ -502,6 +502,10 @@
       "title": "Kunden löschen",
       "message": "Sind Sie sicher, dass Sie den Kunden \"{{name}}\" löschen möchten? Er wird nicht mehr in den Listen des Systems angezeigt."
     },
+    "confirmDeactivate": {
+      "title": "Als Nicht-Kunde markieren",
+      "message": "Dieses Unternehmen wird nicht mehr Kunde sein. Alle aktiven Inspektionen werden automatisch deaktiviert. Möchten Sie fortfahren?"
+    },
     "summary": {
       "cnpj": "CNPJ",
       "phone": "Telefon",

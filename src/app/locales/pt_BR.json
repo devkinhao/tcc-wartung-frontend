@@ -502,6 +502,10 @@
       "title": "Excluir cliente",
       "message": "Tem certeza que deseja excluir o cliente \"{{name}}\"? Ele deixará de aparecer nas listagens do sistema."
     },
+    "confirmDeactivate": {
+      "title": "Marcar como não-cliente",
+      "message": "Esta empresa deixará de ser cliente. Todas as inspeções ativas dela serão desativadas automaticamente. Deseja continuar?"
+    },
     "summary": {
       "cnpj": "CNPJ",
       "phone": "Telefone",
