@@ -35,8 +35,12 @@
     "cep": {
       "notFound": "CEP não encontrado"
     },
+    "cnpj": {
+      "notFound": "CNPJ não encontrado na Receita Federal"
+    },
     "fields": {
-      "zipCode": "CEP"
+      "zipCode": "CEP",
+      "cnpj": "CNPJ"
     }
   },
   "months": {

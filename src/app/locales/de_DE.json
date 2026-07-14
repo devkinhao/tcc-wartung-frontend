@@ -35,8 +35,12 @@
     "cep": {
       "notFound": "Postleitzahl nicht gefunden"
     },
+    "cnpj": {
+      "notFound": "CNPJ nicht bei der Receita Federal gefunden"
+    },
     "fields": {
-      "zipCode": "PLZ"
+      "zipCode": "PLZ",
+      "cnpj": "CNPJ"
     }
   },
   "months": {

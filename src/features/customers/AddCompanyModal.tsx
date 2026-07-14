@@ -26,10 +26,13 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
+import { CnpjTextField } from "@/components/CnpjTextField";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { maskPhone } from "@/utils/masks";
 import { paths } from "@/routes/paths";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
+import type { ReceitaWsResponseDTO } from "@/api/cnpj.api";
 
 type AddCompanyModalProps = {
   open: boolean;
@@ -179,6 +182,28 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     }));
   }, []);
 
+  const handleCnpjFound = useCallback((data: ReceitaWsResponseDTO) => {
+    // A ReceitaWS às vezes retorna mais de um telefone separado por "/"
+    // (ex: "(47) 3383-2264 / (47) 3383-0093") — usamos só o primeiro e
+    // normalizamos pela máscara; o campo continua livre para o usuário editar.
+    const firstPhone = data.phone?.split("/")[0]?.trim();
+
+    setForm((prev) => ({
+      ...prev,
+      cnpj: data.cnpj || prev.cnpj,
+      fantasyName: data.fantasyName || prev.fantasyName,
+      legalName: data.legalName || prev.legalName,
+      phone: firstPhone ? maskPhone(firstPhone) : prev.phone,
+      email: data.email || prev.email,
+      street: data.street || prev.street,
+      complement: data.complement || prev.complement,
+      neighborhood: data.neighborhood || prev.neighborhood,
+      number: data.number || prev.number,
+      zipCode: data.zipCode || prev.zipCode,
+      cityId: data.cityId ? Number(data.cityId) : prev.cityId,
+    }));
+  }, []);
+
   return (
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -219,8 +244,25 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               {t("customers.addModal.success.question")}
             </Typography>
           </Box>
-        ) : step === 0 ? (
-          <Grid container spacing={2}>
+        ) : (
+          <>
+          {/* Os dois Grids ficam sempre montados (só a visibilidade alterna) —
+              desmontar/remontar ao trocar de passo reexecutaria o efeito de
+              autopreenchimento do CnpjTextField/CepTextField com o resultado
+              em cache, sobrescrevendo edições manuais do usuário. */}
+          <Grid container spacing={2} sx={{ display: step === 0 ? "flex" : "none" }}>
+            <Grid item xs={12} md={4}>
+              <CnpjTextField
+                label={t("customers.addModal.fields.cnpj")}
+                value={form.cnpj}
+                onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
+                onCompanyFound={handleCnpjFound}
+                required
+                error={cnpjError}
+                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
+              />
+            </Grid>
+
             <Grid item xs={12} md={8}>
               <TextField
                 label={t("customers.addModal.fields.fantasyName")}
@@ -230,20 +272,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 inputProps={{ maxLength: 100 }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <MaskedTextField
-                mask="cnpj"
-                label={t("customers.addModal.fields.cnpj")}
-                value={form.cnpj}
-                onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
-                fullWidth
-                size="small"
-                required
-                error={cnpjError}
-                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
               />
             </Grid>
 
@@ -321,8 +349,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
           </Grid>
-        ) : (
-          <Grid container spacing={2}>
+
+          <Grid container spacing={2} sx={{ display: step === 1 ? "flex" : "none" }}>
             <Grid item xs={12} md={3}>
               <CepTextField
                 value={form.zipCode}
@@ -408,6 +436,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               </FormControl>
             </Grid>
           </Grid>
+          </>
         )}
       </DialogContent>
 
