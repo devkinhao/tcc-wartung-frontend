@@ -166,7 +166,11 @@
     "description": "Allgemeine Einstellungen, die das Systemverhalten steuern.",
     "fields": {
       "diasAlertaVencimento": "Tage bis zur Ablaufwarnung",
-      "diasAlertaVencimentoDescription": "Anzahl der Tage vor Ablauf, ab der eine Inspektion als bald ablaufend markiert wird"
+      "diasAlertaVencimentoDescription": "Anzahl der Tage vor Ablauf, ab der eine Inspektion als bald ablaufend markiert wird",
+      "allowedFileExtensions": "Erlaubte Dateierweiterungen",
+      "allowedFileExtensionsDescription": "Für den Dokumenten-Upload zulässige Erweiterungen, durch Komma getrennt (z. B. pdf,jpg,png)",
+      "maxFileSizeMb": "Maximale Dateigröße (MB)",
+      "maxFileSizeMbDescription": "Maximal zulässige Größe in Megabyte für den Dokumenten-Upload"
     },
     "actions": {
       "save": "Einstellungen speichern"
@@ -692,7 +696,9 @@
       "AVATAR_PROCESSING_ERROR": "Das Bild konnte nicht verarbeitet werden.",
       "INVALID_PERMISSIONS": "Eine oder mehrere angegebene Berechtigungen sind ungültig.",
       "INVALID_EXPIRATION_DATE": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen.",
-      "FILE_TOO_LARGE": "Die hochgeladene Datei überschreitet die maximal zulässige Größe."
+      "FILE_TOO_LARGE": "Die hochgeladene Datei überschreitet die maximal zulässige Größe.",
+      "FILE_EXTENSION_NOT_ALLOWED": "Dateierweiterung nicht erlaubt.",
+      "FILE_EXTENSION_MISSING": "Die Datei muss eine Erweiterung haben."
     }
   },
   "inspections": {

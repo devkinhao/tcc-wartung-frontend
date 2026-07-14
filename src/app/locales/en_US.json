@@ -166,7 +166,11 @@
     "description": "General settings that control the system behavior.",
     "fields": {
       "diasAlertaVencimento": "Expiration alert days",
-      "diasAlertaVencimentoDescription": "Number of days before expiration when an inspection starts being flagged as near expiration"
+      "diasAlertaVencimentoDescription": "Number of days before expiration when an inspection starts being flagged as near expiration",
+      "allowedFileExtensions": "Allowed file extensions",
+      "allowedFileExtensionsDescription": "Extensions accepted for document uploads, separated by commas (e.g. pdf,jpg,png)",
+      "maxFileSizeMb": "Maximum file size (MB)",
+      "maxFileSizeMbDescription": "Maximum allowed size, in megabytes, for document uploads"
     },
     "actions": {
       "save": "Save settings"
@@ -692,7 +696,9 @@
       "AVATAR_PROCESSING_ERROR": "Could not process the image.",
       "INVALID_PERMISSIONS": "One or more provided permissions are invalid.",
       "INVALID_EXPIRATION_DATE": "Expiration date cannot be before the inspection date.",
-      "FILE_TOO_LARGE": "The uploaded file exceeds the maximum allowed size."
+      "FILE_TOO_LARGE": "The uploaded file exceeds the maximum allowed size.",
+      "FILE_EXTENSION_NOT_ALLOWED": "File extension not allowed.",
+      "FILE_EXTENSION_MISSING": "The file must have an extension."
     }
   },
   "inspections": {

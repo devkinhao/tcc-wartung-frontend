@@ -166,7 +166,11 @@
     "description": "Ajustes gerais que controlam o comportamento do sistema.",
     "fields": {
       "diasAlertaVencimento": "Dias de alerta de vencimento",
-      "diasAlertaVencimentoDescription": "Quantidade de dias antes do vencimento em que a inspeção passa a ser sinalizada como próxima do vencimento"
+      "diasAlertaVencimentoDescription": "Quantidade de dias antes do vencimento em que a inspeção passa a ser sinalizada como próxima do vencimento",
+      "allowedFileExtensions": "Extensões de arquivo permitidas",
+      "allowedFileExtensionsDescription": "Extensões aceitas no upload de documentos, separadas por vírgula (ex: pdf,jpg,png)",
+      "maxFileSizeMb": "Tamanho máximo de arquivo (MB)",
+      "maxFileSizeMbDescription": "Tamanho máximo permitido, em megabytes, para upload de documentos"
     },
     "actions": {
       "save": "Salvar configurações"
@@ -692,7 +696,9 @@
       "AVATAR_PROCESSING_ERROR": "Não foi possível processar a imagem.",
       "INVALID_PERMISSIONS": "Uma ou mais permissões informadas são inválidas.",
       "INVALID_EXPIRATION_DATE": "O vencimento não pode ser anterior à data da inspeção.",
-      "FILE_TOO_LARGE": "O arquivo enviado excede o tamanho máximo permitido."
+      "FILE_TOO_LARGE": "O arquivo enviado excede o tamanho máximo permitido.",
+      "FILE_EXTENSION_NOT_ALLOWED": "Extensão de arquivo não permitida.",
+      "FILE_EXTENSION_MISSING": "O arquivo precisa ter uma extensão."
     }
   },
   "inspections": {

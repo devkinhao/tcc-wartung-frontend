@@ -12,7 +12,7 @@ import { getConfigurations, updateConfigurations } from "../api/configurations.a
 // Configurações cujo VAL_CONFIG é semanticamente numérico (ex: quantidade de dias).
 // O backend guarda como String livre (só length=100), então essa restrição é
 // só do frontend — filtra dígitos ao digitar em vez de validar depois.
-const NUMERIC_CONFIGS = new Set(["DIAS_ALERTA_VENCIMENTO"]);
+const NUMERIC_CONFIGS = new Set(["DIAS_ALERTA_VENCIMENTO", "MAX_FILE_SIZE_MB"]);
 
 export default function ConfigurationsPage() {
   const { t } = useTranslation();
