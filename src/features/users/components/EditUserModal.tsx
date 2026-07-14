@@ -192,7 +192,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const saveDisabled =
     loading ||
     (tab === 0 && (!fullName.trim() || cpfError || emailError || savingProfile)) ||
-    (tab === 1 && (selectedPermissions.length === 0 || savingPerms)) ||
+    (tab === 1 && savingPerms) ||
     tab === 2; // no "Save" on security tab
 
   const resetDisabled = loading || tab !== 2 || !newPassword.trim() || savingPwd;
