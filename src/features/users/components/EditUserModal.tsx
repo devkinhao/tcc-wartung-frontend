@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   FormGroup,
   IconButton,
+  InputAdornment,
   Stack,
   Tab,
   Tabs,
@@ -18,6 +19,8 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslation } from "react-i18next";
 
 import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/usersApi";
@@ -31,6 +34,11 @@ type Props = {
   onClose: () => void;
   onChanged?: () => void;
 };
+
+// Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
+// @Email) — feedback instantâneo, sem round-trip.
+const CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function TabPanel(props: { value: number; index: number; children: React.ReactNode }) {
   const { value, index, children } = props;
@@ -64,6 +72,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
   // reset password
   const [newPassword, setNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const load = useCallback(async () => {
     if (!open || userId == null) return;
@@ -84,6 +93,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setSelectedPermissions(Array.isArray(u.permissions) ? u.permissions : []);
 
       setNewPassword("");
+      setShowNewPassword(false);
     } catch (e) {
       notify.fromError(e);
       setUser(null);
@@ -125,6 +135,8 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setCreaNumber(updated.creaNumber ?? "");
 
       onChanged?.();
+      notify.success("notify.success.saved");
+      onClose();
     } catch (e) {
       notify.fromError(e);
     } finally {
@@ -145,6 +157,8 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setSelectedPermissions(refreshed.permissions ?? []);
 
       onChanged?.();
+      notify.success("notify.success.saved");
+      onClose();
     } catch (e) {
       notify.fromError(e);
     } finally {
@@ -159,6 +173,8 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     try {
       await usersApi.resetPassword(userId, { newPassword: newPassword.trim() });
       setNewPassword("");
+      setShowNewPassword(false);
+      notify.success("notify.success.passwordChanged");
     } catch (e) {
       notify.fromError(e);
     } finally {
@@ -168,9 +184,14 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
   const title = user ? `${user.fullName} (@${user.username})` : (t("users.edit.title") || "Edit user");
 
+  const cpfTrimmed = cpf.trim();
+  const emailTrimmed = email.trim();
+  const cpfError = cpfTrimmed !== "" && !CPF_REGEX.test(cpfTrimmed);
+  const emailError = emailTrimmed !== "" && !EMAIL_REGEX.test(emailTrimmed);
+
   const saveDisabled =
     loading ||
-    (tab === 0 && (!fullName.trim() || savingProfile)) ||
+    (tab === 0 && (!fullName.trim() || cpfError || emailError || savingProfile)) ||
     (tab === 1 && (selectedPermissions.length === 0 || savingPerms)) ||
     tab === 2; // no "Save" on security tab
 
@@ -218,6 +239,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={savingProfile}
                   required
+                  inputProps={{ maxLength: 50 }}
                 />
                 <MaskedTextField
                   mask="cpf"
@@ -226,6 +248,8 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   value={cpf}
                   onChange={(v) => setCpf(v)}
                   disabled={savingProfile}
+                  error={cpfError}
+                  helperText={cpfError ? t("validation.cpfInvalid") : undefined}
                 />
                 <TextField
                   size="small"
@@ -233,13 +257,18 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={savingProfile}
+                  error={emailError}
+                  helperText={emailError ? t("validation.emailInvalid") : undefined}
+                  inputProps={{ maxLength: 50 }}
                 />
                 <TextField
                   size="small"
                   label={t("users.fields.creaNumber") || "CREA"}
+                  placeholder="CREA-SC"
                   value={creaNumber}
                   onChange={(e) => setCreaNumber(e.target.value)}
                   disabled={savingProfile}
+                  inputProps={{ maxLength: 10 }}
                 />
               </Stack>
             </TabPanel>
@@ -280,11 +309,25 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
               <TextField
                 size="small"
                 label={t("users.edit.newPassword") || "Nova senha"}
-                type="password"
+                type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 disabled={savingPwd}
                 fullWidth
+                inputProps={{ maxLength: 100 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowNewPassword((p) => !p)}
+                        edge="end"
+                        aria-label={t("userProfile.password.actions.toggleVisibility")}
+                      >
+                        {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </TabPanel>
           </>

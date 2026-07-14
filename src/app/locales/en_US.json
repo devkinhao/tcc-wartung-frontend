@@ -8,7 +8,9 @@
     "cepInvalid": "Invalid ZIP code. Use the format 00000-000",
     "emailInvalid": "Invalid email",
     "phoneInvalid": "Invalid phone number",
-    "mobileInvalid": "Invalid mobile number"
+    "mobileInvalid": "Invalid mobile number",
+    "cpfInvalid": "Invalid CPF",
+    "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters)"
   },
   "common": {
     "logoAlt": "Logo",
@@ -282,10 +284,11 @@
       "fields": {
         "username": "Username",
         "password": "Password",
+        "confirmPassword": "Confirm password",
         "fullName": "Full name",
-        "cpf": "CPF (optional)",
-        "email": "Email (optional)",
-        "creaNumber": "CREA (optional)"
+        "cpf": "CPF",
+        "email": "Email",
+        "creaNumber": "CREA"
       },
       "helpers": {
         "username": "Lowercase letters and numbers only (minimum 4 characters)."

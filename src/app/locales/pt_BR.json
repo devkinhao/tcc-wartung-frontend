@@ -8,7 +8,9 @@
     "cepInvalid": "CEP inválido. Use o formato 00000-000",
     "emailInvalid": "E-mail inválido",
     "phoneInvalid": "Telefone inválido",
-    "mobileInvalid": "Celular inválido"
+    "mobileInvalid": "Celular inválido",
+    "cpfInvalid": "CPF inválido",
+    "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres)"
   },
   "common": {
     "logoAlt": "Logo",
@@ -282,10 +284,11 @@
       "fields": {
         "username": "Usuário",
         "password": "Senha",
+        "confirmPassword": "Confirmar senha",
         "fullName": "Nome completo",
-        "cpf": "CPF (opcional)",
-        "email": "E-mail (opcional)",
-        "creaNumber": "CREA (opcional)"
+        "cpf": "CPF",
+        "email": "E-mail",
+        "creaNumber": "CREA"
       },
       "helpers": {
         "username": "Somente letras minúsculas e números (mínimo 4 caracteres)."

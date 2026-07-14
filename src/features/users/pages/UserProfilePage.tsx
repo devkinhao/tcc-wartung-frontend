@@ -32,6 +32,11 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
 
+// Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
+// @Email) — feedback instantâneo, sem round-trip.
+const CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function UserProfile() {
   const { t } = useTranslation();
   const notify = useNotify();
@@ -115,6 +120,7 @@ export default function UserProfile() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      notify.success("notify.success.passwordChanged");
     },
     onError: (err) => notify.fromError(err),
   });
@@ -142,13 +148,16 @@ export default function UserProfile() {
   }
 
   function handleChangePassword() {
-    if (newPassword !== confirmPassword) {
-      notify.error(t("userProfile.password.errors.mismatch"));
-      return;
-    }
-
     passwordMutation.mutate({ currentPassword, newPassword });
   }
+
+  const cpfError = cpf.trim() !== "" && !CPF_REGEX.test(cpf.trim());
+  const emailError = email.trim() !== "" && !EMAIL_REGEX.test(email.trim());
+  const isProfileValid = fullName.trim() !== "" && !cpfError && !emailError;
+
+  const passwordMismatch = confirmPassword !== "" && newPassword !== confirmPassword;
+  const isPasswordFormValid =
+    currentPassword.trim() !== "" && newPassword.trim() !== "" && newPassword === confirmPassword;
 
   if (isLoading) {
     return (
@@ -247,6 +256,7 @@ export default function UserProfile() {
                 size="small"
                 disabled={!isEditing}
                 required
+                inputProps={{ maxLength: 50 }}
               />
             </Grid>
 
@@ -259,6 +269,8 @@ export default function UserProfile() {
                 onChange={(v) => setCpf(v)}
                 size="small"
                 disabled={!isEditing}
+                error={isEditing && cpfError}
+                helperText={isEditing && cpfError ? t("validation.cpfInvalid") : undefined}
               />
             </Grid>
 
@@ -270,6 +282,9 @@ export default function UserProfile() {
                 onChange={(e) => setEmail(e.target.value)}
                 size="small"
                 disabled={!isEditing}
+                error={isEditing && emailError}
+                helperText={isEditing && emailError ? t("validation.emailInvalid") : undefined}
+                inputProps={{ maxLength: 50 }}
               />
             </Grid>
 
@@ -277,10 +292,12 @@ export default function UserProfile() {
               <TextField
                 fullWidth
                 label={t("userProfile.fields.crea")}
+                placeholder="CREA-SC"
                 value={creaNumber}
                 onChange={(e) => setCreaNumber(e.target.value)}
                 size="small"
                 disabled={!isEditing}
+                inputProps={{ maxLength: 10 }}
               />
             </Grid>
           </Grid>
@@ -309,7 +326,7 @@ export default function UserProfile() {
               <Button
                 variant="contained"
                 onClick={handleSaveProfile}
-                disabled={updateMutation.isPending || avatarMutation.isPending}
+                disabled={updateMutation.isPending || avatarMutation.isPending || !isProfileValid}
               >
                 {t("company.actions.saveChanges")}
               </Button>
@@ -331,6 +348,7 @@ export default function UserProfile() {
               onChange={(e) => setCurrentPassword(e.target.value)}
               size="small"
               fullWidth
+              inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -353,6 +371,7 @@ export default function UserProfile() {
               onChange={(e) => setNewPassword(e.target.value)}
               size="small"
               fullWidth
+              inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -375,6 +394,9 @@ export default function UserProfile() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               size="small"
               fullWidth
+              inputProps={{ maxLength: 100 }}
+              error={passwordMismatch}
+              helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -396,7 +418,11 @@ export default function UserProfile() {
           <Button onClick={() => setPasswordModalOpen(false)} variant="outlined">
             {t("common.actions.cancel")}
           </Button>
-          <Button onClick={handleChangePassword} variant="contained" disabled={passwordMutation.isPending}>
+          <Button
+            onClick={handleChangePassword}
+            variant="contained"
+            disabled={passwordMutation.isPending || !isPasswordFormValid}
+          >
             {t("common.actions.save")}
           </Button>
         </DialogActions>
