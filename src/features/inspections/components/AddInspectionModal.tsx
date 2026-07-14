@@ -324,7 +324,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 minRows={3}
                 value={form.notes}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                inputProps={{ maxLength: 500 }}
+                inputProps={{ maxLength: 100 }}
               />
             </Grid>
 

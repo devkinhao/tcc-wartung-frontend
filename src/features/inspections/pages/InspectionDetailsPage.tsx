@@ -176,6 +176,18 @@ export default function InspectionDetailsPage() {
     );
   }
 
+  // Espelha as constraints do InspectionUpdateRequestDTO do backend (@NotNull
+  // inspectionDate/expirationDate) mais a regra de negócio de vencimento
+  // não anteceder a inspeção — feedback instantâneo, sem round-trip.
+  const inspectionDateValue = toISODate(draft?.inspectionDate);
+  const expirationDateValue = toISODate(draft?.expirationDate);
+  const expirationBeforeInspection =
+    inspectionDateValue !== "" &&
+    expirationDateValue !== "" &&
+    expirationDateValue < inspectionDateValue;
+  const isGeneralValid =
+    inspectionDateValue !== "" && expirationDateValue !== "" && !expirationBeforeInspection;
+
   const handleSave = () => {
     if (!draft) return;
 
@@ -347,6 +359,7 @@ export default function InspectionDetailsPage() {
               title={t("inspectionDetails.sections.general")}
               editing={editing}
               saving={mutation.isPending}
+              saveDisabled={!isGeneralValid}
               onEdit={() => setEditing(true)}
               onCancel={() => {
                 setDraft(data ?? null);
@@ -405,6 +418,12 @@ export default function InspectionDetailsPage() {
                     )
                   }
                   disabled={!editing}
+                  error={editing && expirationBeforeInspection}
+                  helperText={
+                    editing && expirationBeforeInspection
+                      ? t("inspections.addModal.errors.expirationBeforeInspection")
+                      : undefined
+                  }
                 />
 
                 <Stack spacing={0.5} sx={{ minWidth: 110, flexShrink: 0 }}>
@@ -446,6 +465,7 @@ export default function InspectionDetailsPage() {
                   )
                 }
                 disabled={!editing}
+                inputProps={{ maxLength: 100 }}
               />
             </Stack>
           </CardContent>
