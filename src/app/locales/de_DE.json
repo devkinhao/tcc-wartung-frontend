@@ -67,6 +67,7 @@
     "inspectionsList": "Inspektionen",
     "inspectionDetails": "Inspektion",
     "notificationsList": "Benachrichtigungen",
+    "serviceTypes": "Dienstleistungsarten",
     "reports": "Berichte",
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
@@ -176,6 +177,33 @@
     },
     "actions": {
       "save": "Einstellungen speichern"
+    }
+  },
+  "serviceTypes": {
+    "title": "Dienstleistungsarten",
+    "description": "Verwalten Sie die für Inspektionen verfügbaren Dienstleistungsarten.",
+    "search": "Suchen",
+    "empty": "Keine Dienstleistungsart gefunden.",
+    "actions": {
+      "new": "Neue Dienstleistungsart",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    },
+    "confirmDelete": {
+      "title": "Dienstleistungsart löschen",
+      "message": "Sind Sie sicher, dass Sie die Dienstleistungsart \"{{name}}\" löschen möchten?"
+    },
+    "table": {
+      "name": "Name"
+    },
+    "fields": {
+      "name": "Name"
+    },
+    "create": {
+      "title": "Neue Dienstleistungsart"
+    },
+    "edit": {
+      "title": "Dienstleistungsart bearbeiten"
     }
   },
   "help": {
@@ -705,7 +733,9 @@
       "INVALID_EXPIRATION_DATE": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen.",
       "FILE_TOO_LARGE": "Die hochgeladene Datei überschreitet die maximal zulässige Größe.",
       "FILE_EXTENSION_NOT_ALLOWED": "Dateierweiterung nicht erlaubt.",
-      "FILE_EXTENSION_MISSING": "Die Datei muss eine Erweiterung haben."
+      "FILE_EXTENSION_MISSING": "Die Datei muss eine Erweiterung haben.",
+      "SERVICE_TYPE_ALREADY_EXISTS": "Diese Dienstleistungsart existiert bereits.",
+      "SERVICE_TYPE_HAS_INSPECTIONS": "Löschen nicht möglich: Diese Dienstleistungsart hat verknüpfte Inspektionen."
     }
   },
   "inspections": {

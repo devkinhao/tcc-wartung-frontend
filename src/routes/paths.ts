@@ -15,6 +15,8 @@ export const paths = {
   inspections: "/inspections",
   inspectionDetails: (id: number | string) => `/inspections/${id}`,
 
+  serviceTypes: "/service-types",
+
   notifications: "/notifications",
   reports: "/reports",
   company: "/company",

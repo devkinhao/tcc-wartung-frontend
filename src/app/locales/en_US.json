@@ -67,6 +67,7 @@
     "inspectionsList": "Inspections",
     "inspectionDetails": "Inspection",
     "notificationsList": "Notifications",
+    "serviceTypes": "Service Types",
     "reports": "Reports",
     "myCompany": "My Company",
     "users": "Users",
@@ -176,6 +177,33 @@
     },
     "actions": {
       "save": "Save settings"
+    }
+  },
+  "serviceTypes": {
+    "title": "Service Types",
+    "description": "Manage the service types available for inspections.",
+    "search": "Search",
+    "empty": "No service types found.",
+    "actions": {
+      "new": "New service type",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "confirmDelete": {
+      "title": "Delete service type",
+      "message": "Are you sure you want to delete the service type \"{{name}}\"?"
+    },
+    "table": {
+      "name": "Name"
+    },
+    "fields": {
+      "name": "Name"
+    },
+    "create": {
+      "title": "New service type"
+    },
+    "edit": {
+      "title": "Edit service type"
     }
   },
   "help": {
@@ -705,7 +733,9 @@
       "INVALID_EXPIRATION_DATE": "Expiration date cannot be before the inspection date.",
       "FILE_TOO_LARGE": "The uploaded file exceeds the maximum allowed size.",
       "FILE_EXTENSION_NOT_ALLOWED": "File extension not allowed.",
-      "FILE_EXTENSION_MISSING": "The file must have an extension."
+      "FILE_EXTENSION_MISSING": "The file must have an extension.",
+      "SERVICE_TYPE_ALREADY_EXISTS": "This service type already exists.",
+      "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections."
     }
   },
   "inspections": {

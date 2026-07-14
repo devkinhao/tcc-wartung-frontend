@@ -10,6 +10,7 @@ import Help from "./features/help/pages/HelpPage";
 import Configurations from "./features/configurations/pages/ConfigurationsPage";
 import Reports from "./features/reports/pages/ReportsPage";
 import Users from "./features/users/pages/UsersPage";
+import ServiceTypes from "./features/serviceTypes/pages/ServiceTypesPage";
 import CustomerDetailsPage from "./features/customers/pages/CustomerDetailsPage";
 import InspectionDetailsPage from "./features/inspections/pages/InspectionDetailsPage";
 import InspectionsListPage from "./features/inspections/pages/InspectionsListPage";
@@ -44,6 +45,7 @@ export default function App() {
                   <Route path="inspections"          element={<InspectionsListPage />} />
                   <Route path="inspections/:id"      element={<InspectionDetailsPage />} />
                   <Route path="notifications"        element={<NotificationsPage />} />
+                  <Route path="service-types"        element={<ServiceTypes />} />
                   <Route path="help"                 element={<Help />} />
                   <Route path="users/me"             element={<UserProfile />} />
                   <Route path="users/me/preferences" element={<UserPreferences />} />

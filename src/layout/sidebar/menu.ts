@@ -2,6 +2,7 @@ import {
   Home as HomeIcon,
   People as PeopleIcon,
   Checklist as ChecklistIcon,
+  Build as BuildIcon,
   Description as DescriptionIcon,
   Apartment as ApartmentIcon,
   AdminPanelSettings as AdminIcon,
@@ -16,6 +17,7 @@ export const menuPrincipal: MenuItem[] = [
   { label: "nav.home", to: paths.dashboard, icon: HomeIcon },
   { label: "nav.customersList", to: paths.customers, icon: PeopleIcon },
   { label: "nav.inspections", to: paths.inspections, icon: ChecklistIcon },
+  { label: "nav.serviceTypes", to: paths.serviceTypes, icon: BuildIcon },
   {
     label: "nav.reports",
     to: paths.reports,

@@ -67,6 +67,7 @@
     "inspectionsList": "Inspeções",
     "inspectionDetails": "Inspeção",
     "notificationsList": "Notificações",
+    "serviceTypes": "Tipos de Serviço",
     "reports": "Relatórios",
     "myCompany": "Minha Empresa",
     "users": "Usuários",
@@ -176,6 +177,33 @@
     },
     "actions": {
       "save": "Salvar configurações"
+    }
+  },
+  "serviceTypes": {
+    "title": "Tipos de Serviço",
+    "description": "Gerencie os tipos de serviço disponíveis para as inspeções.",
+    "search": "Buscar",
+    "empty": "Nenhum tipo de serviço encontrado.",
+    "actions": {
+      "new": "Novo tipo de serviço",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+    "confirmDelete": {
+      "title": "Excluir tipo de serviço",
+      "message": "Tem certeza que deseja excluir o tipo de serviço \"{{name}}\"?"
+    },
+    "table": {
+      "name": "Nome"
+    },
+    "fields": {
+      "name": "Nome"
+    },
+    "create": {
+      "title": "Novo tipo de serviço"
+    },
+    "edit": {
+      "title": "Editar tipo de serviço"
     }
   },
   "help": {
@@ -705,7 +733,9 @@
       "INVALID_EXPIRATION_DATE": "O vencimento não pode ser anterior à data da inspeção.",
       "FILE_TOO_LARGE": "O arquivo enviado excede o tamanho máximo permitido.",
       "FILE_EXTENSION_NOT_ALLOWED": "Extensão de arquivo não permitida.",
-      "FILE_EXTENSION_MISSING": "O arquivo precisa ter uma extensão."
+      "FILE_EXTENSION_MISSING": "O arquivo precisa ter uma extensão.",
+      "SERVICE_TYPE_ALREADY_EXISTS": "Este tipo de serviço já existe.",
+      "SERVICE_TYPE_HAS_INSPECTIONS": "Não é possível excluir: este tipo de serviço possui inspeções vinculadas."
     }
   },
   "inspections": {
