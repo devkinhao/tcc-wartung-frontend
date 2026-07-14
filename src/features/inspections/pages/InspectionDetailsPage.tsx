@@ -603,6 +603,7 @@ export default function InspectionDetailsPage() {
               required
               value={uploadDescription}
               onChange={(e) => setUploadDescription(e.target.value)}
+              inputProps={{ maxLength: 50 }}
             />
 
             <Button variant="outlined" component="label">
@@ -633,13 +634,10 @@ export default function InspectionDetailsPage() {
             variant="contained"
             startIcon={uploadMutation.isPending ? <CircularProgress size={16} /> : <UploadFileIcon />}
             onClick={() => {
-              if (!uploadFile) {
-                notify.warning("notify.error.uploadFailed");
-                return;
-              }
+              if (!uploadFile) return;
               uploadMutation.mutate({ description: uploadDescription, file: uploadFile });
             }}
-            disabled={uploadMutation.isPending}
+            disabled={uploadMutation.isPending || uploadDescription.trim() === "" || !uploadFile}
           >
             {t("inspectionDetails.documents.uploadDialog.upload")}
           </Button>

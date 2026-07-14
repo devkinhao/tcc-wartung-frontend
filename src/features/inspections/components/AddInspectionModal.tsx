@@ -119,10 +119,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
   };
 
   function addPendingDocument() {
-    if (!docFile) {
-      notify.warning("notify.error.uploadFailed");
-      return;
-    }
+    if (!docFile || docDescription.trim() === "") return;
     setPendingDocs((prev) => [...prev, { description: docDescription.trim(), file: docFile }]);
     setDocDescription("");
     setDocFile(null);
@@ -340,6 +337,8 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                   value={docDescription}
                   onChange={(e) => setDocDescription(e.target.value)}
                   sx={{ flex: 1 }}
+                  required
+                  inputProps={{ maxLength: 50 }}
                 />
 
                 <Button variant="outlined" component="label" size="small" sx={{ whiteSpace: "nowrap" }}>
@@ -358,7 +357,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                   size="small"
                   startIcon={<UploadFileIcon />}
                   onClick={addPendingDocument}
-                  disabled={!docFile}
+                  disabled={!docFile || docDescription.trim() === ""}
                 >
                   {t("inspections.addModal.documents.add")}
                 </Button>
