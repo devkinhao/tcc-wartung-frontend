@@ -9,9 +9,9 @@ export type CustomerUpdateGeneralRequestDTO = {
 };
 
 export type CustomerUpdateContactsRequestDTO = {
-  phone: string;
-  mobilePhone: string;
-  email: string;
+  phone: string | null;
+  mobilePhone: string | null;
+  email: string | null;
 };
 
 export type CustomerUpdateAddressRequestDTO = {

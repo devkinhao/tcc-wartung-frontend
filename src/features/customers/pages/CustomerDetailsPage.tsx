@@ -224,9 +224,9 @@ export default function CustomerDetailsPage() {
           onCancelContacts={() => { resetDraft(); setEditingContacts(false); }}
           onSaveContacts={() =>
             mutations.contacts.mutate({
-              phone:       view.phone,
-              mobilePhone: view.mobilePhone,
-              email:       view.email,
+              phone:       view.phone || null,
+              mobilePhone: view.mobilePhone || null,
+              email:       view.email || null,
             } satisfies CustomerUpdateContactsRequestDTO)
           }
         />

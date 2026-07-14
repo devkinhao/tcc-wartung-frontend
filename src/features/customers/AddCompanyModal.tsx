@@ -137,9 +137,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         fantasyName: form.fantasyName.trim(),
         legalName: form.legalName.trim(),
         cnpj: form.cnpj.trim(),
-        phone: form.phone.trim(),
-        mobilePhone: form.mobile.trim(),
-        email: form.email.trim(),
+        ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
+        ...(form.mobile.trim() ? { mobilePhone: form.mobile.trim() } : {}),
+        ...(form.email.trim() ? { email: form.email.trim() } : {}),
         abvtexSeal: form.abvtexSeal,
         address: {
           street: form.street.trim(),

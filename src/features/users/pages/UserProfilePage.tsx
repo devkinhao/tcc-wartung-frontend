@@ -133,7 +133,12 @@ export default function UserProfile() {
   }
 
   function handleSaveProfile() {
-    updateMutation.mutate({ fullName, cpf, email, creaNumber });
+    updateMutation.mutate({
+      fullName: fullName.trim(),
+      ...(cpf.trim() ? { cpf: cpf.trim() } : {}),
+      ...(email.trim() ? { email: email.trim() } : {}),
+      ...(creaNumber.trim() ? { creaNumber: creaNumber.trim() } : {}),
+    });
     if (avatarFile) avatarMutation.mutate(avatarFile);
   }
 
