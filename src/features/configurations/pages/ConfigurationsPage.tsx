@@ -6,7 +6,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { toCamelCase } from "@/utils/strings";
+import { digitsOnly } from "@/utils/masks";
 import { getConfigurations, updateConfigurations } from "../api/configurations.api";
+
+// Configurações cujo VAL_CONFIG é semanticamente numérico (ex: quantidade de dias).
+// O backend guarda como String livre (só length=100), então essa restrição é
+// só do frontend — filtra dígitos ao digitar em vez de validar depois.
+const NUMERIC_CONFIGS = new Set(["DIAS_ALERTA_VENCIMENTO"]);
 
 export default function ConfigurationsPage() {
   const { t } = useTranslation();
@@ -43,8 +49,13 @@ export default function ConfigurationsPage() {
   });
 
   function handleChange(name: string, value: string) {
-    setDraft((prev) => (prev ? { ...prev, [name]: value } : prev));
+    const sanitized = NUMERIC_CONFIGS.has(name) ? digitsOnly(value) : value;
+    setDraft((prev) => (prev ? { ...prev, [name]: sanitized } : prev));
   }
+
+  // Nenhuma configuração pode ficar em branco — feedback instantâneo,
+  // sem depender do round-trip pro backend rejeitar o PUT.
+  const hasBlankConfig = data?.some((config) => (draft?.[config.name] ?? "").trim() === "") ?? true;
 
   if (isLoading || !data || !draft) {
     return (
@@ -91,6 +102,8 @@ export default function ConfigurationsPage() {
                 value={draft[config.name] ?? ""}
                 onChange={(e) => handleChange(config.name, e.target.value)}
                 size="small"
+                inputMode={NUMERIC_CONFIGS.has(config.name) ? "numeric" : "text"}
+                inputProps={{ maxLength: 100 }}
               />
             </Card>
           );
@@ -98,7 +111,13 @@ export default function ConfigurationsPage() {
       </Stack>
 
       <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-        <Button variant="contained" color="primary" disabled={isSaving} onClick={() => save(draft)}>
+        {/* @NotEmpty no ConfigurationBatchUpdateRequestDTO (mapa vazio) + nenhum valor em branco */}
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={isSaving || Object.keys(draft).length === 0 || hasBlankConfig}
+          onClick={() => save(draft)}
+        >
           {isSaving ? <CircularProgress size={20} color="inherit" /> : t("configurations.actions.save")}
         </Button>
       </Box>
