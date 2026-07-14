@@ -691,7 +691,8 @@
       "INVALID_IMAGE_TYPE": "Ungültiges Bildformat.",
       "AVATAR_PROCESSING_ERROR": "Das Bild konnte nicht verarbeitet werden.",
       "INVALID_PERMISSIONS": "Eine oder mehrere angegebene Berechtigungen sind ungültig.",
-      "INVALID_EXPIRATION_DATE": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen."
+      "INVALID_EXPIRATION_DATE": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen.",
+      "FILE_TOO_LARGE": "Die hochgeladene Datei überschreitet die maximal zulässige Größe."
     }
   },
   "inspections": {

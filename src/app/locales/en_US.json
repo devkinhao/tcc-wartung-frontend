@@ -691,7 +691,8 @@
       "INVALID_IMAGE_TYPE": "Invalid image format.",
       "AVATAR_PROCESSING_ERROR": "Could not process the image.",
       "INVALID_PERMISSIONS": "One or more provided permissions are invalid.",
-      "INVALID_EXPIRATION_DATE": "Expiration date cannot be before the inspection date."
+      "INVALID_EXPIRATION_DATE": "Expiration date cannot be before the inspection date.",
+      "FILE_TOO_LARGE": "The uploaded file exceeds the maximum allowed size."
     }
   },
   "inspections": {
