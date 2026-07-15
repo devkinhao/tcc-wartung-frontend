@@ -27,7 +27,7 @@ export function DocxPreview({ blob, message, downloadLabel, onDownload }: Props)
     if (!container) return;
     container.innerHTML = "";
 
-    renderAsync(blob, container, undefined, { className: "docx-preview", inWrapper: false }).catch(() => {
+    renderAsync(blob, container, undefined, { className: "docx-preview", inWrapper: true, breakPages: true }).catch(() => {
       if (!cancelled) setFailed(true);
     });
 
@@ -58,6 +58,11 @@ export function DocxPreview({ blob, message, downloadLabel, onDownload }: Props)
         bgcolor: "background.paper",
         p: 2,
         "& .docx-preview": { maxWidth: "100%" },
+        // O Word ignora a orientação EXIF de fotos embutidas (sempre mostra
+        // os pixels crus) — sem isso, o navegador reaplica uma rotação da
+        // câmera que já não bate mais com a imagem, girando fotos que no
+        // Word aparecem corretas.
+        "& img": { imageOrientation: "none" },
       }}
     />
   );
