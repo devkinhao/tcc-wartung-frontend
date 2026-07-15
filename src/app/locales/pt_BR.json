@@ -71,7 +71,7 @@
     "inspectionsList": "Inspeções",
     "inspectionDetails": "Inspeção",
     "notificationsList": "Notificações",
-    "serviceTypes": "Tipos de Serviço",
+    "serviceTypes": "Serviços",
     "reports": "Relatórios",
     "myCompany": "Minha Empresa",
     "users": "Usuários",
@@ -184,18 +184,18 @@
     }
   },
   "serviceTypes": {
-    "title": "Tipos de Serviço",
-    "description": "Gerencie os tipos de serviço disponíveis para as inspeções.",
+    "title": "Serviços",
+    "description": "Gerencie os serviços disponíveis para as inspeções.",
     "search": "Buscar",
-    "empty": "Nenhum tipo de serviço encontrado.",
+    "empty": "Nenhum serviço encontrado.",
     "actions": {
-      "new": "Novo tipo de serviço",
+      "new": "Novo serviço",
       "edit": "Editar",
       "delete": "Excluir"
     },
     "confirmDelete": {
-      "title": "Excluir tipo de serviço",
-      "message": "Tem certeza que deseja excluir o tipo de serviço \"{{name}}\"?"
+      "title": "Excluir serviço",
+      "message": "Tem certeza que deseja excluir o serviço \"{{name}}\"?"
     },
     "table": {
       "name": "Nome"
@@ -204,10 +204,10 @@
       "name": "Nome"
     },
     "create": {
-      "title": "Novo tipo de serviço"
+      "title": "Novo serviço"
     },
     "edit": {
-      "title": "Editar tipo de serviço"
+      "title": "Editar serviço"
     }
   },
   "help": {
@@ -367,7 +367,7 @@
     "title": "Gerenciar Empresas",
     "description": "Busque, filtre e gerencie empresas cadastradas.",
     "actions": {
-      "addCompany": "Adicionar Empresa"
+      "addCompany": "Nova empresa"
     },
     "filters": {
       "searchLabel": "Buscar",

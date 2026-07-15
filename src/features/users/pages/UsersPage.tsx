@@ -146,7 +146,7 @@ export default function UsersPage() {
               <SortableHeader label={t("users.table.fullName")} column="fullName" {...sharedSortProps} width="40%" />
               <SortableHeader label={t("users.table.email")} column="email" {...sharedSortProps} width="28%" />
               <SortableHeader label={t("users.table.status")} column="isActive" {...sharedSortProps} width="9%" />
-              <TableCell align="center" sx={{ width: "8%" }} />
+              <TableCell align="right" sx={{ width: "8%" }} />
             </TableRow>
           </TableHead>
 
@@ -170,7 +170,7 @@ export default function UsersPage() {
                     variant={u.isActive ? "filled" : "outlined"}
                   />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="right">
                   <IconButton size="small" onClick={(e) => openMenu(e, u)}>
                     <MoreVertIcon fontSize="small" />
                   </IconButton>

@@ -71,7 +71,7 @@
     "inspectionsList": "Inspektionen",
     "inspectionDetails": "Inspektion",
     "notificationsList": "Benachrichtigungen",
-    "serviceTypes": "Dienstleistungsarten",
+    "serviceTypes": "Dienstleistungen",
     "reports": "Berichte",
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
@@ -184,18 +184,18 @@
     }
   },
   "serviceTypes": {
-    "title": "Dienstleistungsarten",
-    "description": "Verwalten Sie die für Inspektionen verfügbaren Dienstleistungsarten.",
+    "title": "Dienstleistungen",
+    "description": "Verwalten Sie die für Inspektionen verfügbaren Dienstleistungen.",
     "search": "Suchen",
-    "empty": "Keine Dienstleistungsart gefunden.",
+    "empty": "Keine Dienstleistung gefunden.",
     "actions": {
-      "new": "Neue Dienstleistungsart",
+      "new": "Neue Dienstleistung",
       "edit": "Bearbeiten",
       "delete": "Löschen"
     },
     "confirmDelete": {
-      "title": "Dienstleistungsart löschen",
-      "message": "Sind Sie sicher, dass Sie die Dienstleistungsart \"{{name}}\" löschen möchten?"
+      "title": "Dienstleistung löschen",
+      "message": "Sind Sie sicher, dass Sie die Dienstleistung \"{{name}}\" löschen möchten?"
     },
     "table": {
       "name": "Name"
@@ -204,10 +204,10 @@
       "name": "Name"
     },
     "create": {
-      "title": "Neue Dienstleistungsart"
+      "title": "Neue Dienstleistung"
     },
     "edit": {
-      "title": "Dienstleistungsart bearbeiten"
+      "title": "Dienstleistung bearbeiten"
     }
   },
   "help": {
@@ -367,7 +367,7 @@
     "title": "Unternehmen verwalten",
     "description": "Unternehmen suchen, filtern und verwalten.",
     "actions": {
-      "addCompany": "Unternehmen hinzufügen"
+      "addCompany": "Neues Unternehmen"
     },
     "filters": {
       "searchLabel": "Suchen",

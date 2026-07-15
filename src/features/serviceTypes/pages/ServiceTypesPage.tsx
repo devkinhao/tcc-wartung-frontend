@@ -104,7 +104,13 @@ export default function ServiceTypesPage() {
             sx={{ minWidth: 260 }}
             disabled={isLoading}
           />
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setCreateOpen(true)} disabled={isLoading}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setCreateOpen(true)}
+            disabled={isLoading}
+            sx={{ whiteSpace: "nowrap", flexShrink: 0 }}
+          >
             {t("serviceTypes.actions.new")}
           </Button>
         </Stack>
@@ -132,7 +138,7 @@ export default function ServiceTypesPage() {
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <TableCell sx={{ width: "85%" }}><b>{t("serviceTypes.table.name")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "15%" }} />
+              <TableCell align="right" sx={{ width: "15%" }} />
             </TableRow>
           </TableHead>
 
@@ -142,7 +148,7 @@ export default function ServiceTypesPage() {
                 <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={s.name}>
                   {s.name}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="right">
                   <IconButton size="small" onClick={(e) => openMenu(e, s)}>
                     <MoreVertIcon fontSize="small" />
                   </IconButton>

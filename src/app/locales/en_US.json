@@ -71,7 +71,7 @@
     "inspectionsList": "Inspections",
     "inspectionDetails": "Inspection",
     "notificationsList": "Notifications",
-    "serviceTypes": "Service Types",
+    "serviceTypes": "Services",
     "reports": "Reports",
     "myCompany": "My Company",
     "users": "Users",
@@ -184,18 +184,18 @@
     }
   },
   "serviceTypes": {
-    "title": "Service Types",
-    "description": "Manage the service types available for inspections.",
+    "title": "Services",
+    "description": "Manage the services available for inspections.",
     "search": "Search",
-    "empty": "No service types found.",
+    "empty": "No services found.",
     "actions": {
-      "new": "New service type",
+      "new": "New service",
       "edit": "Edit",
       "delete": "Delete"
     },
     "confirmDelete": {
-      "title": "Delete service type",
-      "message": "Are you sure you want to delete the service type \"{{name}}\"?"
+      "title": "Delete service",
+      "message": "Are you sure you want to delete the service \"{{name}}\"?"
     },
     "table": {
       "name": "Name"
@@ -204,10 +204,10 @@
       "name": "Name"
     },
     "create": {
-      "title": "New service type"
+      "title": "New service"
     },
     "edit": {
-      "title": "Edit service type"
+      "title": "Edit service"
     }
   },
   "help": {
@@ -367,7 +367,7 @@
     "title": "Manage companies",
     "description": "Search, filter and manage registered companies.",
     "actions": {
-      "addCompany": "Add company"
+      "addCompany": "New company"
     },
     "filters": {
       "searchLabel": "Search",
