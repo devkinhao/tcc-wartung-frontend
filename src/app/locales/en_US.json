@@ -673,6 +673,7 @@
       },
       "confirmDeleteTitle": "Delete document",
       "confirmDelete": "Are you sure you want to delete this document?",
+      "previewUnsupported": "Preview not available for this file type. Download the file to view it.",
       "uploadDialog": {
         "title": "Upload document",
         "description": "Description",

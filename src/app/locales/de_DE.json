@@ -673,6 +673,7 @@
       },
       "confirmDeleteTitle": "Dokument löschen",
       "confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
+      "previewUnsupported": "Vorschau für diesen Dateityp nicht verfügbar. Laden Sie die Datei herunter, um sie anzuzeigen.",
       "uploadDialog": {
         "title": "Dokument hochladen",
         "description": "Beschreibung",

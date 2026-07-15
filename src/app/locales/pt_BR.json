@@ -673,6 +673,7 @@
       },
       "confirmDeleteTitle": "Excluir documento",
       "confirmDelete": "Tem certeza que deseja excluir este documento?",
+      "previewUnsupported": "Pré-visualização não disponível para este tipo de arquivo. Baixe o arquivo para visualizá-lo.",
       "uploadDialog": {
         "title": "Enviar documento",
         "description": "Descrição",

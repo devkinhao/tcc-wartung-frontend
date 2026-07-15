@@ -29,7 +29,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -54,10 +54,33 @@ import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
+import { DocxPreview } from "@/components/DocxPreview";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
   return value.split("T")[0];
+}
+
+// O backend devolve o download sempre como "application/octet-stream" —
+// deduzimos o tipo real pela extensão pra saber o que dá pra pré-visualizar
+// inline no navegador (imagem/PDF) e o que só dá pra baixar (docx, xlsx, etc).
+function guessMimeType(name: string): string | null {
+  const ext = name.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "pdf": return "application/pdf";
+    case "png": return "image/png";
+    case "jpg":
+    case "jpeg": return "image/jpeg";
+    case "gif": return "image/gif";
+    case "bmp": return "image/bmp";
+    case "webp": return "image/webp";
+    case "svg": return "image/svg+xml";
+    default: return null;
+  }
+}
+
+function isDocx(name: string): boolean {
+  return name.toLowerCase().endsWith(".docx");
 }
 
 export default function InspectionDetailsPage() {
@@ -89,6 +112,17 @@ export default function InspectionDetailsPage() {
 
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
   const [confirmDeleteInspectionOpen, setConfirmDeleteInspectionOpen] = useState(false);
+
+  const [docMenuAnchor, setDocMenuAnchor] = useState<HTMLElement | null>(null);
+  const [docMenuTarget, setDocMenuTarget] = useState<number | null>(null);
+  const [preview, setPreview] = useState<{
+    docId: number;
+    name: string;
+    kind: "image" | "pdf" | "docx" | "unsupported";
+    url?: string;
+    blob?: Blob;
+  } | null>(null);
+  const [previewLoading, setPreviewLoading] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionDetail(inspectionId),
@@ -229,8 +263,105 @@ export default function InspectionDetailsPage() {
     setConfirmDeleteId(docId);
   };
 
+  const handlePreview = async (docId: number, name: string) => {
+    setPreviewLoading(docId);
+    try {
+      const blob = await downloadInspectionDocument(inspectionId, docId);
+
+      if (isDocx(name)) {
+        setPreview({ docId, name, kind: "docx", blob });
+        return;
+      }
+
+      const mimeType = guessMimeType(name);
+      // Reconstrói o Blob com o tipo correto — sem isso o navegador não sabe
+      // renderizar o PDF/imagem inline e acaba oferecendo só "Salvar como".
+      const typedBlob = mimeType ? new Blob([blob], { type: mimeType }) : blob;
+      const url = window.URL.createObjectURL(typedBlob);
+      const kind = mimeType?.startsWith("image/")
+        ? "image"
+        : mimeType === "application/pdf"
+          ? "pdf"
+          : "unsupported";
+      setPreview({ docId, name, url, kind });
+    } catch {
+      notify.error("notify.error.downloadFailed");
+    } finally {
+      setPreviewLoading(null);
+    }
+  };
+
+  const handleClosePreview = () => {
+    if (preview?.url) window.URL.revokeObjectURL(preview.url);
+    setPreview(null);
+  };
+
+  const openDocMenu = (e: React.MouseEvent<HTMLElement>, docId: number) => {
+    setDocMenuAnchor(e.currentTarget);
+    setDocMenuTarget(docId);
+  };
+
+  const closeDocMenu = () => {
+    setDocMenuAnchor(null);
+    setDocMenuTarget(null);
+  };
+
   return (
     <Box sx={{ maxWidth: 1200 }}>
+
+      {/* Menu de ações por documento (3 pontinhos) */}
+      <Menu anchorEl={docMenuAnchor} open={Boolean(docMenuAnchor)} onClose={closeDocMenu}>
+        <MenuItem
+          onClick={() => {
+            if (docMenuTarget !== null) handleDeleteDoc(docMenuTarget);
+            closeDocMenu();
+          }}
+        >
+          {t("inspectionDetails.documents.actions.delete")}
+        </MenuItem>
+      </Menu>
+
+      {/* Pré-visualização de documento */}
+      <Dialog open={preview !== null} onClose={handleClosePreview} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          {preview?.name}
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0, display: "flex", justifyContent: "center", bgcolor: "background.default" }}>
+          {preview?.kind === "image" ? (
+            <Box
+              component="img"
+              src={preview.url}
+              alt={preview.name}
+              sx={{ maxWidth: "100%", maxHeight: "70vh", objectFit: "contain" }}
+            />
+          ) : preview?.kind === "pdf" ? (
+            <Box component="iframe" src={preview.url} title={preview.name} sx={{ width: "100%", height: "70vh", border: 0 }} />
+          ) : preview?.kind === "docx" && preview.blob ? (
+            <DocxPreview
+              blob={preview.blob}
+              message={t("inspectionDetails.documents.previewUnsupported")}
+              downloadLabel={t("inspectionDetails.documents.actions.download")}
+              onDownload={() => handleDownload(preview.docId, preview.name)}
+            />
+          ) : preview?.kind === "unsupported" ? (
+            <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
+              <Typography color="text.secondary">
+                {t("inspectionDetails.documents.previewUnsupported")}
+              </Typography>
+              <Button
+                variant="outlined"
+                startIcon={<DownloadIcon />}
+                onClick={() => handleDownload(preview.docId, preview.name)}
+              >
+                {t("inspectionDetails.documents.actions.download")}
+              </Button>
+            </Stack>
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePreview}>{t("common.actions.close")}</Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Confirm delete dialog — substitui window.confirm */}
       <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
@@ -518,6 +649,14 @@ export default function InspectionDetailsPage() {
                           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
                             <IconButton
                               size="small"
+                              aria-label={t("inspectionDetails.documents.actions.view")}
+                              onClick={() => handlePreview(d.id, d.name)}
+                              disabled={previewLoading === d.id}
+                            >
+                              <VisibilityIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
                               aria-label={t("inspectionDetails.documents.actions.download")}
                               onClick={() => handleDownload(d.id, d.name)}
                             >
@@ -525,11 +664,10 @@ export default function InspectionDetailsPage() {
                             </IconButton>
                             <IconButton
                               size="small"
-                              aria-label={t("inspectionDetails.documents.actions.delete")}
-                              onClick={() => handleDeleteDoc(d.id)}
-                              disabled={deleteMutation.isPending}
+                              aria-label={t("inspectionDetails.documents.table.actions")}
+                              onClick={(e) => openDocMenu(e, d.id)}
                             >
-                              <DeleteIcon fontSize="small" />
+                              <MoreVertIcon fontSize="small" />
                             </IconButton>
                           </Stack>
                         </TableCell>

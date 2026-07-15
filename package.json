@@ -21,6 +21,7 @@
     "@tanstack/react-query-devtools": "^5.91.3",
     "@tanstack/react-query-persist-client": "^5.90.22",
     "axios": "^1.13.2",
+    "docx-preview": "^0.4.0",
     "i18next": "^25.8.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.562.0",
