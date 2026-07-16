@@ -155,6 +155,8 @@
     "themeDescription": "Visuelles Design des Systems",
     "showNotifications": "Benachrichtigungen",
     "showNotificationsDescription": "Benachrichtigungen im System anzeigen",
+    "chatbotEnabled": "Chatbot",
+    "chatbotEnabledDescription": "Chat-Assistenten im System anzeigen",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -166,6 +168,10 @@
         "dark": "Dunkel"
       },
       "SHOW_NOTIFICATIONS": {
+        "true": "Aktiviert",
+        "false": "Deaktiviert"
+      },
+      "CHATBOT_ENABLED": {
         "true": "Aktiviert",
         "false": "Deaktiviert"
       }

@@ -155,6 +155,8 @@
     "themeDescription": "System visual theme",
     "showNotifications": "Notifications",
     "showNotificationsDescription": "Show notifications in the system",
+    "chatbotEnabled": "Chatbot",
+    "chatbotEnabledDescription": "Show the chat assistant in the system",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -166,6 +168,10 @@
         "dark": "Dark"
       },
       "SHOW_NOTIFICATIONS": {
+        "true": "Enabled",
+        "false": "Disabled"
+      },
+      "CHATBOT_ENABLED": {
         "true": "Enabled",
         "false": "Disabled"
       }

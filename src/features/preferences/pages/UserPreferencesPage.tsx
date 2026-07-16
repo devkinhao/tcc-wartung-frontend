@@ -20,6 +20,8 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
+import ChatIcon from "@mui/icons-material/Chat";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { PreferenceName } from "../types/Preferences";
@@ -44,6 +46,10 @@ const OPTION_ICONS: Record<string, Record<string, React.ReactNode>> = {
     true: <NotificationsActiveIcon fontSize="small" sx={{ color: "primary.main" }} />,
     false: <NotificationsOffIcon fontSize="small" sx={{ color: "text.disabled" }} />,
   },
+  CHATBOT_ENABLED: {
+    true: <ChatIcon fontSize="small" sx={{ color: "primary.main" }} />,
+    false: <ChatBubbleOutlineIcon fontSize="small" sx={{ color: "text.disabled" }} />,
+  },
 };
 
 // ── Ordem de exibição das preferências ─────────────────────────────────────
@@ -52,6 +58,7 @@ const PREFERENCE_ORDER = [
   PreferenceName.LANGUAGE,
   PreferenceName.THEME,
   PreferenceName.SHOW_NOTIFICATIONS,
+  PreferenceName.CHATBOT_ENABLED,
 ];
 
 // ── Componente ───────────────────────────────────────────────────────────────
@@ -135,6 +142,7 @@ export default function UserPreferencesPage() {
                     {name === "THEME" && <LightModeIcon fontSize="small" color="action" />}
                     {name === "LANGUAGE" && <LanguageIcon fontSize="small" color="action" />}
                     {name === "SHOW_NOTIFICATIONS" && <NotificationsActiveIcon fontSize="small" color="action" />}
+                    {name === "CHATBOT_ENABLED" && <ChatIcon fontSize="small" color="action" />}
                     <Typography fontWeight={600} color="text.primary">
                       {t(`preferences.${toCamelCase(name)}`, { defaultValue: name })}
                     </Typography>

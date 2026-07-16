@@ -155,6 +155,8 @@
     "themeDescription": "Tema visual do sistema",
     "showNotifications": "Notificações",
     "showNotificationsDescription": "Exibir notificações no sistema",
+    "chatbotEnabled": "Chatbot",
+    "chatbotEnabledDescription": "Exibir o assistente de chat no sistema",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -168,6 +170,10 @@
       "SHOW_NOTIFICATIONS": {
         "true": "Ativadas",
         "false": "Desativadas"
+      },
+      "CHATBOT_ENABLED": {
+        "true": "Ativado",
+        "false": "Desativado"
       }
     }
   },

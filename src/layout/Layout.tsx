@@ -6,10 +6,13 @@ import Sidebar from "./sidebar/Sidebar";
 import Header from "./header/Header";
 import { ChatButton } from "./chatbot/ChatButton";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./sidebar/constants";
+import { usePreferences } from "@/features/preferences/usePreferences";
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(true);
   const drawerWidth = collapsed ? DRAWER_COLLAPSED_WIDTH : DRAWER_WIDTH;
+  const { preferences } = usePreferences();
+  const showChatbot = preferences.CHATBOT_ENABLED !== "false";
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
@@ -35,7 +38,7 @@ export default function Layout() {
           <Outlet />
         </Box>
 
-        <ChatButton />
+        {showChatbot && <ChatButton />}
       </Box>
     </Box>
   );
