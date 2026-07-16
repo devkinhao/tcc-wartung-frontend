@@ -9,6 +9,7 @@ export const paths = {
   customers: "/customers",
   customerDetails: (id: number | string) => `/customers/${id}`,
   customerInspectionsTab: (id: number | string) => `/customers/${id}?tab=inspections`,
+  customerAddressTab: (id: number | string) => `/customers/${id}?tab=address`,
   customerInspectionDetails: (customerId: number | string, id: number | string) =>
     `/customers/${customerId}/inspections/${id}`,
 

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
@@ -10,12 +9,10 @@ import { CustomersTable } from "../CustomersTable";
 import { Pagination } from "../../../components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
-import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
-import { paths } from "@/routes/paths";
+import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 
 export default function CustomersListPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const cities = useCities();
   const [isAddOpen, setIsAddOpen] = useState(false);
 
@@ -63,10 +60,6 @@ export default function CustomersListPage() {
         sortBy={sort.by}
         sortDir={sort.dir}
         onSort={sort.handle}
-        onRowClick={(id) => {
-          saveScrollPosition("customers-list.scrollY");
-          navigate(paths.customerDetails(id));
-        }}
       />
 
       <Box sx={{ mt: 1 }}>

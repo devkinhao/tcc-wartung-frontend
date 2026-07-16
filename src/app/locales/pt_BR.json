@@ -393,7 +393,8 @@
     "empty": "Nenhuma empresa encontrada.",
     "rowMenu": {
       "actionsLabel": "Ações",
-      "view": "Ver cliente",
+      "view": "Ver cadastro",
+      "address": "Ver endereço",
       "inspections": "Ver Inspeções"
     },
     "quickView": {

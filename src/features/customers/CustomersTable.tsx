@@ -1,11 +1,10 @@
-import { useState } from "react";
 import {
   Box, Chip, CircularProgress, TableBody,
   TableCell, TableHead, TableRow, Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Customer } from "./types/customersList";
-import { CustomersRowMenu } from "./CustomersRowMenu";
+import { CustomersRowActions } from "./CustomersRowActions";
 import { AbvtexChip } from "./components/AbvtexChip";
 import { SortableHeader } from "@/components/SortableHeader";
 import { ExpirationChip } from "@/components/ExpirationChip";
@@ -18,12 +17,10 @@ type Props = {
   sortBy: keyof Customer | null;
   sortDir: "asc" | "desc";
   onSort: (c: keyof Customer) => void;
-  onRowClick: (id: number) => void;
 };
 
-export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, onRowClick }: Props) {
+export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: Props) {
   const { t } = useTranslation();
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const alertDays = useAlertDays();
 
   const sharedSortProps = { sortBy, sortDir, onSort };
@@ -32,14 +29,14 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
     <DataTableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="20%" />
-            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="17%" />
-            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="15%" />
-            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="9%" />
-            <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="12%" />
-            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="12%" />
-            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="12%" />
-            <TableCell align="right" sx={{ width: "5%" }} />
+            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="18%" />
+            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="15%" />
+            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="13%" />
+            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="8%" />
+            <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="11%" />
+            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="10%" />
+            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="13%" />
+            <TableCell align="right" sx={{ width: "12%" }} />
           </TableRow>
         </TableHead>
 
@@ -61,7 +58,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
             </TableRow>
           ) : (
             customers.map((c) => (
-                <TableRow key={c.id} hover sx={{ cursor: "pointer" }} onClick={() => onRowClick(c.id)}>
+                <TableRow key={c.id}>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.legalName}>
                     {c.legalName}
                   </TableCell>
@@ -82,13 +79,8 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort, on
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                     <ExpirationChip date={c.nextExpirationDate} alertDays={alertDays} />
                   </TableCell>
-                  <TableCell align="right" onClick={(e) => e.stopPropagation()} sx={{ width: "5%" }}>
-                    <CustomersRowMenu
-                      customerId={c.id}
-                      open={openMenuId === c.id}
-                      onToggle={() => setOpenMenuId(openMenuId === c.id ? null : c.id)}
-                      onClose={() => setOpenMenuId(null)}
-                    />
+                  <TableCell align="right" sx={{ width: "12%" }}>
+                    <CustomersRowActions customerId={c.id} />
                   </TableCell>
                 </TableRow>
             ))
