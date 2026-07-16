@@ -53,6 +53,10 @@ export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChan
       sx={{
         borderTop: (t) => `1px solid ${t.palette.divider}`,
         mt: 2,
+        "& .MuiTablePagination-toolbar": { justifyContent: "center" },
+        // O MUI insere um spacer com flex:1 antes do conteúdo — sem removê-lo,
+        // ele ocupa todo o espaço livre e o justifyContent acima não faz nada.
+        "& .MuiTablePagination-spacer": { display: "none" },
       }}
     />
   );

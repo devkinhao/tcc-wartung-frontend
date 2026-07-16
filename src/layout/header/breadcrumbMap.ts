@@ -64,3 +64,9 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "nav.preferences" },
   ],
 };
+
+/**
+ * Rotas cuja própria página renderiza o breadcrumb (no lugar do título/subtítulo,
+ * que ficavam redundantes com ele) — o Header não desenha nada nessas rotas.
+ */
+export const PAGES_WITH_OWN_BREADCRUMB = new Set<string>([paths.customers]);

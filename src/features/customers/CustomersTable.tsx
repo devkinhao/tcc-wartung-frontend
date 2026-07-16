@@ -36,7 +36,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
             <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="11%" />
             <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="10%" />
             <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="13%" />
-            <TableCell align="right" sx={{ width: "12%" }} />
+            <TableCell align="center" sx={{ width: "12%" }}><b>{t("customers.table.actions")}</b></TableCell>
           </TableRow>
         </TableHead>
 

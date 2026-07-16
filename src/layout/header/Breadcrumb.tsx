@@ -3,7 +3,14 @@ import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { BreadcrumbItem } from "./breadcrumbMap";
 
-export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
+type Props = {
+  items: BreadcrumbItem[];
+  /** "large" estiliza o item atual (último) como um título de página — usado
+   * quando o breadcrumb substitui o título/subtítulo que ficava na própria página. */
+  size?: "default" | "large";
+};
+
+export function Breadcrumb({ items, size = "default" }: Props) {
   const navigate  = useNavigate();
   const { t }     = useTranslation();
 
@@ -28,6 +35,14 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
             >
               {label}
             </Link>
+          );
+        }
+
+        if (last && size === "large") {
+          return (
+            <Typography key={i} variant="h6" fontWeight={600} color="primary.main">
+              {label}
+            </Typography>
           );
         }
 

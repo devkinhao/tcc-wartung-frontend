@@ -387,7 +387,8 @@
       "isCustomer": "Kunde?",
       "abvtex": "ABVTEX",
       "activeInspections": "Aktive Insp.",
-      "nextExpiration": "Fälligkeit"
+      "nextExpiration": "Fälligkeit",
+      "actions": "Aktionen"
     },
     "loading": "Kunden werden geladen...",
     "empty": "Keine Unternehmen gefunden.",

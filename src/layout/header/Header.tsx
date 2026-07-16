@@ -3,7 +3,7 @@ import { AppBar, Box, Toolbar } from "@mui/material";
 import { Breadcrumb } from "./Breadcrumb";
 import { UserMenu } from "./UserMenu";
 import { NotificationsMenu } from "./NotificationsMenu";
-import { breadcrumbMap } from "./breadcrumbMap";
+import { breadcrumbMap, PAGES_WITH_OWN_BREADCRUMB } from "./breadcrumbMap";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
@@ -90,7 +90,7 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
       }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-        <Breadcrumb items={crumbs} />
+        <Box>{!PAGES_WITH_OWN_BREADCRUMB.has(pathname) && <Breadcrumb items={crumbs} />}</Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {showNotifications && <NotificationsMenu />}
           <UserMenu />

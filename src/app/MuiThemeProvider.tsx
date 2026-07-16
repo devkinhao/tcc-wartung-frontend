@@ -17,7 +17,7 @@ function buildTheme(mode: "light" | "dark") {
       success: { main: t.semantic.success },
       error: { main: t.semantic.danger },
     },
-    shape: { borderRadius: 12 },
+    shape: { borderRadius: 8 },
     typography: { fontFamily: ["Inter", "system-ui", "sans-serif"].join(",") },
     components: {
       MuiAppBar: { styleOverrides: { root: { backgroundColor: t.bg.header } } },

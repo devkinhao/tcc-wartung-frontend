@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,9 @@ import { Pagination } from "../../../components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../AddCompanyModal";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 
 export default function CustomersListPage() {
   const { t } = useTranslation();
@@ -22,27 +25,13 @@ export default function CustomersListPage() {
   useScrollRestoration("customers-list.scrollY", !loading);
 
   return (
-    <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems={{ sm: "center" }}
-        spacing={2}
-        sx={{ mb: 3 }}
-      >
-        <Box>
-          <Typography variant="h6" fontWeight={600} color="primary.main">
-            {t("customers.title")}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t("customers.description")}
-          </Typography>
-        </Box>
-
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-          {t("customers.actions.addCompany")}
-        </Button>
-      </Stack>
+    <Box>
+      <Box sx={{ mb: 2 }}>
+        <Breadcrumb items={breadcrumbMap[paths.customers]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("customers.description")}
+        </Typography>
+      </Box>
 
       <AddCompanyModal open={isAddOpen} onClose={() => setIsAddOpen(false)} cities={cities} />
 
@@ -52,6 +41,11 @@ export default function CustomersListPage() {
         cities={cities}
         hasActiveFilters={hasActiveFilters}
         onClear={clearFilters}
+        action={
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+            {t("customers.actions.addCompany")}
+          </Button>
+        }
       />
 
       <CustomersTable
@@ -71,6 +65,6 @@ export default function CustomersListPage() {
           onPageSizeChange={pagination.setPageSize}
         />
       </Box>
-    </Paper>
+    </Box>
   );
 }
