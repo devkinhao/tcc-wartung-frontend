@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
@@ -51,6 +52,15 @@ export function CustomersByCityChart({ data, loading }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
 
+  // Força uma remontagem única após o layout estabilizar — o ResponsiveContainer
+  // às vezes mede o container antes do reflow final (ex: fontes/grid ainda
+  // ajustando), e o Pie do recharts não recalcula a geometria sozinho depois.
+  const [renderKey, setRenderKey] = useState(0);
+  useEffect(() => {
+    const id = setTimeout(() => setRenderKey((k) => k + 1), 150);
+    return () => clearTimeout(id);
+  }, []);
+
   if (loading || !data) {
     return <Skeleton variant="rounded" height={320} />;
   }
@@ -79,7 +89,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
             </Typography>
           </Box>
         ) : (
-          <ResponsiveContainer width="100%" height={260} minWidth={0}>
+          <ResponsiveContainer key={renderKey} width="100%" height={260} minWidth={0} debounce={350}>
             <PieChart>
               <Pie
                 data={series}

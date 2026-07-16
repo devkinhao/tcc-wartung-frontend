@@ -73,7 +73,7 @@ export function ExpirationsByMonthChart({ data, loading }: Props) {
             </Typography>
           </Box>
         ) : (
-          <ResponsiveContainer width="100%" height={240} minWidth={0}>
+          <ResponsiveContainer width="100%" height={240} minWidth={0} debounce={350}>
             <BarChart data={series} barCategoryGap="35%">
               <CartesianGrid
                 strokeDasharray="3 3"

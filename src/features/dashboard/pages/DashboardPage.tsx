@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const alertDays = useAlertDays();
 
   return (
-    <Box sx={{ maxWidth: 1200, width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 3 }}>
         {t("dashboard.title")}
       </Typography>

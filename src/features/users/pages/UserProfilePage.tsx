@@ -31,6 +31,9 @@ import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 
 // Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
 // @Email) — feedback instantâneo, sem round-trip.
@@ -190,9 +193,9 @@ export default function UserProfile() {
           bgcolor: "background.paper",
         }}
       >
-        <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 3 }}>
-          {t("userProfile.title")}
-        </Typography>
+        <Box sx={{ mb: 3 }}>
+          <Breadcrumb items={breadcrumbMap[paths.userProfile]} size="large" />
+        </Box>
 
         {/* Avatar + Status */}
         <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }} sx={{ mb: 3 }}>

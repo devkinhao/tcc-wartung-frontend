@@ -7,6 +7,9 @@ import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { toCamelCase } from "@/utils/strings";
 import { digitsOnly } from "@/utils/masks";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 import { getConfigurations, updateConfigurations } from "../api/configurations.api";
 
 // Configurações cujo VAL_CONFIG é semanticamente numérico (ex: quantidade de dias).
@@ -71,13 +74,12 @@ export default function ConfigurationsPage() {
 
   return (
     <Paper elevation={1} sx={{ maxWidth: 896, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 0.5 }}>
-        {t("configurations.title")}
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {t("configurations.description")}
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Breadcrumb items={breadcrumbMap[paths.configurations]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("configurations.description")}
+        </Typography>
+      </Box>
 
       <Stack spacing={2}>
         {data.map((config) => {

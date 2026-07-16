@@ -22,6 +22,9 @@ import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { useNotify } from "@/hooks/useNotify";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import {
   getCompany,
@@ -214,9 +217,7 @@ export default function CompanyPage() {
     <Paper elevation={1} sx={{ maxWidth: 1100, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
       {/* Cabeçalho com título e botões Edit/Cancel/Save */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
-        <Typography variant="h6" fontWeight={600} color="primary.main">
-          {t("company.title")}
-        </Typography>
+        <Breadcrumb items={breadcrumbMap[paths.company]} size="large" />
 
         <EditableCardHeader
           title=""

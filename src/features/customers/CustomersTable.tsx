@@ -79,7 +79,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                     <ExpirationChip date={c.nextExpirationDate} alertDays={alertDays} />
                   </TableCell>
-                  <TableCell align="right" sx={{ width: "12%" }}>
+                  <TableCell align="center" sx={{ width: "12%" }}>
                     <CustomersRowActions customerId={c.id} />
                   </TableCell>
                 </TableRow>

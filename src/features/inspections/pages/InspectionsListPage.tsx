@@ -34,6 +34,8 @@ import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { AddInspectionModal } from "../components/AddInspectionModal";
 import {
   listAllInspections,
@@ -105,9 +107,7 @@ export default function InspectionsListPage() {
         sx={{ mb: 3 }}
       >
         <Box>
-          <Typography variant="h6" fontWeight={600} color="primary.main">
-            {t("inspections.title")}
-          </Typography>
+          <Breadcrumb items={breadcrumbMap[paths.inspections]} size="large" />
           <Typography variant="body2" color="text.secondary">
             {t("inspections.description")}
           </Typography>

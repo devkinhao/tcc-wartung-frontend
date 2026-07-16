@@ -19,6 +19,9 @@ import { useTranslation } from "react-i18next";
 
 import { useNotify } from "@/hooks/useNotify";
 import { useCities } from "@/features/customers/hooks/useCities";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 import {
   generateCompanyReport,
   generateExpiringInspectionsReport,
@@ -80,12 +83,12 @@ export default function ReportsPage() {
       elevation={1}
       sx={{ maxWidth: 760, p: 3, borderRadius: 2, bgcolor: "background.paper" }}
     >
-      <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 0.5 }}>
-        {t("reports.title")}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {t("reports.description")}
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Breadcrumb items={breadcrumbMap[paths.reports]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("reports.description")}
+        </Typography>
+      </Box>
 
       <Stack spacing={2.5}>
 

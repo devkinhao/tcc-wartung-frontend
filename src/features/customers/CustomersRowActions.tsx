@@ -22,7 +22,7 @@ export function CustomersRowActions({ customerId }: Props) {
   }
 
   return (
-    <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="flex-end">
+    <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
       <Tooltip title={t("customers.rowMenu.view")}>
         <IconButton
           size="small"

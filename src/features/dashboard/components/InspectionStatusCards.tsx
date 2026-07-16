@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -55,6 +56,15 @@ function StatCard({ label, value, color, icon, total }: StatCardProps) {
 export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
+
+  // Força uma remontagem única após o layout estabilizar — o ResponsiveContainer
+  // às vezes mede o container antes do reflow final (ex: fontes/grid ainda
+  // ajustando), e o Pie do recharts não recalcula a geometria sozinho depois.
+  const [renderKey, setRenderKey] = useState(0);
+  useEffect(() => {
+    const id = setTimeout(() => setRenderKey((k) => k + 1), 150);
+    return () => clearTimeout(id);
+  }, []);
 
   if (loading || !data) {
     return (
@@ -126,7 +136,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
           {/* Donut */}
           {total > 0 && (
             <Box sx={{ width: { xs: "100%", md: 200 }, height: 160, minWidth: 0, flexShrink: 0 }}>
-              <ResponsiveContainer width="100%" height={160} minWidth={0}>
+              <ResponsiveContainer key={renderKey} width="100%" height={160} minWidth={0} debounce={350}>
                 <PieChart>
                   <Pie
                     data={pieData}

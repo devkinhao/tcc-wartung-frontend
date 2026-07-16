@@ -24,6 +24,9 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { PreferenceName } from "../types/Preferences";
 import { toCamelCase } from "@/utils/strings";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 
 // ── Ícones por opção ────────────────────────────────────────────────────────
 
@@ -106,13 +109,12 @@ export default function UserPreferencesPage() {
 
   return (
     <Paper elevation={1} sx={{ maxWidth: 896, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 0.5 }}>
-        {t("preferences.title")}
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {t("preferences.description")}
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Breadcrumb items={breadcrumbMap[paths.userPreferences]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("preferences.description")}
+        </Typography>
+      </Box>
 
       <Stack spacing={2}>
         {sortedEntries.map(([name, values]) => {

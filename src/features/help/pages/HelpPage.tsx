@@ -9,6 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 
 export default function HelpPage() {
   const { t } = useTranslation();
@@ -23,13 +26,12 @@ export default function HelpPage() {
         bgcolor: "background.paper",
       }}
     >
-      <Typography variant="h6" fontWeight={600} color="text.primary" sx={{ mb: 0.5 }}>
-        {t("help.title")}
-      </Typography>
-
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        {t("help.description")}
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Breadcrumb items={breadcrumbMap[paths.help]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("help.description")}
+        </Typography>
+      </Box>
 
       <Stack spacing={2}>
         <Card

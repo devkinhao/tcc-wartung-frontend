@@ -63,10 +63,28 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "nav.myProfile",   path: paths.userProfile },
     { label: "nav.preferences" },
   ],
+
+  [paths.serviceTypes]: [
+    { label: "nav.home",         path: paths.dashboard },
+    { label: "nav.serviceTypes" },
+  ],
 };
 
 /**
  * Rotas cuja própria página renderiza o breadcrumb (no lugar do título/subtítulo,
  * que ficavam redundantes com ele) — o Header não desenha nada nessas rotas.
  */
-export const PAGES_WITH_OWN_BREADCRUMB = new Set<string>([paths.customers]);
+export const PAGES_WITH_OWN_BREADCRUMB = new Set<string>([
+  paths.dashboard,
+  paths.customers,
+  paths.inspections,
+  paths.notifications,
+  paths.reports,
+  paths.company,
+  paths.users,
+  paths.configurations,
+  paths.help,
+  paths.userProfile,
+  paths.userPreferences,
+  paths.serviceTypes,
+]);

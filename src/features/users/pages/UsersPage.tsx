@@ -29,6 +29,9 @@ import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
 import { SortableHeader } from "@/components/SortableHeader";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 
 export default function UsersPage() {
   const { t } = useTranslation();
@@ -85,9 +88,7 @@ export default function UsersPage() {
         sx={{ mb: 2 }}
       >
         <Box>
-          <Typography variant="h6" fontWeight={600} color="text.primary">
-            {t("users.title")}
-          </Typography>
+          <Breadcrumb items={breadcrumbMap[paths.users]} size="large" />
           <Typography variant="body2" color="text.secondary">
             {t("users.description")}
           </Typography>
