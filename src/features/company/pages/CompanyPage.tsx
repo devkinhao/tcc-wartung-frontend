@@ -214,7 +214,7 @@ export default function CompanyPage() {
   } as const;
 
   return (
-    <Paper elevation={1} sx={{ maxWidth: 1100, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
       {/* Cabeçalho com título e botões Edit/Cancel/Save */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.company]} size="large" />
@@ -232,7 +232,7 @@ export default function CompanyPage() {
 
       {/* Dados da empresa */}
       <Card sx={{ ...cardSx, mb: 3 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.fields.fantasyName")}
@@ -317,7 +317,7 @@ export default function CompanyPage() {
       </Typography>
 
       <Card sx={cardSx}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.address.fields.street")}

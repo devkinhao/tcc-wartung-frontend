@@ -6,12 +6,13 @@ export type BreadcrumbItem = {
 };
 
 /**
- * Mapa de breadcrumbs para rotas estáticas.
- * Rotas dinâmicas (/customers/:id, /customers/:id/inspections/:id)
- * são geradas em Header.tsx com dados reais das queries.
+ * Mapa de breadcrumbs para rotas estáticas — cada página renderiza o próprio
+ * breadcrumb (no lugar do título/subtítulo, que ficavam redundantes com ele).
+ * Rotas dinâmicas (/customers/:id, /customers/:id/inspections/:id) montam os
+ * itens na própria página, com dados reais das queries (nome do cliente/inspeção).
  */
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
-  [paths.dashboard]: [{ label: "nav.home" }],
+  [paths.dashboard]: [{ label: "nav.dashboard" }],
 
   [paths.customers]: [
     { label: "nav.home",         path: paths.dashboard },
@@ -69,22 +70,3 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "nav.serviceTypes" },
   ],
 };
-
-/**
- * Rotas cuja própria página renderiza o breadcrumb (no lugar do título/subtítulo,
- * que ficavam redundantes com ele) — o Header não desenha nada nessas rotas.
- */
-export const PAGES_WITH_OWN_BREADCRUMB = new Set<string>([
-  paths.dashboard,
-  paths.customers,
-  paths.inspections,
-  paths.notifications,
-  paths.reports,
-  paths.company,
-  paths.users,
-  paths.configurations,
-  paths.help,
-  paths.userProfile,
-  paths.userPreferences,
-  paths.serviceTypes,
-]);

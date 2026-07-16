@@ -55,6 +55,8 @@ import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
 import { DocxPreview } from "@/components/DocxPreview";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -243,6 +245,19 @@ export default function InspectionDetailsPage() {
     ? t("inspectionDetails.titleWithService", { service: view.serviceType.name })
     : t("inspectionDetails.title");
 
+  const breadcrumbItems: BreadcrumbItem[] = customerId
+    ? [
+        { label: "nav.home", path: paths.dashboard },
+        { label: "nav.customersList", path: paths.customers },
+        { label: view.customer?.legalName ?? t("nav.customerDetails"), path: paths.customerInspectionsTab(customerId) },
+        { label: "nav.inspectionDetailsPage" },
+      ]
+    : [
+        { label: "nav.home", path: paths.dashboard },
+        { label: "nav.inspectionsList", path: paths.inspections },
+        { label: "nav.inspectionDetailsPage" },
+      ];
+
   const handleDownload = async (docId: number, name: string) => {
     try {
       const blob = await downloadInspectionDocument(inspectionId, docId);
@@ -307,7 +322,7 @@ export default function InspectionDetailsPage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 1200 }}>
+    <Box sx={{ width: "100%" }}>
 
       {/* Menu de ações por documento (3 pontinhos) */}
       <Menu anchorEl={docMenuAnchor} open={Boolean(docMenuAnchor)} onClose={closeDocMenu}>
@@ -412,6 +427,10 @@ export default function InspectionDetailsPage() {
         </DialogActions>
       </Dialog>
 
+      <Box sx={{ mb: 1 }}>
+        <Breadcrumb items={breadcrumbItems} size="large" />
+      </Box>
+
       <Paper elevation={1} sx={{ borderRadius: 2, mb: 2 }}>
         <Box sx={{ px: 2, py: 1.5 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
@@ -499,7 +518,7 @@ export default function InspectionDetailsPage() {
               onSave={handleSave}
             />
 
-            <Stack spacing={2}>
+            <Stack spacing={2} sx={{ maxWidth: 1400 }}>
               <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }}>
                 <TextField
                   label={t("inspectionDetails.fields.service")}
@@ -693,38 +712,40 @@ export default function InspectionDetailsPage() {
 
             <Divider sx={{ mb: 2 }} />
 
-            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-              <TextField
-                label={t("inspectionDetails.audit.createdAt")}
-                size="small"
-                fullWidth
-                value={formatDateTimeBR(view.createdAt)}
-                disabled
-              />
-              <TextField
-                label={t("inspectionDetails.audit.createdBy")}
-                size="small"
-                fullWidth
-                value={view.createdByUsername ?? "—"}
-                disabled
-              />
-            </Stack>
+            <Stack sx={{ maxWidth: 1400 }}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                <TextField
+                  label={t("inspectionDetails.audit.createdAt")}
+                  size="small"
+                  fullWidth
+                  value={formatDateTimeBR(view.createdAt)}
+                  disabled
+                />
+                <TextField
+                  label={t("inspectionDetails.audit.createdBy")}
+                  size="small"
+                  fullWidth
+                  value={view.createdByUsername ?? "—"}
+                  disabled
+                />
+              </Stack>
 
-            <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 2 }}>
-              <TextField
-                label={t("inspectionDetails.audit.updatedAt")}
-                size="small"
-                fullWidth
-                value={formatDateTimeBR(view.updatedAt)}
-                disabled
-              />
-              <TextField
-                label={t("inspectionDetails.audit.updatedBy")}
-                size="small"
-                fullWidth
-                value={view.updatedByUsername ?? "—"}
-                disabled
-              />
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 2 }}>
+                <TextField
+                  label={t("inspectionDetails.audit.updatedAt")}
+                  size="small"
+                  fullWidth
+                  value={formatDateTimeBR(view.updatedAt)}
+                  disabled
+                />
+                <TextField
+                  label={t("inspectionDetails.audit.updatedBy")}
+                  size="small"
+                  fullWidth
+                  value={view.updatedByUsername ?? "—"}
+                  disabled
+                />
+              </Stack>
             </Stack>
           </CardContent>
         </Card>

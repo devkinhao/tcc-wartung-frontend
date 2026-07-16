@@ -86,7 +86,7 @@ export function CustomerGeneralTab({
             onSave={onSaveGeneral}
           />
 
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
             <Grid item xs={12} md={2}>
               <TextField
                 label={t("customerDetails.general.fields.code")}
@@ -187,7 +187,7 @@ export function CustomerGeneralTab({
             onSave={onSaveContacts}
           />
 
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
             <Grid item xs={12} md={4}>
               <MaskedTextField
                 mask="phone"

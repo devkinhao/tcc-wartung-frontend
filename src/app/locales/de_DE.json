@@ -66,6 +66,7 @@
   },
   "nav": {
     "home": "Startseite",
+    "dashboard": "Dashboard",
     "customersList": "Unternehmen",
     "inspections": "Inspektionen",
     "inspectionsList": "Inspektionen",
@@ -79,7 +80,9 @@
     "help": "Hilfe",
     "myProfile": "Mein Profil",
     "preferences": "Einstellungen",
-    "customerDetails": "Kundendetails"
+    "customerDetails": "Kundendetails",
+    "companyDetails": "Unternehmensdetails",
+    "inspectionDetailsPage": "Inspektionsdetails"
   },
   "sidebar": {
     "actions": {
@@ -763,6 +766,9 @@
     "actions": {
       "addInspection": "Neue Inspektion"
     },
+    "rowActions": {
+      "view": "Inspektion ansehen"
+    },
     "addModal": {
       "title": "Neue Inspektion",
       "fields": {
@@ -794,7 +800,8 @@
       "notes": "Notizen",
       "inspectionDate": "Inspektionsdatum",
       "expirationDate": "Ablaufdatum",
-      "status": "Status"
+      "status": "Status",
+      "actions": "Aktionen"
     }
   },
   "chatbot": {

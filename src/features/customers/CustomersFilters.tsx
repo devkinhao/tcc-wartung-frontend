@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
-import { tokens } from "@/styles/tokens";
 
 export type CustomerFilterValues = {
   search: string;
@@ -58,7 +57,7 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           placeholder={t("customers.filters.searchPlaceholder")}
           value={values.search}
           onChange={(e) => onChange("search", e.target.value)}
-          sx={{ minWidth: { xs: "100%", md: 240 }, backgroundColor: tokens.light.bg.sidebar }}
+          sx={{ minWidth: { xs: "100%", md: 240 } }}
         />
 
         <FormControl size="small" sx={{ width: { xs: "100%", md: 200 } }}>
@@ -68,7 +67,6 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
             label={t("customers.filters.city")}
             value={values.city}
             onChange={(e) => onChange("city", String(e.target.value))}
-            sx={{backgroundColor: tokens.light.bg.sidebar }}
           >
             <MenuItem value="">{t("customers.filters.allCities")}</MenuItem>
             {cities.map((c) => (
@@ -84,7 +82,6 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
             label={t("customers.filters.isCustomer")}
             value={values.isCustomer}
             onChange={(e) => onChange("isCustomer", String(e.target.value))}
-            sx={{backgroundColor: tokens.light.bg.sidebar }}
           >
             <MenuItem value="">{t("customers.filters.all")}</MenuItem>
             <MenuItem value="true">{t("common.yes")}</MenuItem>
@@ -99,7 +96,6 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
             label={t("customers.filters.month")}
             value={values.month}
             onChange={(e) => onChange("month", String(e.target.value))}
-            sx={{backgroundColor: tokens.light.bg.sidebar }}
           >
             <MenuItem value="">{t("customers.filters.allMonths")}</MenuItem>
             {MONTHS.map((name, i) => (

@@ -1,9 +1,11 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Box, Grid } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 import { qk } from "@/api/keys";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
 import { getDashboard } from "../api/dashboard.api";
 import { InspectionStatusCards } from "../components/InspectionStatusCards";
 import { ExpirationsByMonthChart } from "../components/ExpirationsByMonthChart";
@@ -11,8 +13,6 @@ import { ServiceRankingChart } from "../components/ServiceRankingChart";
 import { CustomersByCityChart } from "../components/CustomersByCityChart";
 
 export default function DashboardPage() {
-  const { t } = useTranslation();
-
   const { data, isLoading } = useQuery({
     queryKey: qk.dashboard(),
     queryFn: getDashboard,
@@ -23,9 +23,9 @@ export default function DashboardPage() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Typography variant="h6" fontWeight={600} color="primary.main" sx={{ mb: 3 }}>
-        {t("dashboard.title")}
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Breadcrumb items={breadcrumbMap[paths.dashboard]} size="large" />
+      </Box>
 
       <Grid container spacing={2.5}>
 

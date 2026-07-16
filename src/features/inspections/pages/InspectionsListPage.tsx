@@ -3,15 +3,12 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  Card,
   Chip,
   CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
-  Menu,
   MenuItem,
-  Paper,
   Select,
   Stack,
   TableBody,
@@ -19,10 +16,12 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
@@ -57,14 +56,6 @@ export default function InspectionsListPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  // Reservado para as ações reais do menu (ainda não definidas) — só o setter é usado por enquanto.
-  const [_menuRowId, setMenuRowId] = useState<number | null>(null);
-
-  function closeRowMenu() {
-    setMenuAnchor(null);
-    setMenuRowId(null);
-  }
 
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionsList({ ...filters, page, pageSize, sortBy, sortDir }),
@@ -98,40 +89,37 @@ export default function InspectionsListPage() {
   }
 
   return (
-    <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems={{ sm: "center" }}
-        spacing={2}
-        sx={{ mb: 3 }}
-      >
-        <Box>
-          <Breadcrumb items={breadcrumbMap[paths.inspections]} size="large" />
-          <Typography variant="body2" color="text.secondary">
-            {t("inspections.description")}
-          </Typography>
-        </Box>
-
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-          {t("inspections.actions.addInspection")}
-        </Button>
-      </Stack>
+    <Box>
+      <Box sx={{ mb: 2 }}>
+        <Breadcrumb items={breadcrumbMap[paths.inspections]} size="large" />
+        <Typography variant="body2" color="text.secondary">
+          {t("inspections.description")}
+        </Typography>
+      </Box>
 
       <AddInspectionModal open={isAddOpen} onClose={() => setIsAddOpen(false)} />
 
       {/* Filtros */}
-      <Card variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3 }}>
-        <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }}>
+      <Box sx={{ mb: 2 }}>
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          spacing={2}
+          alignItems={{ md: "center" }}
+          flexWrap="wrap"
+          sx={{
+            // Deixa a altura dos campos igual à dos botões ao lado (36.5px)
+            "& .MuiOutlinedInput-input": { paddingTop: "6.75px", paddingBottom: "6.75px" },
+          }}
+        >
           <TextField
             size="small"
             label={t("inspections.filters.search")}
             value={filters.search}
             onChange={(e) => setFilter("search", e.target.value)}
-            sx={{ minWidth: 300 }}
+            sx={{ minWidth: { xs: "100%", md: 240 } }}
           />
 
-          <FormControl size="small" sx={{ minWidth: 220 }}>
+          <FormControl size="small" sx={{ width: { xs: "100%", md: 280 } }}>
             <InputLabel>{t("inspections.filters.status")}</InputLabel>
             <Select
               label={t("inspections.filters.status")}
@@ -145,13 +133,22 @@ export default function InspectionsListPage() {
             </Select>
           </FormControl>
 
-          <Box sx={{ flex: 1 }} />
-
-          <Button variant="outlined" onClick={clearFilters} disabled={!hasActiveFilters}>
+          <Button
+            variant="text"
+            startIcon={<FilterAltOffIcon />}
+            onClick={clearFilters}
+            disabled={!hasActiveFilters}
+          >
             {t("inspections.filters.clear")}
           </Button>
+
+          <Box sx={{ flex: 1 }} />
+
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+            {t("inspections.actions.addInspection")}
+          </Button>
         </Stack>
-      </Card>
+      </Box>
 
       {/* Tabela */}
       <DataTableContainer>
@@ -162,7 +159,7 @@ export default function InspectionsListPage() {
               <TableCell sx={{ width: "29%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspections.table.notes")}</b></TableCell>
               <SortableHeader label={t("inspections.table.customer")} column="customer.legalName" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="26%" />
               <SortableHeader label={t("inspections.table.expirationDate")} column="expirationDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="12%" />
-              <TableCell align="right" sx={{ width: "5%" }} />
+              <TableCell align="center" sx={{ width: "5%" }}><b>{t("inspections.table.actions")}</b></TableCell>
             </TableRow>
           </TableHead>
 
@@ -188,15 +185,7 @@ export default function InspectionsListPage() {
               </TableRow>
             ) : items.map((item) => {
               return (
-                <TableRow
-                  key={item.id}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => {
-                    saveScrollPosition("inspections-list.scrollY");
-                    navigate(paths.inspectionDetails(item.id));
-                  }}
-                >
+                <TableRow key={item.id}>
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.inspectionDate)}</TableCell>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.serviceTypeName}>
                     {item.serviceTypeName}
@@ -218,27 +207,25 @@ export default function InspectionsListPage() {
                   <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <ExpirationChip date={item.expirationDate} alertDays={alertDays} />
                   </TableCell>
-                  <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <IconButton
-                      size="small"
-                      aria-label="Ações"
-                      onClick={(e) => {
-                        setMenuAnchor(e.currentTarget);
-                        setMenuRowId(item.id);
-                      }}
-                    >
-                      <MoreVertIcon fontSize="small" />
-                    </IconButton>
+                  <TableCell align="center">
+                    <Tooltip title={t("inspections.rowActions.view")}>
+                      <IconButton
+                        size="small"
+                        aria-label={t("inspections.rowActions.view")}
+                        onClick={() => {
+                          saveScrollPosition("inspections-list.scrollY");
+                          navigate(paths.inspectionDetails(item.id));
+                        }}
+                      >
+                        <VisibilityIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
       </DataTableContainer>
-
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
-        <MenuItem onClick={closeRowMenu}>Teste</MenuItem>
-      </Menu>
 
       <Box sx={{ mt: 1 }}>
         <Pagination
@@ -252,6 +239,6 @@ export default function InspectionsListPage() {
           }}
         />
       </Box>
-    </Paper>
+    </Box>
   );
 }

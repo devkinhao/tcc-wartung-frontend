@@ -37,6 +37,8 @@ import type {
 } from "../api/customers.detail.api";
 import { paths } from "@/routes/paths";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
@@ -92,8 +94,17 @@ export default function CustomerDetailsPage() {
     saveGeneral();
   };
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: "nav.home", path: paths.dashboard },
+    { label: "nav.customersList", path: paths.customers },
+    { label: "nav.companyDetails" },
+  ];
+
   return (
-    <Box sx={{ maxWidth: 1200 }}>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ mb: 1 }}>
+        <Breadcrumb items={breadcrumbItems} size="large" />
+      </Box>
 
       {/* Aviso: desativar o cliente desativa automaticamente as inspeções ativas dele */}
       <Dialog open={confirmDeactivateOpen} onClose={() => setConfirmDeactivateOpen(false)} maxWidth="xs" fullWidth>

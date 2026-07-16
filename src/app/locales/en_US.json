@@ -66,6 +66,7 @@
   },
   "nav": {
     "home": "Home",
+    "dashboard": "Dashboard",
     "customersList": "Companies",
     "inspections": "Inspections",
     "inspectionsList": "Inspections",
@@ -79,7 +80,9 @@
     "help": "Help",
     "myProfile": "My Profile",
     "preferences": "Preferences",
-    "customerDetails": "Customer Details"
+    "customerDetails": "Customer Details",
+    "companyDetails": "Company Details",
+    "inspectionDetailsPage": "Inspection Details"
   },
   "sidebar": {
     "actions": {
@@ -763,6 +766,9 @@
     "actions": {
       "addInspection": "New inspection"
     },
+    "rowActions": {
+      "view": "View inspection"
+    },
     "addModal": {
       "title": "New inspection",
       "fields": {
@@ -794,7 +800,8 @@
       "notes": "Notes",
       "inspectionDate": "Inspection Date",
       "expirationDate": "Expiration",
-      "status": "Status"
+      "status": "Status",
+      "actions": "Actions"
     }
   },
   "chatbot": {
