@@ -1,6 +1,7 @@
 import { Chip } from "@mui/material";
 import { EXPIRATION_COLORS, getExpirationStatus } from "@/utils/expirationStatus";
 import { formatDateBR } from "@/utils/date";
+import { typography } from "@/styles/typography";
 
 type Props = {
   date: string | null | undefined;
@@ -27,7 +28,7 @@ export function ExpirationChip({ date, alertDays, active = true }: Props) {
       sx={{
         bgcolor: color,
         color: status === "expired" ? "#fff" : "#000",
-        fontWeight: 600,
+        fontWeight: typography.weight.semibold,
       }}
     />
   );

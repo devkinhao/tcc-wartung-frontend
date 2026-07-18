@@ -200,7 +200,7 @@ export default function UsersPage() {
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
         <DialogTitle>{t("users.confirmDelete.title")}</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography variant="body2">
             {t("users.confirmDelete.message", { name: deleteTarget?.fullName ?? "" })}
           </Typography>
         </DialogContent>

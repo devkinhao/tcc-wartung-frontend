@@ -27,6 +27,7 @@ import {
   type NotificationResponseDTO,
 } from "../api/notifications.api";
 import { resolveNotificationLink } from "../utils";
+import { typography } from "@/styles/typography";
 
 type FilterKey = "unread" | "all";
 
@@ -157,7 +158,10 @@ export default function NotificationsPage() {
                 }}
               />
               <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Typography variant="body2" fontWeight={n.read ? 400 : 700}>
+                <Typography
+                  variant="body2"
+                  fontWeight={n.read ? typography.weight.regular : typography.weight.bold}
+                >
                   {n.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

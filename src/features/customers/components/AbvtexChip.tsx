@@ -1,6 +1,7 @@
 import { Chip, useTheme } from "@mui/material";
 import type { AbvtexSealType } from "../types/abvtexSeal";
 import { useTranslation } from "react-i18next";
+import { typography } from "@/styles/typography";
 
 type Props = {
   seal: AbvtexSealType;
@@ -19,7 +20,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
           sx: {
             bgcolor: theme.palette.mode === "dark" ? "grey.700" : "grey.200",
             color: theme.palette.mode === "dark" ? "grey.100" : "grey.800",
-            fontWeight: 600,
+            fontWeight: typography.weight.semibold,
           },
         };
 
@@ -29,7 +30,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
           sx: {
             bgcolor: "#B87333",
             color: "#fff",
-            fontWeight: 600,
+            fontWeight: typography.weight.semibold,
           },
         };
 
@@ -39,7 +40,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
           sx: {
             bgcolor: "#CD7F32",
             color: "#fff",
-            fontWeight: 600,
+            fontWeight: typography.weight.semibold,
           },
         };
 
@@ -49,7 +50,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
           sx: {
             bgcolor: "#C0C0C0",
             color: "#000",
-            fontWeight: 600,
+            fontWeight: typography.weight.semibold,
           },
         };
 
@@ -59,7 +60,7 @@ export function AbvtexChip({ seal, size = "small" }: Props) {
           sx: {
             bgcolor: "#D4AF37",
             color: "#000",
-            fontWeight: 600,
+            fontWeight: typography.weight.semibold,
           },
         };
 

@@ -230,7 +230,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
         {step === 2 ? (
           <Box sx={{ textAlign: "center", py: 4 }}>
-            <Typography fontWeight={600} color="text.primary">
+            <Typography variant="subtitle1" color="text.primary">
               {t("customers.addModal.success.title")}
             </Typography>
 

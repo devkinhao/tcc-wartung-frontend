@@ -178,7 +178,7 @@ export default function ServiceTypesPage() {
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
         <DialogTitle>{t("serviceTypes.confirmDelete.title")}</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography variant="body2">
             {t("serviceTypes.confirmDelete.message", { name: deleteTarget?.name ?? "" })}
           </Typography>
         </DialogContent>

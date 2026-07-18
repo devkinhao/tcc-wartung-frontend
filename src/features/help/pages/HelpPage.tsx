@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
+import { typography } from "@/styles/typography";
 
 export default function HelpPage() {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ export default function HelpPage() {
           }}
         >
           <CardContent>
-            <Typography variant="subtitle1" fontWeight={600} color="text.primary" gutterBottom>
+            <Typography variant="subtitle1" color="text.primary" gutterBottom>
               {t("help.faq.title")}
             </Typography>
 
@@ -51,7 +52,7 @@ export default function HelpPage() {
 
             <Stack spacing={1.25}>
               <Box>
-                <Typography fontWeight={600} variant="body2" color="text.primary">
+                <Typography fontWeight={typography.weight.semibold} variant="body2" color="text.primary">
                   {t("help.faq.q1.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -60,7 +61,7 @@ export default function HelpPage() {
               </Box>
 
               <Box>
-                <Typography fontWeight={600} variant="body2" color="text.primary">
+                <Typography fontWeight={typography.weight.semibold} variant="body2" color="text.primary">
                   {t("help.faq.q2.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -69,7 +70,7 @@ export default function HelpPage() {
               </Box>
 
               <Box>
-                <Typography fontWeight={600} variant="body2" color="text.primary">
+                <Typography fontWeight={typography.weight.semibold} variant="body2" color="text.primary">
                   {t("help.faq.q3.question")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -89,7 +90,7 @@ export default function HelpPage() {
           }}
         >
           <CardContent>
-            <Typography variant="subtitle1" fontWeight={600} color="text.primary" gutterBottom>
+            <Typography variant="subtitle1" color="text.primary" gutterBottom>
               {t("help.support.title")}
             </Typography>
 

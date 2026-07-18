@@ -6,6 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useTheme, lighten } from "@mui/material/styles";
 import type { ServiceRankingItem } from "../api/dashboard.api";
+import { typography } from "@/styles/typography";
 
 type Props = {
   data: ServiceRankingItem[] | undefined;
@@ -50,7 +51,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
       }}
     >
       <CardContent>
-        <Typography variant="subtitle2" fontWeight={700} color="text.primary" gutterBottom>
+        <Typography variant="subtitle2" color="text.primary" gutterBottom>
           {t("dashboard.cards.topRequestedServices.title")}
         </Typography>
 
@@ -76,7 +77,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
               <XAxis
                 type="number"
                 allowDecimals={false}
-                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -84,7 +85,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
                 type="category"
                 dataKey="shortName"
                 width={130}
-                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -106,7 +107,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
                       <Typography variant="caption" color="text.secondary" display="block">
                         {item?.serviceName}
                       </Typography>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={typography.weight.semibold}>
                         {payload[0].value} {t("dashboard.cards.topRequestedServices.tooltipLabel")}
                       </Typography>
                     </Box>

@@ -39,6 +39,7 @@ import { paths } from "@/routes/paths";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
+import { typography } from "@/styles/typography";
 
 type TabKey = "general" | "address" | "inspections" | "movements";
 
@@ -110,7 +111,7 @@ export default function CustomerDetailsPage() {
       <Dialog open={confirmDeactivateOpen} onClose={() => setConfirmDeactivateOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>{t("customerDetails.confirmDeactivate.title")}</DialogTitle>
         <DialogContent>
-          <Typography>{t("customerDetails.confirmDeactivate.message")}</Typography>
+          <Typography variant="body2">{t("customerDetails.confirmDeactivate.message")}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmDeactivateOpen(false)}>{t("common.actions.cancel")}</Button>
@@ -131,7 +132,7 @@ export default function CustomerDetailsPage() {
       <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>{t("customerDetails.confirmDelete.title")}</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography variant="body2">
             {t("customerDetails.confirmDelete.message", { name: view.legalName })}
           </Typography>
         </DialogContent>
@@ -160,7 +161,7 @@ export default function CustomerDetailsPage() {
                   aria-label={t("customerDetails.actions.back")}>
                   <ArrowBackIcon fontSize="small" />
                 </IconButton>
-                <Typography fontWeight={700} color="text.primary" noWrap>
+                <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap>
                   {view.legalName}
                 </Typography>
               </Stack>

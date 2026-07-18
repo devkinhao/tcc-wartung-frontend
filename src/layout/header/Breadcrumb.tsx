@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { BreadcrumbItem } from "./breadcrumbMap";
+import { typography } from "@/styles/typography";
 
 type Props = {
   items: BreadcrumbItem[];
@@ -40,7 +41,7 @@ export function Breadcrumb({ items, size = "default" }: Props) {
 
         if (last && size === "large") {
           return (
-            <Typography key={i} variant="h6" fontWeight={600} color="primary.main">
+            <Typography key={i} variant="h6" color="primary.main">
               {label}
             </Typography>
           );
@@ -49,8 +50,9 @@ export function Breadcrumb({ items, size = "default" }: Props) {
         return (
           <Typography
             key={i}
+            variant="body2"
             color={last ? "text.primary" : "text.secondary"}
-            fontWeight={last ? 700 : 500}
+            fontWeight={last ? typography.weight.bold : typography.weight.medium}
           >
             {label}
           </Typography>

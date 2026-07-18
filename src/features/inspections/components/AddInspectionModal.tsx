@@ -198,7 +198,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
       <DialogContent dividers>
         {step === 1 ? (
           <Box sx={{ textAlign: "center", py: 4 }}>
-            <Typography fontWeight={600} color="text.primary">
+            <Typography variant="subtitle1" color="text.primary">
               {t("inspections.addModal.success.title")}
             </Typography>
 
@@ -326,7 +326,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 {t("inspections.addModal.documents.title")}
               </Typography>
 

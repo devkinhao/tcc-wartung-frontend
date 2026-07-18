@@ -20,7 +20,7 @@ export function CustomerMovementsTab({ view }: Props) {
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2, maxWidth: 720 }}>
-      <Typography fontWeight={700} sx={{ mb: 2 }}>
+      <Typography variant="subtitle2" sx={{ mb: 2 }}>
         {t("customerDetails.movements.title")}
       </Typography>
 

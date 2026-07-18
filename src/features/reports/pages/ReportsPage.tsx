@@ -28,6 +28,7 @@ import {
   generateOverdueInspectionsReport,
   type CompanyReportFilters,
 } from "../api/reports.api";
+import { typography } from "@/styles/typography";
 
 // Selos ABVTEX disponíveis — ordem lógica do menor para o maior
 const ABVTEX_SEALS = ["NAO_POSSUI", "COBRE", "BRONZE", "PRATA", "OURO"] as const;
@@ -95,7 +96,7 @@ export default function ReportsPage() {
         {/* ── Relatório 1 — Empresas ──────────────────────────────────── */}
         <Card sx={cardSx}>
           <CardContent>
-            <Typography variant="subtitle1" fontWeight={600} color="text.primary">
+            <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.companies.title")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
@@ -105,7 +106,12 @@ export default function ReportsPage() {
             <Divider sx={{ mb: 2 }} />
 
             {/* Filtros */}
-            <Typography variant="caption" fontWeight={600} color="text.secondary" sx={{ mb: 1, display: "block" }}>
+            <Typography
+              variant="caption"
+              fontWeight={typography.weight.semibold}
+              color="text.secondary"
+              sx={{ mb: 1, display: "block" }}
+            >
               {t("reports.filters.title")}
             </Typography>
 
@@ -191,7 +197,7 @@ export default function ReportsPage() {
         {/* ── Relatório 2 — Vencimentos por mês e cliente ─────────────── */}
         <Card sx={cardSx}>
           <CardContent>
-            <Typography variant="subtitle1" fontWeight={600} color="text.primary">
+            <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.expiringInspections.title")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
@@ -222,7 +228,7 @@ export default function ReportsPage() {
         {/* ── Relatório 3 — Inspeções vencidas ────────────────────────── */}
         <Card sx={cardSx}>
           <CardContent>
-            <Typography variant="subtitle1" fontWeight={600} color="text.primary">
+            <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.overdueInspections.title")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>

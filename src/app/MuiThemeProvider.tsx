@@ -3,6 +3,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useAuth } from "@/features/auth/useAuth";
 import { usePreferences } from "@/features/preferences/usePreferences";
 import { tokens } from "@/styles/tokens";
+import { typography } from "@/styles/typography";
 
 function buildTheme(mode: "light" | "dark") {
   const t = tokens[mode];
@@ -18,7 +19,16 @@ function buildTheme(mode: "light" | "dark") {
       error: { main: t.semantic.danger },
     },
     shape: { borderRadius: 8 },
-    typography: { fontFamily: ["Inter", "system-ui", "sans-serif"].join(",") },
+    typography: {
+      fontFamily: typography.fontFamily,
+      // Pesos já usados de forma consistente pelo app para títulos de página
+      // (h6, via Breadcrumb size="large") e cabeçalhos de seção/card
+      // (subtitle1/subtitle2) — centralizados aqui em vez de repetidos
+      // como fontWeight inline em cada Typography.
+      h6: { fontWeight: typography.weight.semibold },
+      subtitle1: { fontWeight: typography.weight.semibold },
+      subtitle2: { fontWeight: typography.weight.bold },
+    },
     components: {
       MuiAppBar: { styleOverrides: { root: { backgroundColor: t.bg.header } } },
       MuiDrawer: { styleOverrides: { paper: { backgroundColor: t.bg.sidebar } } },

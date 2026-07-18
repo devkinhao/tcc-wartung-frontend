@@ -34,6 +34,7 @@ import { MaskedTextField } from "@/components/MaskedTextField";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
+import { typography } from "@/styles/typography";
 
 // Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
 // @Email) — feedback instantâneo, sem round-trip.
@@ -201,7 +202,7 @@ export default function UserProfile() {
         <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }} sx={{ mb: 3 }}>
           <Box sx={{ position: "relative", width: 112 }}>
             <Avatar
-              sx={{ width: 112, height: 112, fontSize: 32, bgcolor: "background.default" }}
+              sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials, bgcolor: "background.default" }}
               src={avatarPreview ?? undefined}
               alt={t("common.avatarAlt")}
             >
@@ -232,7 +233,7 @@ export default function UserProfile() {
           </Box>
 
           <Box>
-            <Typography fontWeight={600} fontSize={18} color="text.primary">
+            <Typography fontWeight={typography.weight.semibold} fontSize={18} color="text.primary">
               {fullName}
             </Typography>
 

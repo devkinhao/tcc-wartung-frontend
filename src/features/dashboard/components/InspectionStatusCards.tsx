@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import type { InspectionStatus } from "../api/dashboard.api";
 import { useTheme } from "@mui/material/styles";
+import { typography } from "@/styles/typography";
 
 type Props = {
   data: InspectionStatus | undefined;
@@ -39,7 +40,7 @@ function StatCard({ label, value, color, icon, total }: StatCardProps) {
             <Typography variant="body2" color="text.secondary" gutterBottom>
               {label}
             </Typography>
-            <Typography variant="h4" fontWeight={700} color={color} lineHeight={1}>
+            <Typography variant="h4" fontWeight={typography.weight.bold} color={color} lineHeight={1}>
               {value}
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
@@ -98,7 +99,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
       }}
     >
       <CardContent>
-        <Typography variant="subtitle2" fontWeight={700} color="text.primary" gutterBottom>
+        <Typography variant="subtitle2" color="text.primary" gutterBottom>
           {t("dashboard.cards.inspectionStatus.title")}
         </Typography>
 
@@ -157,7 +158,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
                       backgroundColor: theme.palette.background.paper,
                       border: `1px solid ${theme.palette.divider}`,
                       borderRadius: theme.shape.borderRadius,
-                      fontSize: 13,
+                      fontSize: typography.size.chartTooltip,
                     }}
                   />
                 </PieChart>

@@ -51,7 +51,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-        <Typography fontWeight={700}>
+        <Typography variant="subtitle2">
           {t("customerDetails.inspections.title")}
         </Typography>
 

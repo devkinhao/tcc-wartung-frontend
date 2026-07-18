@@ -22,6 +22,7 @@ import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
 import { paths } from "@/routes/paths";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./constants";
+import { typography } from "@/styles/typography";
 
 type SidebarProps = {
   collapsed: boolean;
@@ -74,8 +75,8 @@ const SidebarItem = memo(function SidebarItem({ item, collapsed, permissions }: 
         primary={label}
         primaryTypographyProps={{
           noWrap: true,
-          fontSize: 14,
-          fontWeight: 500,
+          variant: "body2",
+          fontWeight: typography.weight.medium,
         }}
         sx={{
           opacity: collapsed ? 0 : 1,
@@ -152,7 +153,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </Box>
 
         {!collapsed && (
-          <Typography variant="subtitle1" fontWeight={700} noWrap sx={{ ml: 1 }}>
+          <Typography variant="subtitle1" fontWeight={typography.weight.bold} noWrap sx={{ ml: 1 }}>
             {t("app.brandName")}
           </Typography>
         )}

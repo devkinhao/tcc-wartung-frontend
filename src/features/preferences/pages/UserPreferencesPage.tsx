@@ -29,8 +29,11 @@ import { toCamelCase } from "@/utils/strings";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
+import { typography } from "@/styles/typography";
 
 // ── Ícones por opção ────────────────────────────────────────────────────────
+
+const FLAG_ICON_STYLE = { fontSize: typography.size.flagIcon, lineHeight: 1 };
 
 const OPTION_ICONS: Record<string, Record<string, React.ReactNode>> = {
   THEME: {
@@ -38,9 +41,9 @@ const OPTION_ICONS: Record<string, Record<string, React.ReactNode>> = {
     dark: <DarkModeIcon fontSize="small" sx={{ color: "primary.main" }} />,
   },
   LANGUAGE: {
-    pt_BR: <span style={{ fontSize: 16, lineHeight: 1 }}>🇧🇷</span>,
-    en_US: <span style={{ fontSize: 16, lineHeight: 1 }}>🇺🇸</span>,
-    de_DE: <span style={{ fontSize: 16, lineHeight: 1 }}>🇩🇪</span>,
+    pt_BR: <span style={FLAG_ICON_STYLE}>🇧🇷</span>,
+    en_US: <span style={FLAG_ICON_STYLE}>🇺🇸</span>,
+    de_DE: <span style={FLAG_ICON_STYLE}>🇩🇪</span>,
   },
   SHOW_NOTIFICATIONS: {
     true: <NotificationsActiveIcon fontSize="small" sx={{ color: "primary.main" }} />,
@@ -143,7 +146,7 @@ export default function UserPreferencesPage() {
                     {name === "LANGUAGE" && <LanguageIcon fontSize="small" color="action" />}
                     {name === "SHOW_NOTIFICATIONS" && <NotificationsActiveIcon fontSize="small" color="action" />}
                     {name === "CHATBOT_ENABLED" && <ChatIcon fontSize="small" color="action" />}
-                    <Typography fontWeight={600} color="text.primary">
+                    <Typography variant="subtitle1" color="text.primary">
                       {t(`preferences.${toCamelCase(name)}`, { defaultValue: name })}
                     </Typography>
                   </Stack>

@@ -6,6 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import type { ExpirationByMonth } from "../api/dashboard.api";
+import { typography } from "@/styles/typography";
 
 type Props = {
   data: ExpirationByMonth[] | undefined;
@@ -59,7 +60,7 @@ export function ExpirationsByMonthChart({ data, loading }: Props) {
       }}
     >
       <CardContent>
-        <Typography variant="subtitle2" fontWeight={700} color="text.primary">
+        <Typography variant="subtitle2" color="text.primary">
           {t("dashboard.cards.expirationsByMonth.title")}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2 }}>
@@ -82,13 +83,13 @@ export function ExpirationsByMonthChart({ data, loading }: Props) {
               />
               <XAxis
                 dataKey="label"
-                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
                 allowDecimals={false}
-                tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
+                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
                 axisLine={false}
                 tickLine={false}
                 width={28}
@@ -111,7 +112,7 @@ export function ExpirationsByMonthChart({ data, loading }: Props) {
                       <Typography variant="caption" color="text.secondary" display="block">
                         {item?.fullLabel}
                       </Typography>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={typography.weight.semibold}>
                         {payload[0].value} {t("dashboard.cards.expirationsByMonth.tooltipLabel")}
                       </Typography>
                     </Box>

@@ -57,6 +57,7 @@ import { DataTableContainer } from "@/components/DataTableContainer";
 import { DocxPreview } from "@/components/DocxPreview";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
+import { typography } from "@/styles/typography";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -360,7 +361,7 @@ export default function InspectionDetailsPage() {
             />
           ) : preview?.kind === "unsupported" ? (
             <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
-              <Typography color="text.secondary">
+              <Typography variant="body2" color="text.secondary">
                 {t("inspectionDetails.documents.previewUnsupported")}
               </Typography>
               <Button
@@ -382,7 +383,7 @@ export default function InspectionDetailsPage() {
       <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
         <DialogTitle>{t("inspectionDetails.documents.confirmDeleteTitle")}</DialogTitle>
         <DialogContent>
-          <Typography>{t("inspectionDetails.documents.confirmDelete")}</Typography>
+          <Typography variant="body2">{t("inspectionDetails.documents.confirmDelete")}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmDeleteId(null)}>{t("common.actions.cancel")}</Button>
@@ -408,7 +409,7 @@ export default function InspectionDetailsPage() {
       >
         <DialogTitle>{t("inspectionDetails.confirmDelete.title")}</DialogTitle>
         <DialogContent>
-          <Typography>{t("inspectionDetails.confirmDelete.message")}</Typography>
+          <Typography variant="body2">{t("inspectionDetails.confirmDelete.message")}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmDeleteInspectionOpen(false)}>
@@ -444,7 +445,7 @@ export default function InspectionDetailsPage() {
                   <ArrowBackIcon fontSize="small" />
                 </IconButton>
 
-                <Typography fontWeight={700} color="text.primary" noWrap sx={{ minWidth: 0 }}>
+                <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap sx={{ minWidth: 0 }}>
                   {title}
                 </Typography>
               </Stack>
@@ -468,7 +469,7 @@ export default function InspectionDetailsPage() {
                       to={paths.customerDetails(view.customer.id)}
                       underline="hover"
                       color="inherit"
-                      sx={{ fontWeight: 600 }}
+                      sx={{ fontWeight: typography.weight.semibold }}
                     >
                       {view.customer.legalName} — {view.customer.cnpj}
                     </Link>
@@ -624,7 +625,7 @@ export default function InspectionDetailsPage() {
         <Card sx={{ borderRadius: 2 }}>
           <CardContent>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems={{ sm: "center" }} justifyContent="space-between" sx={{ mb: 2 }}>
-              <Typography fontWeight={700}>{t("inspectionDetails.sections.documents")}</Typography>
+              <Typography variant="subtitle2">{t("inspectionDetails.sections.documents")}</Typography>
 
               <Button
                 variant="outlined"
@@ -706,7 +707,7 @@ export default function InspectionDetailsPage() {
 
         <Card sx={{ borderRadius: 2 }}>
           <CardContent>
-            <Typography fontWeight={700} sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 2 }}>
               {t("inspectionDetails.sections.audit")}
             </Typography>
 

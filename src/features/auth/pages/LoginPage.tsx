@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { typography } from "@/styles/typography";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ export default function LoginPage() {
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
             <Box component="img" src="/logo.png" alt={t("common.logoAlt")} sx={{ height: 40 }} />
-            <Typography variant="h6" fontWeight={800} color="primary">
+            <Typography variant="h6" fontWeight={typography.weight.extrabold} color="primary">
               {t("app.brandName")}
             </Typography>
           </Box>
@@ -122,7 +123,7 @@ export default function LoginPage() {
         }}
       >
         <Box sx={{ textAlign: "center", maxWidth: 420 }}>
-          <Typography variant="h3" fontWeight={900} gutterBottom>
+          <Typography variant="h3" fontWeight={typography.weight.black} gutterBottom>
             {t("login.welcome.title")}
           </Typography>
           <Typography variant="h6" sx={{ opacity: 0.95 }}>

@@ -312,7 +312,7 @@ export default function CompanyPage() {
       </Card>
 
       {/* Endereço */}
-      <Typography variant="subtitle1" fontWeight={600} color="primary.main" sx={{ mb: 1.5 }}>
+      <Typography variant="subtitle1" color="primary.main" sx={{ mb: 1.5 }}>
         {t("company.address.title")}
       </Typography>
 

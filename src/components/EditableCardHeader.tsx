@@ -22,7 +22,7 @@ export function EditableCardHeader({ title, editing, saving = false, saveDisable
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-      <Typography fontWeight={700} color="text.primary">
+      <Typography variant="subtitle2" color="text.primary">
         {title}
       </Typography>
 

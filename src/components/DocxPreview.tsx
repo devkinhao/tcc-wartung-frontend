@@ -39,7 +39,7 @@ export function DocxPreview({ blob, message, downloadLabel, onDownload }: Props)
   if (failed) {
     return (
       <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
-        <Typography color="text.secondary">{message}</Typography>
+        <Typography variant="body2" color="text.secondary">{message}</Typography>
         <Button variant="outlined" startIcon={<DownloadIcon />} onClick={onDownload}>
           {downloadLabel}
         </Button>

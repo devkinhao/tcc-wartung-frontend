@@ -27,6 +27,7 @@ import {
 } from "@/features/notifications/api/notifications.api";
 import { resolveNotificationLink } from "@/features/notifications/utils";
 import { paths } from "@/routes/paths";
+import { typography } from "@/styles/typography";
 
 const PREVIEW_SIZE = 5;
 
@@ -101,7 +102,7 @@ export function NotificationsMenu() {
         PaperProps={{ sx: { width: 360 } }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" fontWeight={700}>
+          <Typography variant="subtitle2">
             {t("notifications.title")}
           </Typography>
 
@@ -142,7 +143,11 @@ export function NotificationsMenu() {
                 }}
               />
               <Box sx={{ minWidth: 0 }}>
-                <Typography variant="body2" fontWeight={n.read ? 400 : 700} noWrap>
+                <Typography
+                  variant="body2"
+                  fontWeight={n.read ? typography.weight.regular : typography.weight.bold}
+                  noWrap
+                >
                   {n.title}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
@@ -165,7 +170,7 @@ export function NotificationsMenu() {
           }}
           sx={{ justifyContent: "center" }}
         >
-          <Typography variant="body2" color="primary" fontWeight={600}>
+          <Typography variant="body2" color="primary" fontWeight={typography.weight.semibold}>
             {t("notifications.viewAll")}
           </Typography>
         </MenuItem>

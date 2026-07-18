@@ -6,6 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useTheme, lighten } from "@mui/material/styles";
 import type { CustomersByCityItem } from "../api/dashboard.api";
+import { typography } from "@/styles/typography";
 
 type Props = {
   data: CustomersByCityItem[] | undefined;
@@ -42,7 +43,15 @@ function renderCustomLabel({
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   return (
-    <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={600}>
+    <text
+      x={x}
+      y={y}
+      fill="#fff"
+      textAnchor="middle"
+      dominantBaseline="central"
+      fontSize={typography.size.chartLabel}
+      fontWeight={typography.weight.semibold}
+    >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
@@ -78,7 +87,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
       }}
     >
       <CardContent>
-        <Typography variant="subtitle2" fontWeight={700} color="text.primary" gutterBottom>
+        <Typography variant="subtitle2" color="text.primary" gutterBottom>
           {t("dashboard.cards.customersByCity.title")}
         </Typography>
 
@@ -122,7 +131,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
                       <Typography variant="caption" color="text.secondary" display="block">
                         {payload[0].name}
                       </Typography>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={typography.weight.semibold}>
                         {payload[0].value} {t("dashboard.cards.customersByCity.tooltipLabel")}
                       </Typography>
                     </Box>
@@ -134,7 +143,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
                 iconType="circle"
                 iconSize={8}
                 formatter={(value) => (
-                  <span style={{ fontSize: 12, color: theme.palette.text.secondary }}>
+                  <span style={{ fontSize: typography.size.chartTick, color: theme.palette.text.secondary }}>
                     {value}
                   </span>
                 )}

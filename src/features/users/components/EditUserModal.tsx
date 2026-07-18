@@ -205,7 +205,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pb: 1 }}>
-        <Typography fontWeight={700}>{title}</Typography>
+        {title}
         <IconButton onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
@@ -218,7 +218,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
             <CircularProgress />
           </Box>
         ) : !user ? (
-          <Typography color="warning.main" sx={{ py: 2 }}>
+          <Typography variant="body2" color="warning.main" sx={{ py: 2 }}>
             {t("users.edit.notFound") || "User not found."}
           </Typography>
         ) : (
