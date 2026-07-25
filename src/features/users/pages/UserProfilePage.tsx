@@ -28,6 +28,7 @@ import {
   Typography,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import DeleteIcon from "@mui/icons-material/Delete";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -42,7 +43,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
 import { User } from "../types/User";
-import { changePassword, getAvatar, getMe, updateMe, uploadAvatar } from "../api/user.api";
+import { changePassword, getAvatar, getMe, removeAvatar, updateMe, uploadAvatar } from "../api/user.api";
 import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
@@ -115,6 +116,7 @@ export default function UserProfile() {
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarRemoved, setAvatarRemoved] = useState(false);
 
   const { data: user, isLoading } = useQuery<User>({
     queryKey: qk.me(),
@@ -126,6 +128,16 @@ export default function UserProfile() {
   const [email, setEmail] = useState("");
   const [creaNumber, setCreaNumber] = useState("");
 
+  function loadAvatarPreview(u: User) {
+    if (u.id && u.avatarUrl) {
+      getAvatar(u.id)
+        .then(setAvatarPreview)
+        .catch(() => setAvatarPreview(null));
+    } else {
+      setAvatarPreview(null);
+    }
+  }
+
   React.useEffect(() => {
     if (!user) return;
 
@@ -133,12 +145,7 @@ export default function UserProfile() {
     setCpf(user.cpf);
     setEmail(user.email);
     setCreaNumber(user.creaNumber ?? "");
-
-    if (user.id) {
-      getAvatar(user.id)
-        .then(setAvatarPreview)
-        .catch(() => {});
-    }
+    loadAvatarPreview(user);
   }, [user]);
 
   const updateMutation = useMutation({
@@ -173,6 +180,14 @@ export default function UserProfile() {
     onSettled() {
       queryClient.invalidateQueries({ queryKey: qk.me() });
     },
+  });
+
+  const removeAvatarMutation = useMutation({
+    mutationFn: removeAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: qk.me() });
+    },
+    onError: (err) => notify.fromError(err),
   });
 
   const passwordMutation = useMutation({
@@ -226,6 +241,13 @@ export default function UserProfile() {
     const file = e.target.files[0];
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
+    setAvatarRemoved(false);
+  }
+
+  function handleRemoveAvatar() {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    setAvatarRemoved(true);
   }
 
   function handleSaveProfile() {
@@ -235,7 +257,13 @@ export default function UserProfile() {
       ...(email.trim() ? { email: email.trim() } : {}),
       ...(creaNumber.trim() ? { creaNumber: creaNumber.trim() } : {}),
     });
-    if (avatarFile) avatarMutation.mutate(avatarFile);
+
+    if (avatarFile) {
+      avatarMutation.mutate(avatarFile);
+    } else if (avatarRemoved) {
+      removeAvatarMutation.mutate();
+      setAvatarRemoved(false);
+    }
   }
 
   function handleCancelEdit() {
@@ -245,6 +273,8 @@ export default function UserProfile() {
     setEmail(user.email);
     setCreaNumber(user.creaNumber ?? "");
     setAvatarFile(null);
+    setAvatarRemoved(false);
+    loadAvatarPreview(user);
     setIsEditing(false);
   }
 
@@ -301,13 +331,17 @@ export default function UserProfile() {
               {/* Avatar + Status */}
               <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }} sx={{ mb: 3 }}>
                 <Box sx={{ position: "relative", width: 112 }}>
-                  <Avatar
-                    sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials, bgcolor: "background.default" }}
-                    src={avatarPreview ?? undefined}
-                    alt={t("common.avatarAlt")}
-                  >
-                    {fullName?.charAt(0)}
-                  </Avatar>
+                  {avatarPreview ? (
+                    <Avatar
+                      src={avatarPreview}
+                      sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}
+                      alt={t("common.avatarAlt")}
+                    />
+                  ) : (
+                    <Avatar sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}>
+                      {fullName?.charAt(0)}
+                    </Avatar>
+                  )}
 
                   {isEditing && (
                     <>
@@ -328,6 +362,24 @@ export default function UserProfile() {
                       </IconButton>
 
                       <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
+
+                      {avatarPreview && (
+                        <IconButton
+                          onClick={handleRemoveAvatar}
+                          size="small"
+                          aria-label={t("userProfile.actions.removeAvatar")}
+                          sx={{
+                            position: "absolute",
+                            bottom: 6,
+                            left: 6,
+                            bgcolor: "error.main",
+                            color: "common.white",
+                            "&:hover": { bgcolor: "error.dark" },
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </>
                   )}
                 </Box>
@@ -435,7 +487,12 @@ export default function UserProfile() {
                     <Button
                       variant="contained"
                       onClick={handleSaveProfile}
-                      disabled={updateMutation.isPending || avatarMutation.isPending || !isProfileValid}
+                      disabled={
+                        updateMutation.isPending ||
+                        avatarMutation.isPending ||
+                        removeAvatarMutation.isPending ||
+                        !isProfileValid
+                      }
                     >
                       {t("company.actions.saveChanges")}
                     </Button>

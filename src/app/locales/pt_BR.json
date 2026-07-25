@@ -376,7 +376,8 @@
     "actions": {
       "editProfile": "Editar perfil",
       "changePassword": "Alterar senha",
-      "changeAvatar": "Alterar avatar"
+      "changeAvatar": "Alterar avatar",
+      "removeAvatar": "Remover foto"
     },
     "password": {
       "title": "Alterar senha",

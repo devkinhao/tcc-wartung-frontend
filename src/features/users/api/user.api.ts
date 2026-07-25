@@ -30,6 +30,10 @@ export async function uploadAvatar(file: File) {
   return api.put("/users/me/avatar", formData);
 }
 
+export async function removeAvatar() {
+  return api.delete("/users/me/avatar");
+}
+
 export async function getAvatar(userId: number): Promise<string> {
   const response = await api.get(`/users/${userId}/avatar`, {
     responseType: "blob",
