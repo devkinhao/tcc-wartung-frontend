@@ -77,12 +77,31 @@
     "myCompany": "Minha Empresa",
     "users": "Usuários",
     "configurations": "Configurações",
+    "adminPanel": "Painel administrativo",
     "help": "Ajuda",
     "myProfile": "Meu Perfil",
     "preferences": "Preferências",
     "customerDetails": "Detalhes do Cliente",
     "companyDetails": "Detalhes da Empresa",
     "inspectionDetailsPage": "Detalhes da Inspeção"
+  },
+  "adminPanel": {
+    "title": "Painel administrativo",
+    "description": "Acesse as áreas administrativas do sistema.",
+    "items": {
+      "company": {
+        "title": "Minha empresa",
+        "description": "Dados cadastrais e endereço da sua empresa."
+      },
+      "users": {
+        "title": "Usuários",
+        "description": "Gerencie usuários, permissões e status."
+      },
+      "configurations": {
+        "title": "Configurações",
+        "description": "Ajustes gerais que controlam o comportamento do sistema."
+      }
+    }
   },
   "sidebar": {
     "actions": {
@@ -92,7 +111,6 @@
   },
   "userMenu": {
     "myProfile": "Meu perfil",
-    "preferences": "Preferências",
     "logout": "Sair"
   },
   "notifications": {
@@ -345,6 +363,10 @@
   "userProfile": {
     "title": "Meu perfil",
     "loading": "Carregando perfil...",
+    "tabs": {
+      "profile": "Perfil",
+      "preferences": "Preferências"
+    },
     "fields": {
       "fullName": "Nome completo",
       "cpf": "CPF",

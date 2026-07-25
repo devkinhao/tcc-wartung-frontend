@@ -4,7 +4,7 @@ import Dashboard from "./features/dashboard/pages/DashboardPage";
 import Customers from "./features/customers/pages/CustomersListPage";
 import Layout from "./layout/Layout";
 import UserProfile from "./features/users/pages/UserProfilePage";
-import UserPreferences from "./features/preferences/pages/UserPreferencesPage";
+import AdminPanel from "./features/adminPanel/pages/AdminPanelPage";
 import Company from "./features/company/pages/CompanyPage";
 import Help from "./features/help/pages/HelpPage";
 import Configurations from "./features/configurations/pages/ConfigurationsPage";
@@ -48,13 +48,13 @@ export default function App() {
                   <Route path="service-types"        element={<ServiceTypes />} />
                   <Route path="help"                 element={<Help />} />
                   <Route path="users/me"             element={<UserProfile />} />
-                  <Route path="users/me/preferences" element={<UserPreferences />} />
 
                   <Route element={<RequirePermission permissions={ROUTE_PERMISSIONS.reports} />}>
                     <Route path="reports" element={<Reports />} />
                   </Route>
 
                   <Route element={<RequirePermission permissions={ROUTE_PERMISSIONS.admin} />}>
+                    <Route path="admin-panel"    element={<AdminPanel />} />
                     <Route path="company"        element={<Company />} />
                     <Route path="users"          element={<Users />} />
                     <Route path="configurations" element={<Configurations />} />

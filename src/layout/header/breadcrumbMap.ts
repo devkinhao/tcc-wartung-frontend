@@ -34,18 +34,26 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "nav.reports" },
   ],
 
+  [paths.adminPanel]: [
+    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.adminPanel" },
+  ],
+
   [paths.company]: [
-    { label: "nav.home",      path: paths.dashboard },
+    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.myCompany" },
   ],
 
   [paths.users]: [
-    { label: "nav.home",  path: paths.dashboard },
+    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.users" },
   ],
 
   [paths.configurations]: [
     { label: "nav.home",           path: paths.dashboard },
+    { label: "nav.adminPanel",     path: paths.adminPanel },
     { label: "nav.configurations" },
   ],
 
@@ -57,12 +65,6 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
   [paths.userProfile]: [
     { label: "nav.home",      path: paths.dashboard },
     { label: "nav.myProfile" },
-  ],
-
-  [paths.userPreferences]: [
-    { label: "nav.home",        path: paths.dashboard },
-    { label: "nav.myProfile",   path: paths.userProfile },
-    { label: "nav.preferences" },
   ],
 
   [paths.serviceTypes]: [

@@ -20,11 +20,12 @@ export const paths = {
 
   notifications: "/notifications",
   reports: "/reports",
+  adminPanel: "/admin-panel",
   company: "/company",
   users: "/users",
   configurations: "/configurations",
   help: "/help",
 
   userProfile: "/users/me",
-  userPreferences: "/users/me/preferences",
+  userPreferences: "/users/me?tab=preferences",
 } as const;

@@ -9,7 +9,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { ExpandMore, Logout, Person, Tune } from "@mui/icons-material";
+import { AdminPanelSettings, ExpandMore, Logout, Person } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/auth/useAuth";
@@ -17,6 +17,8 @@ import { useMe } from "@/hooks/useMe";
 import { getAvatar } from "@/features/users/api/user.api";
 import { getFirstName } from "@/utils/getFirstName";
 import { paths } from "@/routes/paths";
+import { canAccess } from "@/features/auth/permissions";
+import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
 
 export function UserMenu() {
   const { t } = useTranslation();
@@ -30,6 +32,10 @@ export function UserMenu() {
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   const firstName = useMemo(() => (user ? getFirstName(user.fullName) : ""), [user]);
+  const isAdmin = useMemo(
+    () => canAccess(user?.permissions ?? [], ROUTE_PERMISSIONS.admin),
+    [user]
+  );
 
   // O endpoint de avatar exige autenticação — um <img src> direto não envia o
   // Bearer token, então precisa ser buscado via axios (blob) como no perfil.
@@ -99,12 +105,14 @@ export function UserMenu() {
           {t("userMenu.myProfile")}
         </MenuItem>
 
-        <MenuItem onClick={() => go(paths.userPreferences)}>
-          <ListItemIcon>
-            <Tune fontSize="small" />
-          </ListItemIcon>
-          {t("userMenu.preferences")}
-        </MenuItem>
+        {isAdmin && (
+          <MenuItem onClick={() => go(paths.adminPanel)}>
+            <ListItemIcon>
+              <AdminPanelSettings fontSize="small" />
+            </ListItemIcon>
+            {t("nav.adminPanel")}
+          </MenuItem>
+        )}
 
         <Divider />
 

@@ -4,9 +4,6 @@ import {
   Checklist as ChecklistIcon,
   Build as BuildIcon,
   Description as DescriptionIcon,
-  Apartment as ApartmentIcon,
-  AdminPanelSettings as AdminIcon,
-  Settings as SettingsIcon,
   Help as HelpIcon,
 } from "@mui/icons-material";
 import { MenuItem } from "./menu.types";
@@ -27,23 +24,5 @@ export const menuPrincipal: MenuItem[] = [
 ];
 
 export const menuOutros: MenuItem[] = [
-  {
-    label: "nav.myCompany",
-    to: paths.company,
-    icon: ApartmentIcon,
-    permissions: ROUTE_PERMISSIONS.admin,
-  },
-  {
-    label: "nav.users",
-    to: paths.users,
-    icon: AdminIcon,
-    permissions: ROUTE_PERMISSIONS.admin,
-  },
-  {
-    label: "nav.configurations",
-    to: paths.configurations,
-    icon: SettingsIcon,
-    permissions: ROUTE_PERMISSIONS.admin,
-  },
   { label: "nav.help", to: paths.help, icon: HelpIcon },
 ];
