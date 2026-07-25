@@ -142,8 +142,8 @@ export default function UserProfile() {
     if (!user) return;
 
     setFullName(user.fullName);
-    setCpf(user.cpf);
-    setEmail(user.email);
+    setCpf(user.cpf ?? "");
+    setEmail(user.email ?? "");
     setCreaNumber(user.creaNumber ?? "");
     loadAvatarPreview(user);
   }, [user]);
@@ -269,8 +269,8 @@ export default function UserProfile() {
   function handleCancelEdit() {
     if (!user) return;
     setFullName(user.fullName);
-    setCpf(user.cpf);
-    setEmail(user.email);
+    setCpf(user.cpf ?? "");
+    setEmail(user.email ?? "");
     setCreaNumber(user.creaNumber ?? "");
     setAvatarFile(null);
     setAvatarRemoved(false);
