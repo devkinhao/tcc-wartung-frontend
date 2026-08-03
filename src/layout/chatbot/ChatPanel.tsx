@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Box, IconButton, Paper, Stack, TextField, Typography, Fade } from "@mui/material";
-import { Send, Close } from "@mui/icons-material";
+import { useEffect, useRef } from "react";
+import { Box, Button, IconButton, Paper, Stack, Typography, Fade } from "@mui/material";
+import { Close, ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useChatBot } from "./useChatBot";
 
@@ -11,20 +11,18 @@ type ChatPanelProps = {
 
 export function ChatPanel({ open, onClose }: ChatPanelProps) {
   const { t } = useTranslation();
-  const { messages, sendMessage } = useChatBot();
-  const [input, setInput] = useState("");
+  const { messages, currentOptions, canGoBack, selectOption, goBack } = useChatBot();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, currentOptions]);
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (!input.trim()) return;
-    sendMessage(input);
-    setInput("");
-  };
+  useEffect(() => {
+    if (open) {
+      bottomRef.current?.scrollIntoView({ behavior: "auto" });
+    }
+  }, [open]);
 
   if (!open) return null;
 
@@ -86,26 +84,36 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
               </Typography>
             </Box>
           ))}
+
+          {(currentOptions.length > 0 || canGoBack) && (
+            <Stack spacing={0.75} sx={{ pt: 0.5 }}>
+              {currentOptions.map((option) => (
+                <Button
+                  key={option.id}
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => selectOption(option)}
+                  sx={{ justifyContent: "flex-start", textTransform: "none" }}
+                >
+                  {t(option.labelKey)}
+                </Button>
+              ))}
+              {canGoBack && (
+                <Button
+                  variant="text"
+                  fullWidth
+                  startIcon={<ArrowBack fontSize="small" />}
+                  onClick={goBack}
+                  sx={{ justifyContent: "flex-start", textTransform: "none" }}
+                >
+                  {t("chatbot.menu.back")}
+                </Button>
+              )}
+            </Stack>
+          )}
+
           <div ref={bottomRef} />
         </Stack>
-
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", gap: 1, p: 1.5, borderTop: 1, borderColor: "divider" }}
-        >
-          <TextField
-            size="small"
-            fullWidth
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            placeholder={t("chatbot.placeholder")}
-            autoComplete="off"
-          />
-          <IconButton type="submit" color="primary" aria-label={t("chatbot.send")}>
-            <Send />
-          </IconButton>
-        </Box>
       </Paper>
     </Fade>
   );

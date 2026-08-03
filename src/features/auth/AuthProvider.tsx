@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const clearSession = useCallback(() => {
     localStorage.removeItem("token");
+    localStorage.removeItem("chatbot:v1:messages");
     setToken(null);
     localStorage.setItem("theme", "light");
     document.documentElement.classList.remove("dark");

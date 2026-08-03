@@ -6,7 +6,6 @@ import Layout from "./layout/Layout";
 import UserProfile from "./features/users/pages/UserProfilePage";
 import AdminPanel from "./features/adminPanel/pages/AdminPanelPage";
 import Company from "./features/company/pages/CompanyPage";
-import Help from "./features/help/pages/HelpPage";
 import Configurations from "./features/configurations/pages/ConfigurationsPage";
 import Reports from "./features/reports/pages/ReportsPage";
 import Users from "./features/users/pages/UsersPage";
@@ -46,7 +45,6 @@ export default function App() {
                   <Route path="inspections/:id"      element={<InspectionDetailsPage />} />
                   <Route path="notifications"        element={<NotificationsPage />} />
                   <Route path="service-types"        element={<ServiceTypes />} />
-                  <Route path="help"                 element={<Help />} />
                   <Route path="users/me"             element={<UserProfile />} />
 
                   <Route element={<RequirePermission permissions={ROUTE_PERMISSIONS.reports} />}>

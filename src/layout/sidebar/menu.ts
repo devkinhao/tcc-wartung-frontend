@@ -4,7 +4,6 @@ import {
   Checklist as ChecklistIcon,
   Build as BuildIcon,
   Description as DescriptionIcon,
-  Help as HelpIcon,
 } from "@mui/icons-material";
 import { MenuItem } from "./menu.types";
 import { paths } from "@/routes/paths";
@@ -21,8 +20,4 @@ export const menuPrincipal: MenuItem[] = [
     icon: DescriptionIcon,
     permissions: ROUTE_PERMISSIONS.reports,
   },
-];
-
-export const menuOutros: MenuItem[] = [
-  { label: "nav.help", to: paths.help, icon: HelpIcon },
 ];

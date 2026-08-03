@@ -78,7 +78,6 @@
     "users": "Usuários",
     "configurations": "Configurações",
     "adminPanel": "Painel administrativo",
-    "help": "Ajuda",
     "myProfile": "Meu Perfil",
     "preferences": "Preferências",
     "customerDetails": "Detalhes do Cliente",
@@ -238,25 +237,18 @@
     }
   },
   "help": {
-    "title": "Ajuda",
-    "description": "Encontre orientações rápidas sobre como usar o sistema.",
     "faq": {
-      "title": "Perguntas frequentes",
       "q1": {
-        "question": "Como cadastrar um cliente?",
         "answer": "Acesse Clientes e clique em Novo. Preencha os dados e confirme."
       },
       "q2": {
-        "question": "Como alterar minhas preferências?",
         "answer": "Vá em Preferências e selecione o idioma/tema desejados."
       },
       "q3": {
-        "question": "Como gerar relatórios?",
         "answer": "Em Relatórios, escolha um tipo e clique em Gerar relatório."
       }
     },
     "support": {
-      "title": "Suporte",
       "description": "Se precisar de ajuda, entre em contato com o suporte.",
       "emailLabel": "E-mail:"
     }
@@ -836,14 +828,47 @@
   "chatbot": {
     "title": "Assistente",
     "openLabel": "Abrir assistente",
-    "placeholder": "Digite um comando...",
-    "send": "Enviar",
     "responses": {
-      "greeting": "Olá! Posso te ajudar a navegar pelo sistema. Digite \"ajuda\" para ver os comandos.",
-      "help": "Experimente comandos como: \"ir para clientes\", \"abrir inspeções\", \"notificações\", \"relatórios\", \"usuários\", \"configurações\", \"meu perfil\" ou \"preferências\".",
       "navigated": "Abrindo {{page}}...",
-      "forbidden": "Você não tem permissão para acessar essa área.",
-      "fallback": "Não entendi. Digite \"ajuda\" para ver os comandos disponíveis."
+      "loading": "Consultando...",
+      "queryError": "Não consegui buscar essa informação agora. Tente novamente em instantes.",
+      "inspectionsExpired": "Você tem {{count}} inspeções vencidas.",
+      "inspectionsNear": "Você tem {{count}} inspeções próximas do vencimento.",
+      "inspectionsOnTrack": "Você tem {{count}} inspeções em dia.",
+      "notificationsUnread": "Você tem {{count}} notificações não lidas.",
+      "customersTotal": "Você tem {{count}} clientes cadastrados."
+    },
+    "menu": {
+      "back": "Voltar ao menu",
+      "root": {
+        "intro": "Olá! Escolha uma das opções abaixo."
+      },
+      "categories": {
+        "navigate": { "label": "Navegar", "intro": "Para onde você quer ir?" },
+        "data": { "label": "Consultar dados", "intro": "O que você quer consultar?" },
+        "faq": { "label": "Dúvidas e suporte", "intro": "Sobre o que você tem dúvida?" }
+      },
+      "actions": {
+        "dashboard": "Ir para o início",
+        "customers": "Ver clientes",
+        "inspections": "Ver inspeções",
+        "notifications": "Ver notificações",
+        "reports": "Relatórios",
+        "company": "Minha empresa",
+        "users": "Usuários",
+        "configurations": "Configurações",
+        "profile": "Meu perfil",
+        "preferences": "Preferências",
+        "inspectionsExpired": "Inspeções vencidas",
+        "inspectionsNear": "Inspeções próximas do vencimento",
+        "inspectionsOnTrack": "Inspeções em dia",
+        "notificationsUnread": "Notificações não lidas",
+        "customersTotal": "Total de clientes",
+        "faqAddCustomer": "Como cadastrar um cliente",
+        "faqPreferences": "Como alterar preferências",
+        "faqReports": "Como gerar relatórios",
+        "faqSupport": "Falar com o suporte"
+      }
     }
   }
 }

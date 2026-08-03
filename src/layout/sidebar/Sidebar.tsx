@@ -2,7 +2,6 @@ import { memo } from "react";
 import { NavLink } from "react-router-dom";
 import {
   Box,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -16,7 +15,7 @@ import {
 import { ChevronRight, MenuOpen } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-import { menuPrincipal, menuOutros } from "./menu";
+import { menuPrincipal } from "./menu";
 import { MenuItem } from "./menu.types";
 import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
@@ -162,14 +161,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <Box sx={{ flex: 1, py: 1 }}>
         <List disablePadding>
           {menuPrincipal.map((item) => (
-            <SidebarItem key={item.to} item={item} collapsed={collapsed} permissions={permissions} />
-          ))}
-        </List>
-
-        <Divider sx={{ my: 1 }} />
-
-        <List disablePadding>
-          {menuOutros.map((item) => (
             <SidebarItem key={item.to} item={item} collapsed={collapsed} permissions={permissions} />
           ))}
         </List>

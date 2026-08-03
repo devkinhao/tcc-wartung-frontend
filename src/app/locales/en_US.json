@@ -78,7 +78,6 @@
     "users": "Users",
     "configurations": "Configurations",
     "adminPanel": "Admin panel",
-    "help": "Help",
     "myProfile": "My Profile",
     "preferences": "Preferences",
     "customerDetails": "Customer Details",
@@ -238,25 +237,18 @@
     }
   },
   "help": {
-    "title": "Help",
-    "description": "Find quick guidance on how to use the system.",
     "faq": {
-      "title": "Frequently asked questions",
       "q1": {
-        "question": "How do I register a customer?",
         "answer": "Go to Customers and click New. Fill in the data and confirm."
       },
       "q2": {
-        "question": "How do I change my preferences?",
         "answer": "Go to Preferences and select the desired language/theme."
       },
       "q3": {
-        "question": "How do I generate reports?",
         "answer": "In Reports, choose a type and click Generate report."
       }
     },
     "support": {
-      "title": "Support",
       "description": "If you need help, contact support.",
       "emailLabel": "Email:"
     }
@@ -836,14 +828,47 @@
   "chatbot": {
     "title": "Assistant",
     "openLabel": "Open assistant",
-    "placeholder": "Type a command...",
-    "send": "Send",
     "responses": {
-      "greeting": "Hi! I can help you navigate the system. Type \"help\" to see the available commands.",
-      "help": "Try commands like: \"go to customers\", \"open inspections\", \"notifications\", \"reports\", \"users\", \"configurations\", \"my profile\" or \"preferences\".",
       "navigated": "Opening {{page}}...",
-      "forbidden": "You don't have permission to access this area.",
-      "fallback": "I didn't understand that. Type \"help\" to see the available commands."
+      "loading": "Looking that up...",
+      "queryError": "I couldn't fetch that information right now. Please try again shortly.",
+      "inspectionsExpired": "You have {{count}} expired inspections.",
+      "inspectionsNear": "You have {{count}} inspections nearing expiration.",
+      "inspectionsOnTrack": "You have {{count}} inspections on track.",
+      "notificationsUnread": "You have {{count}} unread notifications.",
+      "customersTotal": "You have {{count}} registered customers."
+    },
+    "menu": {
+      "back": "Back to menu",
+      "root": {
+        "intro": "Hi! Choose one of the options below."
+      },
+      "categories": {
+        "navigate": { "label": "Navigate", "intro": "Where would you like to go?" },
+        "data": { "label": "Check data", "intro": "What would you like to check?" },
+        "faq": { "label": "Questions and support", "intro": "What do you need help with?" }
+      },
+      "actions": {
+        "dashboard": "Go to home",
+        "customers": "View customers",
+        "inspections": "View inspections",
+        "notifications": "View notifications",
+        "reports": "Reports",
+        "company": "My company",
+        "users": "Users",
+        "configurations": "Configurations",
+        "profile": "My profile",
+        "preferences": "Preferences",
+        "inspectionsExpired": "Expired inspections",
+        "inspectionsNear": "Inspections nearing expiration",
+        "inspectionsOnTrack": "Inspections on track",
+        "notificationsUnread": "Unread notifications",
+        "customersTotal": "Total customers",
+        "faqAddCustomer": "How to register a customer",
+        "faqPreferences": "How to change preferences",
+        "faqReports": "How to generate reports",
+        "faqSupport": "Talk to support"
+      }
     }
   }
 }

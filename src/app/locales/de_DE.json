@@ -78,7 +78,6 @@
     "users": "Benutzer",
     "configurations": "Konfigurationen",
     "adminPanel": "Admin-Bereich",
-    "help": "Hilfe",
     "myProfile": "Mein Profil",
     "preferences": "Einstellungen",
     "customerDetails": "Kundendetails",
@@ -238,25 +237,18 @@
     }
   },
   "help": {
-    "title": "Hilfe",
-    "description": "Schnelle Hinweise zur Nutzung des Systems.",
     "faq": {
-      "title": "Häufige Fragen",
       "q1": {
-        "question": "Wie registriere ich einen Kunden?",
         "answer": "Gehen Sie zu Kunden und klicken Sie auf Neu. Daten ausfüllen und bestätigen."
       },
       "q2": {
-        "question": "Wie ändere ich meine Einstellungen?",
         "answer": "Gehen Sie zu Einstellungen und wählen Sie Sprache/Design."
       },
       "q3": {
-        "question": "Wie erstelle ich Berichte?",
         "answer": "In Berichte wählen Sie einen Typ und klicken auf Bericht erstellen."
       }
     },
     "support": {
-      "title": "Support",
       "description": "Wenn Sie Hilfe benötigen, kontaktieren Sie den Support.",
       "emailLabel": "E-Mail:"
     }
@@ -836,14 +828,47 @@
   "chatbot": {
     "title": "Assistent",
     "openLabel": "Assistent öffnen",
-    "placeholder": "Befehl eingeben...",
-    "send": "Senden",
     "responses": {
-      "greeting": "Hallo! Ich kann dir helfen, im System zu navigieren. Gib \"Hilfe\" ein, um die Befehle zu sehen.",
-      "help": "Probiere Befehle wie: \"zu Kunden gehen\", \"Inspektionen öffnen\", \"Benachrichtigungen\", \"Berichte\", \"Benutzer\", \"Konfigurationen\", \"mein Profil\" oder \"Einstellungen\".",
       "navigated": "Öffne {{page}}...",
-      "forbidden": "Du hast keine Berechtigung für diesen Bereich.",
-      "fallback": "Das habe ich nicht verstanden. Gib \"Hilfe\" ein, um die Befehle zu sehen."
+      "loading": "Ich schaue nach...",
+      "queryError": "Ich konnte diese Information gerade nicht abrufen. Bitte versuche es gleich noch einmal.",
+      "inspectionsExpired": "Du hast {{count}} abgelaufene Inspektionen.",
+      "inspectionsNear": "Du hast {{count}} Inspektionen, die bald ablaufen.",
+      "inspectionsOnTrack": "Du hast {{count}} Inspektionen im Zeitplan.",
+      "notificationsUnread": "Du hast {{count}} ungelesene Benachrichtigungen.",
+      "customersTotal": "Du hast {{count}} registrierte Kunden."
+    },
+    "menu": {
+      "back": "Zurück zum Menü",
+      "root": {
+        "intro": "Hallo! Wähle eine der Optionen unten."
+      },
+      "categories": {
+        "navigate": { "label": "Navigieren", "intro": "Wohin möchtest du gehen?" },
+        "data": { "label": "Daten abfragen", "intro": "Was möchtest du abfragen?" },
+        "faq": { "label": "Fragen und Support", "intro": "Wobei brauchst du Hilfe?" }
+      },
+      "actions": {
+        "dashboard": "Zur Startseite",
+        "customers": "Kunden anzeigen",
+        "inspections": "Inspektionen anzeigen",
+        "notifications": "Benachrichtigungen anzeigen",
+        "reports": "Berichte",
+        "company": "Mein Unternehmen",
+        "users": "Benutzer",
+        "configurations": "Konfigurationen",
+        "profile": "Mein Profil",
+        "preferences": "Einstellungen",
+        "inspectionsExpired": "Abgelaufene Inspektionen",
+        "inspectionsNear": "Bald ablaufende Inspektionen",
+        "inspectionsOnTrack": "Inspektionen im Zeitplan",
+        "notificationsUnread": "Ungelesene Benachrichtigungen",
+        "customersTotal": "Gesamtzahl der Kunden",
+        "faqAddCustomer": "Wie registriere ich einen Kunden",
+        "faqPreferences": "Wie ändere ich Einstellungen",
+        "faqReports": "Wie erstelle ich Berichte",
+        "faqSupport": "Mit dem Support sprechen"
+      }
     }
   }
 }
