@@ -504,14 +504,16 @@
     },
     "actions": {
       "signIn": "Entrar",
-      "signingIn": "Entrando..."
+      "signingIn": "Entrando...",
+      "waitSeconds": "Aguarde {{seconds}}s..."
     },
     "welcome": {
       "title": "Bem-vindo!",
       "subtitle": "Gerencie clientes e inspeções com facilidade."
     },
     "errors": {
-      "invalidCredentials": "Usuário ou senha inválidos"
+      "invalidCredentials": "Usuário ou senha inválidos",
+      "tooManyAttempts": "Muitas tentativas de login. Aguarde um momento antes de tentar novamente."
     }
   },
   "company": {

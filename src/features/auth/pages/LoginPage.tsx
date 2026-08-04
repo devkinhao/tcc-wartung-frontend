@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
 import { useTranslation } from "react-i18next";
@@ -9,11 +10,22 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { typography } from "@/styles/typography";
+
+// O backend (LoginRateLimitFilter) manda o tempo real de espera no header
+// Retry-After a cada 429. Esse valor só entra em cena se, por algum motivo,
+// o header não vier (proxy removendo, deploy de frontend mais novo que o
+// backend etc.) — nesses casos assumimos o pior caso da janela (1 min / 5
+// tentativas = renova 1 a cada 12s) com uma margem de segurança.
+const FALLBACK_RATE_LIMIT_COOLDOWN_SECONDS = 15;
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -22,8 +34,16 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,8 +54,18 @@ export default function LoginPage() {
       const { token } = await loginRequest({ username, password });
       await login(token);
       navigate(paths.dashboard);
-    } catch {
-      setError(t("login.errors.invalidCredentials"));
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 429) {
+        const retryAfter = Number(err.response.headers?.["retry-after"]);
+        const cooldownSeconds = Number.isFinite(retryAfter) && retryAfter > 0
+          ? retryAfter
+          : FALLBACK_RATE_LIMIT_COOLDOWN_SECONDS;
+
+        setError(t("login.errors.tooManyAttempts"));
+        setCooldown(cooldownSeconds);
+      } else {
+        setError(t("login.errors.invalidCredentials"));
+      }
     } finally {
       setLoading(false);
     }
@@ -76,11 +106,24 @@ export default function LoginPage() {
 
             <TextField
               label={t("login.fields.password")}
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((p) => !p)}
+                      edge="end"
+                      aria-label={t("userProfile.password.actions.toggleVisibility")}
+                    >
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
             {error && (
@@ -91,7 +134,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              disabled={loading || !username || !password}
+              disabled={loading || !username || !password || cooldown > 0}
               size="large"
               sx={{ py: 1.3 }}
             >
@@ -100,6 +143,8 @@ export default function LoginPage() {
                   <CircularProgress size={18} />
                   {t("login.actions.signingIn")}
                 </Box>
+              ) : cooldown > 0 ? (
+                t("login.actions.waitSeconds", { seconds: cooldown })
               ) : (
                 t("login.actions.signIn")
               )}

@@ -2,10 +2,11 @@ import { addDaysISODate, todayISODate } from "./date";
 
 export type ExpirationStatus = "expired" | "near" | "ok";
 
-// Cores do chip de vencimento — mesmas em ambos os temas (claro/escuro), já
-// validadas visualmente para contraste em qualquer fundo.
+// Cores do chip de vencimento — mesmas em ambos os temas (claro/escuro).
+// "expired" usa texto branco em cima: #c65b4a original dava 4.2:1 (abaixo do
+// mínimo WCAG AA de 4.5:1 para texto normal); #b25243 passa com ~5:1.
 export const EXPIRATION_COLORS = {
-  expired: "#c65b4a",
+  expired: "#b25243",
   near: "#e0a83f",
 } as const;
 

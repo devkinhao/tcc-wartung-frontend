@@ -4,6 +4,7 @@ import { api } from "@/api/client";
 import { Customer } from "../types/customersList";
 import { qk } from "@/api/keys";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { CustomerFilterValues } from "../CustomersFilters";
 
 interface SpringPageResponse {
@@ -52,9 +53,14 @@ export function useCustomers() {
   const [sortBy, setSortBy] = useSessionStorageState<keyof Customer | null>("customers-list.sortBy", "nextExpirationDate");
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("customers-list.sortDir", "asc");
 
+  // Só o texto de busca é debounced — cidade/status/mês são seleções
+  // discretas (Select) e já devem refletir na busca imediatamente.
+  const debouncedSearch = useDebouncedValue(filters.search, 400);
+  const queryFilters = { ...filters, search: debouncedSearch };
+
   const { data, isLoading } = useQuery({
-    queryKey: qk.customers({ page, pageSize, sortBy, sortDir, ...filters }),
-    queryFn: () => fetchCustomers({ page, pageSize, sortBy, sortDir, filters }),
+    queryKey: qk.customers({ page, pageSize, sortBy, sortDir, ...queryFilters }),
+    queryFn: () => fetchCustomers({ page, pageSize, sortBy, sortDir, filters: queryFilters }),
     placeholderData: (prev) => prev,
   });
 

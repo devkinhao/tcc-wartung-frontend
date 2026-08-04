@@ -504,14 +504,16 @@
     },
     "actions": {
       "signIn": "Sign in",
-      "signingIn": "Signing in..."
+      "signingIn": "Signing in...",
+      "waitSeconds": "Wait {{seconds}}s..."
     },
     "welcome": {
       "title": "Welcome!",
       "subtitle": "Manage customers and inspections easily."
     },
     "errors": {
-      "invalidCredentials": "Invalid username or password"
+      "invalidCredentials": "Invalid username or password",
+      "tooManyAttempts": "Too many login attempts. Please wait a moment before trying again."
     }
   },
   "company": {

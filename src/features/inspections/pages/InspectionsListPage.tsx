@@ -30,6 +30,7 @@ import { SortableHeader } from "@/components/SortableHeader";
 import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
@@ -57,9 +58,14 @@ export default function InspectionsListPage() {
   const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
 
+  // Só o texto de busca é debounced — o Select de status já é uma seleção
+  // discreta e deve refletir na busca imediatamente.
+  const debouncedSearch = useDebouncedValue(filters.search, 400);
+  const queryFilters = { ...filters, search: debouncedSearch };
+
   const { data, isLoading } = useQuery({
-    queryKey: qk.inspectionsList({ ...filters, page, pageSize, sortBy, sortDir }),
-    queryFn:  () => listAllInspections(filters, page, pageSize, sortBy, sortDir),
+    queryKey: qk.inspectionsList({ ...queryFilters, page, pageSize, sortBy, sortDir }),
+    queryFn:  () => listAllInspections(queryFilters, page, pageSize, sortBy, sortDir),
     placeholderData: (prev) => prev,
   });
 

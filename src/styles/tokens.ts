@@ -10,7 +10,10 @@ export const tokens = {
       tableHeader: "#E8E8E8",
       tableBody: "#F2F2F2",
     },
-    text: { primary: "#303030", secondary: "#959595" },
+    // secondary em #707070 — o valor original (#959595) ficava abaixo de 4.5:1
+    // (WCAG AA) contra os fundos claros do app (screen/card); #707070 passa
+    // em ambos (~4.5:1 e ~4.9:1) mantendo o mesmo tom de cinza.
+    text: { primary: "#303030", secondary: "#707070" },
     brand: { blue: "#2A4C61", green: "#78744C" },
     button: { gray: "#9E9D99", hover: "#BDBCB7" },
     semantic: { success: "#16a34a", danger: "#dc2626" },

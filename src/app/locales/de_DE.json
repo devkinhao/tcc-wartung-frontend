@@ -504,14 +504,16 @@
     },
     "actions": {
       "signIn": "Anmelden",
-      "signingIn": "Anmeldung..."
+      "signingIn": "Anmeldung...",
+      "waitSeconds": "Warten Sie {{seconds}}s..."
     },
     "welcome": {
       "title": "Willkommen!",
       "subtitle": "Verwalten Sie Kunden und Inspektionen ganz einfach."
     },
     "errors": {
-      "invalidCredentials": "Ungültiger Benutzername oder Passwort"
+      "invalidCredentials": "Ungültiger Benutzername oder Passwort",
+      "tooManyAttempts": "Zu viele Anmeldeversuche. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen."
     }
   },
   "company": {
