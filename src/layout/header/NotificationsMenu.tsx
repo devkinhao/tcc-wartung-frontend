@@ -31,7 +31,7 @@ import { typography } from "@/styles/typography";
 
 const PREVIEW_SIZE = 5;
 
-export function NotificationsMenu() {
+export function NotificationsMenu({ disabled = false }: { disabled?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -41,6 +41,7 @@ export function NotificationsMenu() {
   const { data: unreadCount = 0 } = useQuery({
     queryKey: qk.notificationsUnreadCount(),
     queryFn: getUnreadNotificationCount,
+    enabled: !disabled,
     refetchInterval: 30_000,
     // A configuração global desativa refetch no foco da janela; para notificações
     // vale a pena reativar aqui — voltar para a aba é um gatilho natural e muito
@@ -51,7 +52,7 @@ export function NotificationsMenu() {
   const { data, isLoading } = useQuery({
     queryKey: qk.notifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
     queryFn: () => listNotifications({ onlyUnread: true, page: 1, pageSize: PREVIEW_SIZE }),
-    enabled: open,
+    enabled: open && !disabled,
     // Sempre busca de novo ao abrir o menu — sem isso, reabrir dentro da janela de
     // staleTime global (5 min) mostraria a lista em cache, já desatualizada.
     staleTime: 0,
@@ -89,15 +90,16 @@ export function NotificationsMenu() {
         aria-label={t("notifications.ariaLabel")}
         onClick={(e) => setAnchorEl(e.currentTarget)}
         size="large"
+        disabled={disabled}
       >
-        <Badge color="error" badgeContent={unreadCount} max={99}>
+        <Badge color="error" badgeContent={disabled ? 0 : unreadCount} max={99}>
           <Notifications />
         </Badge>
       </IconButton>
 
       <Menu
         anchorEl={anchorEl}
-        open={open}
+        open={open && !disabled}
         onClose={() => setAnchorEl(null)}
         PaperProps={{ sx: { width: 360 } }}
       >

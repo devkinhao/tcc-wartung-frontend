@@ -87,6 +87,7 @@ export default function ForgotPasswordPage() {
                   autoComplete="email"
                   autoFocus
                   fullWidth
+                  required
                   error={emailInvalid}
                   helperText={emailInvalid ? t("forgotPassword.errors.invalidEmail") : undefined}
                 />

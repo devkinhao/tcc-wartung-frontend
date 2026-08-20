@@ -99,6 +99,7 @@ export default function ConfigurationsPage() {
             >
               <TextField
                 fullWidth
+                required
                 label={label}
                 helperText={description || undefined}
                 value={draft[config.name] ?? ""}

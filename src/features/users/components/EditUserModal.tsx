@@ -314,6 +314,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 onChange={(e) => setNewPassword(e.target.value)}
                 disabled={savingPwd}
                 fullWidth
+                required
                 inputProps={{ maxLength: 100 }}
                 InputProps={{
                   endAdornment: (

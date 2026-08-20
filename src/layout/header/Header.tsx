@@ -24,7 +24,7 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {showNotifications && <NotificationsMenu />}
+          <NotificationsMenu disabled={!showNotifications} />
           <UserMenu />
         </Box>
       </Toolbar>

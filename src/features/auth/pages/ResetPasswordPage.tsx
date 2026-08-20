@@ -122,6 +122,7 @@ export default function ResetPasswordPage() {
                   autoComplete="new-password"
                   autoFocus
                   fullWidth
+                  required
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -144,6 +145,7 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
                   fullWidth
+                  required
                   error={passwordMismatch}
                   helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
                 />

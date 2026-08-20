@@ -109,7 +109,7 @@ export function CustomerGeneralTab({
 
             <Grid item xs={12} md={3}>
               <FormControl fullWidth size="small" disabled={!editingGeneral}>
-                <InputLabel id="abvtex-label">{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
+                <InputLabel id="abvtex-label" required>{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex-label"
                   label={t("customerDetails.general.fields.abvtexSeal")}

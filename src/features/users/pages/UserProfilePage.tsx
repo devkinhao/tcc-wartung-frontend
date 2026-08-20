@@ -604,6 +604,7 @@ export default function UserProfile() {
               onChange={(e) => setCurrentPassword(e.target.value)}
               size="small"
               fullWidth
+              required
               inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
@@ -627,6 +628,7 @@ export default function UserProfile() {
               onChange={(e) => setNewPassword(e.target.value)}
               size="small"
               fullWidth
+              required
               inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
@@ -650,6 +652,7 @@ export default function UserProfile() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               size="small"
               fullWidth
+              required
               inputProps={{ maxLength: 100 }}
               error={passwordMismatch}
               helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}

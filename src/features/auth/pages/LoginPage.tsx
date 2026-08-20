@@ -103,6 +103,7 @@ export default function LoginPage() {
               autoComplete="username"
               autoFocus
               fullWidth
+              required
             />
 
             <TextField
@@ -112,6 +113,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               fullWidth
+              required
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
