@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
@@ -12,6 +12,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Link,
   Paper,
   TextField,
   Typography,
@@ -125,6 +126,10 @@ export default function LoginPage() {
                 ),
               }}
             />
+
+            <Link component={RouterLink} to={paths.forgotPassword} variant="body2" sx={{ justifySelf: "end" }}>
+              {t("login.actions.forgotPassword")}
+            </Link>
 
             {error && (
               <Typography variant="body2" color="error">

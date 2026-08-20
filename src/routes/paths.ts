@@ -4,6 +4,8 @@
 // divergentes espalhadas pelo código.
 export const paths = {
   login: "/login",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
   dashboard: "/dashboard",
 
   customers: "/customers",

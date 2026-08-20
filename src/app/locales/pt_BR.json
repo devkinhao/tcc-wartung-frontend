@@ -505,7 +505,8 @@
     "actions": {
       "signIn": "Entrar",
       "signingIn": "Entrando...",
-      "waitSeconds": "Aguarde {{seconds}}s..."
+      "waitSeconds": "Aguarde {{seconds}}s...",
+      "forgotPassword": "Esqueci minha senha"
     },
     "welcome": {
       "title": "Bem-vindo!",
@@ -514,6 +515,42 @@
     "errors": {
       "invalidCredentials": "Usuário ou senha inválidos",
       "tooManyAttempts": "Muitas tentativas de login. Aguarde um momento antes de tentar novamente."
+    }
+  },
+  "forgotPassword": {
+    "title": "Esqueci minha senha",
+    "subtitle": "Informe seu e-mail cadastrado e enviaremos um link para redefinir sua senha.",
+    "fields": {
+      "email": "E-mail"
+    },
+    "actions": {
+      "send": "Enviar link de recuperação",
+      "sending": "Enviando...",
+      "backToLogin": "Voltar para o login"
+    },
+    "success": "Se o e-mail informado estiver cadastrado, você receberá um link para redefinir sua senha em instantes.",
+    "errors": {
+      "invalidEmail": "Informe um e-mail válido",
+      "generic": "Não foi possível processar sua solicitação. Tente novamente."
+    }
+  },
+  "resetPassword": {
+    "title": "Redefinir senha",
+    "subtitle": "Crie uma nova senha para acessar sua conta.",
+    "fields": {
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha"
+    },
+    "actions": {
+      "submit": "Redefinir senha",
+      "submitting": "Redefinindo...",
+      "backToLogin": "Voltar para o login"
+    },
+    "success": "Senha redefinida com sucesso! Você já pode fazer login com sua nova senha.",
+    "errors": {
+      "invalidToken": "Este link de redefinição é inválido ou expirou. Solicite um novo.",
+      "missingToken": "Link de redefinição inválido.",
+      "generic": "Não foi possível redefinir sua senha. Tente novamente."
     }
   },
   "company": {

@@ -505,7 +505,8 @@
     "actions": {
       "signIn": "Sign in",
       "signingIn": "Signing in...",
-      "waitSeconds": "Wait {{seconds}}s..."
+      "waitSeconds": "Wait {{seconds}}s...",
+      "forgotPassword": "Forgot my password"
     },
     "welcome": {
       "title": "Welcome!",
@@ -514,6 +515,42 @@
     "errors": {
       "invalidCredentials": "Invalid username or password",
       "tooManyAttempts": "Too many login attempts. Please wait a moment before trying again."
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot my password",
+    "subtitle": "Enter your registered email and we'll send you a link to reset your password.",
+    "fields": {
+      "email": "Email"
+    },
+    "actions": {
+      "send": "Send recovery link",
+      "sending": "Sending...",
+      "backToLogin": "Back to login"
+    },
+    "success": "If the email you entered is registered, you'll receive a password reset link shortly.",
+    "errors": {
+      "invalidEmail": "Enter a valid email",
+      "generic": "Could not process your request. Please try again."
+    }
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "subtitle": "Create a new password to access your account.",
+    "fields": {
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password"
+    },
+    "actions": {
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "backToLogin": "Back to login"
+    },
+    "success": "Password reset successfully! You can now sign in with your new password.",
+    "errors": {
+      "invalidToken": "This reset link is invalid or has expired. Please request a new one.",
+      "missingToken": "Invalid reset link.",
+      "generic": "Could not reset your password. Please try again."
     }
   },
   "company": {

@@ -505,7 +505,8 @@
     "actions": {
       "signIn": "Anmelden",
       "signingIn": "Anmeldung...",
-      "waitSeconds": "Warten Sie {{seconds}}s..."
+      "waitSeconds": "Warten Sie {{seconds}}s...",
+      "forgotPassword": "Passwort vergessen"
     },
     "welcome": {
       "title": "Willkommen!",
@@ -514,6 +515,42 @@
     "errors": {
       "invalidCredentials": "Ungültiger Benutzername oder Passwort",
       "tooManyAttempts": "Zu viele Anmeldeversuche. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen."
+    }
+  },
+  "forgotPassword": {
+    "title": "Passwort vergessen",
+    "subtitle": "Geben Sie Ihre registrierte E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "fields": {
+      "email": "E-Mail"
+    },
+    "actions": {
+      "send": "Wiederherstellungslink senden",
+      "sending": "Wird gesendet...",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "success": "Falls die eingegebene E-Mail-Adresse registriert ist, erhalten Sie in Kürze einen Link zum Zurücksetzen Ihres Passworts.",
+    "errors": {
+      "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein",
+      "generic": "Ihre Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "resetPassword": {
+    "title": "Passwort zurücksetzen",
+    "subtitle": "Erstellen Sie ein neues Passwort für Ihr Konto.",
+    "fields": {
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen"
+    },
+    "actions": {
+      "submit": "Passwort zurücksetzen",
+      "submitting": "Wird zurückgesetzt...",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "success": "Passwort erfolgreich zurückgesetzt! Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+    "errors": {
+      "invalidToken": "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
+      "missingToken": "Ungültiger Link zum Zurücksetzen.",
+      "generic": "Ihr Passwort konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut."
     }
   },
   "company": {

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./features/auth/pages/LoginPage";
+import ForgotPassword from "./features/auth/pages/ForgotPasswordPage";
+import ResetPassword from "./features/auth/pages/ResetPasswordPage";
 import Dashboard from "./features/dashboard/pages/DashboardPage";
 import Customers from "./features/customers/pages/CustomersListPage";
 import Layout from "./layout/Layout";
@@ -32,6 +34,8 @@ export default function App() {
           <BrowserRouter>
             <Routes>
               <Route path={paths.login} element={<Login />} />
+              <Route path={paths.forgotPassword} element={<ForgotPassword />} />
+              <Route path={paths.resetPassword} element={<ResetPassword />} />
               <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
                   <Route index element={<Navigate to={paths.dashboard} />} />
