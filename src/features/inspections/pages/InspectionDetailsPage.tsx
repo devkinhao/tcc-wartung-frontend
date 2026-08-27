@@ -31,6 +31,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DownloadIcon from "@mui/icons-material/Download";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import Tooltip from "@mui/material/Tooltip";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -58,6 +60,9 @@ import { DocxPreview } from "@/components/DocxPreview";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 import { typography } from "@/styles/typography";
+import { MaskedTextField } from "@/components/MaskedTextField";
+import { isValidArtNumber } from "../utils/artNumber";
+import { openCreaScArtValidation } from "@/utils/creaScArt";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -222,8 +227,18 @@ export default function InspectionDetailsPage() {
     inspectionDateValue !== "" &&
     expirationDateValue !== "" &&
     expirationDateValue < inspectionDateValue;
+  const artNumberValue = draft?.artNumber ?? "";
+  const artNumberInvalid = !isValidArtNumber(artNumberValue);
   const isGeneralValid =
-    inspectionDateValue !== "" && expirationDateValue !== "" && !expirationBeforeInspection;
+    inspectionDateValue !== "" &&
+    expirationDateValue !== "" &&
+    !expirationBeforeInspection &&
+    !artNumberInvalid;
+
+  const handleValidateArt = () => {
+    if (!view.artNumber) return;
+    openCreaScArtValidation(view.artNumber);
+  };
 
   const handleSave = () => {
     if (!draft) return;
@@ -232,6 +247,7 @@ export default function InspectionDetailsPage() {
       inspectionDate: toISODate(draft.inspectionDate),
       expirationDate: toISODate(draft.expirationDate),
       notes: draft.notes ?? "",
+      artNumber: draft.artNumber?.trim() || null,
       isActive: draft.isActive,
     };
 
@@ -596,6 +612,56 @@ export default function InspectionDetailsPage() {
                     }
                   />
                 </Stack>
+              </Stack>
+
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems="flex-start">
+                {editing ? (
+                  <MaskedTextField
+                    mask="art"
+                    label={t("inspectionDetails.fields.artNumber")}
+                    size="small"
+                    fullWidth
+                    value={draft?.artNumber ?? ""}
+                    onChange={(v) =>
+                      setDraft((prev) => (prev ? { ...prev, artNumber: v || null } : prev))
+                    }
+                    error={artNumberInvalid}
+                    helperText={
+                      artNumberInvalid ? t("inspectionDetails.errors.artNumberFormat") : undefined
+                    }
+                    sx={{ maxWidth: { sm: 320 } }}
+                  />
+                ) : (
+                  <TextField
+                    label={t("inspectionDetails.fields.artNumber")}
+                    size="small"
+                    fullWidth
+                    value={view.artNumber ?? "—"}
+                    disabled
+                    sx={{ maxWidth: { sm: 320 } }}
+                  />
+                )}
+
+                <Tooltip
+                  title={
+                    view.artNumber
+                      ? t("inspectionDetails.artValidation.tooltip")
+                      : t("inspectionDetails.artValidation.disabledHint")
+                  }
+                >
+                  <span>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<FactCheckIcon />}
+                      onClick={handleValidateArt}
+                      disabled={!view.artNumber || editing}
+                      sx={{ mt: { sm: 0.25 }, whiteSpace: "nowrap" }}
+                    >
+                      {t("inspectionDetails.artValidation.action")}
+                    </Button>
+                  </span>
+                </Tooltip>
               </Stack>
 
               <TextField

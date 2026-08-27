@@ -6,7 +6,7 @@
  * O valor armazenado no estado é sempre a string mascarada.
  */
 
-export type MaskType = "cpf" | "cnpj" | "phone" | "mobile" | "cep";
+export type MaskType = "cpf" | "cnpj" | "phone" | "mobile" | "cep" | "art";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,6 +61,20 @@ export function maskCep(value: string): string {
   return `${d.slice(0, 5)}-${d.slice(5)}`;
 }
 
+/**
+ * Número da ART (CREA-SC): dígito verificador sempre após o hífen.
+ * Aceita ARTs antigas (7 dígitos + verificador → 0000000-0) e
+ * novas (8 dígitos + verificador → 00000000-0).
+ *
+ * O hífen é sempre inserido antes do último dígito digitado, então ao digitar
+ * uma ART de 8 dígitos o agrupamento se ajusta ao teclar o verificador.
+ */
+export function maskArt(value: string): string {
+  const d = digitsOnly(value).slice(0, 9);
+  if (d.length <= 7) return d;
+  return `${d.slice(0, d.length - 1)}-${d.slice(d.length - 1)}`;
+}
+
 // ── Dispatcher ────────────────────────────────────────────────────────────────
 
 const MASK_FNS: Record<MaskType, (v: string) => string> = {
@@ -69,6 +83,7 @@ const MASK_FNS: Record<MaskType, (v: string) => string> = {
   phone: maskPhone,
   mobile: maskMobile,
   cep: maskCep,
+  art: maskArt,
 };
 
 export function applyMask(value: string, type: MaskType): string {
@@ -83,4 +98,5 @@ export const MASK_PLACEHOLDERS: Record<MaskType, string> = {
   phone: "(00) 0000-0000",
   mobile: "(00) 00000-0000",
   cep: "00000-000",
+  art: "00000000-0",
 };

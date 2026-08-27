@@ -9,6 +9,7 @@ export type InspectionCreateRequestDTO = {
   inspectionDate: string; // ISO date
   expirationDate: string; // ISO date
   notes?: string | null;
+  artNumber?: string | null;
   serviceTypeId: number;
 };
 

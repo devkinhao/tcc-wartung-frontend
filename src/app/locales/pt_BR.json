@@ -718,7 +718,13 @@
       "inspectionDate": "Data da inspeção",
       "expirationDate": "Data de vencimento",
       "notes": "Observações",
-      "isActive": "Ativa?"
+      "isActive": "Ativa?",
+      "artNumber": "Número da ART (CREA-SC)"
+    },
+    "artValidation": {
+      "action": "Consultar no CREA-SC",
+      "tooltip": "Abrir a página de validação da ART no CREA-SC (o número é copiado para você colar no campo do site)",
+      "disabledHint": "Informe o número da ART para consultar a autenticidade"
     },
     "documents": {
       "loading": "Carregando documentos...",
@@ -759,7 +765,8 @@
       "uploadDoc": "Não foi possível enviar o documento.",
       "uploadDocMissingFile": "Selecione um arquivo para enviar.",
       "downloadDoc": "Não foi possível baixar o documento.",
-      "deleteDoc": "Não foi possível excluir o documento."
+      "deleteDoc": "Não foi possível excluir o documento.",
+      "artNumberFormat": "O número da ART deve estar no formato 0000000-0 ou 00000000-0"
     }
   },
   "notify": {

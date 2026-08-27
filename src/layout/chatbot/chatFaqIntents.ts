@@ -24,6 +24,6 @@ export const faqActions: ChatMenuOption[] = [
     kind: "action",
     labelKey: "chatbot.menu.actions.faqSupport",
     respond: ({ t }) =>
-      `${t("help.support.description")} ${t("help.support.emailLabel")} suporte@empresa.com`,
+      `${t("help.support.description")} ${t("help.support.emailLabel")} ermaas@furb.br`,
   },
 ];

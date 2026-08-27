@@ -718,7 +718,13 @@
       "inspectionDate": "Inspektionsdatum",
       "expirationDate": "Ablaufdatum",
       "notes": "Notizen",
-      "isActive": "Aktiv?"
+      "isActive": "Aktiv?",
+      "artNumber": "ART-Nummer (CREA-SC)"
+    },
+    "artValidation": {
+      "action": "Bei CREA-SC prüfen",
+      "tooltip": "Die CREA-SC-Seite zur ART-Prüfung öffnen (die Nummer wird kopiert, damit Sie sie in das Feld der Website einfügen können)",
+      "disabledHint": "Geben Sie die ART-Nummer ein, um die Echtheit zu prüfen"
     },
     "documents": {
       "loading": "Dokumente werden geladen...",
@@ -759,7 +765,8 @@
       "uploadDoc": "Dokument konnte nicht hochgeladen werden.",
       "uploadDocMissingFile": "Bitte wählen Sie eine Datei zum Hochladen aus.",
       "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
-      "deleteDoc": "Dokument konnte nicht gelöscht werden."
+      "deleteDoc": "Dokument konnte nicht gelöscht werden.",
+      "artNumberFormat": "Die ART-Nummer muss im Format 0000000-0 oder 00000000-0 vorliegen"
     }
   },
   "notify": {

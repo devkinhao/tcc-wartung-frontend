@@ -36,6 +36,8 @@ import {
 } from "../api/inspections.create.api";
 import type { CustomerSummaryResponseDTO } from "../types/inspectionDetail";
 import { paths } from "@/routes/paths";
+import { MaskedTextField } from "@/components/MaskedTextField";
+import { isValidArtNumber } from "../utils/artNumber";
 
 type PendingDocument = {
   description: string;
@@ -55,6 +57,7 @@ type NewInspectionForm = {
   inspectionDate: string;
   expirationDate: string;
   notes: string;
+  artNumber: string;
 };
 
 const defaultForm: NewInspectionForm = {
@@ -63,6 +66,7 @@ const defaultForm: NewInspectionForm = {
   inspectionDate: "",
   expirationDate: "",
   notes: "",
+  artNumber: "",
 };
 
 export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspectionModalProps) {
@@ -134,12 +138,15 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
     form.expirationDate !== "" &&
     form.expirationDate < form.inspectionDate;
 
+  const artNumberInvalid = !isValidArtNumber(form.artNumber);
+
   const isValid =
     form.customer !== null &&
     form.serviceTypeId !== "" &&
     form.inspectionDate !== "" &&
     form.expirationDate !== "" &&
-    !expirationBeforeInspection;
+    !expirationBeforeInspection &&
+    !artNumberInvalid;
 
   const { mutate: save, isPending: submitting } = useMutation({
     mutationFn: async () => {
@@ -147,6 +154,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
         inspectionDate: form.inspectionDate,
         expirationDate: form.expirationDate,
         notes: form.notes.trim() || null,
+        artNumber: form.artNumber.trim() || null,
         serviceTypeId: form.serviceTypeId as number,
       };
       const created = await createInspection(form.customer!.id, dto);
@@ -308,6 +316,21 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                   expirationBeforeInspection
                     ? t("inspections.addModal.errors.expirationBeforeInspection")
                     : undefined
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <MaskedTextField
+                mask="art"
+                label={t("inspectionDetails.fields.artNumber")}
+                size="small"
+                fullWidth
+                value={form.artNumber}
+                onChange={(v) => setForm((p) => ({ ...p, artNumber: v }))}
+                error={artNumberInvalid}
+                helperText={
+                  artNumberInvalid ? t("inspectionDetails.errors.artNumberFormat") : undefined
                 }
               />
             </Grid>

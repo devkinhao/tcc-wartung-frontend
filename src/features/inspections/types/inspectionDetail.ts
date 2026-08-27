@@ -23,6 +23,7 @@ export type InspectionDetailResponseDTO = {
   inspectionDate: string; // ISO date
   serviceType: ServiceTypeResponseDTO;
   notes: string | null;
+  artNumber: string | null;
   expirationDate: string; // ISO date
   isActive: boolean;
   isRenewed: boolean;

@@ -5,6 +5,7 @@ export type InspectionUpdateRequestDTO = {
   inspectionDate: string; // ISO date
   expirationDate: string; // ISO date
   notes?: string | null;
+  artNumber?: string | null;
   isActive: boolean;
 };
 
