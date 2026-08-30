@@ -10,7 +10,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Paper,
   Stack,
   TableBody,
   TableCell,
@@ -75,7 +74,7 @@ export default function ServiceTypesPage() {
   }
 
   return (
-    <Paper elevation={1} sx={{ maxWidth: 800, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Box sx={{ maxWidth: 800 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
@@ -198,6 +197,6 @@ export default function ServiceTypesPage() {
         onClose={() => setEditTarget(null)}
         onUpdated={reload}
       />
-    </Paper>
+    </Box>
   );
 }

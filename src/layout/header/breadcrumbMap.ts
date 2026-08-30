@@ -12,58 +12,69 @@ export type BreadcrumbItem = {
  * itens na própria página, com dados reais das queries (nome do cliente/inspeção).
  */
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
-  [paths.dashboard]: [{ label: "nav.dashboard" }],
+  [paths.home]: [{ label: "nav.home" }],
+
+  [paths.dashboard]: [
+    { label: "nav.home", path: paths.home },
+    { label: "nav.analytics" },
+  ],
 
   [paths.customers]: [
-    { label: "nav.home",         path: paths.dashboard },
+    { label: "nav.home",         path: paths.home },
     { label: "nav.customersList" },
   ],
 
   [paths.inspections]: [
-    { label: "nav.home",            path: paths.dashboard },
+    { label: "nav.home",            path: paths.home },
     { label: "nav.inspectionsList" },
   ],
 
   [paths.notifications]: [
-    { label: "nav.home",              path: paths.dashboard },
+    { label: "nav.home",              path: paths.home },
     { label: "nav.notificationsList" },
   ],
 
   [paths.reports]: [
-    { label: "nav.home",   path: paths.dashboard },
+    { label: "nav.home",   path: paths.home },
     { label: "nav.reports" },
   ],
 
   [paths.adminPanel]: [
-    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.home",       path: paths.home },
     { label: "nav.adminPanel" },
   ],
 
   [paths.company]: [
-    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.home",       path: paths.home },
     { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.myCompany" },
   ],
 
   [paths.users]: [
-    { label: "nav.home",       path: paths.dashboard },
+    { label: "nav.home",       path: paths.home },
     { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.users" },
   ],
 
   [paths.configurations]: [
-    { label: "nav.home",           path: paths.dashboard },
+    { label: "nav.home",           path: paths.home },
     { label: "nav.adminPanel",     path: paths.adminPanel },
     { label: "nav.configurations" },
   ],
 
   [paths.userProfile]: [
-    { label: "nav.home",      path: paths.dashboard },
+    { label: "nav.home",      path: paths.home },
     { label: "nav.myProfile" },
   ],
 
+  [paths.preferences]: [
+    { label: "nav.home",       path: paths.home },
+    { label: "nav.preferences" },
+  ],
+
   [paths.serviceTypes]: [
-    { label: "nav.home",         path: paths.dashboard },
+    { label: "nav.home",       path: paths.home },
+    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.serviceTypes" },
   ],
 };

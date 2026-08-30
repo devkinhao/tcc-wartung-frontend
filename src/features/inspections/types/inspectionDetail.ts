@@ -1,3 +1,5 @@
+import type { InspectionDeactivationReason } from "../deactivationReason";
+
 export type ServiceTypeResponseDTO = {
   id: number;
   name: string;
@@ -27,6 +29,7 @@ export type InspectionDetailResponseDTO = {
   expirationDate: string; // ISO date
   isActive: boolean;
   isRenewed: boolean;
+  deactivationReason: InspectionDeactivationReason | null;
   createdById: number | null;
   createdByUsername: string | null;
   createdAt: string | null; // ISO date-time

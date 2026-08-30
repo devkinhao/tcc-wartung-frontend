@@ -11,7 +11,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -79,7 +78,7 @@ export default function UsersPage() {
   }
 
   return (
-    <Paper elevation={1} sx={{ maxWidth: 1100, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Box sx={{ maxWidth: 1100 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
@@ -224,6 +223,6 @@ export default function UsersPage() {
         onClose={() => setCreateOpen(false)}
         onCreated={reload}
       />
-    </Paper>
+    </Box>
   );
 }

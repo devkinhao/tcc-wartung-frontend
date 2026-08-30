@@ -29,7 +29,8 @@
       "save": "Save",
       "close": "Close",
       "confirm": "Confirm",
-      "retry": "Retry"
+      "retry": "Retry",
+      "more": "More actions"
     },
     "loading": "Loading...",
     "cep": {
@@ -41,7 +42,11 @@
     "fields": {
       "zipCode": "ZIP code",
       "cnpj": "CNPJ"
-    }
+    },
+    "day": "day",
+    "days": "days",
+    "year": "year",
+    "years": "years"
   },
   "months": {
     "january": "January",
@@ -66,7 +71,6 @@
   },
   "nav": {
     "home": "Home",
-    "dashboard": "Dashboard",
     "customersList": "Companies",
     "inspections": "Inspections",
     "inspectionsList": "Inspections",
@@ -77,12 +81,13 @@
     "myCompany": "My Company",
     "users": "Users",
     "configurations": "Configurations",
-    "adminPanel": "Admin panel",
+    "adminPanel": "Administration",
     "myProfile": "My Profile",
     "preferences": "Preferences",
-    "customerDetails": "Customer Details",
+    "customerDetails": "Company Details",
     "companyDetails": "Company Details",
-    "inspectionDetailsPage": "Inspection Details"
+    "inspectionDetailsPage": "Inspection Details",
+    "analytics": "Analytics"
   },
   "adminPanel": {
     "title": "Admin panel",
@@ -99,6 +104,10 @@
       "configurations": {
         "title": "Configurations",
         "description": "General settings that control the system's behavior."
+      },
+      "serviceTypes": {
+        "title": "Services",
+        "description": "Create and edit the service types used in inspections."
       }
     }
   },
@@ -160,7 +169,8 @@
         "title": "Customers by City",
         "tooltipLabel": "customer(s)"
       }
-    }
+    },
+    "description": "An overview of the numbers."
   },
   "preferences": {
     "title": "Preferences",
@@ -239,7 +249,7 @@
   "help": {
     "faq": {
       "q1": {
-        "answer": "Go to Customers and click New. Fill in the data and confirm."
+        "answer": "Go to Companies and click New company. Fill in the details and confirm."
       },
       "q2": {
         "answer": "Go to Preferences and select the desired language/theme."
@@ -385,7 +395,8 @@
         "mismatch": "Passwords do not match",
         "changeFailed": "Failed to change password"
       }
-    }
+    },
+    "description": "Your system account details."
   },
   "customers": {
     "title": "Manage companies",
@@ -414,7 +425,7 @@
       "nextExpiration": "Expiration",
       "actions": "Actions"
     },
-    "loading": "Loading customers...",
+    "loading": "Loading companies...",
     "empty": "No companies found.",
     "rowMenu": {
       "actionsLabel": "Actions",
@@ -425,7 +436,7 @@
     "quickView": {
       "title": "Inspections (quick view)",
       "loading": "Loading inspections...",
-      "empty": "No inspections found for this customer",
+      "empty": "No inspections found for this company",
       "error": "Could not load inspections",
       "table": {
         "inspectionDate": "Inspection date",
@@ -438,16 +449,16 @@
       }
     },
     "addModal": {
-      "title": "New customer",
+      "title": "New company",
       "steps": {
         "info": "Information",
         "address": "Address",
         "done": "Done"
       },
       "stepHints": {
-        "step1": "1. Basic identification and contact information",
-        "step2": "2. Customer location",
-        "done": "Registration completed"
+        "step1": "Company data and contact",
+        "step2": "Company address",
+        "done": "All set"
       },
       "fields": {
         "fantasyName": "Trade name",
@@ -485,12 +496,13 @@
         "finish": "Finish",
         "saving": "Saving...",
         "close": "Close",
-        "openRecord": "Open record"
+        "openRecord": "Open record",
+        "newInspection": "Add inspection"
       },
       "success": {
         "title": "Company registered successfully!",
-        "idLabel": "ID",
-        "question": "Do you want to open the record now or just close?"
+        "question": "Do you want to open the record now or just close?",
+        "summary": "{{name}} has been added."
       },
       "errors": {
         "createFailed": "Could not register the company. Check the data and try again."
@@ -510,7 +522,7 @@
     },
     "welcome": {
       "title": "Welcome!",
-      "subtitle": "Manage customers and inspections easily."
+      "subtitle": "Manage companies and inspections with ease."
     },
     "errors": {
       "invalidCredentials": "Invalid username or password",
@@ -580,10 +592,12 @@
       "actions": {
         "selectCity": "Select a city"
       }
-    }
+    },
+    "description": "Your company's data, used on reports and documents.",
+    "generalTitle": "General data"
   },
   "customerDetails": {
-    "loading": "Loading customer...",
+    "loading": "Loading company...",
     "status": {
       "active": "ACTIVE",
       "inactive": "INACTIVE"
@@ -591,13 +605,13 @@
     "actions": {
       "back": "Back",
       "actions": "Actions",
-      "delete": "Delete customer",
+      "delete": "Delete company",
       "whatsapp": "WhatsApp",
       "email": "Email"
     },
     "confirmDelete": {
-      "title": "Delete customer",
-      "message": "Are you sure you want to delete customer \"{{name}}\"? They will no longer appear in the system's listings."
+      "title": "Delete company",
+      "message": "Are you sure you want to delete the company \"{{name}}\"? It will no longer appear in the system's lists."
     },
     "confirmDeactivate": {
       "title": "Mark as non-customer",
@@ -612,13 +626,13 @@
       "general": "General",
       "address": "Address",
       "inspections": "Inspections",
-      "movements": "Activity"
+      "movements": "History"
     },
     "errors": {
       "updateGeneral": "Could not update general information.",
       "updateContacts": "Could not update contacts.",
       "updateAddress": "Could not update the address.",
-      "delete": "Could not delete the customer."
+      "delete": "Could not delete the company."
     },
     "general": {
       "title": "General information",
@@ -669,11 +683,12 @@
         "renewed": "Renewed"
       },
       "actions": {
-        "openDocuments": "Open documents"
+        "openDocuments": "Open documents",
+        "rowMenu": "Inspection actions"
       }
     },
     "movements": {
-      "title": "Activity",
+      "title": "History",
       "fields": {
         "createdAt": "Created date/time",
         "createdBy": "Created by",
@@ -692,7 +707,8 @@
     "actions": {
       "back": "Back",
       "actions": "Actions",
-      "delete": "Delete inspection"
+      "delete": "Delete inspection",
+      "reactivate": "Reactivate"
     },
     "confirmDelete": {
       "title": "Delete inspection",
@@ -711,7 +727,7 @@
     "sections": {
       "general": "Inspection data",
       "documents": "Documents",
-      "audit": "Audit"
+      "audit": "History"
     },
     "fields": {
       "service": "Service",
@@ -730,7 +746,6 @@
       "loading": "Loading documents...",
       "empty": "No documents found.",
       "table": {
-        "description": "Description",
         "name": "Name",
         "size": "Size",
         "uploadDate": "Upload date",
@@ -747,11 +762,11 @@
       "previewUnsupported": "Preview not available for this file type. Download the file to view it.",
       "uploadDialog": {
         "title": "Upload document",
-        "description": "Description",
-        "chooseFile": "Choose file",
-        "fileSelected": "File: {{name}}",
         "hint": "Upload a document related to this inspection.",
         "upload": "Upload"
+      },
+      "picker": {
+        "select": "Select files"
       }
     },
     "audit": {
@@ -767,6 +782,9 @@
       "downloadDoc": "Could not download document.",
       "deleteDoc": "Could not delete document.",
       "artNumberFormat": "The ART number must be in the format 0000000-0 or 00000000-0"
+    },
+    "renew": {
+      "alreadyRenewed": "This inspection has already been renewed."
     }
   },
   "notify": {
@@ -775,7 +793,8 @@
       "created": "Created successfully",
       "deleted": "Removed successfully",
       "uploaded": "File uploaded successfully",
-      "passwordChanged": "Password changed successfully"
+      "passwordChanged": "Password changed successfully",
+      "reportGenerated": "Report generated — check your downloads."
     },
     "error": {
       "generic": "An error occurred. Please try again.",
@@ -812,12 +831,13 @@
       "FILE_EXTENSION_NOT_ALLOWED": "File extension not allowed.",
       "FILE_EXTENSION_MISSING": "The file must have an extension.",
       "SERVICE_TYPE_ALREADY_EXISTS": "This service type already exists.",
-      "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections."
+      "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections.",
+      "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed."
     }
   },
   "inspections": {
     "title": "Inspections",
-    "description": "Operational view of all active inspections.",
+    "description": "All registered inspections.",
     "empty": "No inspections found.",
     "status": {
       "expired": "Expired",
@@ -825,10 +845,14 @@
       "onTrack": "On Track"
     },
     "filters": {
-      "search": "Search by customer or service",
+      "search": "Search by company or service",
       "status": "Status",
       "allStatuses": "All statuses",
-      "clear": "Clear filters"
+      "clear": "Clear filters",
+      "statusAll": "All",
+      "statusExpired": "Overdue",
+      "statusNear": "Due soon",
+      "statusOk": "On track"
     },
     "actions": {
       "addInspection": "New inspection"
@@ -839,36 +863,64 @@
     "addModal": {
       "title": "New inspection",
       "fields": {
-        "customer": "Customer"
+        "customer": "Company"
       },
-      "customerNoOptions": "Type to search for a customer",
+      "customerNoOptions": "Type to search for a company",
       "errors": {
         "expirationBeforeInspection": "Expiration date cannot be before the inspection date"
       },
       "documents": {
-        "title": "Documents (optional)",
-        "add": "Add"
+        "title": "Documents (optional)"
       },
       "success": {
         "title": "Inspection created successfully!",
-        "idLabel": "ID",
-        "uploadFailures": "{{count}} document(s) could not be uploaded. You can try again from the inspection page."
+        "uploadFailures": "{{count}} document(s) could not be uploaded. You can try again from the inspection page.",
+        "summary": "{{service}} inspection for {{customer}}, due {{date}}."
       },
       "actions": {
         "create": "Create inspection",
         "saving": "Saving...",
         "close": "Close",
         "openRecord": "Open inspection"
-      }
+      },
+      "expirationShortcut": "+{{count}} {{unit}}"
     },
     "table": {
-      "customer": "Customer",
+      "customer": "Company",
       "service": "Service",
       "notes": "Notes",
       "inspectionDate": "Inspection Date",
       "expirationDate": "Expiration",
       "status": "Status",
       "actions": "Actions"
+    },
+    "renewModal": {
+      "title": "Renew inspection",
+      "success": {
+        "title": "Inspection renewed!",
+        "summary": "New {{service}} inspection for {{customer}}, due {{date}}."
+      },
+      "actions": {
+        "confirm": "Renew",
+        "confirmShort": "Renew",
+        "openNew": "Open new inspection"
+      },
+      "tooltip": "Create the next inspection from this one",
+      "currentSummary": "Done on {{inspectionDate}} · due {{expirationDate}}"
+    },
+    "deactivate": {
+      "title": "Close without renewal",
+      "intro": "The {{service}} inspection for {{customer}} will leave the pending list but stays in the company's history.",
+      "reasonLabel": "Reason",
+      "reasons": {
+        "CLIENT_DECLINED": "Client declined to renew",
+        "EQUIPMENT_DECOMMISSIONED": "Equipment decommissioned",
+        "OTHER": "Other",
+        "CUSTOMER_INACTIVATED": "Company is no longer a client"
+      },
+      "confirm": "Confirm",
+      "action": "Don't renew",
+      "archivedChip": "Not renewed"
     }
   },
   "chatbot": {
@@ -882,7 +934,7 @@
       "inspectionsNear": "You have {{count}} inspections nearing expiration.",
       "inspectionsOnTrack": "You have {{count}} inspections on track.",
       "notificationsUnread": "You have {{count}} unread notifications.",
-      "customersTotal": "You have {{count}} registered customers."
+      "customersTotal": "You have {{count}} companies registered."
     },
     "menu": {
       "back": "Back to menu",
@@ -890,13 +942,22 @@
         "intro": "Hi! Choose one of the options below."
       },
       "categories": {
-        "navigate": { "label": "Navigate", "intro": "Where would you like to go?" },
-        "data": { "label": "Check data", "intro": "What would you like to check?" },
-        "faq": { "label": "Questions and support", "intro": "What do you need help with?" }
+        "navigate": {
+          "label": "Navigate",
+          "intro": "Where would you like to go?"
+        },
+        "data": {
+          "label": "Check data",
+          "intro": "What would you like to check?"
+        },
+        "faq": {
+          "label": "Questions and support",
+          "intro": "What do you need help with?"
+        }
       },
       "actions": {
         "dashboard": "Go to home",
-        "customers": "View customers",
+        "customers": "View companies",
         "inspections": "View inspections",
         "notifications": "View notifications",
         "reports": "Reports",
@@ -909,12 +970,58 @@
         "inspectionsNear": "Inspections nearing expiration",
         "inspectionsOnTrack": "Inspections on track",
         "notificationsUnread": "Unread notifications",
-        "customersTotal": "Total customers",
-        "faqAddCustomer": "How to register a customer",
+        "customersTotal": "Total companies",
+        "faqAddCustomer": "How to add a company",
         "faqPreferences": "How to change preferences",
         "faqReports": "How to generate reports",
-        "faqSupport": "Talk to support"
+        "faqSupport": "Talk to support",
+        "analytics": "View analytics"
       }
     }
+  },
+  "home": {
+    "title": "Home",
+    "subtitle": "Your inspections that need attention.",
+    "cards": {
+      "expired": "Overdue",
+      "near": "Due in {{days}} days",
+      "onTrack": "On track",
+      "tooltip": {
+        "expired": "View overdue inspections",
+        "near": "View inspections due within {{days}} days",
+        "onTrack": "View on-track inspections"
+      }
+    },
+    "attention": {
+      "title": "Needs attention",
+      "seeAll": "See all",
+      "empty": "No overdue or soon-to-expire inspections. All caught up!",
+      "renewTooltip": "Create the next inspection from this one",
+      "openTooltip": "Open the inspection details",
+      "more": "See {{count}} more",
+      "whatsappTooltip": "Message the company on WhatsApp",
+      "noPhone": "No mobile number on file",
+      "dueToday": "Due today",
+      "overdue": "Overdue by {{count}} {{unit}}",
+      "dueIn": "Due in {{count}} {{unit}}",
+      "emailTooltip": "Email the company",
+      "noEmail": "No email on file"
+    }
+  },
+  "expiration": {
+    "tooltip": {
+      "expired": "Expired on {{date}}",
+      "due": "Due on {{date}}"
+    }
+  },
+  "unsavedChanges": {
+    "title": "Unsaved changes",
+    "message": "You have changes that haven't been saved. If you leave now, they'll be lost.",
+    "stay": "Keep editing",
+    "leave": "Leave without saving"
+  },
+  "audit": {
+    "created": "Created by {{by}} on {{at}}",
+    "updated": "Last updated by {{by}} on {{at}}"
   }
 }

@@ -9,7 +9,8 @@ import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./sidebar/constants";
 import { usePreferences } from "@/features/preferences/usePreferences";
 
 export default function Layout() {
-  const [collapsed, setCollapsed] = useState(true);
+  // O menu abre sempre expandido; recolher é uma ação pontual da sessão.
+  const [collapsed, setCollapsed] = useState(false);
   const drawerWidth = collapsed ? DRAWER_COLLAPSED_WIDTH : DRAWER_WIDTH;
   const { preferences } = usePreferences();
   const showChatbot = preferences.CHATBOT_ENABLED !== "false";

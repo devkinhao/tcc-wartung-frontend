@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import type { City } from "./types/City";
-import type { AbvtexSealType } from "./types/abvtexSeal";
+import type { City } from "../types/City";
+import type { AbvtexSealType } from "../types/abvtexSeal";
 import { api } from "@/api/client";
 import { useNavigate } from "react-router-dom";
 import {
@@ -61,7 +61,7 @@ const defaultForm: NewCompanyForm = {
   fantasyName: "",
   legalName: "",
   cnpj: "",
-  abvtexSeal: "",
+  abvtexSeal: "NAO_POSSUI",
   phone: "",
   mobile: "",
   email: "",
@@ -122,7 +122,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const step1Valid =
     form.legalName.trim() !== "" &&
     CNPJ_REGEX.test(form.cnpj.trim()) &&
-    form.abvtexSeal !== "" &&
     !emailError &&
     !phoneError &&
     !mobileError;
@@ -167,6 +166,12 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
   const goToCadastro = () => {
     if (createdId) navigate(paths.customerDetails(createdId));
+    else navigate(paths.customers);
+    closeAndReset();
+  };
+
+  const goToNewInspection = () => {
+    if (createdId) navigate(paths.customerInspectionsTab(createdId));
     else navigate(paths.customers);
     closeAndReset();
   };
@@ -236,7 +241,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
             {createdId ? (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {t("customers.addModal.success.idLabel")}: {createdId}
+                {t("customers.addModal.success.summary", { name: form.legalName.trim() })}
               </Typography>
             ) : null}
 
@@ -251,7 +256,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               autopreenchimento do CnpjTextField/CepTextField com o resultado
               em cache, sobrescrevendo edições manuais do usuário. */}
           <Grid container spacing={2} sx={{ display: step === 0 ? "flex" : "none" }}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <CnpjTextField
                 label={t("customers.addModal.fields.cnpj")}
                 value={form.cnpj}
@@ -263,7 +268,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label={t("customers.addModal.fields.fantasyName")}
                 placeholder={t("customers.addModal.placeholders.fantasyName")}
@@ -275,7 +280,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12}>
               <TextField
                 label={t("customers.addModal.fields.legalName")}
                 placeholder={t("customers.addModal.placeholders.legalName")}
@@ -288,9 +293,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <FormControl fullWidth size="small">
-                <InputLabel id="abvtex" required>{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
+                <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex"
                   label={t("customers.addModal.fields.abvtexSeal")}
@@ -299,7 +304,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                     setForm((p) => ({ ...p, abvtexSeal: e.target.value as NewCompanyForm["abvtexSeal"] }))
                   }
                 >
-                  <MenuItem value="">{t("customers.addModal.placeholders.abvtexSeal")}</MenuItem>
                   {abvtexOptions.map((o) => (
                     <MenuItem key={o.value} value={o.value}>
                       {o.label}
@@ -309,7 +313,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <MaskedTextField
                 mask="phone"
                 label={t("customers.addModal.fields.phone")}
@@ -322,7 +326,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <MaskedTextField
                 mask="mobile"
                 label={t("customers.addModal.fields.mobile")}
@@ -335,7 +339,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label={t("customers.addModal.fields.email")}
                 placeholder={t("customers.addModal.placeholders.email")}
@@ -463,12 +467,15 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
             {submitting ? t("customers.addModal.actions.saving") : t("customers.addModal.actions.finish")}
           </Button>
         ) : (
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button variant="outlined" onClick={closeAndReset}>
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <Button onClick={closeAndReset}>
               {t("customers.addModal.actions.close")}
             </Button>
-            <Button variant="contained" onClick={goToCadastro}>
+            <Button variant="outlined" onClick={goToCadastro}>
               {t("customers.addModal.actions.openRecord")}
+            </Button>
+            <Button variant="contained" onClick={goToNewInspection}>
+              {t("customers.addModal.actions.newInspection")}
             </Button>
           </Box>
         )}

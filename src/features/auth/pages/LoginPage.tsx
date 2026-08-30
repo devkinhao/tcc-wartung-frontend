@@ -54,7 +54,7 @@ export default function LoginPage() {
     try {
       const { token } = await loginRequest({ username, password });
       await login(token);
-      navigate(paths.dashboard);
+      navigate(paths.home);
     } catch (err) {
       if (isAxiosError(err) && err.response?.status === 429) {
         const retryAfter = Number(err.response.headers?.["retry-after"]);

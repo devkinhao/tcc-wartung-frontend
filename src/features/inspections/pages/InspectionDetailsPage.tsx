@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -7,7 +7,6 @@ import {
   CardContent,
   Chip,
   CircularProgress,
-  Divider,
   Dialog,
   DialogActions,
   DialogContent,
@@ -28,6 +27,8 @@ import {
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DownloadIcon from "@mui/icons-material/Download";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -47,12 +48,13 @@ import {
   deleteInspectionDocument,
   downloadInspectionDocument,
   listInspectionDocuments,
-  uploadInspectionDocument,
-} from "../api/inspection.documents.api";
+  uploadInspectionDocuments,
+} from "../api/inspections.documents.api";
 import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { AuditFooter } from "@/components/AuditFooter";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
@@ -61,8 +63,14 @@ import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 import { typography } from "@/styles/typography";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { UnsavedChangesGuard } from "@/components/UnsavedChangesGuard";
 import { isValidArtNumber } from "../utils/artNumber";
+import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 import { openCreaScArtValidation } from "@/utils/creaScArt";
+import { RenewInspectionModal, type RenewableInspection } from "../components/RenewInspectionModal";
+import { DeactivateInspectionModal } from "../components/DeactivateInspectionModal";
+import { DocumentPicker } from "../components/DocumentPicker";
+import { deactivationReasonKey } from "../deactivationReason";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -114,12 +122,13 @@ export default function InspectionDetailsPage() {
   const [draft, setDraft] = useState<InspectionDetailResponseDTO | null>(null);
 
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [uploadDescription, setUploadDescription] = useState("");
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
   const [confirmDeleteInspectionOpen, setConfirmDeleteInspectionOpen] = useState(false);
+  const [renewOpen, setRenewOpen] = useState(false);
+  const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   const [docMenuAnchor, setDocMenuAnchor] = useState<HTMLElement | null>(null);
   const [docMenuTarget, setDocMenuTarget] = useState<number | null>(null);
@@ -144,24 +153,29 @@ export default function InspectionDetailsPage() {
     enabled: Number.isFinite(inspectionId) && inspectionId > 0,
   });
 
-  useEffect(() => {
-    if (data) setDraft((prev) => prev ?? data);
-  }, [data]);
+  // Trocar de inspeção reaproveita esta mesma tela (só muda o :id da URL).
+  // Descarta qualquer edição em aberto para não mostrar o rascunho da anterior.
+  // (padrão "ajustar estado durante o render" recomendado pelo React)
+  const [loadedInspectionId, setLoadedInspectionId] = useState(inspectionId);
+  if (inspectionId !== loadedInspectionId) {
+    setLoadedInspectionId(inspectionId);
+    setEditing(false);
+    setDraft(null);
+  }
 
   const mutation = useMutation({
     mutationFn: (payload: InspectionUpdateRequestDTO) => updateInspection(inspectionId, payload),
     onSuccess: (updated) => {
       qc.setQueryData(qk.inspectionDetail(inspectionId), updated);
-      setDraft(updated);
       setEditing(false);
+      setDraft(null);
       notify.success("notify.success.saved");
     },
     onError: (err) => notify.fromError(err),
   });
 
   const uploadMutation = useMutation({
-    mutationFn: (params: { description: string; file: File }) =>
-      uploadInspectionDocument(inspectionId, params),
+    mutationFn: (files: File[]) => uploadInspectionDocuments(inspectionId, files),
     onSuccess: async () => {
       // Invalida e aguarda os dados atualizados ANTES de fechar o dialog
       await Promise.all([
@@ -169,8 +183,7 @@ export default function InspectionDetailsPage() {
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
       setUploadOpen(false);
-      setUploadDescription("");
-      setUploadFile(null);
+      setUploadFiles([]);
       notify.success("notify.success.uploaded");
     },
     onError: (err) => notify.fromError(err),
@@ -203,7 +216,9 @@ export default function InspectionDetailsPage() {
     onError: (err) => notify.fromError(err),
   });
 
-  const view = draft ?? data;
+  // A tela sempre exibe os dados do servidor (view); o rascunho (draft) existe
+  // apenas enquanto o card "Geral" está em edição.
+  const view = data;
 
   const documents = docsQuery.data ?? view?.documents ?? [];
 
@@ -217,6 +232,16 @@ export default function InspectionDetailsPage() {
       </Stack>
     );
   }
+
+  const startEditing = () => {
+    setDraft(view);
+    setEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setDraft(null);
+    setEditing(false);
+  };
 
   // Espelha as constraints do InspectionUpdateRequestDTO do backend (@NotNull
   // inspectionDate/expirationDate) mais a regra de negócio de vencimento
@@ -240,6 +265,16 @@ export default function InspectionDetailsPage() {
     openCreaScArtValidation(view.artNumber);
   };
 
+  // Alterações não salvas: em edição e com o rascunho divergindo do servidor.
+  const hasUnsavedChanges =
+    editing &&
+    draft != null &&
+    (draft.inspectionDate !== view.inspectionDate ||
+      draft.expirationDate !== view.expirationDate ||
+      (draft.notes ?? "") !== (view.notes ?? "") ||
+      (draft.artNumber ?? "") !== (view.artNumber ?? "") ||
+      draft.isActive !== view.isActive);
+
   const handleSave = () => {
     if (!draft) return;
 
@@ -254,6 +289,16 @@ export default function InspectionDetailsPage() {
     mutation.mutate(payload);
   };
 
+  const handleReactivate = () => {
+    mutation.mutate({
+      inspectionDate: toISODate(view.inspectionDate),
+      expirationDate: toISODate(view.expirationDate),
+      notes: view.notes ?? "",
+      artNumber: view.artNumber?.trim() || null,
+      isActive: true,
+    });
+  };
+
   const statusLabel = view.isActive
     ? t("inspectionDetails.status.active")
     : t("inspectionDetails.status.inactive");
@@ -264,13 +309,13 @@ export default function InspectionDetailsPage() {
 
   const breadcrumbItems: BreadcrumbItem[] = customerId
     ? [
-        { label: "nav.home", path: paths.dashboard },
+        { label: "nav.home", path: paths.home },
         { label: "nav.customersList", path: paths.customers },
         { label: view.customer?.legalName ?? t("nav.customerDetails"), path: paths.customerInspectionsTab(customerId) },
         { label: "nav.inspectionDetailsPage" },
       ]
     : [
-        { label: "nav.home", path: paths.dashboard },
+        { label: "nav.home", path: paths.home },
         { label: "nav.inspectionsList", path: paths.inspections },
         { label: "nav.inspectionDetailsPage" },
       ];
@@ -340,6 +385,7 @@ export default function InspectionDetailsPage() {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <UnsavedChangesGuard when={hasUnsavedChanges} />
 
       {/* Menu de ações por documento (3 pontinhos) */}
       <Menu anchorEl={docMenuAnchor} open={Boolean(docMenuAnchor)} onClose={closeDocMenu}>
@@ -444,6 +490,40 @@ export default function InspectionDetailsPage() {
         </DialogActions>
       </Dialog>
 
+      <RenewInspectionModal
+        open={renewOpen}
+        onClose={() => setRenewOpen(false)}
+        inspection={
+          {
+            id: view.id,
+            inspectionDate: view.inspectionDate,
+            expirationDate: view.expirationDate,
+            customerLegalName: view.customer?.legalName ?? "—",
+            serviceTypeName: view.serviceType?.name ?? "—",
+            customerId: customerId ?? view.customer?.id,
+          } satisfies RenewableInspection
+        }
+        onRenewed={(newId) => {
+          setRenewOpen(false);
+          navigate(
+            customerId
+              ? paths.customerInspectionDetails(customerId, newId)
+              : paths.inspectionDetails(newId)
+          );
+        }}
+      />
+
+      <DeactivateInspectionModal
+        open={deactivateOpen}
+        onClose={() => setDeactivateOpen(false)}
+        inspection={{
+          id: view.id,
+          serviceTypeName: view.serviceType?.name ?? "—",
+          customerLegalName: view.customer?.legalName ?? "—",
+          customerId: customerId ?? view.customer?.id,
+        }}
+      />
+
       <Box sx={{ mb: 1 }}>
         <Breadcrumb items={breadcrumbItems} size="large" />
       </Box>
@@ -467,13 +547,14 @@ export default function InspectionDetailsPage() {
               </Stack>
 
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, flexWrap: "wrap" }}>
-                <Typography variant="body2" color="text.secondary">
-                  {t("inspectionDetails.summary.id")}: {view.id}
-                </Typography>
-
                 <Chip size="small" label={statusLabel} color={view.isActive ? "success" : "default"} />
                 {view.isRenewed ? (
                   <Chip size="small" label={t("inspectionDetails.status.renewed")} color="info" />
+                ) : null}
+                {!view.isActive && view.deactivationReason ? (
+                  <Tooltip title={t(deactivationReasonKey(view.deactivationReason))}>
+                    <Chip size="small" color="warning" label={t("inspections.deactivate.archivedChip")} />
+                  </Tooltip>
                 ) : null}
 
                 {/* Empresa (customer) não vem no DTO ainda */}
@@ -496,7 +577,42 @@ export default function InspectionDetailsPage() {
               </Stack>
             </Box>
 
-            <Box>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ flexShrink: 0 }}>
+              {view.isActive ? (
+                <Tooltip
+                  title={
+                    view.isRenewed
+                      ? t("inspectionDetails.renew.alreadyRenewed")
+                      : t("inspections.renewModal.tooltip")
+                  }
+                >
+                  <span>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      startIcon={<AutorenewIcon />}
+                      onClick={() => setRenewOpen(true)}
+                      disabled={view.isRenewed || editing}
+                      sx={{ whiteSpace: "nowrap" }}
+                    >
+                      {t("inspections.renewModal.actions.confirm")}
+                    </Button>
+                  </span>
+                </Tooltip>
+              ) : !view.isRenewed ? (
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="small"
+                  startIcon={<RestartAltIcon />}
+                  onClick={handleReactivate}
+                  disabled={mutation.isPending || editing}
+                  sx={{ whiteSpace: "nowrap" }}
+                >
+                  {t("inspectionDetails.actions.reactivate")}
+                </Button>
+              ) : null}
+
               <IconButton
                 aria-label={t("inspectionDetails.actions.actions")}
                 onClick={(e) => setMenuEl(e.currentTarget)}
@@ -506,6 +622,15 @@ export default function InspectionDetailsPage() {
               </IconButton>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
                 <MenuItem
+                  disabled={!view.isActive || editing}
+                  onClick={() => {
+                    setMenuEl(null);
+                    setDeactivateOpen(true);
+                  }}
+                >
+                  {t("inspections.deactivate.action")}
+                </MenuItem>
+                <MenuItem
                   onClick={() => {
                     setMenuEl(null);
                     setConfirmDeleteInspectionOpen(true);
@@ -514,7 +639,7 @@ export default function InspectionDetailsPage() {
                   {t("inspectionDetails.actions.delete")}
                 </MenuItem>
               </Menu>
-            </Box>
+            </Stack>
           </Stack>
         </Box>
       </Paper>
@@ -527,11 +652,8 @@ export default function InspectionDetailsPage() {
               editing={editing}
               saving={mutation.isPending}
               saveDisabled={!isGeneralValid}
-              onEdit={() => setEditing(true)}
-              onCancel={() => {
-                setDraft(data ?? null);
-                setEditing(false);
-              }}
+              onEdit={startEditing}
+              onCancel={cancelEditing}
               onSave={handleSave}
             />
 
@@ -592,26 +714,6 @@ export default function InspectionDetailsPage() {
                       : undefined
                   }
                 />
-
-                <Stack spacing={0.5} sx={{ minWidth: 110, flexShrink: 0 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {t("inspectionDetails.fields.isActive")}
-                  </Typography>
-                  <Chip
-                    label={(editing ? draft?.isActive : view.isActive) ? t("common.yes") : t("common.no")}
-                    color={(editing ? draft?.isActive : view.isActive) ? "success" : "default"}
-                    variant={(editing ? draft?.isActive : view.isActive) ? "filled" : "outlined"}
-                    sx={{ width: "fit-content" }}
-                    onClick={
-                      editing
-                        ? () =>
-                            setDraft((prev) =>
-                              prev ? { ...prev, isActive: !prev.isActive } : prev
-                            )
-                        : undefined
-                    }
-                  />
-                </Stack>
               </Stack>
 
               <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems="flex-start">
@@ -682,7 +784,7 @@ export default function InspectionDetailsPage() {
                   )
                 }
                 disabled={!editing}
-                inputProps={{ maxLength: 100 }}
+                inputProps={{ maxLength: INSPECTION_NOTES_MAX_LENGTH }}
               />
             </Stack>
           </CardContent>
@@ -702,11 +804,10 @@ export default function InspectionDetailsPage() {
               </Button>
             </Stack>
 
-            <DataTableContainer>
+            <DataTableContainer stickyHeader={false}>
                 <TableHead sx={{ bgcolor: "background.default" }}>
                   <TableRow>
-                    <TableCell sx={{ width: "38%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.description")}</b></TableCell>
-                    <TableCell sx={{ width: "20%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
+                    <TableCell sx={{ width: "48%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
                     <TableCell align="center" sx={{ width: "14%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
                     <TableCell align="center" sx={{ width: "18%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
                     <TableCell align="center" sx={{ width: "10%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
@@ -716,16 +817,13 @@ export default function InspectionDetailsPage() {
                 <TableBody>
                   {docsQuery.isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={5} align="center" sx={{ py: 2, color: "text.secondary" }}>
+                      <TableCell colSpan={4} align="center" sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.loading")}
                       </TableCell>
                     </TableRow>
                   ) : documents?.length ? (
                     documents.map((d) => (
                       <TableRow key={d.id} hover>
-                        <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.description ?? ""}>
-                          {d.description || "—"}
-                        </TableCell>
                         <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.name}>
                           {d.name}
                         </TableCell>
@@ -761,7 +859,7 @@ export default function InspectionDetailsPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} align="center" sx={{ py: 2, color: "text.secondary" }}>
+                      <TableCell colSpan={4} align="center" sx={{ py: 2, color: "text.secondary" }}>
                         {t("inspectionDetails.documents.empty")}
                       </TableCell>
                     </TableRow>
@@ -771,80 +869,19 @@ export default function InspectionDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card sx={{ borderRadius: 2 }}>
-          <CardContent>
-            <Typography variant="subtitle2" sx={{ mb: 2 }}>
-              {t("inspectionDetails.sections.audit")}
-            </Typography>
-
-            <Divider sx={{ mb: 2 }} />
-
-            <Stack sx={{ maxWidth: 1400 }}>
-              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                <TextField
-                  label={t("inspectionDetails.audit.createdAt")}
-                  size="small"
-                  fullWidth
-                  value={formatDateTimeBR(view.createdAt)}
-                  disabled
-                />
-                <TextField
-                  label={t("inspectionDetails.audit.createdBy")}
-                  size="small"
-                  fullWidth
-                  value={view.createdByUsername ?? "—"}
-                  disabled
-                />
-              </Stack>
-
-              <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 2 }}>
-                <TextField
-                  label={t("inspectionDetails.audit.updatedAt")}
-                  size="small"
-                  fullWidth
-                  value={formatDateTimeBR(view.updatedAt)}
-                  disabled
-                />
-                <TextField
-                  label={t("inspectionDetails.audit.updatedBy")}
-                  size="small"
-                  fullWidth
-                  value={view.updatedByUsername ?? "—"}
-                  disabled
-                />
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
+        <AuditFooter
+          createdBy={view.createdByUsername}
+          createdAt={view.createdAt}
+          updatedBy={view.updatedByUsername}
+          updatedAt={view.updatedAt}
+        />
       </Stack>
 
       <Dialog open={uploadOpen} onClose={() => setUploadOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{t("inspectionDetails.documents.uploadDialog.title")}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField
-              label={t("inspectionDetails.documents.uploadDialog.description")}
-              size="small"
-              fullWidth
-              required
-              value={uploadDescription}
-              onChange={(e) => setUploadDescription(e.target.value)}
-              inputProps={{ maxLength: 50 }}
-            />
-
-            <Button variant="outlined" component="label">
-              {uploadFile
-                ? t("inspectionDetails.documents.uploadDialog.fileSelected", { name: uploadFile.name })
-                : t("inspectionDetails.documents.uploadDialog.chooseFile")}
-              <input
-                type="file"
-                hidden
-                onChange={(e) => {
-                  const f = e.target.files?.[0] ?? null;
-                  setUploadFile(f);
-                }}
-              />
-            </Button>
+            <DocumentPicker files={uploadFiles} onChange={setUploadFiles} disabled={uploadMutation.isPending} />
 
             <Typography variant="caption" color="text.secondary">
               {t("inspectionDetails.documents.uploadDialog.hint")}
@@ -859,11 +896,8 @@ export default function InspectionDetailsPage() {
           <Button
             variant="contained"
             startIcon={uploadMutation.isPending ? <CircularProgress size={16} /> : <UploadFileIcon />}
-            onClick={() => {
-              if (!uploadFile) return;
-              uploadMutation.mutate({ description: uploadDescription, file: uploadFile });
-            }}
-            disabled={uploadMutation.isPending || uploadDescription.trim() === "" || !uploadFile}
+            onClick={() => uploadMutation.mutate(uploadFiles)}
+            disabled={uploadMutation.isPending || uploadFiles.length === 0}
           >
             {t("inspectionDetails.documents.uploadDialog.upload")}
           </Button>

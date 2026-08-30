@@ -1,14 +1,14 @@
-import type { ReactNode } from "react";
-import type { City } from "./types/City";
+import type { City } from "../types/City";
 import {
   Box,
-  Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Stack,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
@@ -26,8 +26,6 @@ type Props = {
   cities: City[];
   hasActiveFilters: boolean;
   onClear: () => void;
-  /** Ação extra (ex: botão "Nova empresa") alinhada à direita, após "Limpar filtros" */
-  action?: ReactNode;
 };
 
 const MONTHS = [
@@ -36,20 +34,17 @@ const MONTHS = [
   "september", "october", "november", "december",
 ] as const;
 
-export function CustomersFilters({ values, onChange, cities, hasActiveFilters, onClear, action }: Props) {
+export function CustomersFilters({ values, onChange, cities, hasActiveFilters, onClear }: Props) {
   const { t } = useTranslation();
 
   return (
     <Box sx={{ mb: 2 }}>
       <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        alignItems={{ md: "center" }}
+        direction={{ xs: "column", sm: "row" }}
+        spacing={1.5}
+        alignItems={{ sm: "center" }}
         flexWrap="wrap"
-        sx={{
-          // Deixa a altura dos campos igual à dos botões ao lado (36.5px)
-          "& .MuiOutlinedInput-input": { paddingTop: "6.75px", paddingBottom: "6.75px" },
-        }}
+        useFlexGap
       >
         <TextField
           size="small"
@@ -57,10 +52,10 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           placeholder={t("customers.filters.searchPlaceholder")}
           value={values.search}
           onChange={(e) => onChange("search", e.target.value)}
-          sx={{ minWidth: { xs: "100%", md: 240 } }}
+          sx={{ minWidth: { xs: "100%", sm: 220 }, flex: { sm: 1 }, maxWidth: { sm: 320 } }}
         />
 
-        <FormControl size="small" sx={{ width: { xs: "100%", md: 200 } }}>
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 170 } }}>
           <InputLabel id="customers-city">{t("customers.filters.city")}</InputLabel>
           <Select
             labelId="customers-city"
@@ -75,7 +70,7 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ width: { xs: "100%", md: 100 } }}>
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 130 } }}>
           <InputLabel id="customers-isCustomer">{t("customers.filters.isCustomer")}</InputLabel>
           <Select
             labelId="customers-isCustomer"
@@ -89,7 +84,7 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ width: { xs: "100%", md: 135 } }}>
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 130 } }}>
           <InputLabel id="customers-month">{t("customers.filters.month")}</InputLabel>
           <Select
             labelId="customers-month"
@@ -106,18 +101,13 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <Button
-          variant="text"
-          startIcon={<FilterAltOffIcon />}
-          onClick={onClear}
-          disabled={!hasActiveFilters}
-        >
-          {t("customers.filters.clear")}
-        </Button>
-
-        <Box sx={{ flex: 1 }} />
-
-        {action}
+        {hasActiveFilters && (
+          <Tooltip title={t("customers.filters.clear")}>
+            <IconButton size="small" onClick={onClear} aria-label={t("customers.filters.clear")}>
+              <FilterAltOffIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Stack>
     </Box>
   );

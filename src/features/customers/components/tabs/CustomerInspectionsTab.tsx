@@ -17,11 +17,16 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DescriptionIcon from "@mui/icons-material/Description";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import BlockIcon from "@mui/icons-material/Block";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
+import { RenewInspectionModal, type RenewableInspection } from "@/features/inspections/components/RenewInspectionModal";
+import { DeactivateInspectionModal, type DeactivatableInspection } from "@/features/inspections/components/DeactivateInspectionModal";
+import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
 import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
@@ -39,13 +44,39 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
   const navigate = useNavigate();
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
+  const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  // Reservado para as ações reais do menu (ainda não definidas) — só o setter é usado por enquanto.
-  const [_menuRowId, setMenuRowId] = useState<number | null>(null);
+  const [menuRow, setMenuRow] = useState<InspectionSummaryResponseDTO | null>(null);
+
+  function openRowMenu(e: React.MouseEvent<HTMLElement>, row: InspectionSummaryResponseDTO) {
+    setMenuAnchor(e.currentTarget);
+    setMenuRow(row);
+  }
 
   function closeRowMenu() {
     setMenuAnchor(null);
-    setMenuRowId(null);
+    setMenuRow(null);
+  }
+
+  function renewFromRow(row: InspectionSummaryResponseDTO) {
+    setRenewTarget({
+      id: row.id,
+      inspectionDate: row.inspectionDate,
+      expirationDate: row.expirationDate,
+      customerLegalName,
+      serviceTypeName: row.serviceType?.name ?? "—",
+      customerId,
+    });
+  }
+
+  function deactivateFromRow(row: InspectionSummaryResponseDTO) {
+    setDeactivateTarget({
+      id: row.id,
+      serviceTypeName: row.serviceType?.name ?? "—",
+      customerLegalName,
+      customerId,
+    });
   }
 
   return (
@@ -66,7 +97,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         lockedCustomer={{ id: customerId, legalName: customerLegalName, cnpj: customerCnpj }}
       />
 
-      <DataTableContainer>
+      <DataTableContainer stickyHeader={false}>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <TableCell align="center" sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
@@ -123,22 +154,29 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   </TableCell>
 
                   <TableCell align="center">
-                    <Chip
-                      size="small"
-                      label={i.isActive ? t("customerDetails.inspections.status.active") : t("customerDetails.inspections.status.inactive")}
-                      color={i.isActive ? "success" : "default"}
-                      variant={i.isActive ? "filled" : "outlined"}
-                    />
+                    {!i.isActive && i.deactivationReason ? (
+                      <Chip
+                        size="small"
+                        color="warning"
+                        variant="outlined"
+                        label={t("inspections.deactivate.archivedChip")}
+                        title={t(deactivationReasonKey(i.deactivationReason))}
+                      />
+                    ) : (
+                      <Chip
+                        size="small"
+                        label={i.isActive ? t("customerDetails.inspections.status.active") : t("customerDetails.inspections.status.inactive")}
+                        color={i.isActive ? "success" : "default"}
+                        variant={i.isActive ? "filled" : "outlined"}
+                      />
+                    )}
                   </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                     <IconButton
                       size="small"
-                      aria-label={t("customerDetails.inspections.actions.open")}
-                      onClick={(e) => {
-                        setMenuAnchor(e.currentTarget);
-                        setMenuRowId(i.id);
-                      }}
+                      aria-label={t("customerDetails.inspections.actions.rowMenu")}
+                      onClick={(e) => openRowMenu(e, i)}
                     >
                       <MoreVertIcon fontSize="small" />
                     </IconButton>
@@ -157,8 +195,39 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
       </DataTableContainer>
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
-        <MenuItem onClick={closeRowMenu}>Teste</MenuItem>
+        <MenuItem
+          disabled={menuRow?.isRenewed}
+          onClick={() => {
+            if (menuRow) renewFromRow(menuRow);
+            closeRowMenu();
+          }}
+        >
+          <AutorenewIcon fontSize="small" sx={{ mr: 1 }} />
+          {t("inspections.renewModal.actions.confirm")}
+        </MenuItem>
+        <MenuItem
+          disabled={!menuRow?.isActive}
+          onClick={() => {
+            if (menuRow) deactivateFromRow(menuRow);
+            closeRowMenu();
+          }}
+        >
+          <BlockIcon fontSize="small" sx={{ mr: 1 }} />
+          {t("inspections.deactivate.action")}
+        </MenuItem>
       </Menu>
+
+      <RenewInspectionModal
+        open={renewTarget !== null}
+        inspection={renewTarget}
+        onClose={() => setRenewTarget(null)}
+      />
+
+      <DeactivateInspectionModal
+        open={deactivateTarget !== null}
+        inspection={deactivateTarget}
+        onClose={() => setDeactivateTarget(null)}
+      />
     </Paper>
   );
 }

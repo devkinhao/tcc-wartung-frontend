@@ -1,7 +1,8 @@
-import { Chip } from "@mui/material";
-import { EXPIRATION_COLORS, getExpirationStatus } from "@/utils/expirationStatus";
+import { Chip, Tooltip } from "@mui/material";
+import { alpha, useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
+import { getExpirationStatus } from "@/utils/expirationStatus";
 import { formatDateBR } from "@/utils/date";
-import { typography } from "@/styles/typography";
 
 type Props = {
   date: string | null | undefined;
@@ -10,26 +11,40 @@ type Props = {
   active?: boolean;
 };
 
-// Chip de data de vencimento com cor de alerta — mesma regra usada nas
-// tabelas de Empresas e Inspeções: vermelho sólido se vencida, âmbar se
-// vence dentro da janela de alerta configurada, texto simples caso contrário.
+// Chip de data de vencimento no estilo "badge suave" (fundo levemente tingido
+// + texto na cor). Usa a mesma paleta semântica error/warning/success da home:
+// vermelho (vencida), âmbar (vence logo), verde (em dia) — o mesmo semáforo em
+// todo o sistema.
 export function ExpirationChip({ date, alertDays, active = true }: Props) {
-  const status = active ? getExpirationStatus(date, alertDays) : null;
-  const color = status === "expired" ? EXPIRATION_COLORS.expired
-              : status === "near"    ? EXPIRATION_COLORS.near
-              : null;
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const dark = theme.palette.mode === "dark";
 
-  if (!color) return <>{formatDateBR(date)}</>;
+  const status = active ? getExpirationStatus(date, alertDays) : null;
+  if (status == null) return <>{formatDateBR(date)}</>;
+
+  const c =
+    status === "expired" ? theme.palette.error
+    : status === "near"  ? theme.palette.warning
+    : theme.palette.success;
+
+  const tooltip =
+    status === "expired"
+      ? t("expiration.tooltip.expired", { date: formatDateBR(date) })
+      : t("expiration.tooltip.due", { date: formatDateBR(date) });
 
   return (
-    <Chip
-      size="small"
-      label={formatDateBR(date)}
-      sx={{
-        bgcolor: color,
-        color: status === "expired" ? "#fff" : "#000",
-        fontWeight: typography.weight.semibold,
-      }}
-    />
+    <Tooltip title={tooltip}>
+      <Chip
+        size="small"
+        label={formatDateBR(date)}
+        sx={{
+          bgcolor: alpha(c.main, dark ? 0.24 : 0.14),
+          color: dark ? c.light : c.dark,
+          border: `1px solid ${alpha(c.main, 0.35)}`,
+          fontWeight: 600,
+        }}
+      />
+    </Tooltip>
   );
 }

@@ -9,7 +9,6 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Stack,
   Typography,
@@ -52,6 +51,7 @@ export default function ReportsPage() {
     setLoading((p) => ({ ...p, [reportId]: true }));
     try {
       await fn();
+      notify.success("notify.success.reportGenerated");
     } catch (e) {
       notify.fromError(e);
     } finally {
@@ -80,13 +80,10 @@ export default function ReportsPage() {
   } as const;
 
   return (
-    <Paper
-      elevation={1}
-      sx={{ maxWidth: 760, p: 3, borderRadius: 2, bgcolor: "background.paper" }}
-    >
+    <Box sx={{ maxWidth: 760 }}>
       <Box sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.reports]} size="large" />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("reports.description")}
         </Typography>
       </Box>
@@ -257,6 +254,6 @@ export default function ReportsPage() {
         </Card>
 
       </Stack>
-    </Paper>
+    </Box>
   );
 }

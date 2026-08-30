@@ -16,11 +16,15 @@ function buildTheme(mode: "light" | "dark") {
       background: { default: t.bg.screen, paper: t.bg.card },
       text: { primary: t.text.primary, secondary: t.text.secondary },
       success: { main: t.semantic.success },
+      warning: { main: t.semantic.warning },
       error: { main: t.semantic.danger },
     },
     shape: { borderRadius: 8 },
     typography: {
       fontFamily: typography.fontFamily,
+      // Base de 16px (o padrão do MUI é 14). O sistema é usado no dia a dia por
+      // um público mais velho — todo o texto derivado desta base fica ~15% maior.
+      fontSize: 16,
       // Pesos já usados de forma consistente pelo app para títulos de página
       // (h6, via Breadcrumb size="large") e cabeçalhos de seção/card
       // (subtitle1/subtitle2) — centralizados aqui em vez de repetidos

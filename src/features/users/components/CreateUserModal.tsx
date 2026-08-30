@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslation } from "react-i18next";
-import { usersApi, type UserCreateRequestDTO } from "../api/usersApi";
+import { usersApi, type UserCreateRequestDTO } from "../api/users.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 

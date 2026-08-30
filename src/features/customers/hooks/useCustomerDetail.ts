@@ -128,10 +128,16 @@ export function useCustomerDetail(customerId: number) {
   // ele deixa de ser marcado como cliente — avisamos o usuário antes de salvar.
   const willDeactivateInspections = Boolean(data?.isCustomer) && draft?.isCustomer === false;
 
+  // Há alterações não salvas quando um card está em edição e o rascunho
+  // divergiu dos dados do servidor.
+  const isEditing = editingGeneral || editingContacts || editingAddress;
+  const hasUnsavedChanges = isEditing && JSON.stringify(draft) !== JSON.stringify(data);
+
   return {
     view: draft ?? data,
     isLoading,
     willDeactivateInspections,
+    hasUnsavedChanges,
     // edição
     editingGeneral,  setEditingGeneral,
     editingContacts, setEditingContacts,

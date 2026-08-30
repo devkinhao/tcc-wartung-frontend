@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
-import { usersApi, type UserResponseDTO } from "../api/usersApi";
+import { usersApi, type UserResponseDTO } from "../api/users.api";
 
 // --- Tipos e helpers de apresentação ---
 

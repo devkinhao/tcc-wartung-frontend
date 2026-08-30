@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Card,
+  CardContent,
   CircularProgress,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Stack,
   TextField,
@@ -18,7 +20,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { qk } from "@/api/keys";
 import { useCities } from "@/features/customers/hooks/useCities";
-import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { useNotify } from "@/hooks/useNotify";
@@ -205,34 +206,21 @@ export default function CompanyPage() {
     );
   }
 
-  const cardSx = {
-    p: 2,
-    borderRadius: 2,
-    transition: (th: any) =>
-      th.transitions.create("box-shadow", { duration: th.transitions.duration.short }),
-    "&:hover": { boxShadow: 4 },
-  } as const;
-
   return (
-    <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-      {/* Cabeçalho com título e botões Edit/Cancel/Save */}
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
+    <Box sx={{ maxWidth: 960 }}>
+      <Box sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.company]} size="large" />
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+          {t("company.description")}
+        </Typography>
+      </Box>
 
-        <EditableCardHeader
-          title=""
-          editing={isEditing}
-          saving={isSaving}
-          saveDisabled={!isFormValid}
-          onEdit={() => setIsEditing(true)}
-          onCancel={handleCancel}
-          onSave={handleSave}
-        />
-      </Stack>
-
-      {/* Dados da empresa */}
-      <Card sx={{ ...cardSx, mb: 3 }}>
-        <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
+      <Card sx={{ borderRadius: 2 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Typography variant="subtitle2" sx={{ mb: 2 }}>
+            {t("company.generalTitle")}
+          </Typography>
+          <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.fields.fantasyName")}
@@ -308,16 +296,14 @@ export default function CompanyPage() {
               inputProps={{ maxLength: 75 }}
             />
           </Grid>
-        </Grid>
-      </Card>
+          </Grid>
 
-      {/* Endereço */}
-      <Typography variant="subtitle1" color="primary.main" sx={{ mb: 1.5 }}>
-        {t("company.address.title")}
-      </Typography>
+          <Divider sx={{ my: 3 }} />
 
-      <Card sx={cardSx}>
-        <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
+          <Typography variant="subtitle2" sx={{ mb: 2 }}>
+            {t("company.address.title")}
+          </Typography>
+          <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
               label={t("company.address.fields.street")}
@@ -400,8 +386,32 @@ export default function CompanyPage() {
               </Select>
             </FormControl>
           </Grid>
-        </Grid>
+          </Grid>
+
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            {!isEditing ? (
+              <Button variant="contained" onClick={() => setIsEditing(true)}>
+                {t("common.actions.edit")}
+              </Button>
+            ) : (
+              <Stack direction="row" spacing={1}>
+                <Button variant="outlined" onClick={handleCancel} disabled={isSaving}>
+                  {t("common.actions.cancel")}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleSave}
+                  disabled={isSaving || !isFormValid}
+                >
+                  {t("common.actions.save")}
+                </Button>
+              </Stack>
+            )}
+          </Box>
+        </CardContent>
       </Card>
-    </Paper>
+    </Box>
   );
 }

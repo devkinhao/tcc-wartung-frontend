@@ -41,7 +41,7 @@ export function Breadcrumb({ items, size = "default" }: Props) {
 
         if (last && size === "large") {
           return (
-            <Typography key={i} variant="subtitle1" color="primary.main">
+            <Typography key={i} variant="h6" color="text.primary" fontWeight={typography.weight.bold}>
               {label}
             </Typography>
           );

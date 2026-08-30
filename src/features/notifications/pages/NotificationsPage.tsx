@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Paper,
   Stack,
   Tab,
   Tabs,
@@ -86,7 +85,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <Paper elevation={1} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Box sx={{ maxWidth: 900 }}>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         justifyContent="space-between"
@@ -188,6 +187,6 @@ export default function NotificationsPage() {
           }}
         />
       </Box>
-    </Paper>
+    </Box>
   );
 }

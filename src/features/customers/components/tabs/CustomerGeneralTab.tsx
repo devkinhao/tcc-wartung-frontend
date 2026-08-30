@@ -1,5 +1,4 @@
 import {
-  Box,
   Card,
   CardContent,
   Chip,
@@ -17,13 +16,19 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { AuditFooter } from "@/components/AuditFooter";
 import { MaskedTextField } from "@/components/MaskedTextField";
-import { AbvtexChip } from "../AbvtexChip";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 
 type Props = {
   view: CustomerDetailResponseDTO;
+  audit: {
+    createdBy: string | null;
+    createdAt: string | null;
+    updatedBy: string | null;
+    updatedAt: string | null;
+  };
   // Geral
   editingGeneral: boolean;
   savingGeneral: boolean;
@@ -55,6 +60,7 @@ const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;
 
 export function CustomerGeneralTab({
   view,
+  audit,
   editingGeneral, savingGeneral, onEditGeneral, onCancelGeneral, onSaveGeneral,
   editingContacts, savingContacts, onEditContacts, onCancelContacts, onSaveContacts,
   updateField,
@@ -87,15 +93,7 @@ export function CustomerGeneralTab({
           />
 
           <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
-            <Grid item xs={12} md={2}>
-              <TextField
-                label={t("customerDetails.general.fields.code")}
-                value={view.id}
-                size="small" fullWidth disabled
-              />
-            </Grid>
-
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={9}>
               <TextField
                 label={t("customerDetails.general.fields.legalName")}
                 value={view.legalName}
@@ -109,7 +107,7 @@ export function CustomerGeneralTab({
 
             <Grid item xs={12} md={3}>
               <FormControl fullWidth size="small" disabled={!editingGeneral}>
-                <InputLabel id="abvtex-label" required>{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
+                <InputLabel id="abvtex-label">{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex-label"
                   label={t("customerDetails.general.fields.abvtexSeal")}
@@ -165,9 +163,6 @@ export function CustomerGeneralTab({
                       : undefined
                   }
                 />
-                <Box sx={{ mt: 1 }}>
-                  <AbvtexChip seal={view.abvtexSeal} />
-                </Box>
               </Stack>
             </Grid>
           </Grid>
@@ -253,6 +248,8 @@ export function CustomerGeneralTab({
           </Grid>
         </CardContent>
       </Card>
+
+      <AuditFooter {...audit} />
     </Stack>
   );
 }

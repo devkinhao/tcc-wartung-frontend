@@ -3,6 +3,9 @@ import { api } from "@/api/client";
 export type InspectionListItem = {
   id: number;
   customerLegalName: string;
+  customerMobilePhone: string | null;
+  customerEmail: string | null;
+  customerCity: string | null;
   inspectionDate: string;
   serviceTypeName: string;
   notes: string | null;

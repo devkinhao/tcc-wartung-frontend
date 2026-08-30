@@ -1,5 +1,6 @@
 import { AbvtexSealType } from "./abvtexSeal"
 import type { City } from "./City";
+import type { InspectionDeactivationReason } from "@/features/inspections/deactivationReason";
 
 export type AddressResponseDTO = {
   street: string;
@@ -31,6 +32,7 @@ export type InspectionSummaryResponseDTO = {
   expirationDate: string; // LocalDate ISO
   isActive: boolean;
   isRenewed: boolean;
+  deactivationReason: InspectionDeactivationReason | null;
   documents: InspectionDocumentResponseDTO[];
 };
 

@@ -1,5 +1,6 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
@@ -13,6 +14,7 @@ import { ServiceRankingChart } from "../components/ServiceRankingChart";
 import { CustomersByCityChart } from "../components/CustomersByCityChart";
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const { data, isLoading } = useQuery({
     queryKey: qk.dashboard(),
     queryFn: getDashboard,
@@ -25,6 +27,9 @@ export default function DashboardPage() {
     <Box sx={{ width: "100%" }}>
       <Box sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.dashboard]} size="large" />
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+          {t("dashboard.description")}
+        </Typography>
       </Box>
 
       <Grid container spacing={2.5}>

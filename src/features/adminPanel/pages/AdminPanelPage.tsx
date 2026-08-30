@@ -5,10 +5,9 @@ import {
   CardActionArea,
   CardContent,
   Grid,
-  Paper,
   Typography,
 } from "@mui/material";
-import { Apartment, AdminPanelSettings, Settings } from "@mui/icons-material";
+import { Apartment, AdminPanelSettings, Settings, Build } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
@@ -17,6 +16,7 @@ import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
 
 const ITEMS = [
+  { key: "serviceTypes", to: paths.serviceTypes, icon: Build },
   { key: "company", to: paths.company, icon: Apartment },
   { key: "users", to: paths.users, icon: AdminPanelSettings },
   { key: "configurations", to: paths.configurations, icon: Settings },
@@ -27,10 +27,10 @@ export default function AdminPanelPage() {
   const navigate = useNavigate();
 
   return (
-    <Paper elevation={1} sx={{ maxWidth: 960, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Box sx={{ maxWidth: 960 }}>
       <Box sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.adminPanel]} size="large" />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("adminPanel.description")}
         </Typography>
       </Box>
@@ -61,6 +61,6 @@ export default function AdminPanelPage() {
           </Grid>
         ))}
       </Grid>
-    </Paper>
+    </Box>
   );
 }

@@ -18,7 +18,7 @@ export function RequirePermission({ permissions }: Props) {
 
   const userPermissions = user?.permissions ?? [];
   if (!canAccess(userPermissions, permissions)) {
-    return <Navigate to={paths.dashboard} replace />;
+    return <Navigate to={paths.home} replace />;
   }
 
   return <Outlet />;

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 
 import { useCustomers } from "../hooks/useCustomers";
-import { CustomersFilters } from "../CustomersFilters";
-import { CustomersTable } from "../CustomersTable";
-import { Pagination } from "../../../components/Pagination";
+import { CustomersFilters } from "../components/CustomersFilters";
+import { CustomersTable } from "../components/CustomersTable";
+import { Pagination } from "@/components/Pagination";
 import { useCities } from "../hooks/useCities";
-import { AddCompanyModal } from "../AddCompanyModal";
+import { AddCompanyModal } from "../components/AddCompanyModal";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
@@ -26,12 +26,22 @@ export default function CustomersListPage() {
 
   return (
     <Box>
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumb items={breadcrumbMap[paths.customers]} size="large" />
-        <Typography variant="body2" color="text.secondary">
-          {t("customers.description")}
-        </Typography>
-      </Box>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
+        <Box>
+          <Breadcrumb items={breadcrumbMap[paths.customers]} size="large" />
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+            {t("customers.description")}
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setIsAddOpen(true)}
+          sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
+        >
+          {t("customers.actions.addCompany")}
+        </Button>
+      </Stack>
 
       <AddCompanyModal open={isAddOpen} onClose={() => setIsAddOpen(false)} cities={cities} />
 
@@ -41,11 +51,6 @@ export default function CustomersListPage() {
         cities={cities}
         hasActiveFilters={hasActiveFilters}
         onClear={clearFilters}
-        action={
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-            {t("customers.actions.addCompany")}
-          </Button>
-        }
       />
 
       <CustomersTable

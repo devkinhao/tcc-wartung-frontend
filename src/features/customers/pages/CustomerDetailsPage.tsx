@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Box,
@@ -29,7 +29,6 @@ import { useCities }               from "../hooks/useCities";
 import { CustomerGeneralTab }      from "../components/tabs/CustomerGeneralTab";
 import { CustomerAddressTab }      from "../components/tabs/CustomerAddressTab";
 import { CustomerInspectionsTab }  from "../components/tabs/CustomerInspectionsTab";
-import { CustomerMovementsTab }    from "../components/tabs/CustomerMovementsTab";
 import type {
   CustomerUpdateGeneralRequestDTO,
   CustomerUpdateContactsRequestDTO,
@@ -39,20 +38,28 @@ import { paths } from "@/routes/paths";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
+import { UnsavedChangesGuard } from "@/components/UnsavedChangesGuard";
 import { typography } from "@/styles/typography";
 
-type TabKey = "general" | "address" | "inspections" | "movements";
+type TabKey = "general" | "address" | "inspections";
+
+const DEFAULT_TAB: TabKey = "general";
+
+function isTabKey(value: string | null): value is TabKey {
+  return value === "general" || value === "address" || value === "inspections";
+}
 
 export default function CustomerDetailsPage() {
   const { t }        = useTranslation();
   const { id }       = useParams();
   const navigate     = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const cities       = useCities();
 
   const {
     view, isLoading,
     willDeactivateInspections,
+    hasUnsavedChanges,
     editingGeneral,  setEditingGeneral,
     editingContacts, setEditingContacts,
     editingAddress,  setEditingAddress,
@@ -60,9 +67,15 @@ export default function CustomerDetailsPage() {
     mutations,
   } = useCustomerDetail(Number(id));
 
-  // Inicia na aba indicada pela URL (?tab=inspections)
-  const initialTab = (searchParams.get("tab") as TabKey) || "general";
-  const [tab,    setTab]    = useState<TabKey>(initialTab);
+  // A aba ativa vive na URL (?tab=inspections) — permite abrir/compartilhar um
+  // link direto para uma aba e mantê-la ao recarregar a página.
+  const tabParam = searchParams.get("tab");
+  const tab: TabKey = isTabKey(tabParam) ? tabParam : DEFAULT_TAB;
+
+  const handleTabChange = (_: SyntheticEvent, next: TabKey) => {
+    setSearchParams(next === DEFAULT_TAB ? {} : { tab: next }, { replace: true });
+  };
+
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [confirmDeactivateOpen, setConfirmDeactivateOpen] = useState(false);
@@ -96,13 +109,15 @@ export default function CustomerDetailsPage() {
   };
 
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: "nav.home", path: paths.dashboard },
+    { label: "nav.home", path: paths.home },
     { label: "nav.customersList", path: paths.customers },
     { label: "nav.companyDetails" },
   ];
 
   return (
     <Box sx={{ width: "100%" }}>
+      <UnsavedChangesGuard when={hasUnsavedChanges} />
+
       <Box sx={{ mb: 1 }}>
         <Breadcrumb items={breadcrumbItems} size="large" />
       </Box>
@@ -211,12 +226,11 @@ export default function CustomerDetailsPage() {
 
         <Divider />
 
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 2 }}
+        <Tabs value={tab} onChange={handleTabChange} sx={{ px: 2 }}
           textColor="primary" indicatorColor="primary">
           <Tab value="general"     label={t("customerDetails.tabs.general")} />
           <Tab value="address"     label={t("customerDetails.tabs.address")} />
           <Tab value="inspections" label={t("customerDetails.tabs.inspections")} />
-          <Tab value="movements"   label={t("customerDetails.tabs.movements")} />
         </Tabs>
       </Paper>
 
@@ -224,6 +238,12 @@ export default function CustomerDetailsPage() {
       {tab === "general" && (
         <CustomerGeneralTab
           view={view}
+          audit={{
+            createdBy: view.createdByUsername,
+            createdAt: view.createdAt,
+            updatedBy: view.updatedByUsername,
+            updatedAt: view.updatedAt,
+          }}
           updateField={updateField}
           editingGeneral={editingGeneral}
           savingGeneral={mutations.general.isPending}
@@ -275,8 +295,6 @@ export default function CustomerDetailsPage() {
           inspections={view.inspections}
         />
       )}
-      {tab === "movements"   && <CustomerMovementsTab   view={view} />}
-
     </Box>
   );
 }

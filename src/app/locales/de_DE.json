@@ -29,7 +29,8 @@
       "save": "Speichern",
       "close": "Schließen",
       "confirm": "Bestätigen",
-      "retry": "Erneut versuchen"
+      "retry": "Erneut versuchen",
+      "more": "Weitere Aktionen"
     },
     "loading": "Wird geladen...",
     "cep": {
@@ -41,7 +42,11 @@
     "fields": {
       "zipCode": "PLZ",
       "cnpj": "CNPJ"
-    }
+    },
+    "day": "Tag",
+    "days": "Tagen",
+    "year": "Jahr",
+    "years": "Jahre"
   },
   "months": {
     "january": "Januar",
@@ -66,7 +71,6 @@
   },
   "nav": {
     "home": "Startseite",
-    "dashboard": "Dashboard",
     "customersList": "Unternehmen",
     "inspections": "Inspektionen",
     "inspectionsList": "Inspektionen",
@@ -77,12 +81,13 @@
     "myCompany": "Mein Unternehmen",
     "users": "Benutzer",
     "configurations": "Konfigurationen",
-    "adminPanel": "Admin-Bereich",
+    "adminPanel": "Verwaltung",
     "myProfile": "Mein Profil",
     "preferences": "Einstellungen",
-    "customerDetails": "Kundendetails",
+    "customerDetails": "Unternehmensdetails",
     "companyDetails": "Unternehmensdetails",
-    "inspectionDetailsPage": "Inspektionsdetails"
+    "inspectionDetailsPage": "Inspektionsdetails",
+    "analytics": "Analyse"
   },
   "adminPanel": {
     "title": "Admin-Bereich",
@@ -99,6 +104,10 @@
       "configurations": {
         "title": "Konfigurationen",
         "description": "Allgemeine Einstellungen, die das Systemverhalten steuern."
+      },
+      "serviceTypes": {
+        "title": "Dienstleistungen",
+        "description": "Dienstleistungstypen für Inspektionen erstellen und bearbeiten."
       }
     }
   },
@@ -160,7 +169,8 @@
         "title": "Kunden nach Stadt",
         "tooltipLabel": "Kunde(n)"
       }
-    }
+    },
+    "description": "Ein Überblick über die Zahlen."
   },
   "preferences": {
     "title": "Einstellungen",
@@ -239,7 +249,7 @@
   "help": {
     "faq": {
       "q1": {
-        "answer": "Gehen Sie zu Kunden und klicken Sie auf Neu. Daten ausfüllen und bestätigen."
+        "answer": "Gehen Sie zu Unternehmen und klicken Sie auf Neues Unternehmen. Geben Sie die Daten ein und bestätigen Sie."
       },
       "q2": {
         "answer": "Gehen Sie zu Einstellungen und wählen Sie Sprache/Design."
@@ -385,7 +395,8 @@
         "mismatch": "Passwörter stimmen nicht überein",
         "changeFailed": "Passwortänderung fehlgeschlagen"
       }
-    }
+    },
+    "description": "Ihre Kontodaten für das System."
   },
   "customers": {
     "title": "Unternehmen verwalten",
@@ -414,7 +425,7 @@
       "nextExpiration": "Fälligkeit",
       "actions": "Aktionen"
     },
-    "loading": "Kunden werden geladen...",
+    "loading": "Unternehmen werden geladen...",
     "empty": "Keine Unternehmen gefunden.",
     "rowMenu": {
       "actionsLabel": "Aktionen",
@@ -425,7 +436,7 @@
     "quickView": {
       "title": "Inspektionen (Schnellansicht)",
       "loading": "Inspektionen werden geladen...",
-      "empty": "Keine Inspektionen für diesen Kunden gefunden",
+      "empty": "Keine Inspektionen für dieses Unternehmen gefunden",
       "error": "Inspektionen konnten nicht geladen werden",
       "table": {
         "inspectionDate": "Inspektionsdatum",
@@ -438,16 +449,16 @@
       }
     },
     "addModal": {
-      "title": "Neuer Kunde",
+      "title": "Neues Unternehmen",
       "steps": {
         "info": "Informationen",
         "address": "Adresse",
         "done": "Abgeschlossen"
       },
       "stepHints": {
-        "step1": "1. Grundlegende Identifikations- und Kontaktinformationen",
-        "step2": "2. Standort des Kunden",
-        "done": "Registrierung abgeschlossen"
+        "step1": "Unternehmensdaten und Kontakt",
+        "step2": "Anschrift des Unternehmens",
+        "done": "Fertig"
       },
       "fields": {
         "fantasyName": "Handelsname",
@@ -485,12 +496,13 @@
         "finish": "Abschließen",
         "saving": "Wird gespeichert...",
         "close": "Schließen",
-        "openRecord": "Datensatz öffnen"
+        "openRecord": "Datensatz öffnen",
+        "newInspection": "Inspektion anlegen"
       },
       "success": {
         "title": "Unternehmen erfolgreich registriert!",
-        "idLabel": "ID",
-        "question": "Möchten Sie den Datensatz jetzt öffnen oder nur schließen?"
+        "question": "Möchten Sie den Datensatz jetzt öffnen oder nur schließen?",
+        "summary": "{{name}} wurde hinzugefügt."
       },
       "errors": {
         "createFailed": "Das Unternehmen konnte nicht registriert werden. Prüfen Sie die Daten und versuchen Sie es erneut."
@@ -510,7 +522,7 @@
     },
     "welcome": {
       "title": "Willkommen!",
-      "subtitle": "Verwalten Sie Kunden und Inspektionen ganz einfach."
+      "subtitle": "Verwalten Sie Unternehmen und Inspektionen mühelos."
     },
     "errors": {
       "invalidCredentials": "Ungültiger Benutzername oder Passwort",
@@ -580,10 +592,12 @@
       "actions": {
         "selectCity": "Stadt auswählen"
       }
-    }
+    },
+    "description": "Die Daten Ihres Unternehmens, verwendet in Berichten und Dokumenten.",
+    "generalTitle": "Allgemeine Daten"
   },
   "customerDetails": {
-    "loading": "Kunde wird geladen...",
+    "loading": "Unternehmen wird geladen...",
     "status": {
       "active": "AKTIV",
       "inactive": "INAKTIV"
@@ -591,13 +605,13 @@
     "actions": {
       "back": "Zurück",
       "actions": "Aktionen",
-      "delete": "Kunden löschen",
+      "delete": "Unternehmen löschen",
       "whatsapp": "WhatsApp",
       "email": "E-Mail"
     },
     "confirmDelete": {
-      "title": "Kunden löschen",
-      "message": "Sind Sie sicher, dass Sie den Kunden \"{{name}}\" löschen möchten? Er wird nicht mehr in den Listen des Systems angezeigt."
+      "title": "Unternehmen löschen",
+      "message": "Möchten Sie das Unternehmen \"{{name}}\" wirklich löschen? Es wird nicht mehr in den Listen des Systems angezeigt."
     },
     "confirmDeactivate": {
       "title": "Als Nicht-Kunde markieren",
@@ -612,13 +626,13 @@
       "general": "Allgemein",
       "address": "Adresse",
       "inspections": "Inspektionen",
-      "movements": "Aktivität"
+      "movements": "Verlauf"
     },
     "errors": {
       "updateGeneral": "Allgemeine Daten konnten nicht aktualisiert werden.",
       "updateContacts": "Kontakte konnten nicht aktualisiert werden.",
       "updateAddress": "Adresse konnte nicht aktualisiert werden.",
-      "delete": "Kunde konnte nicht gelöscht werden."
+      "delete": "Das Unternehmen konnte nicht gelöscht werden."
     },
     "general": {
       "title": "Allgemeine Daten",
@@ -669,11 +683,12 @@
         "renewed": "Erneuert"
       },
       "actions": {
-        "openDocuments": "Dokumente öffnen"
+        "openDocuments": "Dokumente öffnen",
+        "rowMenu": "Inspektionsaktionen"
       }
     },
     "movements": {
-      "title": "Aktivität",
+      "title": "Verlauf",
       "fields": {
         "createdAt": "Erstellt am/um",
         "createdBy": "Erstellt von",
@@ -692,7 +707,8 @@
     "actions": {
       "back": "Zurück",
       "actions": "Aktionen",
-      "delete": "Inspektion löschen"
+      "delete": "Inspektion löschen",
+      "reactivate": "Reaktivieren"
     },
     "confirmDelete": {
       "title": "Inspektion löschen",
@@ -711,7 +727,7 @@
     "sections": {
       "general": "Inspektionsdaten",
       "documents": "Dokumente",
-      "audit": "Audit"
+      "audit": "Verlauf"
     },
     "fields": {
       "service": "Dienst",
@@ -730,7 +746,6 @@
       "loading": "Dokumente werden geladen...",
       "empty": "Keine Dokumente gefunden.",
       "table": {
-        "description": "Beschreibung",
         "name": "Name",
         "size": "Größe",
         "uploadDate": "Upload-Datum",
@@ -747,11 +762,11 @@
       "previewUnsupported": "Vorschau für diesen Dateityp nicht verfügbar. Laden Sie die Datei herunter, um sie anzuzeigen.",
       "uploadDialog": {
         "title": "Dokument hochladen",
-        "description": "Beschreibung",
-        "chooseFile": "Datei auswählen",
-        "fileSelected": "Datei: {{name}}",
         "hint": "Laden Sie ein Dokument hoch, das zu dieser Inspektion gehört.",
         "upload": "Hochladen"
+      },
+      "picker": {
+        "select": "Dateien auswählen"
       }
     },
     "audit": {
@@ -767,6 +782,9 @@
       "downloadDoc": "Dokument konnte nicht heruntergeladen werden.",
       "deleteDoc": "Dokument konnte nicht gelöscht werden.",
       "artNumberFormat": "Die ART-Nummer muss im Format 0000000-0 oder 00000000-0 vorliegen"
+    },
+    "renew": {
+      "alreadyRenewed": "Diese Inspektion wurde bereits erneuert."
     }
   },
   "notify": {
@@ -775,7 +793,8 @@
       "created": "Erfolgreich erstellt",
       "deleted": "Erfolgreich entfernt",
       "uploaded": "Datei erfolgreich hochgeladen",
-      "passwordChanged": "Passwort erfolgreich geändert"
+      "passwordChanged": "Passwort erfolgreich geändert",
+      "reportGenerated": "Bericht erstellt — prüfen Sie Ihre Downloads."
     },
     "error": {
       "generic": "Ein Fehler ist aufgetreten. Bitte erneut versuchen.",
@@ -812,12 +831,13 @@
       "FILE_EXTENSION_NOT_ALLOWED": "Dateierweiterung nicht erlaubt.",
       "FILE_EXTENSION_MISSING": "Die Datei muss eine Erweiterung haben.",
       "SERVICE_TYPE_ALREADY_EXISTS": "Diese Dienstleistungsart existiert bereits.",
-      "SERVICE_TYPE_HAS_INSPECTIONS": "Löschen nicht möglich: Diese Dienstleistungsart hat verknüpfte Inspektionen."
+      "SERVICE_TYPE_HAS_INSPECTIONS": "Löschen nicht möglich: Diese Dienstleistungsart hat verknüpfte Inspektionen.",
+      "INSPECTION_ALREADY_RENEWED": "Diese Inspektion wurde bereits erneuert."
     }
   },
   "inspections": {
     "title": "Inspektionen",
-    "description": "Betriebliche Übersicht aller aktiven Inspektionen.",
+    "description": "Alle erfassten Inspektionen.",
     "empty": "Keine Inspektionen gefunden.",
     "status": {
       "expired": "Abgelaufen",
@@ -825,10 +845,14 @@
       "onTrack": "Aktuell"
     },
     "filters": {
-      "search": "Nach Kunde oder Service suchen",
+      "search": "Nach Unternehmen oder Dienstleistung suchen",
       "status": "Status",
       "allStatuses": "Alle Status",
-      "clear": "Filter zurücksetzen"
+      "clear": "Filter zurücksetzen",
+      "statusAll": "Alle",
+      "statusExpired": "Überfällig",
+      "statusNear": "Bald fällig",
+      "statusOk": "Im Plan"
     },
     "actions": {
       "addInspection": "Neue Inspektion"
@@ -839,36 +863,64 @@
     "addModal": {
       "title": "Neue Inspektion",
       "fields": {
-        "customer": "Kunde"
+        "customer": "Unternehmen"
       },
-      "customerNoOptions": "Tippen Sie, um einen Kunden zu suchen",
+      "customerNoOptions": "Tippen, um ein Unternehmen zu suchen",
       "errors": {
         "expirationBeforeInspection": "Das Ablaufdatum darf nicht vor dem Inspektionsdatum liegen"
       },
       "documents": {
-        "title": "Dokumente (optional)",
-        "add": "Hinzufügen"
+        "title": "Dokumente (optional)"
       },
       "success": {
         "title": "Inspektion erfolgreich erstellt!",
-        "idLabel": "ID",
-        "uploadFailures": "{{count}} Dokument(e) konnten nicht hochgeladen werden. Sie können es auf der Inspektionsseite erneut versuchen."
+        "uploadFailures": "{{count}} Dokument(e) konnten nicht hochgeladen werden. Sie können es auf der Inspektionsseite erneut versuchen.",
+        "summary": "{{service}}-Inspektion für {{customer}}, fällig am {{date}}."
       },
       "actions": {
         "create": "Inspektion erstellen",
         "saving": "Speichern...",
         "close": "Schließen",
         "openRecord": "Inspektion öffnen"
-      }
+      },
+      "expirationShortcut": "+{{count}} {{unit}}"
     },
     "table": {
-      "customer": "Kunde",
+      "customer": "Unternehmen",
       "service": "Dienstleistung",
       "notes": "Notizen",
       "inspectionDate": "Inspektionsdatum",
       "expirationDate": "Ablaufdatum",
       "status": "Status",
       "actions": "Aktionen"
+    },
+    "renewModal": {
+      "title": "Inspektion erneuern",
+      "success": {
+        "title": "Inspektion erneuert!",
+        "summary": "Neue {{service}}-Inspektion für {{customer}}, fällig am {{date}}."
+      },
+      "actions": {
+        "confirm": "Erneuern",
+        "confirmShort": "Erneuern",
+        "openNew": "Neue Inspektion öffnen"
+      },
+      "tooltip": "Die nächste Inspektion aus dieser erstellen",
+      "currentSummary": "Durchgeführt am {{inspectionDate}} · fällig am {{expirationDate}}"
+    },
+    "deactivate": {
+      "title": "Ohne Erneuerung beenden",
+      "intro": "Die {{service}}-Inspektion von {{customer}} verschwindet aus der Aufgabenliste, bleibt aber in der Unternehmenshistorie.",
+      "reasonLabel": "Grund",
+      "reasons": {
+        "CLIENT_DECLINED": "Kunde wollte nicht erneuern",
+        "EQUIPMENT_DECOMMISSIONED": "Gerät außer Betrieb genommen",
+        "OTHER": "Sonstiges",
+        "CUSTOMER_INACTIVATED": "Unternehmen ist kein Kunde mehr"
+      },
+      "confirm": "Bestätigen",
+      "action": "Nicht erneuern",
+      "archivedChip": "Nicht erneuert"
     }
   },
   "chatbot": {
@@ -882,7 +934,7 @@
       "inspectionsNear": "Du hast {{count}} Inspektionen, die bald ablaufen.",
       "inspectionsOnTrack": "Du hast {{count}} Inspektionen im Zeitplan.",
       "notificationsUnread": "Du hast {{count}} ungelesene Benachrichtigungen.",
-      "customersTotal": "Du hast {{count}} registrierte Kunden."
+      "customersTotal": "Sie haben {{count}} Unternehmen registriert."
     },
     "menu": {
       "back": "Zurück zum Menü",
@@ -890,13 +942,22 @@
         "intro": "Hallo! Wähle eine der Optionen unten."
       },
       "categories": {
-        "navigate": { "label": "Navigieren", "intro": "Wohin möchtest du gehen?" },
-        "data": { "label": "Daten abfragen", "intro": "Was möchtest du abfragen?" },
-        "faq": { "label": "Fragen und Support", "intro": "Wobei brauchst du Hilfe?" }
+        "navigate": {
+          "label": "Navigieren",
+          "intro": "Wohin möchtest du gehen?"
+        },
+        "data": {
+          "label": "Daten abfragen",
+          "intro": "Was möchtest du abfragen?"
+        },
+        "faq": {
+          "label": "Fragen und Support",
+          "intro": "Wobei brauchst du Hilfe?"
+        }
       },
       "actions": {
         "dashboard": "Zur Startseite",
-        "customers": "Kunden anzeigen",
+        "customers": "Unternehmen anzeigen",
         "inspections": "Inspektionen anzeigen",
         "notifications": "Benachrichtigungen anzeigen",
         "reports": "Berichte",
@@ -909,12 +970,58 @@
         "inspectionsNear": "Bald ablaufende Inspektionen",
         "inspectionsOnTrack": "Inspektionen im Zeitplan",
         "notificationsUnread": "Ungelesene Benachrichtigungen",
-        "customersTotal": "Gesamtzahl der Kunden",
-        "faqAddCustomer": "Wie registriere ich einen Kunden",
+        "customersTotal": "Unternehmen gesamt",
+        "faqAddCustomer": "Wie man ein Unternehmen anlegt",
         "faqPreferences": "Wie ändere ich Einstellungen",
         "faqReports": "Wie erstelle ich Berichte",
-        "faqSupport": "Mit dem Support sprechen"
+        "faqSupport": "Mit dem Support sprechen",
+        "analytics": "Analyse anzeigen"
       }
     }
+  },
+  "home": {
+    "title": "Startseite",
+    "subtitle": "Ihre Inspektionen, die Aufmerksamkeit brauchen.",
+    "cards": {
+      "expired": "Überfällig",
+      "near": "Fällig in {{days}} Tagen",
+      "onTrack": "Im Plan",
+      "tooltip": {
+        "expired": "Überfällige Inspektionen anzeigen",
+        "near": "Inspektionen anzeigen, die in {{days}} Tagen fällig sind",
+        "onTrack": "Inspektionen im Plan anzeigen"
+      }
+    },
+    "attention": {
+      "title": "Braucht Aufmerksamkeit",
+      "seeAll": "Alle anzeigen",
+      "empty": "Keine überfälligen oder bald ablaufenden Inspektionen. Alles erledigt!",
+      "renewTooltip": "Die nächste Inspektion aus dieser erstellen",
+      "openTooltip": "Inspektionsdetails öffnen",
+      "more": "{{count}} weitere anzeigen",
+      "whatsappTooltip": "Unternehmen über WhatsApp kontaktieren",
+      "noPhone": "Keine Handynummer hinterlegt",
+      "dueToday": "Heute fällig",
+      "overdue": "Seit {{count}} {{unit}} überfällig",
+      "dueIn": "Fällig in {{count}} {{unit}}",
+      "emailTooltip": "E-Mail an das Unternehmen senden",
+      "noEmail": "Keine E-Mail hinterlegt"
+    }
+  },
+  "expiration": {
+    "tooltip": {
+      "expired": "Abgelaufen am {{date}}",
+      "due": "Fällig am {{date}}"
+    }
+  },
+  "unsavedChanges": {
+    "title": "Nicht gespeicherte Änderungen",
+    "message": "Sie haben Änderungen, die noch nicht gespeichert wurden. Wenn Sie die Seite jetzt verlassen, gehen sie verloren.",
+    "stay": "Weiter bearbeiten",
+    "leave": "Ohne Speichern verlassen"
+  },
+  "audit": {
+    "created": "Erstellt von {{by}} am {{at}}",
+    "updated": "Zuletzt geändert von {{by}} am {{at}}"
   }
 }

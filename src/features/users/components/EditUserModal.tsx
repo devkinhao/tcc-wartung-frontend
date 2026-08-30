@@ -23,8 +23,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslation } from "react-i18next";
 
-import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/usersApi";
-import { permissionsApi, type PermissionResponseDTO } from "../api/permissionsApi";
+import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/users.api";
+import { permissionsApi, type PermissionResponseDTO } from "../api/permissions.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 

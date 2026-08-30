@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CircularProgress, Paper, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, Divider, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -62,68 +62,65 @@ export default function ConfigurationsPage() {
 
   if (isLoading || !data || !draft) {
     return (
-      <Paper elevation={1} sx={{ maxWidth: 896, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+      <Box sx={{ maxWidth: 896 }}>
         <Skeleton variant="text" width={220} height={32} sx={{ mb: 1 }} />
         <Skeleton variant="text" width={360} height={20} sx={{ mb: 3 }} />
         <Stack spacing={2}>
           <Skeleton variant="rounded" height={72} />
         </Stack>
-      </Paper>
+      </Box>
     );
   }
 
   return (
-    <Paper elevation={1} sx={{ maxWidth: 896, p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    <Box sx={{ maxWidth: 896 }}>
       <Box sx={{ mb: 3 }}>
         <Breadcrumb items={breadcrumbMap[paths.configurations]} size="large" />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("configurations.description")}
         </Typography>
       </Box>
 
-      <Stack spacing={2}>
-        {data.map((config) => {
-          const fieldKey = toCamelCase(config.name);
-          const label = t(`configurations.fields.${fieldKey}`, { defaultValue: config.name });
-          const description = t(`configurations.fields.${fieldKey}Description`, { defaultValue: "" });
+      <Card sx={{ borderRadius: 2 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Stack spacing={3}>
+            {data.map((config) => {
+              const fieldKey = toCamelCase(config.name);
+              const label = t(`configurations.fields.${fieldKey}`, { defaultValue: config.name });
+              const description = t(`configurations.fields.${fieldKey}Description`, { defaultValue: "" });
 
-          return (
-            <Card
-              key={config.name}
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                transition: (th) => th.transitions.create("box-shadow", { duration: th.transitions.duration.short }),
-                "&:hover": { boxShadow: 4 },
-              }}
+              return (
+                <TextField
+                  key={config.name}
+                  fullWidth
+                  required
+                  label={label}
+                  helperText={description || undefined}
+                  value={draft[config.name] ?? ""}
+                  onChange={(e) => handleChange(config.name, e.target.value)}
+                  size="small"
+                  inputMode={NUMERIC_CONFIGS.has(config.name) ? "numeric" : "text"}
+                  inputProps={{ maxLength: 100 }}
+                />
+              );
+            })}
+          </Stack>
+
+          <Divider sx={{ my: 3 }} />
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            {/* @NotEmpty no ConfigurationBatchUpdateRequestDTO (mapa vazio) + nenhum valor em branco */}
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={isSaving || Object.keys(draft).length === 0 || hasBlankConfig}
+              onClick={() => save(draft)}
             >
-              <TextField
-                fullWidth
-                required
-                label={label}
-                helperText={description || undefined}
-                value={draft[config.name] ?? ""}
-                onChange={(e) => handleChange(config.name, e.target.value)}
-                size="small"
-                inputMode={NUMERIC_CONFIGS.has(config.name) ? "numeric" : "text"}
-                inputProps={{ maxLength: 100 }}
-              />
-            </Card>
-          );
-        })}
-      </Stack>
-
-      <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-        {/* @NotEmpty no ConfigurationBatchUpdateRequestDTO (mapa vazio) + nenhum valor em branco */}
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={isSaving || Object.keys(draft).length === 0 || hasBlankConfig}
-          onClick={() => save(draft)}
-        >
-          {isSaving ? <CircularProgress size={20} color="inherit" /> : t("configurations.actions.save")}
-        </Button>
-      </Box>
-    </Paper>
+              {isSaving ? <CircularProgress size={20} color="inherit" /> : t("configurations.actions.save")}
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

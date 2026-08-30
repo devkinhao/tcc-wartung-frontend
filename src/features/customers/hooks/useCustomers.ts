@@ -5,7 +5,7 @@ import { Customer } from "../types/customersList";
 import { qk } from "@/api/keys";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import type { CustomerFilterValues } from "../CustomersFilters";
+import type { CustomerFilterValues } from "../components/CustomersFilters";
 
 interface SpringPageResponse {
   content: Customer[];

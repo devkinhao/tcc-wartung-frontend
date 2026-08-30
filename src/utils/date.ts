@@ -40,6 +40,28 @@ export function todayISODate(): string {
   return `${y}-${m}-${d}`;
 }
 
+/**
+ * Dias entre hoje e uma data ISO (yyyy-mm-dd), no calendário local.
+ * Positivo = no futuro; negativo = no passado; 0 = hoje.
+ */
+export function daysFromToday(iso: string): number {
+  const [y, m, d] = iso.split("T")[0].split("-").map(Number);
+  const target = new Date(y, m - 1, d).getTime();
+  const now = new Date();
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  return Math.round((target - todayMidnight) / 86_400_000);
+}
+
+/** Soma anos a uma data ISO (yyyy-mm-dd), retornando outra data ISO */
+export function addYearsISODate(iso: string, years: number): string {
+  const [y, m, d] = iso.split("T")[0].split("-").map(Number);
+  const date = new Date(y + years, m - 1, d);
+  const yy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
+
 /** Soma dias a uma data ISO (yyyy-mm-dd), retornando outra data ISO */
 export function addDaysISODate(iso: string, days: number): string {
   const [y, m, d] = iso.split("-").map(Number);

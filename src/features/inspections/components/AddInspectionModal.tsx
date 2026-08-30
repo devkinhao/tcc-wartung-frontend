@@ -20,14 +20,13 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
-import { uploadInspectionDocument } from "../api/inspection.documents.api";
+import { uploadInspectionDocuments } from "../api/inspections.documents.api";
+import { DocumentPicker } from "./DocumentPicker";
 import {
   createInspection,
   getServiceTypes,
@@ -37,12 +36,9 @@ import {
 import type { CustomerSummaryResponseDTO } from "../types/inspectionDetail";
 import { paths } from "@/routes/paths";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { formatDateBR, addYearsISODate } from "@/utils/date";
 import { isValidArtNumber } from "../utils/artNumber";
-
-type PendingDocument = {
-  description: string;
-  file: File;
-};
+import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 
 type AddInspectionModalProps = {
   open: boolean;
@@ -86,9 +82,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
   const [customerInput, setCustomerInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
 
-  const [pendingDocs, setPendingDocs] = useState<PendingDocument[]>([]);
-  const [docDescription, setDocDescription] = useState("");
-  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docFiles, setDocFiles] = useState<File[]>([]);
 
   // Debounce simples para não disparar uma busca a cada tecla digitada
   useEffect(() => {
@@ -116,22 +110,9 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
     setFailedUploads(0);
     setCustomerInput("");
     setDebouncedInput("");
-    setPendingDocs([]);
-    setDocDescription("");
-    setDocFile(null);
+    setDocFiles([]);
     onClose();
   };
-
-  function addPendingDocument() {
-    if (!docFile || docDescription.trim() === "") return;
-    setPendingDocs((prev) => [...prev, { description: docDescription.trim(), file: docFile }]);
-    setDocDescription("");
-    setDocFile(null);
-  }
-
-  function removePendingDocument(index: number) {
-    setPendingDocs((prev) => prev.filter((_, i) => i !== index));
-  }
 
   const expirationBeforeInspection =
     form.inspectionDate !== "" &&
@@ -160,11 +141,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
       const created = await createInspection(form.customer!.id, dto);
 
       let failed = 0;
-      for (const doc of pendingDocs) {
+      if (docFiles.length > 0) {
         try {
-          await uploadInspectionDocument(created.id, doc);
+          await uploadInspectionDocuments(created.id, docFiles);
         } catch {
-          failed++;
+          failed = docFiles.length;
         }
       }
 
@@ -212,7 +193,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
 
             {createdId ? (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {t("inspections.addModal.success.idLabel")}: {createdId}
+                {t("inspections.addModal.success.summary", {
+                  service: serviceTypes.find((s) => s.id === form.serviceTypeId)?.name ?? "—",
+                  customer: form.customer?.legalName ?? "—",
+                  date: formatDateBR(form.expirationDate),
+                })}
               </Typography>
             ) : null}
 
@@ -235,8 +220,10 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 />
               ) : (
                 <Autocomplete
-                  options={customerOptions}
+                  options={[...customerOptions].sort((a, b) => a.legalName.localeCompare(b.legalName))}
                   loading={loadingCustomers}
+                  openOnFocus
+                  autoHighlight
                   value={form.customer}
                   onChange={(_, value) => setForm((p) => ({ ...p, customer: value }))}
                   inputValue={customerInput}
@@ -318,6 +305,25 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                     : undefined
                 }
               />
+              <Stack direction="row" spacing={1} sx={{ mt: 0.75 }}>
+                {[1, 2, 3].map((years) => (
+                  <Button
+                    key={years}
+                    size="small"
+                    variant="text"
+                    disabled={!form.inspectionDate}
+                    onClick={() =>
+                      setForm((p) => ({ ...p, expirationDate: addYearsISODate(p.inspectionDate, years) }))
+                    }
+                    sx={{ minWidth: 0, px: 1 }}
+                  >
+                    {t("inspections.addModal.expirationShortcut", {
+                      count: years,
+                      unit: t(years === 1 ? "common.year" : "common.years"),
+                    })}
+                  </Button>
+                ))}
+              </Stack>
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -344,7 +350,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 minRows={3}
                 value={form.notes}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                inputProps={{ maxLength: 100 }}
+                inputProps={{ maxLength: INSPECTION_NOTES_MAX_LENGTH }}
               />
             </Grid>
 
@@ -352,65 +358,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 {t("inspections.addModal.documents.title")}
               </Typography>
-
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1} alignItems={{ sm: "center" }}>
-                <TextField
-                  size="small"
-                  label={t("inspectionDetails.documents.uploadDialog.description")}
-                  value={docDescription}
-                  onChange={(e) => setDocDescription(e.target.value)}
-                  sx={{ flex: 1 }}
-                  required
-                  inputProps={{ maxLength: 50 }}
-                />
-
-                <Button variant="outlined" component="label" size="small" sx={{ whiteSpace: "nowrap" }}>
-                  {docFile
-                    ? t("inspectionDetails.documents.uploadDialog.fileSelected", { name: docFile.name })
-                    : t("inspectionDetails.documents.uploadDialog.chooseFile")}
-                  <input
-                    type="file"
-                    hidden
-                    onChange={(e) => setDocFile(e.target.files?.[0] ?? null)}
-                  />
-                </Button>
-
-                <Button
-                  variant="contained"
-                  size="small"
-                  startIcon={<UploadFileIcon />}
-                  onClick={addPendingDocument}
-                  disabled={!docFile || docDescription.trim() === ""}
-                >
-                  {t("inspections.addModal.documents.add")}
-                </Button>
-              </Stack>
-
-              {pendingDocs.length > 0 && (
-                <Stack spacing={0.5} sx={{ mt: 1.5 }}>
-                  {pendingDocs.map((doc, index) => (
-                    <Stack
-                      key={index}
-                      direction="row"
-                      spacing={1}
-                      alignItems="center"
-                      justifyContent="space-between"
-                      sx={{ px: 1.5, py: 0.75, borderRadius: 1, bgcolor: "action.hover" }}
-                    >
-                      <Typography variant="body2" noWrap sx={{ minWidth: 0 }}>
-                        {doc.description ? `${doc.description} — ${doc.file.name}` : doc.file.name}
-                      </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={() => removePendingDocument(index)}
-                        aria-label={t("inspectionDetails.documents.actions.delete")}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Stack>
-                  ))}
-                </Stack>
-              )}
+              <DocumentPicker files={docFiles} onChange={setDocFiles} />
             </Grid>
           </Grid>
         )}

@@ -12,7 +12,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { ChevronRight, MenuOpen } from "@mui/icons-material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { menuPrincipal } from "./menu";
@@ -130,7 +130,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       {/* Logo */}
       <Box
         component={NavLink}
-        to={paths.dashboard}
+        to={paths.home}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -172,7 +172,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           onClick={onToggle}
           aria-label={collapsed ? t("sidebar.actions.expandMenu") : t("sidebar.actions.collapseMenu")}
         >
-          {collapsed ? <ChevronRight /> : <MenuOpen />}
+          {collapsed ? <ChevronRight /> : <ChevronLeft />}
         </IconButton>
       </Box>
     </Drawer>

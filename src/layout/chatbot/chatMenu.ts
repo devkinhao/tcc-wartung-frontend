@@ -52,7 +52,8 @@ const navigateCategory: ChatMenuOption = {
   labelKey: "chatbot.menu.categories.navigate.label",
   introKey: "chatbot.menu.categories.navigate.intro",
   children: [
-    navMenuAction("nav-dashboard", "chatbot.menu.actions.dashboard", paths.dashboard, "nav.home"),
+    navMenuAction("nav-home", "chatbot.menu.actions.dashboard", paths.home, "nav.home"),
+    navMenuAction("nav-analytics", "chatbot.menu.actions.analytics", paths.dashboard, "nav.analytics"),
     navMenuAction(
       "nav-customers",
       "chatbot.menu.actions.customers",
@@ -104,7 +105,7 @@ const navigateCategory: ChatMenuOption = {
     navMenuAction(
       "nav-preferences",
       "chatbot.menu.actions.preferences",
-      paths.userPreferences,
+      paths.preferences,
       "nav.preferences"
     ),
   ],

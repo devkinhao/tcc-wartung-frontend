@@ -8,15 +8,12 @@ export async function listInspectionDocuments(inspectionId: number) {
   return data;
 }
 
-export async function uploadInspectionDocument(
-  inspectionId: number,
-  params: { description: string; file: File }
-) {
+/** Anexa um ou mais arquivos à inspeção numa única requisição. */
+export async function uploadInspectionDocuments(inspectionId: number, files: File[]) {
   const form = new FormData();
-  form.append("description", params.description);
-  form.append("file", params.file);
+  files.forEach((file) => form.append("files", file));
 
-  const { data } = await api.post<InspectionDocumentResponseDTO>(
+  const { data } = await api.post<InspectionDocumentResponseDTO[]>(
     `/inspections/${inspectionId}/documents`,
     form,
     {
