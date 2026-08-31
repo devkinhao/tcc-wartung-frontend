@@ -314,7 +314,6 @@
     "empty": "No users found.",
     "actions": {
       "newUser": "New user",
-      "viewEdit": "View / Edit",
       "delete": "Delete user"
     },
     "confirmDelete": {
@@ -839,6 +838,7 @@
     "title": "Inspections",
     "description": "All registered inspections.",
     "empty": "No inspections found.",
+    "emptyFiltered": "No inspections match the applied filters.",
     "status": {
       "expired": "Expired",
       "nearExpiration": "Expiring in {{days}} days",

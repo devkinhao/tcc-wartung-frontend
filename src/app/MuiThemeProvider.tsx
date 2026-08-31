@@ -34,6 +34,18 @@ function buildTheme(mode: "light" | "dark") {
       subtitle2: { fontWeight: typography.weight.bold },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          // O recharts 3 torna a área do gráfico (e fatias/barras) focável; ao
+          // clicar, o navegador desenha um retângulo preto. Nossos gráficos não
+          // têm ação via SVG — as ações ficam nas legendas fora dele — então
+          // suprimimos o contorno. (Também passamos accessibilityLayer={false}
+          // em cada gráfico para tirar a navegação por teclado do SVG.)
+          ".recharts-wrapper :focus, .recharts-wrapper :focus-visible, .recharts-surface": {
+            outline: "none",
+          },
+        },
+      },
       MuiAppBar: { styleOverrides: { root: { backgroundColor: t.bg.header } } },
       MuiDrawer: { styleOverrides: { paper: { backgroundColor: t.bg.sidebar } } },
       MuiListItemButton: {

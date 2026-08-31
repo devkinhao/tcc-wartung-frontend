@@ -314,7 +314,6 @@
     "empty": "Keine Benutzer gefunden.",
     "actions": {
       "newUser": "Neuer Benutzer",
-      "viewEdit": "Ansehen / Bearbeiten",
       "delete": "Benutzer löschen"
     },
     "confirmDelete": {
@@ -839,6 +838,7 @@
     "title": "Inspektionen",
     "description": "Alle erfassten Inspektionen.",
     "empty": "Keine Inspektionen gefunden.",
+    "emptyFiltered": "Keine Inspektionen entsprechen den angewendeten Filtern.",
     "status": {
       "expired": "Abgelaufen",
       "nearExpiration": "Läuft in {{days}} Tagen ab",

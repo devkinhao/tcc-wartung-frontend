@@ -99,7 +99,7 @@ export function CustomersByCityChart({ data, loading }: Props) {
           </Box>
         ) : (
           <ResponsiveContainer key={renderKey} width="100%" height={260} minWidth={0} debounce={350}>
-            <PieChart>
+            <PieChart accessibilityLayer={false}>
               <Pie
                 data={series}
                 dataKey="count"

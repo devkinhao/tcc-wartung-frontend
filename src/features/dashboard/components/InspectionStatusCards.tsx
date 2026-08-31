@@ -109,7 +109,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
           {total > 0 && (
             <Box sx={{ width: 180, height: 160, flexShrink: 0 }}>
               <ResponsiveContainer key={renderKey} width="100%" height={160} minWidth={0} debounce={350}>
-                <PieChart>
+                <PieChart accessibilityLayer={false}>
                   <Pie
                     data={pieData}
                     cx="50%"

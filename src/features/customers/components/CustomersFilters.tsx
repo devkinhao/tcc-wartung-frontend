@@ -1,14 +1,13 @@
 import type { City } from "../types/City";
 import {
   Box,
+  Button,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Stack,
   TextField,
-  Tooltip,
 } from "@mui/material";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
@@ -102,11 +101,15 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
         </FormControl>
 
         {hasActiveFilters && (
-          <Tooltip title={t("customers.filters.clear")}>
-            <IconButton size="small" onClick={onClear} aria-label={t("customers.filters.clear")}>
-              <FilterAltOffIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <Button
+            size="small"
+            color="inherit"
+            onClick={onClear}
+            startIcon={<FilterAltOffIcon fontSize="small" />}
+            sx={{ flexShrink: 0, color: "text.secondary", whiteSpace: "nowrap" }}
+          >
+            {t("customers.filters.clear")}
+          </Button>
         )}
       </Stack>
     </Box>

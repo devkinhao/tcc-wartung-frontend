@@ -211,7 +211,10 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers sx={{ pt: 1 }}>
+      {/* minHeight fixo: as abas têm alturas bem diferentes (Perfil x Segurança);
+          sem isso o diálogo pula de tamanho e se re-centraliza a cada troca de
+          aba. A aba de Permissões rola dentro do corpo se passar da altura. */}
+      <DialogContent dividers sx={{ pt: 1, minHeight: 420 }}>
 
         {loading ? (
           <Box sx={{ py: 6, display: "flex", justifyContent: "center" }}>

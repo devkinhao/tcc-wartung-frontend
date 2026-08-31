@@ -88,6 +88,7 @@ export default function InspectionsListPage() {
 
   const items = data?.content ?? [];
   const total = data?.page.totalElements ?? 0;
+  const hasActiveFilters = filters.search.trim() !== "" || filters.status !== "";
 
   function setStatus(status: InspectionStatus | "") {
     setFilters((p) => ({ ...p, status }));
@@ -231,12 +232,20 @@ export default function InspectionsListPage() {
           ) : items.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                  {t("inspections.empty")}
-                </Typography>
-                <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-                  {t("inspections.actions.addInspection")}
-                </Button>
+                {hasActiveFilters ? (
+                  <Typography variant="body2" color="text.secondary">
+                    {t("inspections.emptyFiltered")}
+                  </Typography>
+                ) : (
+                  <>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                      {t("inspections.empty")}
+                    </Typography>
+                    <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+                      {t("inspections.actions.addInspection")}
+                    </Button>
+                  </>
+                )}
               </TableCell>
             </TableRow>
           ) : (

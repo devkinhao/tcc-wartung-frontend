@@ -12,7 +12,6 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -28,6 +27,7 @@ import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
 import { SortableHeader } from "@/components/SortableHeader";
+import { DataTableContainer } from "@/components/DataTableContainer";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -58,11 +58,11 @@ export default function UsersPage() {
     setMenuUser(null);
   }
 
-  function handleViewEdit() {
-    if (!menuUser) return;
-    setSelectedUserId(menuUser.id);
+  // Ação principal: clicar na linha abre a edição (mesmo padrão de Inspeções e
+  // Empresas). O menu ⋮ fica só para "Excluir" — ação rara e destrutiva.
+  function openEdit(u: UserRow) {
+    setSelectedUserId(u.id);
     setEditOpen(true);
-    closeMenu();
   }
 
   function handleDelete() {
@@ -114,14 +114,7 @@ export default function UsersPage() {
         </Stack>
       </Stack>
 
-      <Box
-        sx={{
-          border: (th) => `1px solid ${th.palette.divider}`,
-          borderRadius: 2,
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
+      <Box sx={{ position: "relative" }}>
         {(isLoading || isDeleting) && (
           <Box
             sx={{
@@ -133,13 +126,14 @@ export default function UsersPage() {
               bgcolor: "background.paper",
               opacity: 0.7,
               zIndex: 2,
+              borderRadius: 2,
             }}
           >
             <CircularProgress size={28} />
           </Box>
         )}
 
-        <Table size="small" sx={{ tableLayout: "fixed" }}>
+        <DataTableContainer>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <SortableHeader label={t("users.table.username")} column="username" {...sharedSortProps} width="15%" />
@@ -152,7 +146,7 @@ export default function UsersPage() {
 
           <TableBody>
             {users.map((u) => (
-              <TableRow key={u.id} hover>
+              <TableRow key={u.id} hover sx={{ cursor: "pointer" }} onClick={() => openEdit(u)}>
                 <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.username}>
                   {u.username}
                 </TableCell>
@@ -170,8 +164,12 @@ export default function UsersPage() {
                     variant={u.isActive ? "filled" : "outlined"}
                   />
                 </TableCell>
-                <TableCell align="right">
-                  <IconButton size="small" onClick={(e) => openMenu(e, u)}>
+                <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => openMenu(e, u)}
+                    aria-label={t("common.actions.more")}
+                  >
                     <MoreVertIcon fontSize="small" />
                   </IconButton>
                 </TableCell>
@@ -188,11 +186,10 @@ export default function UsersPage() {
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </DataTableContainer>
       </Box>
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-        <MenuItem onClick={handleViewEdit}>{t("users.actions.viewEdit")}</MenuItem>
         <MenuItem onClick={handleDelete}>{t("users.actions.delete")}</MenuItem>
       </Menu>
 

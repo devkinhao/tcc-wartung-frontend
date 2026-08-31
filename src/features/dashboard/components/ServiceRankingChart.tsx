@@ -64,6 +64,7 @@ export function ServiceRankingChart({ data, loading }: Props) {
         ) : (
           <ResponsiveContainer width="100%" height={260} minWidth={0} debounce={350}>
             <BarChart
+              accessibilityLayer={false}
               data={series}
               layout="vertical"
               barCategoryGap="30%"
