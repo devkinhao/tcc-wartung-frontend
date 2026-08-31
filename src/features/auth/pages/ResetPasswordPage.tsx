@@ -9,16 +9,13 @@ import {
   Button,
   CircularProgress,
   Grid,
-  IconButton,
-  InputAdornment,
   Paper,
   TextField,
   Typography,
   Link,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { typography } from "@/styles/typography";
+import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
@@ -125,15 +122,10 @@ export default function ResetPasswordPage() {
                   required
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword((p) => !p)}
-                          edge="end"
-                          aria-label={t("userProfile.password.actions.toggleVisibility")}
-                        >
-                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                        </IconButton>
-                      </InputAdornment>
+                      <PasswordVisibilityToggle
+                        visible={showPassword}
+                        onToggle={() => setShowPassword((p) => !p)}
+                      />
                     ),
                   }}
                 />

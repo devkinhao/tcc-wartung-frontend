@@ -10,16 +10,13 @@ import {
   Button,
   CircularProgress,
   Grid,
-  IconButton,
-  InputAdornment,
   Link,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { typography } from "@/styles/typography";
+import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 
 // O backend (LoginRateLimitFilter) manda o tempo real de espera no header
 // Retry-After a cada 429. Esse valor só entra em cena se, por algum motivo,
@@ -116,15 +113,10 @@ export default function LoginPage() {
               required
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPassword}
+                    onToggle={() => setShowPassword((p) => !p)}
+                  />
                 ),
               }}
             />

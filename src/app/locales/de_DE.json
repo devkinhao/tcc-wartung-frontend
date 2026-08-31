@@ -30,7 +30,9 @@
       "close": "Schließen",
       "confirm": "Bestätigen",
       "retry": "Erneut versuchen",
-      "more": "Weitere Aktionen"
+      "more": "Weitere Aktionen",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort verbergen"
     },
     "loading": "Wird geladen...",
     "cep": {

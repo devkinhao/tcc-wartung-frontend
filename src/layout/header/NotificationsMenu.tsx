@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Notifications } from "@mui/icons-material";
@@ -86,16 +87,20 @@ export function NotificationsMenu({ disabled = false }: { disabled?: boolean }) 
 
   return (
     <>
-      <IconButton
-        aria-label={t("notifications.ariaLabel")}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-        size="large"
-        disabled={disabled}
-      >
-        <Badge color="error" badgeContent={disabled ? 0 : unreadCount} max={99}>
-          <Notifications />
-        </Badge>
-      </IconButton>
+      <Tooltip title={t("notifications.title")}>
+        <span>
+          <IconButton
+            aria-label={t("notifications.ariaLabel")}
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+            size="large"
+            disabled={disabled}
+          >
+            <Badge color="error" badgeContent={disabled ? 0 : unreadCount} max={99}>
+              <Notifications />
+            </Badge>
+          </IconButton>
+        </span>
+      </Tooltip>
 
       <Menu
         anchorEl={anchorEl}

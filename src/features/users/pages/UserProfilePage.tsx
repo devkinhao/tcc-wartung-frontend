@@ -14,16 +14,14 @@ import {
   Divider,
   Grid,
   IconButton,
-  InputAdornment,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
@@ -33,6 +31,7 @@ import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -240,40 +239,44 @@ export default function UserProfile() {
 
                   {isEditing && (
                     <>
-                      <IconButton
-                        onClick={() => fileInputRef.current?.click()}
-                        size="small"
-                        aria-label={t("userProfile.actions.changeAvatar")}
-                        sx={{
-                          position: "absolute",
-                          bottom: 6,
-                          right: 6,
-                          bgcolor: "primary.main",
-                          color: "common.white",
-                          "&:hover": { bgcolor: "primary.dark" },
-                        }}
-                      >
-                        <PhotoCameraIcon fontSize="small" />
-                      </IconButton>
+                      <Tooltip title={t("userProfile.actions.changeAvatar")}>
+                        <IconButton
+                          onClick={() => fileInputRef.current?.click()}
+                          size="small"
+                          aria-label={t("userProfile.actions.changeAvatar")}
+                          sx={{
+                            position: "absolute",
+                            bottom: 6,
+                            right: 6,
+                            bgcolor: "primary.main",
+                            color: "common.white",
+                            "&:hover": { bgcolor: "primary.dark" },
+                          }}
+                        >
+                          <PhotoCameraIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
 
                       <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
 
                       {avatarPreview && (
-                        <IconButton
-                          onClick={handleRemoveAvatar}
-                          size="small"
-                          aria-label={t("userProfile.actions.removeAvatar")}
-                          sx={{
-                            position: "absolute",
-                            bottom: 6,
-                            left: 6,
-                            bgcolor: "error.main",
-                            color: "common.white",
-                            "&:hover": { bgcolor: "error.dark" },
-                          }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                        <Tooltip title={t("userProfile.actions.removeAvatar")}>
+                          <IconButton
+                            onClick={handleRemoveAvatar}
+                            size="small"
+                            aria-label={t("userProfile.actions.removeAvatar")}
+                            sx={{
+                              position: "absolute",
+                              bottom: 6,
+                              left: 6,
+                              bgcolor: "error.main",
+                              color: "common.white",
+                              "&:hover": { bgcolor: "error.dark" },
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       )}
                     </>
                   )}
@@ -411,15 +414,10 @@ export default function UserProfile() {
               inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPasswords((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPasswords}
+                    onToggle={() => setShowPasswords((p) => !p)}
+                  />
                 ),
               }}
             />
@@ -435,15 +433,10 @@ export default function UserProfile() {
               inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPasswords((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPasswords}
+                    onToggle={() => setShowPasswords((p) => !p)}
+                  />
                 ),
               }}
             />
@@ -461,15 +454,10 @@ export default function UserProfile() {
               helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPasswords((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPasswords ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPasswords}
+                    onToggle={() => setShowPasswords((p) => !p)}
+                  />
                 ),
               }}
             />

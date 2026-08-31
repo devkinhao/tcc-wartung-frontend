@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Box, Button, IconButton, Paper, Stack, Typography, Fade } from "@mui/material";
+import { Box, Button, IconButton, Paper, Stack, Tooltip, Typography, Fade } from "@mui/material";
 import { Close, ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useChatBot } from "./useChatBot";
@@ -55,14 +55,16 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
           }}
         >
           <Typography variant="subtitle1">{t("chatbot.title")}</Typography>
-          <IconButton
-            size="small"
-            onClick={onClose}
-            sx={{ color: "inherit" }}
-            aria-label={t("common.actions.close")}
-          >
-            <Close fontSize="small" />
-          </IconButton>
+          <Tooltip title={t("common.actions.close")}>
+            <IconButton
+              size="small"
+              onClick={onClose}
+              sx={{ color: "inherit" }}
+              aria-label={t("common.actions.close")}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         <Stack spacing={1} sx={{ flex: 1, overflowY: "auto", p: 2 }}>

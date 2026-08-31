@@ -7,16 +7,15 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  InputAdornment,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslation } from "react-i18next";
 import { usersApi, type UserCreateRequestDTO } from "../api/users.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 
 type Props = {
   open: boolean;
@@ -113,9 +112,11 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {t("users.create.title")}
-        <IconButton onClick={handleClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={handleClose} aria-label={t("common.actions.close")}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -149,15 +150,10 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               inputProps={{ maxLength: 100 }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPassword}
+                    onToggle={() => setShowPassword((p) => !p)}
+                  />
                 ),
               }}
             />
@@ -178,15 +174,10 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((p) => !p)}
-                      edge="end"
-                      aria-label={t("userProfile.password.actions.toggleVisibility")}
-                    >
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
+                  <PasswordVisibilityToggle
+                    visible={showPassword}
+                    onToggle={() => setShowPassword((p) => !p)}
+                  />
                 ),
               }}
             />

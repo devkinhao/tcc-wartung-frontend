@@ -198,13 +198,15 @@ function AttentionRow({
           </Button>
         </Tooltip>
 
-        <IconButton
-          size="small"
-          onClick={(e) => setMenuEl(e.currentTarget)}
-          aria-label={t("common.actions.more")}
-        >
-          <MoreVertIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.more")}>
+          <IconButton
+            size="small"
+            onClick={(e) => setMenuEl(e.currentTarget)}
+            aria-label={t("common.actions.more")}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        </Tooltip>
         <Menu anchorEl={menuEl} open={Boolean(menuEl)} onClose={() => setMenuEl(null)}>
           <MenuItem
             onClick={() => {

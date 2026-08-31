@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, IconButton, Menu, MenuItem, Stack } from "@mui/material";
+import { Button, IconButton, Menu, MenuItem, Stack, Tooltip } from "@mui/material";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import BlockIcon from "@mui/icons-material/Block";
@@ -36,9 +36,11 @@ export function InspectionRowActions({ item, onRenew, onDeactivate }: Props) {
         {t("inspections.renewModal.actions.confirmShort")}
       </Button>
 
-      <IconButton size="small" onClick={(e) => setMenuEl(e.currentTarget)} aria-label={t("common.actions.more")}>
-        <MoreVertIcon fontSize="small" />
-      </IconButton>
+      <Tooltip title={t("common.actions.more")}>
+        <IconButton size="small" onClick={(e) => setMenuEl(e.currentTarget)} aria-label={t("common.actions.more")}>
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <Menu anchorEl={menuEl} open={Boolean(menuEl)} onClose={() => setMenuEl(null)}>
         <MenuItem
           onClick={() => {

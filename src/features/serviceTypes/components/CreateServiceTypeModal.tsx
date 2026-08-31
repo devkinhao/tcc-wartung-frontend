@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Tooltip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { serviceTypesApi, type ServiceTypeCreateRequestDTO } from "../api/serviceTypes.api";
@@ -51,9 +51,11 @@ export function CreateServiceTypeModal({ open, onClose, onCreated }: Props) {
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {t("serviceTypes.create.title")}
-        <IconButton onClick={handleClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={handleClose} aria-label={t("common.actions.close")}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       <DialogContent dividers>

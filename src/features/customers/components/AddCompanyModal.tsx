@@ -21,6 +21,7 @@ import {
   StepLabel,
   Stepper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -213,9 +214,11 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {t("customers.addModal.title")}
-        <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       <DialogContent dividers>

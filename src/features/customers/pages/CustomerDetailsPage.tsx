@@ -17,6 +17,7 @@ import {
   Stack,
   Tab,
   Tabs,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ArrowBackIcon      from "@mui/icons-material/ArrowBack";
@@ -172,10 +173,12 @@ export default function CustomerDetailsPage() {
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <IconButton size="small" onClick={() => navigate(paths.customers)}
-                  aria-label={t("customerDetails.actions.back")}>
-                  <ArrowBackIcon fontSize="small" />
-                </IconButton>
+                <Tooltip title={t("customerDetails.actions.back")}>
+                  <IconButton size="small" onClick={() => navigate(paths.customers)}
+                    aria-label={t("customerDetails.actions.back")}>
+                    <ArrowBackIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
                 <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap>
                   {view.legalName}
                 </Typography>
@@ -196,25 +199,33 @@ export default function CustomerDetailsPage() {
                 <Typography variant="body2" color="text.secondary">
                   {t("customerDetails.summary.mobile")}: {view.mobilePhone || "—"}
                 </Typography>
-                <IconButton
-                  size="small"
-                  aria-label={t("customerDetails.actions.whatsapp")}
-                  onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
-                  disabled={!view.mobilePhone}
-                >
-                  <WhatsAppIcon fontSize="small" />
-                </IconButton>
+                <Tooltip title={view.mobilePhone ? t("customerDetails.actions.whatsapp") : t("customerDetails.summary.mobile")}>
+                  <span>
+                    <IconButton
+                      size="small"
+                      aria-label={t("customerDetails.actions.whatsapp")}
+                      onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
+                      disabled={!view.mobilePhone}
+                    >
+                      <WhatsAppIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Stack>
             </Box>
 
             <Box>
-              <IconButton
-                aria-label={t("customerDetails.actions.actions")}
-                onClick={(e) => setMenuEl(e.currentTarget)}
-                disabled={mutations.delete.isPending}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              <Tooltip title={t("customerDetails.actions.actions")}>
+                <span>
+                  <IconButton
+                    aria-label={t("customerDetails.actions.actions")}
+                    onClick={(e) => setMenuEl(e.currentTarget)}
+                    disabled={mutations.delete.isPending}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
                 <MenuItem onClick={() => { setMenuEl(null); setConfirmDeleteOpen(true); }}>
                   {t("customerDetails.actions.delete")}

@@ -30,7 +30,9 @@
       "close": "Fechar",
       "confirm": "Confirmar",
       "retry": "Tentar novamente",
-      "more": "Mais ações"
+      "more": "Mais ações",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha"
     },
     "loading": "Carregando...",
     "cep": {

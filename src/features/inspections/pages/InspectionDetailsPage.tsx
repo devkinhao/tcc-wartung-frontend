@@ -533,13 +533,15 @@ export default function InspectionDetailsPage() {
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <IconButton
-                  size="small"
-                  onClick={handleBack}
-                  aria-label={t("inspectionDetails.actions.back")}
-                >
-                  <ArrowBackIcon fontSize="small" />
-                </IconButton>
+                <Tooltip title={t("inspectionDetails.actions.back")}>
+                  <IconButton
+                    size="small"
+                    onClick={handleBack}
+                    aria-label={t("inspectionDetails.actions.back")}
+                  >
+                    <ArrowBackIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
 
                 <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap sx={{ minWidth: 0 }}>
                   {title}
@@ -613,13 +615,17 @@ export default function InspectionDetailsPage() {
                 </Button>
               ) : null}
 
-              <IconButton
-                aria-label={t("inspectionDetails.actions.actions")}
-                onClick={(e) => setMenuEl(e.currentTarget)}
-                disabled={deleteInspectionMutation.isPending}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              <Tooltip title={t("inspectionDetails.actions.actions")}>
+                <span>
+                  <IconButton
+                    aria-label={t("inspectionDetails.actions.actions")}
+                    onClick={(e) => setMenuEl(e.currentTarget)}
+                    disabled={deleteInspectionMutation.isPending}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
                 <MenuItem
                   disabled={!view.isActive || editing}
@@ -831,28 +837,36 @@ export default function InspectionDetailsPage() {
                         <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
-                            <IconButton
-                              size="small"
-                              aria-label={t("inspectionDetails.documents.actions.view")}
-                              onClick={() => handlePreview(d.id, d.name)}
-                              disabled={previewLoading === d.id}
-                            >
-                              <VisibilityIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              aria-label={t("inspectionDetails.documents.actions.download")}
-                              onClick={() => handleDownload(d.id, d.name)}
-                            >
-                              <DownloadIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              aria-label={t("inspectionDetails.documents.table.actions")}
-                              onClick={(e) => openDocMenu(e, d.id)}
-                            >
-                              <MoreVertIcon fontSize="small" />
-                            </IconButton>
+                            <Tooltip title={t("inspectionDetails.documents.actions.view")}>
+                              <span>
+                                <IconButton
+                                  size="small"
+                                  aria-label={t("inspectionDetails.documents.actions.view")}
+                                  onClick={() => handlePreview(d.id, d.name)}
+                                  disabled={previewLoading === d.id}
+                                >
+                                  <VisibilityIcon fontSize="small" />
+                                </IconButton>
+                              </span>
+                            </Tooltip>
+                            <Tooltip title={t("inspectionDetails.documents.actions.download")}>
+                              <IconButton
+                                size="small"
+                                aria-label={t("inspectionDetails.documents.actions.download")}
+                                onClick={() => handleDownload(d.id, d.name)}
+                              >
+                                <DownloadIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t("inspectionDetails.documents.table.actions")}>
+                              <IconButton
+                                size="small"
+                                aria-label={t("inspectionDetails.documents.table.actions")}
+                                onClick={(e) => openDocMenu(e, d.id)}
+                              >
+                                <MoreVertIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
                           </Stack>
                         </TableCell>
                       </TableRow>

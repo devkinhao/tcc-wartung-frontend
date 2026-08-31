@@ -11,22 +11,21 @@ import {
   FormControlLabel,
   FormGroup,
   IconButton,
-  InputAdornment,
   Stack,
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useTranslation } from "react-i18next";
 
 import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/users.api";
 import { permissionsApi, type PermissionResponseDTO } from "../api/permissions.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 
 type Props = {
   open: boolean;
@@ -206,9 +205,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pb: 1 }}>
         {title}
-        <IconButton onClick={onClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={onClose} aria-label={t("common.actions.close")}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       {/* minHeight fixo: as abas têm alturas bem diferentes (Perfil x Segurança);
@@ -321,15 +322,10 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 inputProps={{ maxLength: 100 }}
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowNewPassword((p) => !p)}
-                        edge="end"
-                        aria-label={t("userProfile.password.actions.toggleVisibility")}
-                      >
-                        {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                      </IconButton>
-                    </InputAdornment>
+                    <PasswordVisibilityToggle
+                      visible={showNewPassword}
+                      onToggle={() => setShowNewPassword((p) => !p)}
+                    />
                   ),
                 }}
               />

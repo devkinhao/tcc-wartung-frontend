@@ -10,6 +10,7 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -208,14 +209,18 @@ export function CustomerGeneralTab({
                 helperText={mobileError ? t("validation.mobileInvalid") : undefined}
                 InputProps={{
                   endAdornment: (
-                    <IconButton
-                      size="small"
-                      aria-label={t("customerDetails.actions.whatsapp")}
-                      onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
-                      disabled={!view.mobilePhone}
-                    >
-                      <WhatsAppIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title={t("customerDetails.actions.whatsapp")}>
+                      <span>
+                        <IconButton
+                          size="small"
+                          aria-label={t("customerDetails.actions.whatsapp")}
+                          onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
+                          disabled={!view.mobilePhone}
+                        >
+                          <WhatsAppIcon fontSize="small" />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
                   ),
                 }}
               />
@@ -233,14 +238,18 @@ export function CustomerGeneralTab({
                 inputProps={{ maxLength: 75 }}
                 InputProps={{
                   endAdornment: (
-                    <IconButton
-                      size="small"
-                      aria-label={t("customerDetails.actions.email")}
-                      onClick={() => window.open(`mailto:${view.email}`, "_blank")}
-                      disabled={!view.email}
-                    >
-                      <EmailIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title={t("customerDetails.actions.email")}>
+                      <span>
+                        <IconButton
+                          size="small"
+                          aria-label={t("customerDetails.actions.email")}
+                          onClick={() => window.open(`mailto:${view.email}`, "_blank")}
+                          disabled={!view.email}
+                        >
+                          <EmailIcon fontSize="small" />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
                   ),
                 }}
               />

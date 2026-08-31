@@ -12,6 +12,7 @@ import {
   IconButton,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -173,9 +174,11 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
               </Typography>
             ) : null}
           </Box>
-          <IconButton onClick={onClose} aria-label={t("common.actions.close")} size="small" sx={{ mt: -0.5 }}>
-            <CloseIcon />
-          </IconButton>
+          <Tooltip title={t("common.actions.close")}>
+            <IconButton onClick={onClose} aria-label={t("common.actions.close")} size="small" sx={{ mt: -0.5 }}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </DialogTitle>
 

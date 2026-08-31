@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Tooltip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { serviceTypesApi, type ServiceTypeResponseDTO, type ServiceTypeUpdateRequestDTO } from "../api/serviceTypes.api";
@@ -52,9 +52,11 @@ export function EditServiceTypeModal({ open, serviceType, onClose, onUpdated }: 
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {t("serviceTypes.edit.title")}
-        <IconButton onClick={handleClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={handleClose} aria-label={t("common.actions.close")}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       <DialogContent dividers>

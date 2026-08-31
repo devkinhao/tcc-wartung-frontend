@@ -17,6 +17,7 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -179,9 +180,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
     <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="sm">
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {t("inspections.addModal.title")}
-        <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
-          <CloseIcon />
-        </IconButton>
+        <Tooltip title={t("common.actions.close")}>
+          <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </DialogTitle>
 
       <DialogContent dividers>

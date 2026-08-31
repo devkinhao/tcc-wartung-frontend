@@ -168,12 +168,17 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Collapse toggle */}
       <Box sx={{ display: "flex", justifyContent: collapsed ? "center" : "flex-end", p: 1 }}>
-        <IconButton
-          onClick={onToggle}
-          aria-label={collapsed ? t("sidebar.actions.expandMenu") : t("sidebar.actions.collapseMenu")}
+        <Tooltip
+          title={collapsed ? t("sidebar.actions.expandMenu") : t("sidebar.actions.collapseMenu")}
+          placement="right"
         >
-          {collapsed ? <ChevronRight /> : <ChevronLeft />}
-        </IconButton>
+          <IconButton
+            onClick={onToggle}
+            aria-label={collapsed ? t("sidebar.actions.expandMenu") : t("sidebar.actions.collapseMenu")}
+          >
+            {collapsed ? <ChevronRight /> : <ChevronLeft />}
+          </IconButton>
+        </Tooltip>
       </Box>
     </Drawer>
   );

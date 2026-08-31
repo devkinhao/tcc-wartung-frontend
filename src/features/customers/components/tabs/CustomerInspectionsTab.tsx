@@ -12,6 +12,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -147,9 +148,11 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
                     {i.documents?.length ? (
-                      <Badge badgeContent={i.documents.length} color="primary">
-                        <DescriptionIcon fontSize="small" />
-                      </Badge>
+                      <Tooltip title={t("customerDetails.inspections.table.documents")}>
+                        <Badge badgeContent={i.documents.length} color="primary">
+                          <DescriptionIcon fontSize="small" />
+                        </Badge>
+                      </Tooltip>
                     ) : "—"}
                   </TableCell>
 
@@ -173,13 +176,15 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   </TableCell>
 
                   <TableCell align="center" onClick={(e) => e.stopPropagation()}>
-                    <IconButton
-                      size="small"
-                      aria-label={t("customerDetails.inspections.actions.rowMenu")}
-                      onClick={(e) => openRowMenu(e, i)}
-                    >
-                      <MoreVertIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title={t("common.actions.more")}>
+                      <IconButton
+                        size="small"
+                        aria-label={t("customerDetails.inspections.actions.rowMenu")}
+                        onClick={(e) => openRowMenu(e, i)}
+                      >
+                        <MoreVertIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
                 );

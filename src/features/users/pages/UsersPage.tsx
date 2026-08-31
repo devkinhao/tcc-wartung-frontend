@@ -17,6 +17,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -165,13 +166,15 @@ export default function UsersPage() {
                   />
                 </TableCell>
                 <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                  <IconButton
-                    size="small"
-                    onClick={(e) => openMenu(e, u)}
-                    aria-label={t("common.actions.more")}
-                  >
-                    <MoreVertIcon fontSize="small" />
-                  </IconButton>
+                  <Tooltip title={t("common.actions.more")}>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => openMenu(e, u)}
+                      aria-label={t("common.actions.more")}
+                    >
+                      <MoreVertIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
