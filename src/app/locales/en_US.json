@@ -794,8 +794,6 @@
       "passwordChanged": "Password changed successfully",
       "reportGenerated": "Report generated — check your downloads.",
       "profileUpdated": "Profile updated successfully",
-      "avatarUpdated": "Photo updated successfully",
-      "avatarRemoved": "Photo removed successfully",
       "inspectionCreated": "Inspection created successfully",
       "inspectionRenewed": "Inspection renewed successfully",
       "inspectionNotRenewed": "Inspection marked as not renewed",

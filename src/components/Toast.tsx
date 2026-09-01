@@ -8,6 +8,16 @@ import { keyframes } from "@mui/system";
 const DEFAULT_DURATION_MS = 5000;
 const ERROR_DURATION_MS = 8000;
 
+// Corpo preenchido. Sucesso/info em verde (a maioria dos toasts); erro em
+// vermelho e aviso em âmbar — uma mensagem de erro num card verde confunde.
+const VARIANT_COLOR = {
+  success: "success",
+  info: "success",
+  default: "success",
+  warning: "warning",
+  error: "error",
+} as const;
+
 const shrink = keyframes`
   from { transform: scaleX(1); }
   to   { transform: scaleX(0); }
@@ -55,6 +65,8 @@ export const Toast = forwardRef<HTMLDivElement, CustomContentProps>(function Toa
     };
   }, [paused, id, duration, closeSnackbar]);
 
+  const palette = VARIANT_COLOR[variant] ?? VARIANT_COLOR.default;
+
   return (
     // SnackbarContent recebe o ref e o `style` (opacidade) da transição Fade
     <SnackbarContent ref={ref} role="alert" style={style}>
@@ -74,8 +86,8 @@ export const Toast = forwardRef<HTMLDivElement, CustomContentProps>(function Toa
           py: 2,
           display: "flex",
           alignItems: "center",
-          bgcolor: "success.main",
-          color: "success.contrastText",
+          bgcolor: `${palette}.main`,
+          color: `${palette}.contrastText`,
         }}
       >
         <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.45, color: "inherit" }}>

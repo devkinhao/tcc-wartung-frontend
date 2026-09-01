@@ -115,10 +115,8 @@ export default function UserProfile() {
       return { previousUser };
     },
 
-    onSuccess() {
-      notify.success("notify.success.avatarUpdated");
-    },
-
+    // Sem toast de sucesso próprio: o avatar só é salvo junto com o perfil
+    // (handleSaveProfile), então o "Perfil atualizado" do updateMutation cobre.
     onError(_, __, context) {
       notify.error("notify.error.saveFailed");
       if (context?.previousUser) queryClient.setQueryData(["me"], context.previousUser);
@@ -133,7 +131,6 @@ export default function UserProfile() {
     mutationFn: removeAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.me() });
-      notify.success("notify.success.avatarRemoved");
     },
     onError: (err) => notify.fromError(err),
   });
