@@ -24,7 +24,7 @@ export function useServiceTypes(search = "") {
     mutationFn: (serviceType: ServiceTypeResponseDTO) => serviceTypesApi.delete(serviceType.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.serviceTypes() });
-      notify.success("notify.success.deleted");
+      notify.success("notify.success.serviceDeleted");
     },
     onError: (err) => notify.fromError(err),
   });

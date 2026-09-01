@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Fade } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import { PreferencesProvider } from "@/features/preferences/PreferencesProvider";
 import { ThemeSync } from "@/app/ThemeSync";
 import { MuiThemeProvider } from "@/app/MuiThemeProvider";
+import { Toast } from "@/components/Toast";
+
+const TOAST_VARIANTS = { success: Toast, error: Toast, warning: Toast, info: Toast, default: Toast };
 
 /**
  * Árvore única de providers globais, de fora para dentro:
@@ -38,7 +42,17 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         <PreferencesProvider>
           <ThemeSync />
           <MuiThemeProvider>
-            <SnackbarProvider maxSnack={4} anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+            {/* Toasts no canto inferior direito, empilhados (até 5). O tempo de
+                vida e a barra de progresso são controlados pelo componente
+                `Toast` — por isso `autoHideDuration={null}` aqui. */}
+            <SnackbarProvider
+              maxSnack={5}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={null}
+              TransitionComponent={Fade}
+              transitionDuration={{ enter: 250, exit: 500 }}
+              Components={TOAST_VARIANTS}
+            >
               {children}
             </SnackbarProvider>
           </MuiThemeProvider>

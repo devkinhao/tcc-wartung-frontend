@@ -36,7 +36,7 @@ export function EditServiceTypeModal({ open, serviceType, onClose, onUpdated }: 
       const payload: ServiceTypeUpdateRequestDTO = { name: name.trim() };
       await serviceTypesApi.update(serviceType.id, payload);
 
-      notify.success("notify.success.saved");
+      notify.success("notify.success.serviceUpdated");
       onUpdated?.();
       onClose();
     } catch (e) {

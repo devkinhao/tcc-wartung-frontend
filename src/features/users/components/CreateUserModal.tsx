@@ -79,6 +79,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
 
       await usersApi.create(payload);
 
+      notify.success("notify.success.userCreated");
       onCreated?.();
       resetForm();
       onClose();

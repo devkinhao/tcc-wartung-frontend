@@ -134,7 +134,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setCreaNumber(updated.creaNumber ?? "");
 
       onChanged?.();
-      notify.success("notify.success.saved");
+      notify.success("notify.success.userUpdated");
       onClose();
     } catch (e) {
       notify.fromError(e);
@@ -156,7 +156,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setSelectedPermissions(refreshed.permissions ?? []);
 
       onChanged?.();
-      notify.success("notify.success.saved");
+      notify.success("notify.success.permissionsUpdated");
       onClose();
     } catch (e) {
       notify.fromError(e);
@@ -173,7 +173,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       await usersApi.resetPassword(userId, { newPassword: newPassword.trim() });
       setNewPassword("");
       setShowNewPassword(false);
-      notify.success("notify.success.passwordChanged");
+      notify.success("notify.success.userPasswordReset");
     } catch (e) {
       notify.fromError(e);
     } finally {

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
+import { useNotify } from "@/hooks/useNotify";
 import { usersApi, type UserResponseDTO } from "../api/users.api";
 
 // --- Tipos e helpers de apresentação ---
@@ -51,6 +52,7 @@ function compareValues(a: UserRow[keyof UserRow], b: UserRow[keyof UserRow]): nu
 
 export function useUsers(search = "") {
   const queryClient = useQueryClient();
+  const notify = useNotify();
   const [sortBy, setSortBy] = useState<keyof UserRow | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
@@ -79,7 +81,11 @@ export function useUsers(search = "") {
 
   const deleteMutation = useMutation({
     mutationFn: (user: UserRow) => usersApi.delete(user.id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: qk.users() }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: qk.users() });
+      notify.success("notify.success.userDeleted");
+    },
+    onError: (err) => notify.fromError(err),
   });
 
   return {

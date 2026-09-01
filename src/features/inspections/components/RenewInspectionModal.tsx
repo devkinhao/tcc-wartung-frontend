@@ -135,6 +135,11 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
       }
       setCreatedId(created.id);
       setFailedUploads(failed);
+      if (failed > 0) {
+        notify.warning("notify.warning.inspectionRenewedDocsFailed");
+      } else {
+        notify.success("notify.success.inspectionRenewed");
+      }
       onRenewed?.(created.id);
     },
     onError: (err) => notify.fromError(err),

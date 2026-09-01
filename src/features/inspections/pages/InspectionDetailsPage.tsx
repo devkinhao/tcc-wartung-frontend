@@ -163,13 +163,14 @@ export default function InspectionDetailsPage() {
     setDraft(null);
   }
 
+  // Compartilhada por "salvar edição" e "reativar": a mensagem de sucesso é
+  // decidida por quem chama (mutate(payload, { onSuccess })), pois o texto muda.
   const mutation = useMutation({
     mutationFn: (payload: InspectionUpdateRequestDTO) => updateInspection(inspectionId, payload),
     onSuccess: (updated) => {
       qc.setQueryData(qk.inspectionDetail(inspectionId), updated);
       setEditing(false);
       setDraft(null);
-      notify.success("notify.success.saved");
     },
     onError: (err) => notify.fromError(err),
   });
@@ -184,7 +185,7 @@ export default function InspectionDetailsPage() {
       ]);
       setUploadOpen(false);
       setUploadFiles([]);
-      notify.success("notify.success.uploaded");
+      notify.success("notify.success.documentsUploaded");
     },
     onError: (err) => notify.fromError(err),
   });
@@ -196,7 +197,7 @@ export default function InspectionDetailsPage() {
         qc.invalidateQueries({ queryKey: qk.inspectionDocuments(inspectionId) }),
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspectionId) }),
       ]);
-      notify.success("notify.success.deleted");
+      notify.success("notify.success.documentDeleted");
     },
     onError: (err) => notify.fromError(err),
   });
@@ -204,6 +205,7 @@ export default function InspectionDetailsPage() {
   const deleteInspectionMutation = useMutation({
     mutationFn: () => deleteInspection(inspectionId),
     onSuccess: () => {
+      notify.success("notify.success.inspectionDeleted");
       qc.invalidateQueries({ queryKey: ["inspections-list"] });
       qc.invalidateQueries({ queryKey: qk.dashboard() });
       if (customerId) {
@@ -286,17 +288,22 @@ export default function InspectionDetailsPage() {
       isActive: draft.isActive,
     };
 
-    mutation.mutate(payload);
+    mutation.mutate(payload, {
+      onSuccess: () => notify.success("notify.success.saved"),
+    });
   };
 
   const handleReactivate = () => {
-    mutation.mutate({
-      inspectionDate: toISODate(view.inspectionDate),
-      expirationDate: toISODate(view.expirationDate),
-      notes: view.notes ?? "",
-      artNumber: view.artNumber?.trim() || null,
-      isActive: true,
-    });
+    mutation.mutate(
+      {
+        inspectionDate: toISODate(view.inspectionDate),
+        expirationDate: toISODate(view.expirationDate),
+        notes: view.notes ?? "",
+        artNumber: view.artNumber?.trim() || null,
+        isActive: true,
+      },
+      { onSuccess: () => notify.success("notify.success.inspectionReactivated") }
+    );
   };
 
   const statusLabel = view.isActive

@@ -70,12 +70,9 @@ export function useNotify() {
 
   const show = useCallback(
     (message: string, variant: VariantType) => {
-      enqueueSnackbar(message, {
-        variant,
-        autoHideDuration: variant === "error" ? 5000 : 3000,
-        anchorOrigin: { vertical: "bottom", horizontal: "left" },
-        preventDuplicate: true,
-      });
+      // Posição, transição, empilhamento e tempo de vida (+ barra de progresso)
+      // ficam no SnackbarProvider / componente `Toast` em AppProviders.
+      enqueueSnackbar(message, { variant, preventDuplicate: true });
     },
     [enqueueSnackbar]
   );

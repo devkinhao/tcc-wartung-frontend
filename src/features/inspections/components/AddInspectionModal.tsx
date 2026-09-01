@@ -161,6 +161,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
       setCreatedId(created.id);
       setFailedUploads(failed);
       setStep(1);
+      if (failed > 0) {
+        notify.warning("notify.warning.inspectionCreatedDocsFailed");
+      } else {
+        notify.success("notify.success.inspectionCreated");
+      }
     },
     onError: (err) => notify.fromError(err),
   });

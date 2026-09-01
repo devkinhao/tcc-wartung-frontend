@@ -791,11 +791,32 @@
   "notify": {
     "success": {
       "saved": "Changes saved successfully",
-      "created": "Created successfully",
-      "deleted": "Removed successfully",
-      "uploaded": "File uploaded successfully",
       "passwordChanged": "Password changed successfully",
-      "reportGenerated": "Report generated — check your downloads."
+      "reportGenerated": "Report generated — check your downloads.",
+      "profileUpdated": "Profile updated successfully",
+      "avatarUpdated": "Photo updated successfully",
+      "avatarRemoved": "Photo removed successfully",
+      "inspectionCreated": "Inspection created successfully",
+      "inspectionRenewed": "Inspection renewed successfully",
+      "inspectionNotRenewed": "Inspection marked as not renewed",
+      "inspectionReactivated": "Inspection reactivated successfully",
+      "inspectionDeleted": "Inspection deleted successfully",
+      "documentsUploaded": "Document(s) attached successfully",
+      "documentDeleted": "Document deleted successfully",
+      "companyCreated": "Company created successfully",
+      "companyDeleted": "Company deleted successfully",
+      "userCreated": "User created successfully",
+      "userUpdated": "User updated successfully",
+      "userDeleted": "User deleted successfully",
+      "permissionsUpdated": "Permissions updated successfully",
+      "userPasswordReset": "User password reset successfully",
+      "serviceCreated": "Service created successfully",
+      "serviceUpdated": "Service updated successfully",
+      "serviceDeleted": "Service deleted successfully"
+    },
+    "warning": {
+      "inspectionRenewedDocsFailed": "Inspection renewed, but there was an error attaching the documents",
+      "inspectionCreatedDocsFailed": "Inspection created, but there was an error attaching the documents"
     },
     "error": {
       "generic": "An error occurred. Please try again.",

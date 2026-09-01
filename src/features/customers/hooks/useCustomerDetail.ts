@@ -79,7 +79,10 @@ export function useCustomerDetail(customerId: number) {
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteCustomer(customerId),
-    onSuccess:  () => navigate(paths.customers),
+    onSuccess:  () => {
+      notify.success("notify.success.companyDeleted");
+      navigate(paths.customers);
+    },
     onError:    (err) => notify.fromError(err),
   });
 

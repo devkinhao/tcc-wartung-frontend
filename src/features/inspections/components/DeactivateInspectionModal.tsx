@@ -52,7 +52,7 @@ export function DeactivateInspectionModal({ open, onClose, inspection, onDeactiv
       if (inspection?.customerId) {
         qc.invalidateQueries({ queryKey: qk.customerDetail(inspection.customerId) });
       }
-      notify.success("notify.success.saved");
+      notify.success("notify.success.inspectionNotRenewed");
       handleClose();
       onDeactivated?.();
     },

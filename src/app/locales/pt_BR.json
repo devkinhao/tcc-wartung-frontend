@@ -791,11 +791,32 @@
   "notify": {
     "success": {
       "saved": "Alterações salvas com sucesso",
-      "created": "Cadastro realizado com sucesso",
-      "deleted": "Removido com sucesso",
-      "uploaded": "Arquivo enviado com sucesso",
       "passwordChanged": "Senha alterada com sucesso",
-      "reportGenerated": "Relatório gerado — verifique seus downloads."
+      "reportGenerated": "Relatório gerado — verifique seus downloads.",
+      "profileUpdated": "Perfil atualizado com sucesso",
+      "avatarUpdated": "Foto atualizada com sucesso",
+      "avatarRemoved": "Foto removida com sucesso",
+      "inspectionCreated": "Inspeção cadastrada com sucesso",
+      "inspectionRenewed": "Inspeção renovada com sucesso",
+      "inspectionNotRenewed": "Inspeção marcada como não renovada",
+      "inspectionReactivated": "Inspeção reativada com sucesso",
+      "inspectionDeleted": "Inspeção excluída com sucesso",
+      "documentsUploaded": "Documento(s) anexado(s) com sucesso",
+      "documentDeleted": "Documento excluído com sucesso",
+      "companyCreated": "Empresa cadastrada com sucesso",
+      "companyDeleted": "Empresa excluída com sucesso",
+      "userCreated": "Usuário criado com sucesso",
+      "userUpdated": "Usuário atualizado com sucesso",
+      "userDeleted": "Usuário excluído com sucesso",
+      "permissionsUpdated": "Permissões atualizadas com sucesso",
+      "userPasswordReset": "Senha do usuário redefinida com sucesso",
+      "serviceCreated": "Serviço criado com sucesso",
+      "serviceUpdated": "Serviço atualizado com sucesso",
+      "serviceDeleted": "Serviço excluído com sucesso"
+    },
+    "warning": {
+      "inspectionRenewedDocsFailed": "Inspeção renovada, mas houve erro ao anexar os documentos",
+      "inspectionCreatedDocsFailed": "Inspeção cadastrada, mas houve erro ao anexar os documentos"
     },
     "error": {
       "generic": "Ocorreu um erro. Tente novamente.",

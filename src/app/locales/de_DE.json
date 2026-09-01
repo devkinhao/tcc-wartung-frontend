@@ -791,11 +791,32 @@
   "notify": {
     "success": {
       "saved": "Änderungen erfolgreich gespeichert",
-      "created": "Erfolgreich erstellt",
-      "deleted": "Erfolgreich entfernt",
-      "uploaded": "Datei erfolgreich hochgeladen",
       "passwordChanged": "Passwort erfolgreich geändert",
-      "reportGenerated": "Bericht erstellt — prüfen Sie Ihre Downloads."
+      "reportGenerated": "Bericht erstellt — prüfen Sie Ihre Downloads.",
+      "profileUpdated": "Profil erfolgreich aktualisiert",
+      "avatarUpdated": "Foto erfolgreich aktualisiert",
+      "avatarRemoved": "Foto erfolgreich entfernt",
+      "inspectionCreated": "Inspektion erfolgreich erstellt",
+      "inspectionRenewed": "Inspektion erfolgreich erneuert",
+      "inspectionNotRenewed": "Inspektion als nicht erneuert markiert",
+      "inspectionReactivated": "Inspektion erfolgreich reaktiviert",
+      "inspectionDeleted": "Inspektion erfolgreich gelöscht",
+      "documentsUploaded": "Dokument(e) erfolgreich angehängt",
+      "documentDeleted": "Dokument erfolgreich gelöscht",
+      "companyCreated": "Unternehmen erfolgreich erstellt",
+      "companyDeleted": "Unternehmen erfolgreich gelöscht",
+      "userCreated": "Benutzer erfolgreich erstellt",
+      "userUpdated": "Benutzer erfolgreich aktualisiert",
+      "userDeleted": "Benutzer erfolgreich gelöscht",
+      "permissionsUpdated": "Berechtigungen erfolgreich aktualisiert",
+      "userPasswordReset": "Benutzerpasswort erfolgreich zurückgesetzt",
+      "serviceCreated": "Dienst erfolgreich erstellt",
+      "serviceUpdated": "Dienst erfolgreich aktualisiert",
+      "serviceDeleted": "Dienst erfolgreich gelöscht"
+    },
+    "warning": {
+      "inspectionRenewedDocsFailed": "Inspektion erneuert, aber beim Anhängen der Dokumente ist ein Fehler aufgetreten",
+      "inspectionCreatedDocsFailed": "Inspektion erstellt, aber beim Anhängen der Dokumente ist ein Fehler aufgetreten"
     },
     "error": {
       "generic": "Ein Fehler ist aufgetreten. Bitte erneut versuchen.",

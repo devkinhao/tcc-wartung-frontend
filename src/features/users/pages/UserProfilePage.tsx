@@ -95,8 +95,9 @@ export default function UserProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.me() });
       setIsEditing(false);
-      notify.success("notify.success.saved");
+      notify.success("notify.success.profileUpdated");
     },
+    onError: (err) => notify.fromError(err),
   });
 
   const avatarMutation = useMutation({
@@ -114,6 +115,10 @@ export default function UserProfile() {
       return { previousUser };
     },
 
+    onSuccess() {
+      notify.success("notify.success.avatarUpdated");
+    },
+
     onError(_, __, context) {
       notify.error("notify.error.saveFailed");
       if (context?.previousUser) queryClient.setQueryData(["me"], context.previousUser);
@@ -128,6 +133,7 @@ export default function UserProfile() {
     mutationFn: removeAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.me() });
+      notify.success("notify.success.avatarRemoved");
     },
     onError: (err) => notify.fromError(err),
   });

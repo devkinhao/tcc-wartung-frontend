@@ -158,6 +158,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
       const id = res.data && typeof res.data.id === "number" ? (res.data.id as number) : null;
       setCreatedId(id);
       setStep(2);
+      notify.success("notify.success.companyCreated");
     } catch (e) {
       notify.fromError(e);
     } finally {

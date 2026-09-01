@@ -34,7 +34,7 @@ export function CreateServiceTypeModal({ open, onClose, onCreated }: Props) {
       const payload: ServiceTypeCreateRequestDTO = { name: name.trim() };
       await serviceTypesApi.create(payload);
 
-      notify.success("notify.success.created");
+      notify.success("notify.success.serviceCreated");
       onCreated?.();
       resetForm();
       onClose();
