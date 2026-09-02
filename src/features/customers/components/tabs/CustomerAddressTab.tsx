@@ -61,7 +61,7 @@ export function CustomerAddressTab({
 
   return (
     <Grid container spacing={2} sx={{ maxWidth: 1400 }}>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card
           sx={{
             borderRadius: 2,
@@ -82,7 +82,7 @@ export function CustomerAddressTab({
             />
 
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <CepTextField
                   value={view.address.zipCode ?? ""}
                   onChange={(val) => updateAddress("zipCode", val)}
@@ -95,7 +95,7 @@ export function CustomerAddressTab({
                 />
               </Grid>
 
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <FormControl fullWidth size="small" disabled={!editing}>
                   <InputLabel id="city-label" required>{t("customerDetails.address.fields.city")}</InputLabel>
                   <Select
@@ -117,7 +117,7 @@ export function CustomerAddressTab({
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   label={t("customerDetails.address.fields.street")}
                   size="small" fullWidth disabled={!editing}
@@ -128,7 +128,7 @@ export function CustomerAddressTab({
                 />
               </Grid>
 
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <TextField
                   label={t("customerDetails.address.fields.complement")}
                   size="small" fullWidth disabled={!editing}
@@ -138,7 +138,7 @@ export function CustomerAddressTab({
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label={t("customerDetails.address.fields.number")}
                   size="small" fullWidth disabled={!editing}
@@ -148,7 +148,7 @@ export function CustomerAddressTab({
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   label={t("customerDetails.address.fields.neighborhood")}
                   size="small" fullWidth disabled={!editing}
@@ -162,7 +162,7 @@ export function CustomerAddressTab({
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card
           sx={{
             borderRadius: 2,

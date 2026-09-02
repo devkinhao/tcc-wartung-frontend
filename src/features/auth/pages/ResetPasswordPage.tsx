@@ -64,8 +64,7 @@ export default function ResetPasswordPage() {
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       <Grid
-        item
-        xs={12}
+        size={{ xs: 12 }}
         sx={{
           display: "flex",
           alignItems: "center",

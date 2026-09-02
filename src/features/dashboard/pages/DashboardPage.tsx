@@ -35,7 +35,7 @@ export default function DashboardPage() {
       <Grid container spacing={2.5}>
 
         {/* ── Linha 1: Status das inspeções (full width) ── */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <InspectionStatusCards
             data={data?.inspectionStatus}
             loading={isLoading}
@@ -44,7 +44,7 @@ export default function DashboardPage() {
         </Grid>
 
         {/* ── Linha 2: Vencimentos por mês (full width) ── */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <ExpirationsByMonthChart
             data={data?.expirationsByMonth}
             loading={isLoading}
@@ -52,14 +52,14 @@ export default function DashboardPage() {
         </Grid>
 
         {/* ── Linha 3: Serviços (7/12) + Clientes por cidade (5/12) ── */}
-        <Grid item xs={12} md={7}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <ServiceRankingChart
             data={data?.serviceRanking}
             loading={isLoading}
           />
         </Grid>
 
-        <Grid item xs={12} md={5}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <CustomersByCityChart
             data={data?.customersByCity}
             loading={isLoading}

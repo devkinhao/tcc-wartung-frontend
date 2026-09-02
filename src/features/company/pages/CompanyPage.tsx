@@ -221,7 +221,7 @@ export default function CompanyPage() {
             {t("company.generalTitle")}
           </Typography>
           <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               label={t("company.fields.fantasyName")}
               fullWidth size="small"
@@ -232,7 +232,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               label={t("company.fields.legalName")}
               fullWidth size="small"
@@ -244,7 +244,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <MaskedTextField
               mask="cnpj"
               label={t("company.fields.cnpj")}
@@ -258,7 +258,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <MaskedTextField
               mask="phone"
               label={t("company.fields.phone")}
@@ -271,7 +271,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <MaskedTextField
               mask="mobile"
               label={t("company.fields.mobile")}
@@ -284,7 +284,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               label={t("company.fields.email")}
               fullWidth size="small"
@@ -304,7 +304,7 @@ export default function CompanyPage() {
             {t("company.address.title")}
           </Typography>
           <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               label={t("company.address.fields.street")}
               fullWidth size="small"
@@ -316,7 +316,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <TextField
               label={t("company.address.fields.number")}
               fullWidth size="small"
@@ -327,7 +327,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <TextField
               label={t("company.address.fields.complement")}
               fullWidth size="small"
@@ -338,7 +338,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               label={t("company.address.fields.neighborhood")}
               fullWidth size="small"
@@ -349,7 +349,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <CepTextField
               value={draft.address.zipCode}
               onChange={(val) => updateAddress("zipCode", val)}
@@ -362,7 +362,7 @@ export default function CompanyPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <FormControl fullWidth size="small" disabled={!isEditing}>
               <InputLabel id="company-city-label" required>
                 {t("company.address.fields.city")}

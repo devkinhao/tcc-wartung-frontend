@@ -217,7 +217,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
           </Box>
         ) : (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               {lockedCustomer ? (
                 <TextField
                   label={t("inspections.addModal.fields.customer")}
@@ -260,7 +260,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               )}
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="add-inspection-service-type" required>
                   {t("inspectionDetails.fields.service")}
@@ -283,7 +283,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("inspectionDetails.fields.inspectionDate")}
                 type="date"
@@ -296,7 +296,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("inspectionDetails.fields.expirationDate")}
                 type="date"
@@ -334,7 +334,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               </Stack>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <MaskedTextField
                 mask="art"
                 label={t("inspectionDetails.fields.artNumber")}
@@ -349,7 +349,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label={t("inspectionDetails.fields.notes")}
                 size="small"
@@ -362,7 +362,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 {t("inspections.addModal.documents.title")}
               </Typography>

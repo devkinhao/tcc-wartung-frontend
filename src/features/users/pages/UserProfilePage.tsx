@@ -303,7 +303,7 @@ export default function UserProfile() {
 
               {/* Form */}
               <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
                       label={t("userProfile.fields.fullName")}
@@ -316,7 +316,7 @@ export default function UserProfile() {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <MaskedTextField
                       mask="cpf"
                       fullWidth
@@ -330,7 +330,7 @@ export default function UserProfile() {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
                       label={t("userProfile.fields.email")}
@@ -344,7 +344,7 @@ export default function UserProfile() {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={6}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <TextField
                       fullWidth
                       label={t("userProfile.fields.crea")}

@@ -122,7 +122,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
 
       <DialogContent dividers>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               size="small"
               fullWidth
@@ -138,7 +138,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               size="small"
               fullWidth
@@ -160,7 +160,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               size="small"
               fullWidth
@@ -184,7 +184,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               size="small"
               fullWidth
@@ -197,7 +197,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <MaskedTextField
               mask="cpf"
               size="small"
@@ -211,7 +211,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               size="small"
               fullWidth
@@ -225,7 +225,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               size="small"
               fullWidth

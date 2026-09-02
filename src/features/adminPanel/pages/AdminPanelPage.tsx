@@ -37,7 +37,7 @@ export default function AdminPanelPage() {
 
       <Grid container spacing={2.5}>
         {ITEMS.map(({ key, to, icon: Icon }) => (
-          <Grid key={key} item xs={12} sm={6} md={4}>
+          <Grid key={key} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card
               sx={{
                 borderRadius: 2,

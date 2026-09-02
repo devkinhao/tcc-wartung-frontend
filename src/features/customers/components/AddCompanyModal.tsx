@@ -260,7 +260,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               autopreenchimento do CnpjTextField/CepTextField com o resultado
               em cache, sobrescrevendo edições manuais do usuário. */}
           <Grid container spacing={2} sx={{ display: step === 0 ? "flex" : "none" }}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <CnpjTextField
                 label={t("customers.addModal.fields.cnpj")}
                 value={form.cnpj}
@@ -272,7 +272,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("customers.addModal.fields.fantasyName")}
                 placeholder={t("customers.addModal.placeholders.fantasyName")}
@@ -284,7 +284,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label={t("customers.addModal.fields.legalName")}
                 placeholder={t("customers.addModal.placeholders.legalName")}
@@ -297,7 +297,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
                 <Select
@@ -317,7 +317,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <MaskedTextField
                 mask="phone"
                 label={t("customers.addModal.fields.phone")}
@@ -330,7 +330,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <MaskedTextField
                 mask="mobile"
                 label={t("customers.addModal.fields.mobile")}
@@ -343,7 +343,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("customers.addModal.fields.email")}
                 placeholder={t("customers.addModal.placeholders.email")}
@@ -359,7 +359,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
           </Grid>
 
           <Grid container spacing={2} sx={{ display: step === 1 ? "flex" : "none" }}>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <CepTextField
                 value={form.zipCode}
                 onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
@@ -371,7 +371,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={9}>
+            <Grid size={{ xs: 12, md: 9 }}>
               <TextField
                 label={t("customers.addModal.fields.street")}
                 placeholder={t("customers.addModal.placeholders.street")}
@@ -384,7 +384,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <TextField
                 label={t("customers.addModal.fields.number")}
                 placeholder={t("customers.addModal.placeholders.number")}
@@ -396,7 +396,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={9}>
+            <Grid size={{ xs: 12, md: 9 }}>
               <TextField
                 label={t("customers.addModal.fields.complement")}
                 placeholder={t("customers.addModal.placeholders.complement")}
@@ -408,7 +408,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("customers.addModal.fields.neighborhood")}
                 placeholder={t("customers.addModal.placeholders.neighborhood")}
@@ -420,7 +420,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="city" required>{t("customers.addModal.fields.city")}</InputLabel>
                 <Select

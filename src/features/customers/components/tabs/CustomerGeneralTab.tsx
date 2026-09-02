@@ -94,7 +94,7 @@ export function CustomerGeneralTab({
           />
 
           <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
-            <Grid item xs={12} md={9}>
+            <Grid size={{ xs: 12, md: 9 }}>
               <TextField
                 label={t("customerDetails.general.fields.legalName")}
                 value={view.legalName}
@@ -106,7 +106,7 @@ export function CustomerGeneralTab({
               />
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <FormControl fullWidth size="small" disabled={!editingGeneral}>
                 <InputLabel id="abvtex-label">{t("customerDetails.general.fields.abvtexSeal")}</InputLabel>
                 <Select
@@ -126,7 +126,7 @@ export function CustomerGeneralTab({
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            <Grid size={{ xs: 12, md: 2 }}>
               <MaskedTextField
                 mask="cnpj"
                 label={t("customerDetails.general.fields.cnpj")}
@@ -137,7 +137,7 @@ export function CustomerGeneralTab({
               />
             </Grid>
 
-            <Grid item xs={12} md={7}>
+            <Grid size={{ xs: 12, md: 7 }}>
               <TextField
                 label={t("customerDetails.general.fields.fantasyName")}
                 value={view.fantasyName}
@@ -148,7 +148,7 @@ export function CustomerGeneralTab({
               />
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary">
                   {t("customerDetails.general.fields.customerActive")}
@@ -184,7 +184,7 @@ export function CustomerGeneralTab({
           />
 
           <Grid container spacing={2} sx={{ maxWidth: 1100 }}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <MaskedTextField
                 mask="phone"
                 label={t("customerDetails.contacts.fields.phone")}
@@ -197,7 +197,7 @@ export function CustomerGeneralTab({
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <MaskedTextField
                 mask="mobile"
                 label={t("customerDetails.contacts.fields.mobile")}
@@ -226,7 +226,7 @@ export function CustomerGeneralTab({
               />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 label={t("customerDetails.contacts.fields.email")}
                 value={view.email ?? ""}

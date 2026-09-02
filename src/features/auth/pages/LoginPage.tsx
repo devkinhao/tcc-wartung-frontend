@@ -73,9 +73,7 @@ export default function LoginPage() {
     <Grid container sx={{ minHeight: "100vh" }}>
       {/* Left: form */}
       <Grid
-        item
-        xs={12}
-        md={6}
+        size={{ xs: 12, md: 6 }}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -154,8 +152,7 @@ export default function LoginPage() {
 
       {/* Right: welcome */}
       <Grid
-        item
-        md={6}
+        size={{ md: 6 }}
         sx={{
           display: { xs: "none", md: "flex" },
           alignItems: "center",

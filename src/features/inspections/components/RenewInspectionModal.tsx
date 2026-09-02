@@ -210,7 +210,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
           </Box>
         ) : (
           <Grid container spacing={1.5}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("inspectionDetails.fields.inspectionDate")}
                 type="date"
@@ -223,7 +223,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label={t("inspectionDetails.fields.expirationDate")}
                 type="date"
@@ -242,7 +242,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <MaskedTextField
                 mask="art"
                 label={t("inspectionDetails.fields.artNumber")}
@@ -255,7 +255,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 label={t("inspectionDetails.fields.notes")}
                 size="small"
@@ -268,7 +268,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 {t("inspections.addModal.documents.title")}
               </Typography>
