@@ -72,15 +72,17 @@ const SidebarItem = memo(function SidebarItem({ item, collapsed, permissions }: 
 
       <ListItemText
         primary={label}
-        primaryTypographyProps={{
-          noWrap: true,
-          variant: "body2",
-          fontWeight: typography.weight.medium,
-        }}
         sx={{
           opacity: collapsed ? 0 : 1,
           transition: "opacity 0.2s",
           m: 0,
+        }}
+        slotProps={{
+          primary: {
+            noWrap: true,
+            variant: "body2",
+            fontWeight: typography.weight.medium,
+          }
         }}
       />
     </ListItemButton>

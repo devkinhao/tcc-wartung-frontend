@@ -109,13 +109,15 @@ export default function LoginPage() {
               autoComplete="current-password"
               fullWidth
               required
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPassword}
-                    onToggle={() => setShowPassword((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((p) => !p)}
+                    />
+                  ),
+                }
               }}
             />
 

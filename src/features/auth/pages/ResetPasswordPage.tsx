@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { typography } from "@/styles/typography";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { resetPasswordSchema } from "../schemas";
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
@@ -31,12 +32,13 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
 
   const passwordMismatch = confirmPassword !== "" && newPassword !== confirmPassword;
+  const formValid = resetPasswordSchema.safeParse({ newPassword, confirmPassword }).success;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (newPassword !== confirmPassword) {
+    if (!formValid) {
       setError(t("userProfile.password.errors.mismatch"));
       return;
     }
@@ -119,13 +121,15 @@ export default function ResetPasswordPage() {
                   autoFocus
                   fullWidth
                   required
-                  InputProps={{
-                    endAdornment: (
-                      <PasswordVisibilityToggle
-                        visible={showPassword}
-                        onToggle={() => setShowPassword((p) => !p)}
-                      />
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <PasswordVisibilityToggle
+                          visible={showPassword}
+                          onToggle={() => setShowPassword((p) => !p)}
+                        />
+                      ),
+                    }
                   }}
                 />
 
@@ -149,7 +153,7 @@ export default function ResetPasswordPage() {
 
                 <Button
                   type="submit"
-                  disabled={loading || !newPassword || !confirmPassword || passwordMismatch}
+                  disabled={loading || !formValid}
                   size="large"
                   sx={{ py: 1.3 }}
                 >

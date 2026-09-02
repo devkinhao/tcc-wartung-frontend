@@ -4,11 +4,8 @@
  *
  * Espelha o `@Pattern(regexp = "\\d{7,8}-\\d")` do backend
  * (InspectionCreateRequestDTO / InspectionUpdateRequestDTO).
+ *
+ * Consumido por `@/validation/fields` (schema `artNumber`) — a validação dos
+ * formulários passa por lá.
  */
 export const ART_NUMBER_PATTERN = /^\d{7,8}-\d$/;
-
-/** `true` se o valor está vazio (campo opcional) ou no formato válido. */
-export function isValidArtNumber(value: string | null | undefined): boolean {
-  const trimmed = (value ?? "").trim();
-  return trimmed === "" || ART_NUMBER_PATTERN.test(trimmed);
-}

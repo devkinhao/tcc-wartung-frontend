@@ -28,6 +28,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
 import { CnpjTextField } from "@/components/CnpjTextField";
+import { fieldError } from "@/validation/fields";
+import { companyGeneralSchema, companyContactsSchema, companyAddressSchema } from "../schemas";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { maskPhone } from "@/utils/masks";
@@ -106,31 +108,36 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     onClose();
   };
 
-  const CNPJ_REGEX  = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
-  const CEP_REGEX   = /^\d{5}-\d{3}$/;
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const PHONE_REGEX  = /^\(\d{2}\) \d{4}-\d{4}$/;   // 10 dígitos — fixo
-  const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;   // 11 dígitos — celular
+  // Valida contra os schemas de empresa (espelham CustomerCreateRequestDTO +
+  // AddressRequestDTO no backend). Passo 1 = dados + contatos, passo 2 = endereço.
+  const general = companyGeneralSchema.safeParse({
+    fantasyName: form.fantasyName,
+    legalName: form.legalName,
+    cnpj: form.cnpj.trim(),
+  });
+  const contacts = companyContactsSchema.safeParse({
+    phone: form.phone.trim(),
+    mobilePhone: form.mobile.trim(),
+    email: form.email.trim(),
+  });
+  const address = companyAddressSchema.safeParse({
+    street: form.street,
+    number: form.number,
+    complement: form.complement,
+    neighborhood: form.neighborhood,
+    zipCode: form.zipCode.trim(),
+    cityId: typeof form.cityId === "number" ? form.cityId : 0,
+  });
 
   // Erros de formato — visíveis quando o campo está preenchido mas inválido
-  const cnpjError   = form.cnpj.trim()    !== "" && !CNPJ_REGEX.test(form.cnpj.trim());
-  const zipError    = form.zipCode.trim() !== "" && !CEP_REGEX.test(form.zipCode.trim());
-  const emailError  = form.email.trim()   !== "" && !EMAIL_REGEX.test(form.email.trim());
-  const phoneError  = form.phone.trim()   !== "" && !PHONE_REGEX.test(form.phone.trim());
-  const mobileError = form.mobile.trim()  !== "" && !MOBILE_REGEX.test(form.mobile.trim());
+  const cnpjError   = form.cnpj.trim()   !== "" && !!fieldError(general, "cnpj");
+  const zipError    = form.zipCode.trim() !== "" && !!fieldError(address, "zipCode");
+  const emailError  = form.email.trim()  !== "" && !!fieldError(contacts, "email");
+  const phoneError  = form.phone.trim()  !== "" && !!fieldError(contacts, "phone");
+  const mobileError = form.mobile.trim() !== "" && !!fieldError(contacts, "mobilePhone");
 
-  // Só os obrigatórios bloqueiam o avanço de etapa
-  const step1Valid =
-    form.legalName.trim() !== "" &&
-    CNPJ_REGEX.test(form.cnpj.trim()) &&
-    !emailError &&
-    !phoneError &&
-    !mobileError;
-
-  const step2Valid =
-    CEP_REGEX.test(form.zipCode.trim()) &&
-    form.street.trim() !== "" &&
-    form.cityId !== "";
+  const step1Valid = general.success && contacts.success;
+  const step2Valid = address.success;
 
   const onSubmit = async () => {
     setSubmitting(true);
@@ -280,7 +287,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, fantasyName: e.target.value }))}
                 fullWidth
                 size="small"
-                inputProps={{ maxLength: 100 }}
+                slotProps={{
+                  htmlInput: { maxLength: 100 }
+                }}
               />
             </Grid>
 
@@ -293,7 +302,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 required
-                inputProps={{ maxLength: 100 }}
+                slotProps={{
+                  htmlInput: { maxLength: 100 }
+                }}
               />
             </Grid>
 
@@ -353,7 +364,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 size="small"
                 error={emailError}
                 helperText={emailError ? t("validation.emailInvalid") : undefined}
-                inputProps={{ maxLength: 75 }}
+                slotProps={{
+                  htmlInput: { maxLength: 75 }
+                }}
               />
             </Grid>
           </Grid>
@@ -380,7 +393,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 required
-                inputProps={{ maxLength: 100 }}
+                slotProps={{
+                  htmlInput: { maxLength: 100 }
+                }}
               />
             </Grid>
 
@@ -392,7 +407,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))}
                 fullWidth
                 size="small"
-                inputProps={{ maxLength: 20 }}
+                slotProps={{
+                  htmlInput: { maxLength: 20 }
+                }}
               />
             </Grid>
 
@@ -404,7 +421,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))}
                 fullWidth
                 size="small"
-                inputProps={{ maxLength: 75 }}
+                slotProps={{
+                  htmlInput: { maxLength: 75 }
+                }}
               />
             </Grid>
 
@@ -416,7 +435,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))}
                 fullWidth
                 size="small"
-                inputProps={{ maxLength: 75 }}
+                slotProps={{
+                  htmlInput: { maxLength: 75 }
+                }}
               />
             </Grid>
 

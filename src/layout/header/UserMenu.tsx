@@ -97,7 +97,12 @@ export function UserMenu() {
         <Typography variant="body2">{firstName}</Typography>
       </Button>
 
-      <Menu anchorEl={anchorEl} open={open} onClose={close} PaperProps={{ sx: { width: 220 } }}>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={close}
+        slotProps={{ paper: { sx: { width: 220 } } }}
+      >
         <MenuItem onClick={() => go(paths.userProfile)}>
           <ListItemIcon>
             <Person fontSize="small" />

@@ -29,7 +29,8 @@ import { renewInspection, type InspectionRenewRequestDTO } from "../api/inspecti
 import { getInspectionDetail } from "../api/inspections.detail.api";
 import { uploadInspectionDocuments } from "../api/inspections.documents.api";
 import { DocumentPicker } from "./DocumentPicker";
-import { isValidArtNumber } from "../utils/artNumber";
+import { fieldError } from "@/validation/fields";
+import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 
 /** Dados mínimos da inspeção de origem necessários para renovar. */
@@ -99,10 +100,16 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
     setNotes(source.notes ?? "");
   }
 
+  const renewForm = inspectionFormSchema.safeParse({
+    inspectionDate,
+    expirationDate,
+    artNumber: artNumber.trim(),
+    notes,
+  });
   const expirationBeforeInspection =
-    inspectionDate !== "" && expirationDate !== "" && expirationDate <= inspectionDate;
-  const artNumberInvalid = !isValidArtNumber(artNumber);
-  const isValid = inspectionDate !== "" && expirationDate !== "" && !expirationBeforeInspection && !artNumberInvalid;
+    inspectionDate !== "" && expirationDate !== "" && !!fieldError(renewForm, "expirationDate");
+  const artNumberInvalid = artNumber.trim() !== "" && !!fieldError(renewForm, "artNumber");
+  const isValid = renewForm.success;
 
   const { mutate: save, isPending: submitting } = useMutation({
     mutationFn: async () => {
@@ -217,9 +224,11 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
                 size="small"
                 fullWidth
                 required
-                InputLabelProps={{ shrink: true }}
                 value={inspectionDate}
                 onChange={(e) => setInspectionDate(e.target.value)}
+                slotProps={{
+                  inputLabel: { shrink: true }
+                }}
               />
             </Grid>
 
@@ -230,7 +239,6 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
                 size="small"
                 fullWidth
                 required
-                InputLabelProps={{ shrink: true }}
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
                 error={expirationBeforeInspection}
@@ -239,6 +247,9 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
                     ? t("inspections.addModal.errors.expirationBeforeInspection")
                     : undefined
                 }
+                slotProps={{
+                  inputLabel: { shrink: true }
+                }}
               />
             </Grid>
 
@@ -264,7 +275,9 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
                 minRows={2}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                inputProps={{ maxLength: INSPECTION_NOTES_MAX_LENGTH }}
+                slotProps={{
+                  htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH }
+                }}
               />
             </Grid>
 

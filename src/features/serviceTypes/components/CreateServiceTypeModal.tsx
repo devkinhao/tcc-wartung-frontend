@@ -68,7 +68,9 @@ export function CreateServiceTypeModal({ open, onClose, onCreated }: Props) {
           disabled={submitting}
           autoFocus
           required
-          inputProps={{ maxLength: 30 }}
+          slotProps={{
+            htmlInput: { maxLength: 30 }
+          }}
         />
       </DialogContent>
 

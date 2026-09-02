@@ -12,6 +12,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { CepTextField } from "@/components/CepTextField";
+import { fieldError } from "@/validation/fields";
+import { companyAddressSchema } from "../../schemas";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
 import type { City } from "../../types/City";
@@ -49,15 +51,20 @@ export function CustomerAddressTab({
   const addressString = `${view.address.street}, ${view.address.number} - ${view.address.neighborhood}, ${view.address.zipCode}`;
   const mapQuery = encodeURIComponent(addressString);
 
-  // Espelha as constraints do AddressRequestDTO do backend (@NotBlank street,
-  // @NotBlank + @Pattern zipCode, @NotNull cityId) — feedback instantâneo,
-  // sem depender de round-trip pro backend pra saber que algo está errado.
-  const CEP_REGEX = /^\d{5}-\d{3}$/;
+  // Valida contra companyAddressSchema (@NotBlank street/zipCode, @Pattern
+  // zipCode, @NotNull cityId no AddressRequestDTO do backend).
   const zipCode = view.address.zipCode?.trim() ?? "";
-  const street = view.address.street?.trim() ?? "";
+  const address = companyAddressSchema.safeParse({
+    street: view.address.street ?? "",
+    number: view.address.number ?? "",
+    complement: view.address.complement ?? "",
+    neighborhood: view.address.neighborhood ?? "",
+    zipCode,
+    cityId: view.address.city?.id ?? 0,
+  });
 
-  const zipCodeFormatError = zipCode !== "" && !CEP_REGEX.test(zipCode);
-  const isAddressValid = street !== "" && CEP_REGEX.test(zipCode) && !!view.address.city?.id;
+  const zipCodeFormatError = zipCode !== "" && !!fieldError(address, "zipCode");
+  const isAddressValid = address.success;
 
   return (
     <Grid container spacing={2} sx={{ maxWidth: 1400 }}>
@@ -124,7 +131,9 @@ export function CustomerAddressTab({
                   required
                   value={view.address.street ?? ""}
                   onChange={(e) => updateAddress("street", e.target.value)}
-                  inputProps={{ maxLength: 100 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 100 }
+                  }}
                 />
               </Grid>
 
@@ -134,7 +143,9 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.complement ?? ""}
                   onChange={(e) => updateAddress("complement", e.target.value)}
-                  inputProps={{ maxLength: 75 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 75 }
+                  }}
                 />
               </Grid>
 
@@ -144,7 +155,9 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.number ?? ""}
                   onChange={(e) => updateAddress("number", e.target.value)}
-                  inputProps={{ maxLength: 20 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 20 }
+                  }}
                 />
               </Grid>
 
@@ -154,7 +167,9 @@ export function CustomerAddressTab({
                   size="small" fullWidth disabled={!editing}
                   value={view.address.neighborhood ?? ""}
                   onChange={(e) => updateAddress("neighborhood", e.target.value)}
-                  inputProps={{ maxLength: 75 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 75 }
+                  }}
                 />
               </Grid>
             </Grid>

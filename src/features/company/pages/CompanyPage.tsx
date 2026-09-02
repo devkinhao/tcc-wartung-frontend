@@ -20,6 +20,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { qk } from "@/api/keys";
 import { useCities } from "@/features/customers/hooks/useCities";
+import { fieldError } from "@/validation/fields";
+import {
+  companyGeneralSchema,
+  companyContactsSchema,
+  companyAddressSchema,
+} from "@/features/customers/schemas";
 import { CepTextField } from "@/components/CepTextField";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { useNotify } from "@/hooks/useNotify";
@@ -103,29 +109,34 @@ export default function CompanyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<CompanyDraft | null>(null);
 
-  const CNPJ_REGEX   = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
-  const CEP_REGEX    = /^\d{5}-\d{3}$/;
-  const EMAIL_REGEX  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const PHONE_REGEX  = /^\(\d{2}\) \d{4}-\d{4}$/;
-  const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;
+  // Valida contra os schemas de empresa (espelham CustomerUpdateRequestDTO +
+  // AddressRequestDTO no backend). Um `safeParse` por seção.
+  const general = companyGeneralSchema.safeParse({
+    fantasyName: draft?.fantasyName ?? "",
+    legalName: draft?.legalName ?? "",
+    cnpj: (draft?.cnpj ?? "").trim(),
+  });
+  const contacts = companyContactsSchema.safeParse({
+    phone: (draft?.phone ?? "").trim(),
+    mobilePhone: (draft?.mobilePhone ?? "").trim(),
+    email: (draft?.email ?? "").trim(),
+  });
+  const address = companyAddressSchema.safeParse({
+    street: draft?.address.street ?? "",
+    number: draft?.address.number ?? "",
+    complement: draft?.address.complement ?? "",
+    neighborhood: draft?.address.neighborhood ?? "",
+    zipCode: (draft?.address.zipCode ?? "").trim(),
+    cityId: draft?.address.cityId ?? 0,
+  });
 
-  const cnpjError   = isEditing && (draft?.cnpj ?? "").trim()        !== "" && !CNPJ_REGEX.test(draft?.cnpj ?? "");
-  const emailError  = isEditing && (draft?.email ?? "").trim()        !== "" && !EMAIL_REGEX.test(draft?.email ?? "");
-  const phoneError  = isEditing && (draft?.phone ?? "").trim()        !== "" && !PHONE_REGEX.test(draft?.phone ?? "");
-  const mobileError = isEditing && (draft?.mobilePhone ?? "").trim()  !== "" && !MOBILE_REGEX.test(draft?.mobilePhone ?? "");
+  const cnpjError   = isEditing && (draft?.cnpj ?? "").trim() !== ""        && !!fieldError(general, "cnpj");
+  const emailError  = isEditing && (draft?.email ?? "").trim() !== ""       && !!fieldError(contacts, "email");
+  const phoneError  = isEditing && (draft?.phone ?? "").trim() !== ""       && !!fieldError(contacts, "phone");
+  const mobileError = isEditing && (draft?.mobilePhone ?? "").trim() !== "" && !!fieldError(contacts, "mobilePhone");
+  const zipCodeFormatError = isEditing && (draft?.address.zipCode ?? "").trim() !== "" && !!fieldError(address, "zipCode");
 
-  // Espelha as constraints do AddressRequestDTO do backend (@NotBlank street,
-  // @NotBlank + @Pattern zipCode, @NotNull cityId) — feedback instantâneo,
-  // sem depender de round-trip pro backend pra saber que algo está errado.
-  const addressZipCode = (draft?.address.zipCode ?? "").trim();
-  const addressStreet  = (draft?.address.street ?? "").trim();
-  const zipCodeFormatError = isEditing && addressZipCode !== "" && !CEP_REGEX.test(addressZipCode);
-
-  const isFormValid =
-    (draft?.legalName ?? "").trim() !== "" &&
-    CNPJ_REGEX.test((draft?.cnpj ?? "").trim()) &&
-    !emailError && !phoneError && !mobileError &&
-    addressStreet !== "" && CEP_REGEX.test(addressZipCode) && !!draft?.address.cityId;
+  const isFormValid = general.success && contacts.success && address.success;
 
   const { data, isLoading } = useQuery({
     queryKey: qk.company(),
@@ -228,7 +239,9 @@ export default function CompanyPage() {
               value={draft.fantasyName}
               onChange={(e) => updateField("fantasyName", e.target.value)}
               disabled={!isEditing}
-              inputProps={{ maxLength: 100 }}
+              slotProps={{
+                htmlInput: { maxLength: 100 }
+              }}
             />
           </Grid>
 
@@ -240,7 +253,9 @@ export default function CompanyPage() {
               onChange={(e) => updateField("legalName", e.target.value)}
               disabled={!isEditing}
               required
-              inputProps={{ maxLength: 100 }}
+              slotProps={{
+                htmlInput: { maxLength: 100 }
+              }}
             />
           </Grid>
 
@@ -293,7 +308,9 @@ export default function CompanyPage() {
               disabled={!isEditing}
               error={emailError}
               helperText={emailError ? t("validation.emailInvalid") : undefined}
-              inputProps={{ maxLength: 75 }}
+              slotProps={{
+                htmlInput: { maxLength: 75 }
+              }}
             />
           </Grid>
           </Grid>
@@ -312,7 +329,9 @@ export default function CompanyPage() {
               value={draft.address.street}
               onChange={(e) => updateAddress("street", e.target.value)}
               disabled={!isEditing}
-              inputProps={{ maxLength: 100 }}
+              slotProps={{
+                htmlInput: { maxLength: 100 }
+              }}
             />
           </Grid>
 
@@ -323,7 +342,9 @@ export default function CompanyPage() {
               value={draft.address.number}
               onChange={(e) => updateAddress("number", e.target.value)}
               disabled={!isEditing}
-              inputProps={{ maxLength: 20 }}
+              slotProps={{
+                htmlInput: { maxLength: 20 }
+              }}
             />
           </Grid>
 
@@ -334,7 +355,9 @@ export default function CompanyPage() {
               value={draft.address.complement}
               onChange={(e) => updateAddress("complement", e.target.value)}
               disabled={!isEditing}
-              inputProps={{ maxLength: 75 }}
+              slotProps={{
+                htmlInput: { maxLength: 75 }
+              }}
             />
           </Grid>
 
@@ -345,7 +368,9 @@ export default function CompanyPage() {
               value={draft.address.neighborhood}
               onChange={(e) => updateAddress("neighborhood", e.target.value)}
               disabled={!isEditing}
-              inputProps={{ maxLength: 75 }}
+              slotProps={{
+                htmlInput: { maxLength: 75 }
+              }}
             />
           </Grid>
 
@@ -371,9 +396,10 @@ export default function CompanyPage() {
                 labelId="company-city-label"
                 label={t("company.address.fields.city")}
                 value={draft.address.cityId ?? ""}
-                onChange={(e) =>
-                  updateAddress("cityId", e.target.value === "" ? null : Number(e.target.value))
-                }
+                onChange={(e) => {
+                  const id = Number(e.target.value);
+                  updateAddress("cityId", id > 0 ? id : null);
+                }}
               >
                 <MenuItem value="">
                   <em>{t("company.address.actions.selectCity")}</em>

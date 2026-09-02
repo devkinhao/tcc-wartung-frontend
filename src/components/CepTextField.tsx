@@ -76,26 +76,29 @@ export function CepTextField({
       value={value}
       onChange={(e) => onChange(maskCep(e.target.value))}
       inputMode="numeric"
-      inputProps={{ inputMode: "numeric" }}
       disabled={disabled}
       error={hasError}
       helperText={displayHelper}
       placeholder="00000-000"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            {isFetching ? (
-              <CircularProgress size={16} />
-            ) : isError ? (
-              <Tooltip title={t("common.cep.notFound")}>
-                <ErrorOutlineIcon fontSize="small" color="error" />
-              </Tooltip>
-            ) : isValidCep(value) ? (
-              <SearchIcon fontSize="small" color="success" />
-            ) : null}
-          </InputAdornment>
-        ),
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              {isFetching ? (
+                <CircularProgress size={16} />
+              ) : isError ? (
+                <Tooltip title={t("common.cep.notFound")}>
+                  <ErrorOutlineIcon fontSize="small" color="error" />
+                </Tooltip>
+              ) : isValidCep(value) ? (
+                <SearchIcon fontSize="small" color="success" />
+              ) : null}
+            </InputAdornment>
+          ),
+        },
+
+        htmlInput: { inputMode: "numeric" }
       }}
-    />
+      />
   );
 }

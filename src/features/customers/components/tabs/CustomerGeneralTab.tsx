@@ -19,6 +19,8 @@ import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
 import { MaskedTextField } from "@/components/MaskedTextField";
+import { fieldError } from "@/validation/fields";
+import { companyContactsSchema } from "../../schemas";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 
@@ -52,13 +54,6 @@ const cardSx = {
   "&:hover": { boxShadow: 4 },
 } as const;
 
-// Espelha as constraints do CustomerUpdateContactsRequestDTO do backend
-// (@Pattern phone/mobilePhone, @Email email) — feedback instantâneo, sem
-// depender de round-trip pro backend pra saber que algo está errado.
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^\(\d{2}\) \d{4}-\d{4}$/;
-const MOBILE_REGEX = /^\(\d{2}\) \d{5}-\d{4}$/;
-
 export function CustomerGeneralTab({
   view,
   audit,
@@ -73,10 +68,12 @@ export function CustomerGeneralTab({
   const phone = view.phone?.trim() ?? "";
   const mobile = view.mobilePhone?.trim() ?? "";
   const email = view.email?.trim() ?? "";
-  const phoneError = phone !== "" && !PHONE_REGEX.test(phone);
-  const mobileError = mobile !== "" && !MOBILE_REGEX.test(mobile);
-  const emailError = email !== "" && !EMAIL_REGEX.test(email);
-  const isContactsValid = !phoneError && !mobileError && !emailError;
+  // Espelha o CustomerUpdateContactsRequestDTO (@Pattern phone/mobilePhone, @Email).
+  const contacts = companyContactsSchema.safeParse({ phone, mobilePhone: mobile, email });
+  const phoneError = phone !== "" && !!fieldError(contacts, "phone");
+  const mobileError = mobile !== "" && !!fieldError(contacts, "mobilePhone");
+  const emailError = email !== "" && !!fieldError(contacts, "email");
+  const isContactsValid = contacts.success;
 
   return (
     <Stack spacing={2}>
@@ -102,7 +99,9 @@ export function CustomerGeneralTab({
                 disabled={!editingGeneral}
                 required
                 onChange={(e) => updateField("legalName", e.target.value)}
-                inputProps={{ maxLength: 100 }}
+                slotProps={{
+                  htmlInput: { maxLength: 100 }
+                }}
               />
             </Grid>
 
@@ -144,7 +143,9 @@ export function CustomerGeneralTab({
                 size="small" fullWidth
                 disabled={!editingGeneral}
                 onChange={(e) => updateField("fantasyName", e.target.value)}
-                inputProps={{ maxLength: 100 }}
+                slotProps={{
+                  htmlInput: { maxLength: 100 }
+                }}
               />
             </Grid>
 
@@ -207,21 +208,23 @@ export function CustomerGeneralTab({
                 onChange={(v) => updateField("mobilePhone", v)}
                 error={mobileError}
                 helperText={mobileError ? t("validation.mobileInvalid") : undefined}
-                InputProps={{
-                  endAdornment: (
-                    <Tooltip title={t("customerDetails.actions.whatsapp")}>
-                      <span>
-                        <IconButton
-                          size="small"
-                          aria-label={t("customerDetails.actions.whatsapp")}
-                          onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
-                          disabled={!view.mobilePhone}
-                        >
-                          <WhatsAppIcon fontSize="small" />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <Tooltip title={t("customerDetails.actions.whatsapp")}>
+                        <span>
+                          <IconButton
+                            size="small"
+                            aria-label={t("customerDetails.actions.whatsapp")}
+                            onClick={() => window.open(buildWhatsAppLink(view.mobilePhone), "_blank")}
+                            disabled={!view.mobilePhone}
+                          >
+                            <WhatsAppIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    ),
+                  },
                 }}
               />
             </Grid>
@@ -230,29 +233,33 @@ export function CustomerGeneralTab({
               <TextField
                 label={t("customerDetails.contacts.fields.email")}
                 value={view.email ?? ""}
-                size="small" fullWidth
+                size="small"
+                fullWidth
                 disabled={!editingContacts}
                 onChange={(e) => updateField("email", e.target.value)}
                 error={emailError}
                 helperText={emailError ? t("validation.emailInvalid") : undefined}
-                inputProps={{ maxLength: 75 }}
-                InputProps={{
-                  endAdornment: (
-                    <Tooltip title={t("customerDetails.actions.email")}>
-                      <span>
-                        <IconButton
-                          size="small"
-                          aria-label={t("customerDetails.actions.email")}
-                          onClick={() => window.open(`mailto:${view.email}`, "_blank")}
-                          disabled={!view.email}
-                        >
-                          <EmailIcon fontSize="small" />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <Tooltip title={t("customerDetails.actions.email")}>
+                        <span>
+                          <IconButton
+                            size="small"
+                            aria-label={t("customerDetails.actions.email")}
+                            onClick={() => window.open(`mailto:${view.email}`, "_blank")}
+                            disabled={!view.email}
+                          >
+                            <EmailIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    ),
+                  },
+
+                  htmlInput: { maxLength: 75 }
                 }}
-              />
+                />
             </Grid>
           </Grid>
         </CardContent>

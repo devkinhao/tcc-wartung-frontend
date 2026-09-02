@@ -76,26 +76,29 @@ export function CnpjTextField({
       value={value}
       onChange={(e) => onChange(maskCnpj(e.target.value))}
       inputMode="numeric"
-      inputProps={{ inputMode: "numeric" }}
       disabled={disabled}
       error={hasError}
       helperText={displayHelper}
       placeholder="00.000.000/0000-00"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            {isFetching ? (
-              <CircularProgress size={16} />
-            ) : isError ? (
-              <Tooltip title={t("common.cnpj.notFound")}>
-                <ErrorOutlineIcon fontSize="small" color="error" />
-              </Tooltip>
-            ) : isValidCnpj(value) ? (
-              <SearchIcon fontSize="small" color="success" />
-            ) : null}
-          </InputAdornment>
-        ),
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              {isFetching ? (
+                <CircularProgress size={16} />
+              ) : isError ? (
+                <Tooltip title={t("common.cnpj.notFound")}>
+                  <ErrorOutlineIcon fontSize="small" color="error" />
+                </Tooltip>
+              ) : isValidCnpj(value) ? (
+                <SearchIcon fontSize="small" color="success" />
+              ) : null}
+            </InputAdornment>
+          ),
+        },
+
+        htmlInput: { inputMode: "numeric" }
       }}
-    />
+      />
   );
 }

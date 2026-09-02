@@ -69,7 +69,9 @@ export function EditServiceTypeModal({ open, serviceType, onClose, onUpdated }: 
           disabled={submitting}
           autoFocus
           required
-          inputProps={{ maxLength: 30 }}
+          slotProps={{
+            htmlInput: { maxLength: 30 }
+          }}
         />
       </DialogContent>
 

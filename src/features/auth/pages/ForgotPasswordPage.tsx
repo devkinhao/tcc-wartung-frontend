@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 import { paths } from "@/routes/paths";
 import { Box, Button, CircularProgress, Grid, Paper, TextField, Typography, Link } from "@mui/material";
 import { typography } from "@/styles/typography";
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { forgotPasswordSchema } from "../schemas";
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation();
@@ -16,13 +15,14 @@ export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const emailInvalid = email !== "" && !EMAIL_PATTERN.test(email);
+  const emailValid = forgotPasswordSchema.safeParse({ email }).success;
+  const emailInvalid = email !== "" && !emailValid;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!EMAIL_PATTERN.test(email)) {
+    if (!emailValid) {
       setError(t("forgotPassword.errors.invalidEmail"));
       return;
     }

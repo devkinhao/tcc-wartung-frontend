@@ -106,7 +106,7 @@ export function NotificationsMenu({ disabled = false }: { disabled?: boolean }) 
         anchorEl={anchorEl}
         open={open && !disabled}
         onClose={() => setAnchorEl(null)}
-        PaperProps={{ sx: { width: 360 } }}
+        slotProps={{ paper: { sx: { width: 360 } } }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2">

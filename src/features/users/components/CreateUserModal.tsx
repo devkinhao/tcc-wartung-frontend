@@ -16,18 +16,14 @@ import { usersApi, type UserCreateRequestDTO } from "../api/users.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { fieldError } from "@/validation/fields";
+import { userCreateSchema } from "../schemas";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onCreated?: () => void;
 };
-
-// Espelha as constraints do UserCreateRequestDTO do backend (@Pattern
-// username, @Pattern cpf, @Email) — feedback instantâneo, sem round-trip.
-const USERNAME_REGEX = /^[a-z0-9]+$/;
-const CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function CreateUserModal({ open, onClose, onCreated }: Props) {
   const { t } = useTranslation();
@@ -94,20 +90,23 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
   const cpf = form.cpf?.trim() ?? "";
   const email = form.email?.trim() ?? "";
 
-  const usernameFormatError = username !== "" && (username.length < 4 || !USERNAME_REGEX.test(username));
-  const cpfError = cpf !== "" && !CPF_REGEX.test(cpf);
-  const emailError = email !== "" && !EMAIL_REGEX.test(email);
+  const validation = userCreateSchema.safeParse({
+    username,
+    password: form.password,
+    confirmPassword,
+    fullName: form.fullName,
+    cpf,
+    email,
+    creaNumber: form.creaNumber?.trim() ?? "",
+  });
+
+  // Erros de formato só aparecem depois que o usuário digitou algo no campo.
+  const usernameFormatError = username !== "" && !!fieldError(validation, "username");
+  const cpfError = cpf !== "" && !!fieldError(validation, "cpf");
+  const emailError = email !== "" && !!fieldError(validation, "email");
   const passwordMismatch = confirmPassword !== "" && form.password !== confirmPassword;
 
-  const createDisabled =
-    submitting ||
-    username === "" ||
-    usernameFormatError ||
-    !form.password ||
-    form.password !== confirmPassword ||
-    !form.fullName.trim() ||
-    cpfError ||
-    emailError;
+  const createDisabled = submitting || !validation.success;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
@@ -134,7 +133,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               disabled={submitting}
               autoFocus
               required
-              inputProps={{ maxLength: 50 }}
+              slotProps={{
+                htmlInput: { maxLength: 50 }
+              }}
             />
           </Grid>
 
@@ -148,16 +149,19 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
               disabled={submitting}
               required
-              inputProps={{ maxLength: 100 }}
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPassword}
-                    onToggle={() => setShowPassword((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((p) => !p)}
+                    />
+                  ),
+                },
+
+                htmlInput: { maxLength: 100 }
               }}
-            />
+              />
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
@@ -170,18 +174,21 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               disabled={submitting}
               required
-              inputProps={{ maxLength: 100 }}
               error={passwordMismatch}
               helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPassword}
-                    onToggle={() => setShowPassword((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((p) => !p)}
+                    />
+                  ),
+                },
+
+                htmlInput: { maxLength: 100 }
               }}
-            />
+              />
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
@@ -193,7 +200,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setForm((p) => ({ ...p, fullName: e.target.value }))}
               disabled={submitting}
               required
-              inputProps={{ maxLength: 50 }}
+              slotProps={{
+                htmlInput: { maxLength: 50 }
+              }}
             />
           </Grid>
 
@@ -221,7 +230,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               disabled={submitting}
               error={emailError}
               helperText={emailError ? t("validation.emailInvalid") : undefined}
-              inputProps={{ maxLength: 50 }}
+              slotProps={{
+                htmlInput: { maxLength: 50 }
+              }}
             />
           </Grid>
 
@@ -234,7 +245,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               value={form.creaNumber ?? ""}
               onChange={(e) => setForm((p) => ({ ...p, creaNumber: e.target.value }))}
               disabled={submitting}
-              inputProps={{ maxLength: 10 }}
+              slotProps={{
+                htmlInput: { maxLength: 10 }
+              }}
             />
           </Grid>
         </Grid>

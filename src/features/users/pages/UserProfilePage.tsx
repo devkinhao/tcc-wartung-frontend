@@ -32,15 +32,12 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { fieldError } from "@/validation/fields";
+import { userProfileSchema, changePasswordSchema } from "../schemas";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
-
-// Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
-// @Email) — feedback instantâneo, sem round-trip.
-const CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function UserProfile() {
   const { t } = useTranslation();
@@ -193,13 +190,22 @@ export default function UserProfile() {
     passwordMutation.mutate({ currentPassword, newPassword });
   }
 
-  const cpfError = cpf.trim() !== "" && !CPF_REGEX.test(cpf.trim());
-  const emailError = email.trim() !== "" && !EMAIL_REGEX.test(email.trim());
-  const isProfileValid = fullName.trim() !== "" && !cpfError && !emailError;
+  const profile = userProfileSchema.safeParse({
+    fullName,
+    cpf: cpf.trim(),
+    email: email.trim(),
+    creaNumber: creaNumber.trim(),
+  });
+  const cpfError = cpf.trim() !== "" && !!fieldError(profile, "cpf");
+  const emailError = email.trim() !== "" && !!fieldError(profile, "email");
+  const isProfileValid = profile.success;
 
   const passwordMismatch = confirmPassword !== "" && newPassword !== confirmPassword;
-  const isPasswordFormValid =
-    currentPassword.trim() !== "" && newPassword.trim() !== "" && newPassword === confirmPassword;
+  const isPasswordFormValid = changePasswordSchema.safeParse({
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  }).success;
 
   const isActive = user?.isActive ?? true;
   const permissions = user?.permissions ?? [];
@@ -312,7 +318,9 @@ export default function UserProfile() {
                       size="small"
                       disabled={!isEditing}
                       required
-                      inputProps={{ maxLength: 50 }}
+                      slotProps={{
+                        htmlInput: { maxLength: 50 }
+                      }}
                     />
                   </Grid>
 
@@ -340,7 +348,9 @@ export default function UserProfile() {
                       disabled={!isEditing}
                       error={isEditing && emailError}
                       helperText={isEditing && emailError ? t("validation.emailInvalid") : undefined}
-                      inputProps={{ maxLength: 50 }}
+                      slotProps={{
+                        htmlInput: { maxLength: 50 }
+                      }}
                     />
                   </Grid>
 
@@ -353,7 +363,9 @@ export default function UserProfile() {
                       onChange={(e) => setCreaNumber(e.target.value)}
                       size="small"
                       disabled={!isEditing}
-                      inputProps={{ maxLength: 10 }}
+                      slotProps={{
+                        htmlInput: { maxLength: 10 }
+                      }}
                     />
                   </Grid>
               </Grid>
@@ -414,16 +426,19 @@ export default function UserProfile() {
               size="small"
               fullWidth
               required
-              inputProps={{ maxLength: 100 }}
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPasswords}
-                    onToggle={() => setShowPasswords((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPasswords}
+                      onToggle={() => setShowPasswords((p) => !p)}
+                    />
+                  ),
+                },
+
+                htmlInput: { maxLength: 100 }
               }}
-            />
+              />
 
             <TextField
               label={t("userProfile.password.fields.new")}
@@ -433,16 +448,19 @@ export default function UserProfile() {
               size="small"
               fullWidth
               required
-              inputProps={{ maxLength: 100 }}
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPasswords}
-                    onToggle={() => setShowPasswords((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPasswords}
+                      onToggle={() => setShowPasswords((p) => !p)}
+                    />
+                  ),
+                },
+
+                htmlInput: { maxLength: 100 }
               }}
-            />
+              />
 
             <TextField
               label={t("userProfile.password.fields.confirm")}
@@ -452,18 +470,21 @@ export default function UserProfile() {
               size="small"
               fullWidth
               required
-              inputProps={{ maxLength: 100 }}
               error={passwordMismatch}
               helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
-              InputProps={{
-                endAdornment: (
-                  <PasswordVisibilityToggle
-                    visible={showPasswords}
-                    onToggle={() => setShowPasswords((p) => !p)}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <PasswordVisibilityToggle
+                      visible={showPasswords}
+                      onToggle={() => setShowPasswords((p) => !p)}
+                    />
+                  ),
+                },
+
+                htmlInput: { maxLength: 100 }
               }}
-            />
+              />
           </Stack>
         </DialogContent>
 

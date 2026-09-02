@@ -29,7 +29,7 @@ type Props = Omit<TextFieldProps, "onChange"> & {
  * ```
  */
 export const MaskedTextField = forwardRef<HTMLDivElement, Props>(
-  ({ mask, value, onChange, placeholder, inputProps, ...rest }, ref) => {
+  ({ mask, value, onChange, placeholder, slotProps, ...rest }, ref) => {
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
       onChange(applyMask(e.target.value, mask));
     }
@@ -41,11 +41,10 @@ export const MaskedTextField = forwardRef<HTMLDivElement, Props>(
         value={value}
         onChange={handleChange}
         placeholder={placeholder ?? MASK_PLACEHOLDERS[mask]}
-        inputMode="numeric"
-        inputProps={{ ...inputProps, inputMode: "numeric" }}
+        slotProps={{ ...slotProps, htmlInput: { inputMode: "numeric" } }}
       />
     );
-  }
+  },
 );
 
 MaskedTextField.displayName = "MaskedTextField";

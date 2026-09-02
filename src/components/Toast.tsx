@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { SnackbarContent, useSnackbar, type CustomContentProps } from "notistack";
 import { Box, Paper, Typography } from "@mui/material";
-import { keyframes } from "@mui/system";
+import { keyframes } from "@mui/material/styles";
 
 // Quanto tempo cada toast fica visível. Erros ficam mais tempo — costumam ter
 // mais texto e o usuário pode precisar reler.

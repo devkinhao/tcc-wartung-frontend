@@ -100,7 +100,9 @@ export default function ConfigurationsPage() {
                   onChange={(e) => handleChange(config.name, e.target.value)}
                   size="small"
                   inputMode={NUMERIC_CONFIGS.has(config.name) ? "numeric" : "text"}
-                  inputProps={{ maxLength: 100 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 100 }
+                  }}
                 />
               );
             })}

@@ -38,7 +38,8 @@ import type { CustomerSummaryResponseDTO } from "../types/inspectionDetail";
 import { paths } from "@/routes/paths";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { formatDateBR, addYearsISODate } from "@/utils/date";
-import { isValidArtNumber } from "../utils/artNumber";
+import { fieldError } from "@/validation/fields";
+import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 
 type AddInspectionModalProps = {
@@ -115,20 +116,21 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
     onClose();
   };
 
+  const inspectionForm = inspectionFormSchema.safeParse({
+    inspectionDate: form.inspectionDate,
+    expirationDate: form.expirationDate,
+    artNumber: form.artNumber.trim(),
+    notes: form.notes,
+  });
+
   const expirationBeforeInspection =
     form.inspectionDate !== "" &&
     form.expirationDate !== "" &&
-    form.expirationDate < form.inspectionDate;
+    !!fieldError(inspectionForm, "expirationDate");
 
-  const artNumberInvalid = !isValidArtNumber(form.artNumber);
+  const artNumberInvalid = form.artNumber.trim() !== "" && !!fieldError(inspectionForm, "artNumber");
 
-  const isValid =
-    form.customer !== null &&
-    form.serviceTypeId !== "" &&
-    form.inspectionDate !== "" &&
-    form.expirationDate !== "" &&
-    !expirationBeforeInspection &&
-    !artNumberInvalid;
+  const isValid = form.customer !== null && form.serviceTypeId !== "" && inspectionForm.success;
 
   const { mutate: save, isPending: submitting } = useMutation({
     mutationFn: async () => {
@@ -245,14 +247,18 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                       label={t("inspections.addModal.fields.customer")}
                       required
                       size="small"
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {loadingCustomers ? <CircularProgress size={16} /> : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
+                      slotProps={{
+                        // `params.InputProps` é a API do renderInput do Autocomplete
+                        // (não o prop depreciado do TextField) — repassa aqui.
+                        input: {
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {loadingCustomers ? <CircularProgress size={16} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        },
                       }}
                     />
                   )}
@@ -290,9 +296,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 size="small"
                 fullWidth
                 required
-                InputLabelProps={{ shrink: true }}
                 value={form.inspectionDate}
                 onChange={(e) => setForm((p) => ({ ...p, inspectionDate: e.target.value }))}
+                slotProps={{
+                  inputLabel: { shrink: true }
+                }}
               />
             </Grid>
 
@@ -303,7 +311,6 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 size="small"
                 fullWidth
                 required
-                InputLabelProps={{ shrink: true }}
                 value={form.expirationDate}
                 onChange={(e) => setForm((p) => ({ ...p, expirationDate: e.target.value }))}
                 error={expirationBeforeInspection}
@@ -312,6 +319,9 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                     ? t("inspections.addModal.errors.expirationBeforeInspection")
                     : undefined
                 }
+                slotProps={{
+                  inputLabel: { shrink: true }
+                }}
               />
               <Stack direction="row" spacing={1} sx={{ mt: 0.75 }}>
                 {[1, 2, 3].map((years) => (
@@ -358,7 +368,9 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
                 minRows={3}
                 value={form.notes}
                 onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                inputProps={{ maxLength: INSPECTION_NOTES_MAX_LENGTH }}
+                slotProps={{
+                  htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH }
+                }}
               />
             </Grid>
 

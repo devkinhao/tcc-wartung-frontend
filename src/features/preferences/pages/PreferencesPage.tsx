@@ -90,7 +90,7 @@ function PreferenceControl({
         <Switch
           checked={currentValue === "true"}
           onChange={(e) => onChange(e.target.checked ? "true" : "false")}
-          inputProps={{ "aria-label": label(currentValue) }}
+          slotProps={{ input: { "aria-label": label(currentValue) } }}
         />
         <Typography variant="body2" color="text.secondary" sx={{ minWidth: 78 }}>
           {label(currentValue)}
@@ -107,7 +107,7 @@ function PreferenceControl({
         <Switch
           checked={dark}
           onChange={(e) => onChange(e.target.checked ? "dark" : "light")}
-          inputProps={{ "aria-label": label(currentValue) }}
+          slotProps={{ input: { "aria-label": label(currentValue) } }}
         />
         <DarkModeIcon fontSize="small" sx={{ color: dark ? "primary.main" : "text.disabled" }} />
       </Stack>
@@ -135,7 +135,10 @@ function PreferenceControl({
                 <Box component="span" sx={{ display: "flex", alignItems: "center" }}>{icons[opt]}</Box>
               </ListItemIcon>
             )}
-            <ListItemText primary={label(opt)} primaryTypographyProps={{ variant: "body2" }} />
+            <ListItemText primary={label(opt)} slotProps={{
+              primary: { variant: "body2" }
+            }}
+            />
           </MenuItem>
         ))}
       </Select>

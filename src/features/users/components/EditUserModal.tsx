@@ -26,6 +26,8 @@ import { permissionsApi, type PermissionResponseDTO } from "../api/permissions.a
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { fieldError } from "@/validation/fields";
+import { userProfileSchema, userResetPasswordSchema } from "../schemas";
 
 type Props = {
   open: boolean;
@@ -33,11 +35,6 @@ type Props = {
   onClose: () => void;
   onChanged?: () => void;
 };
-
-// Espelha as constraints do UserUpdateRequestDTO do backend (@Pattern cpf,
-// @Email) — feedback instantâneo, sem round-trip.
-const CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function TabPanel(props: { value: number; index: number; children: React.ReactNode }) {
   const { value, index, children } = props;
@@ -183,18 +180,26 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
   const title = user ? `${user.fullName} (@${user.username})` : (t("users.edit.title") || "Edit user");
 
-  const cpfTrimmed = cpf.trim();
-  const emailTrimmed = email.trim();
-  const cpfError = cpfTrimmed !== "" && !CPF_REGEX.test(cpfTrimmed);
-  const emailError = emailTrimmed !== "" && !EMAIL_REGEX.test(emailTrimmed);
+  const profile = userProfileSchema.safeParse({
+    fullName,
+    cpf: cpf.trim(),
+    email: email.trim(),
+    creaNumber: creaNumber.trim(),
+  });
+  const cpfError = cpf.trim() !== "" && !!fieldError(profile, "cpf");
+  const emailError = email.trim() !== "" && !!fieldError(profile, "email");
 
   const saveDisabled =
     loading ||
-    (tab === 0 && (!fullName.trim() || cpfError || emailError || savingProfile)) ||
+    (tab === 0 && (!profile.success || savingProfile)) ||
     (tab === 1 && savingPerms) ||
     tab === 2; // no "Save" on security tab
 
-  const resetDisabled = loading || tab !== 2 || !newPassword.trim() || savingPwd;
+  const resetDisabled =
+    loading ||
+    tab !== 2 ||
+    !userResetPasswordSchema.safeParse({ newPassword }).success ||
+    savingPwd;
 
   async function handlePrimaryAction() {
     if (tab === 0) await saveProfile();
@@ -243,7 +248,9 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={savingProfile}
                   required
-                  inputProps={{ maxLength: 50 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 50 }
+                  }}
                 />
                 <MaskedTextField
                   mask="cpf"
@@ -263,7 +270,9 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   disabled={savingProfile}
                   error={emailError}
                   helperText={emailError ? t("validation.emailInvalid") : undefined}
-                  inputProps={{ maxLength: 50 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 50 }
+                  }}
                 />
                 <TextField
                   size="small"
@@ -272,7 +281,9 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   value={creaNumber}
                   onChange={(e) => setCreaNumber(e.target.value)}
                   disabled={savingProfile}
-                  inputProps={{ maxLength: 10 }}
+                  slotProps={{
+                    htmlInput: { maxLength: 10 }
+                  }}
                 />
               </Stack>
             </TabPanel>
@@ -319,16 +330,19 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 disabled={savingPwd}
                 fullWidth
                 required
-                inputProps={{ maxLength: 100 }}
-                InputProps={{
-                  endAdornment: (
-                    <PasswordVisibilityToggle
-                      visible={showNewPassword}
-                      onToggle={() => setShowNewPassword((p) => !p)}
-                    />
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <PasswordVisibilityToggle
+                        visible={showNewPassword}
+                        onToggle={() => setShowNewPassword((p) => !p)}
+                      />
+                    ),
+                  },
+
+                  htmlInput: { maxLength: 100 }
                 }}
-              />
+                />
             </TabPanel>
           </>
         )}

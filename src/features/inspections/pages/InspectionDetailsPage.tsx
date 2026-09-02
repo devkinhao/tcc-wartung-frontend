@@ -64,7 +64,8 @@ import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 import { typography } from "@/styles/typography";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { UnsavedChangesGuard } from "@/components/UnsavedChangesGuard";
-import { isValidArtNumber } from "../utils/artNumber";
+import { fieldError } from "@/validation/fields";
+import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 import { openCreaScArtValidation } from "@/utils/creaScArt";
 import { RenewInspectionModal, type RenewableInspection } from "../components/RenewInspectionModal";
@@ -245,22 +246,23 @@ export default function InspectionDetailsPage() {
     setEditing(false);
   };
 
-  // Espelha as constraints do InspectionUpdateRequestDTO do backend (@NotNull
-  // inspectionDate/expirationDate) mais a regra de negócio de vencimento
-  // não anteceder a inspeção — feedback instantâneo, sem round-trip.
+  // Valida contra inspectionFormSchema (@NotNull datas, vencimento estritamente
+  // após a inspeção, ART no formato do CREA-SC).
   const inspectionDateValue = toISODate(draft?.inspectionDate);
   const expirationDateValue = toISODate(draft?.expirationDate);
+  const artNumberValue = draft?.artNumber ?? "";
+  const generalForm = inspectionFormSchema.safeParse({
+    inspectionDate: inspectionDateValue,
+    expirationDate: expirationDateValue,
+    artNumber: artNumberValue.trim(),
+    notes: draft?.notes ?? "",
+  });
   const expirationBeforeInspection =
     inspectionDateValue !== "" &&
     expirationDateValue !== "" &&
-    expirationDateValue < inspectionDateValue;
-  const artNumberValue = draft?.artNumber ?? "";
-  const artNumberInvalid = !isValidArtNumber(artNumberValue);
-  const isGeneralValid =
-    inspectionDateValue !== "" &&
-    expirationDateValue !== "" &&
-    !expirationBeforeInspection &&
-    !artNumberInvalid;
+    !!fieldError(generalForm, "expirationDate");
+  const artNumberInvalid = artNumberValue.trim() !== "" && !!fieldError(generalForm, "artNumber");
+  const isGeneralValid = generalForm.success;
 
   const handleValidateArt = () => {
     if (!view.artNumber) return;
@@ -686,7 +688,6 @@ export default function InspectionDetailsPage() {
                   fullWidth
                   required
                   type={editing ? "date" : "text"}
-                  InputLabelProps={{ shrink: true }}
                   value={editing ? toISODate(draft?.inspectionDate) : formatDateBR(view.inspectionDate)}
                   onChange={(e) =>
                     setDraft((prev) =>
@@ -699,6 +700,9 @@ export default function InspectionDetailsPage() {
                     )
                   }
                   disabled={!editing}
+                  slotProps={{
+                    inputLabel: { shrink: true }
+                  }}
                 />
 
                 <TextField
@@ -707,7 +711,6 @@ export default function InspectionDetailsPage() {
                   fullWidth
                   required
                   type={editing ? "date" : "text"}
-                  InputLabelProps={{ shrink: true }}
                   value={editing ? toISODate(draft?.expirationDate) : formatDateBR(view.expirationDate)}
                   onChange={(e) =>
                     setDraft((prev) =>
@@ -726,6 +729,9 @@ export default function InspectionDetailsPage() {
                       ? t("inspections.addModal.errors.expirationBeforeInspection")
                       : undefined
                   }
+                  slotProps={{
+                    inputLabel: { shrink: true }
+                  }}
                 />
               </Stack>
 
@@ -797,7 +803,9 @@ export default function InspectionDetailsPage() {
                   )
                 }
                 disabled={!editing}
-                inputProps={{ maxLength: INSPECTION_NOTES_MAX_LENGTH }}
+                slotProps={{
+                  htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH }
+                }}
               />
             </Stack>
           </CardContent>
