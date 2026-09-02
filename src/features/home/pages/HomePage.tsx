@@ -244,8 +244,11 @@ export default function HomePage() {
 
   const status = dashboard?.inspectionStatus;
 
-  // Só o que precisa de ação: vencidas ou dentro da janela de alerta.
+  // Só o que precisa de ação: inspeções ativas, vencidas ou dentro da janela de
+  // alerta. A listagem agora inclui renovadas/encerradas (com data de vencimento
+  // antiga), então o filtro por isActive é necessário aqui.
   const attention = (upcoming?.content ?? []).filter((i) => {
+    if (!i.isActive) return false;
     const s = getExpirationStatus(i.expirationDate, alertDays);
     return s === "expired" || s === "near";
   });

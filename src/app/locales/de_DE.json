@@ -913,7 +913,9 @@
       "inspectionDate": "Inspektionsdatum",
       "expirationDate": "Ablaufdatum",
       "status": "Status",
-      "actions": "Aktionen"
+      "actions": "Aktionen",
+      "renewedChip": "Bereits erneuert",
+      "deactivatedChip": "Deaktiviert"
     },
     "renewModal": {
       "title": "Inspektion erneuern",

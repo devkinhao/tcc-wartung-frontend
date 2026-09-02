@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import type { InspectionDeactivationReason } from "../deactivationReason";
 
 export type InspectionListItem = {
   id: number;
@@ -10,6 +11,9 @@ export type InspectionListItem = {
   serviceTypeName: string;
   notes: string | null;
   expirationDate: string;
+  isActive: boolean;
+  isRenewed: boolean;
+  deactivationReason: InspectionDeactivationReason | null;
 };
 
 export type InspectionStatus = "expired" | "near" | "ok";

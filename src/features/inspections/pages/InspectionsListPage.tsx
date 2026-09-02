@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
   Stack,
   TableBody,
@@ -12,6 +13,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -33,6 +35,7 @@ import { AddInspectionModal } from "../components/AddInspectionModal";
 import { RenewInspectionModal, type RenewableInspection } from "../components/RenewInspectionModal";
 import { DeactivateInspectionModal, type DeactivatableInspection } from "../components/DeactivateInspectionModal";
 import { InspectionRowActions } from "../components/InspectionRowActions";
+import { deactivationReasonKey } from "../deactivationReason";
 import {
   listAllInspections,
   type InspectionListFilters,
@@ -278,10 +281,30 @@ export default function InspectionsListPage() {
                   ) : null}
                 </TableCell>
                 <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                  <ExpirationChip date={item.expirationDate} alertDays={alertDays} />
+                  {item.isActive ? (
+                    <ExpirationChip date={item.expirationDate} alertDays={alertDays} />
+                  ) : item.isRenewed ? (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      label={t("inspections.table.renewedChip")}
+                      sx={{ color: "text.secondary", borderColor: "divider" }}
+                    />
+                  ) : (
+                    <Tooltip title={item.deactivationReason ? t(deactivationReasonKey(item.deactivationReason)) : ""}>
+                      <Chip
+                        size="small"
+                        variant="outlined"
+                        label={t("inspections.table.deactivatedChip")}
+                        sx={{ color: "text.secondary", borderColor: "divider" }}
+                      />
+                    </Tooltip>
+                  )}
                 </TableCell>
                 <TableCell align="right">
-                  <InspectionRowActions item={item} onRenew={openRenew} onDeactivate={openDeactivate} />
+                  {item.isActive ? (
+                    <InspectionRowActions item={item} onRenew={openRenew} onDeactivate={openDeactivate} />
+                  ) : null}
                 </TableCell>
               </TableRow>
             ))
