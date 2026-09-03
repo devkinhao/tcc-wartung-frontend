@@ -23,7 +23,6 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +32,6 @@ import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { getExpirationStatus } from "@/utils/expirationStatus";
 import { daysFromToday } from "@/utils/date";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
-import { buildGmailComposeLink } from "@/utils/mail";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
 import { listAllInspections, type InspectionListItem } from "../../inspections/api/inspections.list.api";
 import { RenewInspectionModal, type RenewableInspection } from "../../inspections/components/RenewInspectionModal";
@@ -114,7 +112,6 @@ function AttentionRow({
         : t("home.attention.dueIn", { count: absDays, unit: dayUnit });
 
   const whatsappLink = row.customerMobilePhone ? buildWhatsAppLink(row.customerMobilePhone) : null;
-  const emailLink = row.customerEmail ? buildGmailComposeLink(row.customerEmail) : null;
 
   return (
     <Stack
@@ -170,18 +167,6 @@ function AttentionRow({
               aria-label={t("home.attention.whatsappTooltip")}
             >
               <WhatsAppIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title={emailLink ? t("home.attention.emailTooltip") : t("home.attention.noEmail")}>
-          <span>
-            <IconButton
-              disabled={!emailLink}
-              onClick={() => emailLink && window.open(emailLink, "_blank")}
-              aria-label={t("home.attention.emailTooltip")}
-            >
-              <EmailOutlinedIcon />
             </IconButton>
           </span>
         </Tooltip>

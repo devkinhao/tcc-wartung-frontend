@@ -189,8 +189,7 @@
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
-        "en_US": "English (US)",
-        "de_DE": "Deutsch"
+        "en_US": "English (US)"
       },
       "THEME": {
         "light": "Light",
@@ -1030,9 +1029,7 @@
       "noPhone": "No mobile number on file",
       "dueToday": "Due today",
       "overdue": "Overdue by {{count}} {{unit}}",
-      "dueIn": "Due in {{count}} {{unit}}",
-      "emailTooltip": "Email the company",
-      "noEmail": "No email on file"
+      "dueIn": "Due in {{count}} {{unit}}"
     }
   },
   "expiration": {

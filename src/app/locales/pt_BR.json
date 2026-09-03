@@ -189,8 +189,7 @@
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
-        "en_US": "English (US)",
-        "de_DE": "Deutsch"
+        "en_US": "English (US)"
       },
       "THEME": {
         "light": "Claro",
@@ -1030,9 +1029,7 @@
       "noPhone": "Sem celular cadastrado",
       "dueToday": "Vence hoje",
       "overdue": "Venceu há {{count}} {{unit}}",
-      "dueIn": "Vence em {{count}} {{unit}}",
-      "emailTooltip": "Enviar e-mail para a empresa",
-      "noEmail": "Sem e-mail cadastrado"
+      "dueIn": "Vence em {{count}} {{unit}}"
     }
   },
   "expiration": {
