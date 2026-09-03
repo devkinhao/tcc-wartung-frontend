@@ -424,7 +424,8 @@
       "abvtex": "ABVTEX",
       "activeInspections": "Active insp.",
       "nextExpiration": "Expiration",
-      "actions": "Actions"
+      "actions": "Actions",
+      "inactive": "Inactive"
     },
     "loading": "Loading companies...",
     "empty": "No companies found.",
@@ -796,7 +797,7 @@
       "profileUpdated": "Profile updated successfully",
       "inspectionCreated": "Inspection created successfully",
       "inspectionRenewed": "Inspection renewed successfully",
-      "inspectionNotRenewed": "Inspection marked as not renewed",
+      "inspectionDeactivated": "Inspection deactivated",
       "inspectionReactivated": "Inspection reactivated successfully",
       "inspectionDeleted": "Inspection deleted successfully",
       "documentsUploaded": "Document(s) attached successfully",
@@ -932,18 +933,21 @@
       "currentSummary": "Done on {{inspectionDate}} · due {{expirationDate}}"
     },
     "deactivate": {
-      "title": "Close without renewal",
+      "title": "Deactivate inspection",
       "intro": "The {{service}} inspection for {{customer}} will leave the pending list but stays in the company's history.",
       "reasonLabel": "Reason",
       "reasons": {
         "CLIENT_DECLINED": "Client declined to renew",
         "EQUIPMENT_DECOMMISSIONED": "Equipment decommissioned",
-        "OTHER": "Other",
-        "CUSTOMER_INACTIVATED": "Company is no longer a client"
+        "CUSTOMER_INACTIVATED": "Company is no longer a client",
+        "COMPANY_CLOSED": "Company ceased operations",
+        "OTHER": "Other"
       },
+      "cascadeWarning": "This company's other active inspections will be deactivated as well.",
+      "companyClosedWarning": "The company will be marked inactive and drop out of the tracking views.",
       "confirm": "Confirm",
-      "action": "Don't renew",
-      "archivedChip": "Not renewed"
+      "action": "Deactivate inspection",
+      "archivedChip": "Inspection deactivated"
     }
   },
   "chatbot": {

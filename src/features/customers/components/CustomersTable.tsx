@@ -68,11 +68,24 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
                 <TableRow
                   key={c.id}
                   hover
-                  sx={{ cursor: "pointer" }}
+                  sx={{
+                    cursor: "pointer",
+                    ...(!c.isActive && {
+                      bgcolor: "action.hover",
+                      "& td": { color: "text.disabled" },
+                    }),
+                  }}
                   onClick={() => openDetails(c.id)}
                 >
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.legalName}>
-                    {c.legalName}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, overflow: "hidden" }}>
+                      <Box component="span" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {c.legalName}
+                      </Box>
+                      {!c.isActive && (
+                        <Chip size="small" variant="outlined" label={t("customers.table.inactive")} />
+                      )}
+                    </Box>
                   </TableCell>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.cnpj}>{c.cnpj}</TableCell>
                   <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={c.city}>

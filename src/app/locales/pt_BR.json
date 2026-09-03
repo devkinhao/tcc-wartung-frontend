@@ -424,7 +424,8 @@
       "abvtex": "ABVTEX",
       "activeInspections": "Insp. ativas",
       "nextExpiration": "Vencimento",
-      "actions": "Ações"
+      "actions": "Ações",
+      "inactive": "Inativa"
     },
     "loading": "Carregando empresas...",
     "empty": "Nenhuma empresa encontrada.",
@@ -796,7 +797,7 @@
       "profileUpdated": "Perfil atualizado com sucesso",
       "inspectionCreated": "Inspeção cadastrada com sucesso",
       "inspectionRenewed": "Inspeção renovada com sucesso",
-      "inspectionNotRenewed": "Inspeção marcada como não renovada",
+      "inspectionDeactivated": "Inspeção desativada",
       "inspectionReactivated": "Inspeção reativada com sucesso",
       "inspectionDeleted": "Inspeção excluída com sucesso",
       "documentsUploaded": "Documento(s) anexado(s) com sucesso",
@@ -932,18 +933,21 @@
       "currentSummary": "Realizada em {{inspectionDate}} · vence em {{expirationDate}}"
     },
     "deactivate": {
-      "title": "Encerrar sem renovação",
+      "title": "Desativar inspeção",
       "intro": "A inspeção de {{service}} de {{customer}} sairá da lista de pendências, mas continua no histórico da empresa.",
       "reasonLabel": "Motivo",
       "reasons": {
         "CLIENT_DECLINED": "Cliente não quis renovar",
         "EQUIPMENT_DECOMMISSIONED": "Equipamento retirado de operação",
-        "OTHER": "Outro",
-        "CUSTOMER_INACTIVATED": "Empresa deixou de ser cliente"
+        "CUSTOMER_INACTIVATED": "Empresa deixou de ser cliente",
+        "COMPANY_CLOSED": "Empresa encerrou as atividades",
+        "OTHER": "Outro"
       },
+      "cascadeWarning": "As demais inspeções ativas desta empresa também serão desativadas.",
+      "companyClosedWarning": "A empresa será marcada como inativa e sairá das visões de acompanhamento.",
       "confirm": "Confirmar",
-      "action": "Não renovar",
-      "archivedChip": "Não renovada"
+      "action": "Desativar inspeção",
+      "archivedChip": "Inspeção desativada"
     }
   },
   "chatbot": {

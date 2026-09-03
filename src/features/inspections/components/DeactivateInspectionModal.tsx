@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -43,6 +44,10 @@ export function DeactivateInspectionModal({ open, onClose, inspection, onDeactiv
 
   const [reason, setReason] = useState<InspectionDeactivationReason | "">("");
 
+  // Motivos de nível empresa: encerram todas as inspeções da empresa em cascata
+  // e refletem no cadastro dela.
+  const isCompanyLevel = reason === "CUSTOMER_INACTIVATED" || reason === "COMPANY_CLOSED";
+
   const { mutate, isPending } = useMutation({
     mutationFn: () => deactivateInspection(inspection!.id, reason as InspectionDeactivationReason),
     onSuccess: () => {
@@ -52,7 +57,12 @@ export function DeactivateInspectionModal({ open, onClose, inspection, onDeactiv
       if (inspection?.customerId) {
         qc.invalidateQueries({ queryKey: qk.customerDetail(inspection.customerId) });
       }
-      notify.success("notify.success.inspectionNotRenewed");
+      // Motivos de nível empresa alteram o cadastro dela e derrubam outras
+      // inspeções — a listagem de empresas precisa ser revalidada.
+      if (isCompanyLevel) {
+        qc.invalidateQueries({ queryKey: ["customers"] });
+      }
+      notify.success("notify.success.inspectionDeactivated");
       handleClose();
       onDeactivated?.();
     },
@@ -91,6 +101,13 @@ export function DeactivateInspectionModal({ open, onClose, inspection, onDeactiv
               ))}
             </Select>
           </FormControl>
+
+          {isCompanyLevel && (
+            <Alert severity="warning">
+              {t("inspections.deactivate.cascadeWarning")}
+              {reason === "COMPANY_CLOSED" && ` ${t("inspections.deactivate.companyClosedWarning")}`}
+            </Alert>
+          )}
         </Stack>
       </DialogContent>
       <DialogActions>
