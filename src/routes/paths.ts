@@ -12,12 +12,11 @@ export const paths = {
   customers: "/customers",
   customerDetails: (id: number | string) => `/customers/${id}`,
   customerInspectionsTab: (id: number | string) => `/customers/${id}?tab=inspections`,
-  customerInspectionDetails: (customerId: number | string, id: number | string) =>
-    `/customers/${customerId}/inspections/${id}`,
 
   inspections: "/inspections",
   inspectionsByStatus: (status: "expired" | "near" | "ok") => `/inspections?status=${status}`,
-  inspectionDetails: (id: number | string) => `/inspections/${id}`,
+  // A inspeção abre num modal na lista; o link direto (notificações) usa ?inspection=.
+  inspectionDetails: (id: number | string) => `/inspections?inspection=${id}`,
 
   serviceTypes: "/service-types",
 

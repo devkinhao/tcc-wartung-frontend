@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Box,
@@ -35,7 +34,6 @@ import {
   type InspectionCreateRequestDTO,
 } from "../api/inspections.create.api";
 import type { CustomerSummaryResponseDTO } from "../types/inspectionDetail";
-import { paths } from "@/routes/paths";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { formatDateBR, addYearsISODate } from "@/utils/date";
 import { fieldError } from "@/validation/fields";
@@ -47,6 +45,8 @@ type AddInspectionModalProps = {
   onClose: () => void;
   /** Quando informado, pré-preenche e trava o campo de cliente (ex: aberto a partir da própria ficha do cliente) */
   lockedCustomer?: CustomerSummaryResponseDTO;
+  /** Abre o modal de detalhes da inspeção recém-criada. */
+  onOpenDetail?: (id: number) => void;
 };
 
 type NewInspectionForm = {
@@ -67,10 +67,9 @@ const defaultForm: NewInspectionForm = {
   artNumber: "",
 };
 
-export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspectionModalProps) {
+export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail }: AddInspectionModalProps) {
   const { t } = useTranslation();
   const notify = useNotify();
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const [form, setForm] = useState<NewInspectionForm>(() => ({
@@ -173,13 +172,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer }: AddInspect
   });
 
   const goToInspection = () => {
-    if (createdId) {
-      navigate(
-        lockedCustomer
-          ? paths.customerInspectionDetails(lockedCustomer.id, createdId)
-          : paths.inspectionDetails(createdId)
-      );
-    }
+    if (createdId) onOpenDetail?.(createdId);
     closeAndReset();
   };
 

@@ -18,7 +18,6 @@ const Home = lazy(() => import("@/features/home/pages/HomePage"));
 const Dashboard = lazy(() => import("@/features/dashboard/pages/DashboardPage"));
 const Customers = lazy(() => import("@/features/customers/pages/CustomersListPage"));
 const CustomerDetailsPage = lazy(() => import("@/features/customers/pages/CustomerDetailsPage"));
-const InspectionDetailsPage = lazy(() => import("@/features/inspections/pages/InspectionDetailsPage"));
 const InspectionsListPage = lazy(() => import("@/features/inspections/pages/InspectionsListPage"));
 const NotificationsPage = lazy(() => import("@/features/notifications/pages/NotificationsPage"));
 const ServiceTypes = lazy(() => import("@/features/serviceTypes/pages/ServiceTypesPage"));
@@ -66,11 +65,9 @@ export const router = createBrowserRouter([
           { path: "dashboard", element: page(<Dashboard />) },
           { path: "customers", element: page(<Customers />) },
           { path: "customers/:id", element: page(<CustomerDetailsPage />) },
-          // Inspeção aninhada sob o cliente — preserva o contexto hierárquico
-          { path: "customers/:customerId/inspections/:id", element: page(<InspectionDetailsPage />) },
-          // Visão operacional transversal — todas as inspeções
+          // Visão operacional transversal — todas as inspeções. Os detalhes de
+          // uma inspeção abrem num modal (InspectionDetailModal), não em rota.
           { path: "inspections", element: page(<InspectionsListPage />) },
-          { path: "inspections/:id", element: page(<InspectionDetailsPage />) },
           { path: "notifications", element: page(<NotificationsPage />) },
           { path: "users/me", element: page(<UserProfile />) },
           { path: "preferences", element: page(<Preferences />) },

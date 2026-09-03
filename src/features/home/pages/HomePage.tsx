@@ -39,6 +39,7 @@ import {
   DeactivateInspectionModal,
   type DeactivatableInspection,
 } from "../../inspections/components/DeactivateInspectionModal";
+import { InspectionDetailModal } from "../../inspections/components/InspectionDetailModal";
 
 const ATTENTION_LIMIT = 6;
 
@@ -89,16 +90,17 @@ function AttentionRow({
   row,
   onRenew,
   onDeactivate,
+  onOpenDetail,
 }: {
   row: InspectionListItem;
   onRenew: (row: InspectionListItem) => void;
   onDeactivate: (row: InspectionListItem) => void;
+  onOpenDetail: (id: number) => void;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
 
-  const openDetails = () => navigate(paths.inspectionDetails(row.id));
+  const openDetails = () => onOpenDetail(row.id);
 
   const days = daysFromToday(row.expirationDate);
   const overdue = days < 0;
@@ -214,6 +216,7 @@ export default function HomePage() {
 
   const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
   const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
+  const [detailId, setDetailId] = useState<number | null>(null);
 
   const { data: dashboard, isLoading: loadingStatus } = useQuery({
     queryKey: qk.dashboard(),
@@ -332,7 +335,7 @@ export default function HomePage() {
             {rows.map((row, index) => (
               <Box key={row.id}>
                 {index > 0 && <Divider />}
-                <AttentionRow row={row} onRenew={openRenew} onDeactivate={openDeactivate} />
+                <AttentionRow row={row} onRenew={openRenew} onDeactivate={openDeactivate} onOpenDetail={setDetailId} />
               </Box>
             ))}
 
@@ -356,12 +359,19 @@ export default function HomePage() {
         open={renewTarget !== null}
         inspection={renewTarget}
         onClose={() => setRenewTarget(null)}
+        onOpenDetail={setDetailId}
       />
 
       <DeactivateInspectionModal
         open={deactivateTarget !== null}
         inspection={deactivateTarget}
         onClose={() => setDeactivateTarget(null)}
+      />
+
+      <InspectionDetailModal
+        inspectionId={detailId}
+        open={detailId !== null}
+        onClose={() => setDetailId(null)}
       />
     </Box>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -26,7 +26,7 @@ import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { saveScrollPosition, useScrollRestoration } from "@/hooks/useScrollRestoration";
+import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
@@ -34,6 +34,8 @@ import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { AddInspectionModal } from "../components/AddInspectionModal";
 import { RenewInspectionModal, type RenewableInspection } from "../components/RenewInspectionModal";
 import { DeactivateInspectionModal, type DeactivatableInspection } from "../components/DeactivateInspectionModal";
+import { DeleteInspectionDialog, type DeletableInspection } from "../components/DeleteInspectionDialog";
+import { InspectionDetailModal } from "../components/InspectionDetailModal";
 import { InspectionRowActions } from "../components/InspectionRowActions";
 import { deactivationReasonKey } from "../deactivationReason";
 import {
@@ -51,7 +53,6 @@ const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
 
 export default function InspectionsListPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const alertDays = useAlertDays();
 
   const [filters, setFilters]   = useSessionStorageState<InspectionListFilters>("inspections-list.filters", INITIAL_FILTERS);
@@ -60,12 +61,16 @@ export default function InspectionsListPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
   const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<DeletableInspection | null>(null);
   const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
 
-  // Permite abrir a lista já filtrada por um link externo (ex: cartões da tela
-  // inicial → /inspections?status=expired). Consome o parâmetro na chegada.
+  // Links externos podem abrir a lista já filtrada (cartões da home →
+  // ?status=expired) ou com uma inspeção aberta no modal (notificação →
+  // ?inspection=123). O status é consumido na chegada; o id da inspeção fica
+  // derivado do param (reage mesmo estando já na lista) e é limpo ao fechar.
   const [searchParams, setSearchParams] = useSearchParams();
+
   useEffect(() => {
     const urlStatus = searchParams.get("status");
     if (urlStatus && (VALID_STATUSES as string[]).includes(urlStatus)) {
@@ -77,6 +82,21 @@ export default function InspectionsListPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [clickedDetailId, setClickedDetailId] = useState<number | null>(null);
+  const paramInspectionId = Number(searchParams.get("inspection"));
+  const detailId =
+    clickedDetailId ??
+    (Number.isFinite(paramInspectionId) && paramInspectionId > 0 ? paramInspectionId : null);
+
+  const closeDetail = () => {
+    setClickedDetailId(null);
+    if (searchParams.has("inspection")) {
+      const next = new URLSearchParams(searchParams);
+      next.delete("inspection");
+      setSearchParams(next, { replace: true });
+    }
+  };
 
   const debouncedSearch = useDebouncedValue(filters.search, 400);
   const queryFilters = { ...filters, search: debouncedSearch };
@@ -109,10 +129,14 @@ export default function InspectionsListPage() {
     setPage(1);
   }
 
-  const openDetails = (id: number) => {
-    saveScrollPosition("inspections-list.scrollY");
-    navigate(paths.inspectionDetails(id));
-  };
+  const openDetails = (id: number) => setClickedDetailId(id);
+
+  const openDelete = (item: InspectionListItem) =>
+    setDeleteTarget({
+      id: item.id,
+      serviceTypeName: item.serviceTypeName,
+      customerLegalName: item.customerLegalName,
+    });
 
   const openRenew = (item: InspectionListItem) =>
     setRenewTarget({
@@ -156,16 +180,31 @@ export default function InspectionsListPage() {
         </Button>
       </Stack>
 
-      <AddInspectionModal open={isAddOpen} onClose={() => setIsAddOpen(false)} />
+      <AddInspectionModal
+        open={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onOpenDetail={setClickedDetailId}
+      />
       <RenewInspectionModal
         open={renewTarget !== null}
         inspection={renewTarget}
         onClose={() => setRenewTarget(null)}
+        onOpenDetail={setClickedDetailId}
       />
       <DeactivateInspectionModal
         open={deactivateTarget !== null}
         inspection={deactivateTarget}
         onClose={() => setDeactivateTarget(null)}
+      />
+      <DeleteInspectionDialog
+        open={deleteTarget !== null}
+        inspection={deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+      />
+      <InspectionDetailModal
+        inspectionId={detailId}
+        open={detailId !== null}
+        onClose={closeDetail}
       />
 
       {/* Filtros */}
@@ -302,9 +341,12 @@ export default function InspectionsListPage() {
                   )}
                 </TableCell>
                 <TableCell align="right">
-                  {item.isActive ? (
-                    <InspectionRowActions item={item} onRenew={openRenew} onDeactivate={openDeactivate} />
-                  ) : null}
+                  <InspectionRowActions
+                    item={item}
+                    onRenew={openRenew}
+                    onDeactivate={openDeactivate}
+                    onDelete={openDelete}
+                  />
                 </TableCell>
               </TableRow>
             ))

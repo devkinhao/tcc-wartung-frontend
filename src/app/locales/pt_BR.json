@@ -76,7 +76,6 @@
     "customersList": "Empresas",
     "inspections": "Inspeções",
     "inspectionsList": "Inspeções",
-    "inspectionDetails": "Inspeção",
     "notificationsList": "Notificações",
     "serviceTypes": "Serviços",
     "reports": "Relatórios",
@@ -88,7 +87,6 @@
     "preferences": "Preferências",
     "customerDetails": "Detalhes da Empresa",
     "companyDetails": "Detalhes da Empresa",
-    "inspectionDetailsPage": "Detalhes da Inspeção",
     "analytics": "Análise"
   },
   "adminPanel": {
@@ -706,8 +704,6 @@
     "title": "Inspeção",
     "titleWithService": "Inspeção • {{service}}",
     "actions": {
-      "back": "Voltar",
-      "actions": "Ações",
       "delete": "Excluir inspeção",
       "reactivate": "Reativar"
     },
@@ -737,11 +733,6 @@
       "notes": "Observações",
       "isActive": "Ativa?",
       "artNumber": "Número da ART (CREA-SC)"
-    },
-    "artValidation": {
-      "action": "Consultar no CREA-SC",
-      "tooltip": "Abrir a página de validação da ART no CREA-SC (o número é copiado para você colar no campo do site)",
-      "disabledHint": "Informe o número da ART para consultar a autenticidade"
     },
     "documents": {
       "loading": "Carregando documentos...",
@@ -937,7 +928,7 @@
       "reasonLabel": "Motivo",
       "reasons": {
         "CLIENT_DECLINED": "Cliente não quis renovar",
-        "EQUIPMENT_DECOMMISSIONED": "Equipamento retirado de operação",
+        "EQUIPMENT_DECOMMISSIONED": "Equipamento fora de operação",
         "CUSTOMER_INACTIVATED": "Empresa deixou de ser cliente",
         "COMPANY_CLOSED": "Empresa encerrou as atividades",
         "OTHER": "Outro"

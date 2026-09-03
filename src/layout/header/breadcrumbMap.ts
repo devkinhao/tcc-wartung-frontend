@@ -8,8 +8,8 @@ export type BreadcrumbItem = {
 /**
  * Mapa de breadcrumbs para rotas estáticas — cada página renderiza o próprio
  * breadcrumb (no lugar do título/subtítulo, que ficavam redundantes com ele).
- * Rotas dinâmicas (/customers/:id, /customers/:id/inspections/:id) montam os
- * itens na própria página, com dados reais das queries (nome do cliente/inspeção).
+ * A rota dinâmica /customers/:id monta os itens na própria página, com dados
+ * reais da query (nome do cliente).
  */
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
   [paths.home]: [{ label: "nav.home" }],

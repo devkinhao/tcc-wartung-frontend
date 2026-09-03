@@ -20,18 +20,19 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import BlockIcon from "@mui/icons-material/Block";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
 import { RenewInspectionModal, type RenewableInspection } from "@/features/inspections/components/RenewInspectionModal";
 import { DeactivateInspectionModal, type DeactivatableInspection } from "@/features/inspections/components/DeactivateInspectionModal";
+import { DeleteInspectionDialog, type DeletableInspection } from "@/features/inspections/components/DeleteInspectionDialog";
+import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
 import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
 import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
-import { paths } from "@/routes/paths";
 
 type Props = {
   customerId: number;
@@ -42,11 +43,12 @@ type Props = {
 
 export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections }: Props) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
   const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<DeletableInspection | null>(null);
+  const [detailId, setDetailId] = useState<number | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuRow, setMenuRow] = useState<InspectionSummaryResponseDTO | null>(null);
 
@@ -80,6 +82,15 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
     });
   }
 
+  function deleteFromRow(row: InspectionSummaryResponseDTO) {
+    setDeleteTarget({
+      id: row.id,
+      serviceTypeName: row.serviceType?.name ?? "—",
+      customerLegalName,
+      customerId,
+    });
+  }
+
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -96,6 +107,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         open={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         lockedCustomer={{ id: customerId, legalName: customerLegalName, cnpj: customerCnpj }}
+        onOpenDetail={setDetailId}
       />
 
       <DataTableContainer stickyHeader={false}>
@@ -119,7 +131,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   key={i.id}
                   hover
                   sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(paths.customerInspectionDetails(customerId, i.id))}
+                  onClick={() => setDetailId(i.id)}
                 >
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
 
@@ -220,18 +232,41 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
           <BlockIcon fontSize="small" sx={{ mr: 1 }} />
           {t("inspections.deactivate.action")}
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (menuRow) deleteFromRow(menuRow);
+            closeRowMenu();
+          }}
+        >
+          <DeleteOutlineIcon fontSize="small" sx={{ mr: 1 }} />
+          {t("inspectionDetails.actions.delete")}
+        </MenuItem>
       </Menu>
 
       <RenewInspectionModal
         open={renewTarget !== null}
         inspection={renewTarget}
         onClose={() => setRenewTarget(null)}
+        onOpenDetail={setDetailId}
       />
 
       <DeactivateInspectionModal
         open={deactivateTarget !== null}
         inspection={deactivateTarget}
         onClose={() => setDeactivateTarget(null)}
+      />
+
+      <DeleteInspectionDialog
+        open={deleteTarget !== null}
+        inspection={deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+      />
+
+      <InspectionDetailModal
+        inspectionId={detailId}
+        open={detailId !== null}
+        onClose={() => setDetailId(null)}
+        customerId={customerId}
       />
     </Paper>
   );

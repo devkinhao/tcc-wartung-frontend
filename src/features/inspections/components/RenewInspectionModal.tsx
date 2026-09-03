@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -24,7 +23,6 @@ import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { formatDateBR, todayISODate, addDaysISODate } from "@/utils/date";
-import { paths } from "@/routes/paths";
 import { renewInspection, type InspectionRenewRequestDTO } from "../api/inspections.renew.api";
 import { getInspectionDetail } from "../api/inspections.detail.api";
 import { uploadInspectionDocuments } from "../api/inspections.documents.api";
@@ -50,6 +48,8 @@ type Props = {
   inspection: RenewableInspection | null;
   /** Chamado após renovar com sucesso, com o id da nova inspeção. */
   onRenewed?: (newInspectionId: number) => void;
+  /** Abre o modal de detalhes da nova inspeção. */
+  onOpenDetail?: (id: number) => void;
 };
 
 // Remonta o formulário (estado limpo) sempre que muda a inspeção de origem.
@@ -65,10 +65,9 @@ function previousValiditySpanDays(inspectionDate: string, expirationDate: string
   return days > 0 ? days : 365;
 }
 
-function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
+function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetail }: Props) {
   const { t } = useTranslation();
   const notify = useNotify();
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const today = todayISODate();
@@ -153,13 +152,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed }: Props) {
   });
 
   const goToNewInspection = () => {
-    if (createdId) {
-      navigate(
-        inspection?.customerId
-          ? paths.customerInspectionDetails(inspection.customerId, createdId)
-          : paths.inspectionDetails(createdId)
-      );
-    }
+    if (createdId) onOpenDetail?.(createdId);
     onClose();
   };
 

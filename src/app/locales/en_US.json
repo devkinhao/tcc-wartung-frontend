@@ -76,7 +76,6 @@
     "customersList": "Companies",
     "inspections": "Inspections",
     "inspectionsList": "Inspections",
-    "inspectionDetails": "Inspection",
     "notificationsList": "Notifications",
     "serviceTypes": "Services",
     "reports": "Reports",
@@ -88,7 +87,6 @@
     "preferences": "Preferences",
     "customerDetails": "Company Details",
     "companyDetails": "Company Details",
-    "inspectionDetailsPage": "Inspection Details",
     "analytics": "Analytics"
   },
   "adminPanel": {
@@ -706,8 +704,6 @@
     "title": "Inspection",
     "titleWithService": "Inspection • {{service}}",
     "actions": {
-      "back": "Back",
-      "actions": "Actions",
       "delete": "Delete inspection",
       "reactivate": "Reactivate"
     },
@@ -737,11 +733,6 @@
       "notes": "Notes",
       "isActive": "Active?",
       "artNumber": "ART number (CREA-SC)"
-    },
-    "artValidation": {
-      "action": "Check on CREA-SC",
-      "tooltip": "Open the CREA-SC ART validation page (the number is copied so you can paste it into the site field)",
-      "disabledHint": "Enter the ART number to check its authenticity"
     },
     "documents": {
       "loading": "Loading documents...",
@@ -937,7 +928,7 @@
       "reasonLabel": "Reason",
       "reasons": {
         "CLIENT_DECLINED": "Client declined to renew",
-        "EQUIPMENT_DECOMMISSIONED": "Equipment decommissioned",
+        "EQUIPMENT_DECOMMISSIONED": "Equipment out of operation",
         "CUSTOMER_INACTIVATED": "Company is no longer a client",
         "COMPANY_CLOSED": "Company ceased operations",
         "OTHER": "Other"
