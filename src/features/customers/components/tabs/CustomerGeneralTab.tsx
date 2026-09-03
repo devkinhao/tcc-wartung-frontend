@@ -20,7 +20,7 @@ import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
-import { companyContactsSchema } from "../../schemas";
+import { companyContactsSchema, companyGeneralSchema } from "../../schemas";
 import type { CustomerDetailResponseDTO } from "../../types/customerDetail";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 
@@ -63,7 +63,15 @@ export function CustomerGeneralTab({
 }: Props) {
   const { t } = useTranslation();
 
-  const isGeneralValid = view.legalName.trim() !== "";
+  const cnpj = view.cnpj?.trim() ?? "";
+  // Espelha o CustomerUpdateGeneralRequestDTO (@NotBlank legalName, @Pattern cnpj).
+  const general = companyGeneralSchema.safeParse({
+    fantasyName: view.fantasyName ?? "",
+    legalName: view.legalName,
+    cnpj,
+  });
+  const cnpjError = editingGeneral && cnpj !== "" && !!fieldError(general, "cnpj");
+  const isGeneralValid = general.success;
 
   const phone = view.phone?.trim() ?? "";
   const mobile = view.mobilePhone?.trim() ?? "";
@@ -125,18 +133,21 @@ export function CustomerGeneralTab({
               </FormControl>
             </Grid>
 
-            <Grid size={{ xs: 12, md: 2 }}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <MaskedTextField
                 mask="cnpj"
                 label={t("customerDetails.general.fields.cnpj")}
                 value={view.cnpj}
                 size="small" fullWidth
-                disabled
-                onChange={() => {}}
+                disabled={!editingGeneral}
+                required
+                onChange={(v) => updateField("cnpj", v)}
+                error={cnpjError}
+                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
               />
             </Grid>
 
-            <Grid size={{ xs: 12, md: 7 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label={t("customerDetails.general.fields.fantasyName")}
                 value={view.fantasyName}
