@@ -44,7 +44,6 @@ const PREFERENCE_OPTION_ICONS: Record<string, Record<string, React.ReactNode>> =
   LANGUAGE: {
     pt_BR: <span style={FLAG_ICON_STYLE}>🇧🇷</span>,
     en_US: <span style={FLAG_ICON_STYLE}>🇺🇸</span>,
-    de_DE: <span style={FLAG_ICON_STYLE}>🇩🇪</span>,
   },
   SHOW_NOTIFICATIONS: {
     true: <NotificationsActiveIcon fontSize="small" sx={{ color: "primary.main" }} />,
