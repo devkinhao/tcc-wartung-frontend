@@ -59,6 +59,8 @@ import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
 import { DocumentPicker } from "./DocumentPicker";
+import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
+import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
 import { deactivationReasonKey } from "../deactivationReason";
 
 function toISODate(value?: string | null) {
@@ -209,7 +211,11 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
     expirationDateValue !== "" &&
     !!fieldError(generalForm, "expirationDate");
   const artNumberInvalid = artNumberValue.trim() !== "" && !!fieldError(generalForm, "artNumber");
-  const isGeneralValid = generalForm.success;
+
+  const draftEquipmentValues = toEquipmentValues(draft);
+  const viewEquipmentValues = toEquipmentValues(view);
+  const equipmentErrors = equipmentFieldErrors(view?.serviceType.category, draftEquipmentValues);
+  const isGeneralValid = generalForm.success && Object.keys(equipmentErrors).length === 0;
 
   const hasUnsavedChanges =
     editing &&
@@ -218,7 +224,12 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
     (draft.inspectionDate !== view.inspectionDate ||
       draft.expirationDate !== view.expirationDate ||
       (draft.notes ?? "") !== (view.notes ?? "") ||
-      (draft.artNumber ?? "") !== (view.artNumber ?? ""));
+      (draft.artNumber ?? "") !== (view.artNumber ?? "") ||
+      (draft.manufacturer ?? "") !== (view.manufacturer ?? "") ||
+      (draft.model ?? "") !== (view.model ?? "") ||
+      (draft.capacity ?? "") !== (view.capacity ?? "") ||
+      (draft.cylinderCount ?? null) !== (view.cylinderCount ?? null) ||
+      (draft.btu ?? null) !== (view.btu ?? null));
 
   const startEditing = () => {
     if (readOnly || !view) return;
@@ -249,6 +260,11 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         notes: draft.notes ?? "",
         artNumber: draft.artNumber?.trim() || null,
         isActive: draft.isActive,
+        manufacturer: draft.manufacturer?.trim() || null,
+        model: draft.model?.trim() || null,
+        capacity: draft.capacity?.trim() || null,
+        cylinderCount: draft.cylinderCount ?? null,
+        btu: draft.btu ?? null,
       },
       { onSuccess: () => notify.success("notify.success.saved") }
     );
@@ -263,6 +279,11 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         notes: view.notes ?? "",
         artNumber: view.artNumber?.trim() || null,
         isActive: true,
+        manufacturer: view.manufacturer,
+        model: view.model,
+        capacity: view.capacity,
+        cylinderCount: view.cylinderCount,
+        btu: view.btu,
       },
       { onSuccess: () => notify.success("notify.success.inspectionReactivated") }
     );
@@ -478,6 +499,22 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                       sx={{ maxWidth: { sm: 320 } }}
                     />
                   )}
+
+                  <ServiceEquipmentFields
+                    category={view.serviceType.category}
+                    values={editing ? draftEquipmentValues : viewEquipmentValues}
+                    onChange={(field, value) =>
+                      setDraft((prev) => {
+                        if (!prev) return prev;
+                        if (field === "cylinderCount" || field === "btu") {
+                          return { ...prev, [field]: value.trim() === "" ? null : Number(value) };
+                        }
+                        return { ...prev, [field]: value === "" ? null : value };
+                      })
+                    }
+                    disabled={!editing}
+                    errors={editing ? equipmentErrors : undefined}
+                  />
 
                   <TextField
                     label={t("inspectionDetails.fields.notes")}

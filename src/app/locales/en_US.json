@@ -10,7 +10,8 @@
     "phoneInvalid": "Invalid phone number",
     "mobileInvalid": "Invalid mobile number",
     "cpfInvalid": "Invalid CPF",
-    "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters)"
+    "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters)",
+    "positiveIntegerInvalid": "Enter a positive whole number"
   },
   "common": {
     "alt": {
@@ -750,7 +751,12 @@
       "expirationDate": "Expiration date",
       "notes": "Notes",
       "isActive": "Active?",
-      "artNumber": "ART number (CREA-SC)"
+      "artNumber": "ART number (CREA-SC)",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "capacity": "Capacity",
+      "cylinderCount": "Number of cylinders",
+      "btu": "BTUs"
     },
     "documents": {
       "loading": "Loading documents...",
@@ -864,7 +870,8 @@
       "SERVICE_TYPE_ALREADY_EXISTS": "This service type already exists.",
       "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections.",
       "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed.",
-      "INSPECTION_INACTIVE": "Inactive inspection. Reactivate it before editing or attaching documents."
+      "INSPECTION_INACTIVE": "Inactive inspection. Reactivate it before editing or attaching documents.",
+      "SERVICE_FIELDS_REQUIRED": "Fill in the equipment data required for this service."
     }
   },
   "inspections": {

@@ -39,6 +39,13 @@ import { formatDateBR, addYearsISODate } from "@/utils/date";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
+import {
+  EMPTY_EQUIPMENT_FIELDS,
+  equipmentFieldErrors,
+  getServiceFields,
+  type EquipmentFieldValues,
+} from "../serviceCategory";
 
 type AddInspectionModalProps = {
   open: boolean;
@@ -56,6 +63,7 @@ type NewInspectionForm = {
   expirationDate: string;
   notes: string;
   artNumber: string;
+  equipment: EquipmentFieldValues;
 };
 
 const defaultForm: NewInspectionForm = {
@@ -65,6 +73,7 @@ const defaultForm: NewInspectionForm = {
   expirationDate: "",
   notes: "",
   artNumber: "",
+  equipment: EMPTY_EQUIPMENT_FIELDS,
 };
 
 export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail }: AddInspectionModalProps) {
@@ -129,7 +138,14 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
 
   const artNumberInvalid = form.artNumber.trim() !== "" && !!fieldError(inspectionForm, "artNumber");
 
-  const isValid = form.customer !== null && form.serviceTypeId !== "" && inspectionForm.success;
+  const selectedCategory = serviceTypes.find((s) => s.id === form.serviceTypeId)?.category ?? null;
+  const equipmentErrors = equipmentFieldErrors(selectedCategory, form.equipment);
+
+  const isValid =
+    form.customer !== null &&
+    form.serviceTypeId !== "" &&
+    inspectionForm.success &&
+    Object.keys(equipmentErrors).length === 0;
 
   const { mutate: save, isPending: submitting } = useMutation({
     mutationFn: async () => {
@@ -139,6 +155,11 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
         notes: form.notes.trim() || null,
         artNumber: form.artNumber.trim() || null,
         serviceTypeId: form.serviceTypeId as number,
+        manufacturer: form.equipment.manufacturer.trim() || null,
+        model: form.equipment.model.trim() || null,
+        capacity: form.equipment.capacity.trim() || null,
+        cylinderCount: form.equipment.cylinderCount.trim() ? Number(form.equipment.cylinderCount) : null,
+        btu: form.equipment.btu.trim() ? Number(form.equipment.btu) : null,
       };
       const created = await createInspection(form.customer!.id, dto);
 
@@ -351,6 +372,19 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
                 }
               />
             </Grid>
+
+            {getServiceFields(selectedCategory).fields.length > 0 ? (
+              <Grid size={{ xs: 12 }}>
+                <ServiceEquipmentFields
+                  category={selectedCategory}
+                  values={form.equipment}
+                  onChange={(field, value) =>
+                    setForm((p) => ({ ...p, equipment: { ...p.equipment, [field]: value } }))
+                  }
+                  errors={equipmentErrors}
+                />
+              </Grid>
+            ) : null}
 
             <Grid size={{ xs: 12 }}>
               <TextField

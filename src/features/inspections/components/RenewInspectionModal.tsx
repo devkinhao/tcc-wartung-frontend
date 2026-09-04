@@ -27,6 +27,14 @@ import { renewInspection, type InspectionRenewRequestDTO } from "../api/inspecti
 import { getInspectionDetail } from "../api/inspections.detail.api";
 import { uploadInspectionDocuments } from "../api/inspections.documents.api";
 import { DocumentPicker } from "./DocumentPicker";
+import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
+import {
+  EMPTY_EQUIPMENT_FIELDS,
+  equipmentFieldErrors,
+  getServiceFields,
+  toEquipmentValues,
+  type EquipmentFieldValues,
+} from "../serviceCategory";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
@@ -87,17 +95,23 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
   const [expirationDate, setExpirationDate] = useState(suggestedExpiration);
   const [notes, setNotes] = useState("");
   const [artNumber, setArtNumber] = useState("");
+  const [equipment, setEquipment] = useState<EquipmentFieldValues>(EMPTY_EQUIPMENT_FIELDS);
   const [docFiles, setDocFiles] = useState<File[]>([]);
   const [createdId, setCreatedId] = useState<number | null>(null);
   const [failedUploads, setFailedUploads] = useState(0);
 
-  // Pré-preenche as observações com as da inspeção anterior assim que elas chegam
-  // (padrão "ajustar estado durante o render" — sem useEffect).
+  // Pré-preenche observações e dados do equipamento com os da inspeção anterior
+  // assim que chegam (padrão "ajustar estado durante o render" — sem useEffect).
   const [seededFromId, setSeededFromId] = useState<number | null>(null);
   if (source && seededFromId !== source.id) {
     setSeededFromId(source.id);
     setNotes(source.notes ?? "");
+    setEquipment(toEquipmentValues(source));
   }
+
+  // O serviço é herdado da inspeção anterior e não muda na renovação.
+  const category = source?.serviceType.category ?? null;
+  const equipmentErrors = equipmentFieldErrors(category, equipment);
 
   const renewForm = inspectionFormSchema.safeParse({
     inspectionDate,
@@ -108,7 +122,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
   const expirationBeforeInspection =
     inspectionDate !== "" && expirationDate !== "" && !!fieldError(renewForm, "expirationDate");
   const artNumberInvalid = artNumber.trim() !== "" && !!fieldError(renewForm, "artNumber");
-  const isValid = renewForm.success;
+  const isValid = renewForm.success && Object.keys(equipmentErrors).length === 0;
 
   const { mutate: save, isPending: submitting } = useMutation({
     mutationFn: async () => {
@@ -117,6 +131,11 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
         expirationDate,
         notes: notes.trim() || null,
         artNumber: artNumber.trim() || null,
+        manufacturer: equipment.manufacturer.trim() || null,
+        model: equipment.model.trim() || null,
+        capacity: equipment.capacity.trim() || null,
+        cylinderCount: equipment.cylinderCount.trim() ? Number(equipment.cylinderCount) : null,
+        btu: equipment.btu.trim() ? Number(equipment.btu) : null,
       };
       const created = await renewInspection(inspection!.id, dto);
 
@@ -258,6 +277,18 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
                 helperText={artNumberInvalid ? t("inspectionDetails.errors.artNumberFormat") : undefined}
               />
             </Grid>
+
+            {getServiceFields(category).fields.length > 0 ? (
+              <Grid size={{ xs: 12 }}>
+                <ServiceEquipmentFields
+                  category={category}
+                  values={equipment}
+                  onChange={(field, value) => setEquipment((p) => ({ ...p, [field]: value }))}
+                  disabled={submitting}
+                  errors={equipmentErrors}
+                />
+              </Grid>
+            ) : null}
 
             <Grid size={{ xs: 12 }}>
               <TextField

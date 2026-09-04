@@ -6,6 +6,11 @@ export type InspectionRenewRequestDTO = {
   expirationDate: string; // ISO date
   notes?: string | null;
   artNumber?: string | null;
+  manufacturer?: string | null;
+  model?: string | null;
+  capacity?: string | null;
+  cylinderCount?: number | null;
+  btu?: number | null;
 };
 
 /**

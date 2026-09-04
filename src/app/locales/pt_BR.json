@@ -10,7 +10,8 @@
     "phoneInvalid": "Telefone inválido",
     "mobileInvalid": "Celular inválido",
     "cpfInvalid": "CPF inválido",
-    "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres)"
+    "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres)",
+    "positiveIntegerInvalid": "Informe um número inteiro positivo"
   },
   "common": {
     "alt": {
@@ -750,7 +751,12 @@
       "expirationDate": "Data de vencimento",
       "notes": "Observações",
       "isActive": "Ativa?",
-      "artNumber": "Número da ART (CREA-SC)"
+      "artNumber": "Número da ART (CREA-SC)",
+      "manufacturer": "Fabricante",
+      "model": "Modelo",
+      "capacity": "Capacidade",
+      "cylinderCount": "Quantidade de botijões",
+      "btu": "BTUs"
     },
     "documents": {
       "loading": "Carregando documentos...",
@@ -864,7 +870,8 @@
       "SERVICE_TYPE_ALREADY_EXISTS": "Este tipo de serviço já existe.",
       "SERVICE_TYPE_HAS_INSPECTIONS": "Não é possível excluir: este tipo de serviço possui inspeções vinculadas.",
       "INSPECTION_ALREADY_RENEWED": "Esta inspeção já foi renovada.",
-      "INSPECTION_INACTIVE": "Inspeção inativa. Reative-a antes de editar ou anexar documentos."
+      "INSPECTION_INACTIVE": "Inspeção inativa. Reative-a antes de editar ou anexar documentos.",
+      "SERVICE_FIELDS_REQUIRED": "Preencha os dados do equipamento exigidos para este serviço."
     }
   },
   "inspections": {

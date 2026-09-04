@@ -7,6 +7,11 @@ export type InspectionUpdateRequestDTO = {
   notes?: string | null;
   artNumber?: string | null;
   isActive: boolean;
+  manufacturer?: string | null;
+  model?: string | null;
+  capacity?: string | null;
+  cylinderCount?: number | null;
+  btu?: number | null;
 };
 
 export async function getInspectionDetail(id: number) {

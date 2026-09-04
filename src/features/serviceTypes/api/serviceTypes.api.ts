@@ -1,8 +1,11 @@
 import { api } from "@/api/client";
+import type { ServiceCategory } from "@/features/inspections/serviceCategory";
 
 export type ServiceTypeResponseDTO = {
   id: number;
   name: string;
+  /** Null = serviço customizado (fora do catálogo fixo), sem campos de equipamento. */
+  category: ServiceCategory | null;
 };
 
 export type ServiceTypeCreateRequestDTO = {

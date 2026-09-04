@@ -11,6 +11,11 @@ export type InspectionCreateRequestDTO = {
   notes?: string | null;
   artNumber?: string | null;
   serviceTypeId: number;
+  manufacturer?: string | null;
+  model?: string | null;
+  capacity?: string | null;
+  cylinderCount?: number | null;
+  btu?: number | null;
 };
 
 export async function createInspection(customerId: number, dto: InspectionCreateRequestDTO) {

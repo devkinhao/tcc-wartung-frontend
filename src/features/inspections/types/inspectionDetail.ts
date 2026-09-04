@@ -1,8 +1,10 @@
 import type { InspectionDeactivationReason } from "../deactivationReason";
+import type { ServiceCategory } from "../serviceCategory";
 
 export type ServiceTypeResponseDTO = {
   id: number;
   name: string;
+  category: ServiceCategory | null;
 };
 
 export type CustomerSummaryResponseDTO = {
@@ -26,6 +28,11 @@ export type InspectionDetailResponseDTO = {
   serviceType: ServiceTypeResponseDTO;
   notes: string | null;
   artNumber: string | null;
+  manufacturer: string | null;
+  model: string | null;
+  capacity: string | null;
+  cylinderCount: number | null;
+  btu: number | null;
   expirationDate: string; // ISO date
   isActive: boolean;
   isRenewed: boolean;
