@@ -8,6 +8,8 @@ type Props = {
   saving?: boolean;
   /** true quando o formulário tem erros de validação — bloqueia o Salvar sem round-trip ao backend */
   saveDisabled?: boolean;
+  /** true quando a edição está indisponível — esconde o botão "Editar", só mostra o título */
+  readOnly?: boolean;
   onEdit: () => void;
   onCancel: () => void;
   onSave: () => void;
@@ -17,7 +19,7 @@ type Props = {
  * Cabeçalho reutilizável para cards editáveis.
  * Exibe o título e alterna entre botão "Editar" e botões "Cancelar / Salvar".
  */
-export function EditableCardHeader({ title, editing, saving = false, saveDisabled = false, onEdit, onCancel, onSave }: Props) {
+export function EditableCardHeader({ title, editing, saving = false, saveDisabled = false, readOnly = false, onEdit, onCancel, onSave }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -26,7 +28,7 @@ export function EditableCardHeader({ title, editing, saving = false, saveDisable
         {title}
       </Typography>
 
-      {!editing ? (
+      {readOnly ? null : !editing ? (
         <Button startIcon={<EditIcon />} onClick={onEdit}>
           {t("common.actions.edit")}
         </Button>

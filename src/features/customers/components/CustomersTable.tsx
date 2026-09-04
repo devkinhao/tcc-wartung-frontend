@@ -36,11 +36,11 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
     <DataTableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="26%" />
-            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="17%" />
-            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="16%" />
+            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="30%" />
+            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="18%" />
+            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="18%" />
             <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="11%" />
-            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="16%" />
+            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="21%" />
             <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="14%" />
           </TableRow>
         </TableHead>

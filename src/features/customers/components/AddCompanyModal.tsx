@@ -27,7 +27,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { CepTextField } from "@/components/CepTextField";
-import { CnpjTextField } from "@/components/CnpjTextField";
+import { CnpjTextField, type CnpjLookupStatus } from "@/components/CnpjTextField";
 import { fieldError } from "@/validation/fields";
 import { companyGeneralSchema, companyContactsSchema, companyAddressSchema } from "../schemas";
 import { useNotify } from "@/hooks/useNotify";
@@ -86,6 +86,11 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const [submitting, setSubmitting] = useState(false);
   const [createdId, setCreatedId] = useState<number | null>(null);
 
+  // Os demais campos do passo 1 só liberam depois que o CNPJ é consultado na
+  // ReceitaWS (encontrado ou não) — assim os dados sempre são puxados primeiro.
+  const [cnpjStatus, setCnpjStatus] = useState<CnpjLookupStatus>("empty");
+  const detailsUnlocked = cnpjStatus === "found" || cnpjStatus === "notFound";
+
   const navigate = useNavigate();
 
   const abvtexOptions = useMemo(
@@ -105,6 +110,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     setForm(defaultForm);
     setSubmitting(false);
     setCreatedId(null);
+    setCnpjStatus("empty");
     onClose();
   };
 
@@ -136,7 +142,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const phoneError  = form.phone.trim()  !== "" && !!fieldError(contacts, "phone");
   const mobileError = form.mobile.trim() !== "" && !!fieldError(contacts, "mobilePhone");
 
-  const step1Valid = general.success && contacts.success;
+  const step1Valid = detailsUnlocked && general.success && contacts.success;
   const step2Valid = address.success;
 
   const onSubmit = async () => {
@@ -273,9 +279,16 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 value={form.cnpj}
                 onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
                 onCompanyFound={handleCnpjFound}
+                onStatusChange={setCnpjStatus}
                 required
                 error={cnpjError}
-                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
+                helperText={
+                  cnpjError
+                    ? t("validation.cnpjInvalid")
+                    : !detailsUnlocked
+                      ? t("customers.addModal.cnpjFirst")
+                      : undefined
+                }
               />
             </Grid>
 
@@ -287,6 +300,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, fantasyName: e.target.value }))}
                 fullWidth
                 size="small"
+                disabled={!detailsUnlocked}
                 slotProps={{
                   htmlInput: { maxLength: 100 }
                 }}
@@ -302,6 +316,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 fullWidth
                 size="small"
                 required
+                disabled={!detailsUnlocked}
                 slotProps={{
                   htmlInput: { maxLength: 100 }
                 }}
@@ -309,7 +324,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
             </Grid>
 
             <Grid size={{ xs: 12, md: 6 }}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" disabled={!detailsUnlocked}>
                 <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
                 <Select
                   labelId="abvtex"
@@ -336,6 +351,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(v) => setForm((p) => ({ ...p, phone: v }))}
                 fullWidth
                 size="small"
+                disabled={!detailsUnlocked}
                 error={phoneError}
                 helperText={phoneError ? t("validation.phoneInvalid") : undefined}
               />
@@ -349,6 +365,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(v) => setForm((p) => ({ ...p, mobile: v }))}
                 fullWidth
                 size="small"
+                disabled={!detailsUnlocked}
                 error={mobileError}
                 helperText={mobileError ? t("validation.mobileInvalid") : undefined}
               />
@@ -362,6 +379,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 fullWidth
                 size="small"
+                disabled={!detailsUnlocked}
                 error={emailError}
                 helperText={emailError ? t("validation.emailInvalid") : undefined}
                 slotProps={{

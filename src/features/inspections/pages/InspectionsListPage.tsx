@@ -253,10 +253,10 @@ export default function InspectionsListPage() {
       <DataTableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="14%" />
-            <SortableHeader label={t("inspections.table.service")} column="serviceType.name" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="25%" />
-            <SortableHeader label={t("inspections.table.customer")} column="customer.legalName" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="35%" />
-            <SortableHeader label={t("inspections.table.expirationDate")} column="expirationDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="12%" />
+            <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="18%" />
+            <SortableHeader label={t("inspections.table.service")} column="serviceType.name" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="24%" />
+            <SortableHeader label={t("inspections.table.customer")} column="customer.legalName" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="31%" />
+            <SortableHeader label={t("inspections.table.expirationDate")} column="expirationDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="16%" />
             <TableCell align="center" sx={{ width: "14%" }}><b>{t("inspections.table.actions")}</b></TableCell>
           </TableRow>
         </TableHead>

@@ -142,6 +142,10 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
 
   const documents = docsQuery.data ?? view?.documents ?? [];
 
+  // Inspeção inativa fica somente-leitura: nada de editar dados nem anexar/
+  // excluir documentos até que o usuário a reative.
+  const readOnly = view != null && !view.isActive;
+
   // Trocar de inspeção (ou reabrir) descarta qualquer rascunho pendente.
   const [loadedId, setLoadedId] = useState(id);
   if (id !== loadedId) {
@@ -217,7 +221,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
       (draft.artNumber ?? "") !== (view.artNumber ?? ""));
 
   const startEditing = () => {
-    if (view) setDraft(view);
+    if (readOnly || !view) return;
+    setDraft(view);
     setEditing(true);
   };
 
@@ -396,6 +401,7 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   editing={editing}
                   saving={mutation.isPending}
                   saveDisabled={!isGeneralValid}
+                  readOnly={readOnly}
                   onEdit={startEditing}
                   onCancel={cancelEditing}
                   onSave={handleSave}
@@ -498,13 +504,18 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   sx={{ mb: 2 }}
                 >
                   <Typography variant="subtitle2">{t("inspectionDetails.sections.documents")}</Typography>
-                  <Button
-                    variant="outlined"
-                    startIcon={<UploadFileIcon />}
-                    onClick={() => setUploadOpen(true)}
-                  >
-                    {t("inspectionDetails.documents.actions.upload")}
-                  </Button>
+                  <Tooltip title={readOnly ? t("inspectionDetails.documents.lockedHint") : ""}>
+                    <span>
+                      <Button
+                        variant="outlined"
+                        startIcon={<UploadFileIcon />}
+                        onClick={() => setUploadOpen(true)}
+                        disabled={readOnly}
+                      >
+                        {t("inspectionDetails.documents.actions.upload")}
+                      </Button>
+                    </span>
+                  </Tooltip>
                 </Stack>
 
                 <DataTableContainer stickyHeader={false}>
@@ -555,15 +566,17 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                                   <DownloadIcon fontSize="small" />
                                 </IconButton>
                               </Tooltip>
-                              <Tooltip title={t("inspectionDetails.documents.table.actions")}>
-                                <IconButton
-                                  size="small"
-                                  aria-label={t("inspectionDetails.documents.table.actions")}
-                                  onClick={(e) => openDocMenu(e, d.id)}
-                                >
-                                  <MoreVertIcon fontSize="small" />
-                                </IconButton>
-                              </Tooltip>
+                              {readOnly ? null : (
+                                <Tooltip title={t("inspectionDetails.documents.table.actions")}>
+                                  <IconButton
+                                    size="small"
+                                    aria-label={t("inspectionDetails.documents.table.actions")}
+                                    onClick={(e) => openDocMenu(e, d.id)}
+                                  >
+                                    <MoreVertIcon fontSize="small" />
+                                  </IconButton>
+                                </Tooltip>
+                              )}
                             </Stack>
                           </TableCell>
                         </TableRow>

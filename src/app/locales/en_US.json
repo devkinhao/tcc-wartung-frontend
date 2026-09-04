@@ -458,6 +458,7 @@
         "step2": "Company address",
         "done": "All set"
       },
+      "cnpjFirst": "Enter the CNPJ to look up the company data from Receita",
       "fields": {
         "fantasyName": "Trade name",
         "legalName": "Legal name",
@@ -736,6 +737,7 @@
     "documents": {
       "loading": "Loading documents...",
       "empty": "No documents found.",
+      "lockedHint": "Reactivate the inspection to attach or remove documents.",
       "table": {
         "name": "Name",
         "size": "Size",
@@ -843,7 +845,8 @@
       "FILE_EXTENSION_MISSING": "The file must have an extension.",
       "SERVICE_TYPE_ALREADY_EXISTS": "This service type already exists.",
       "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections.",
-      "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed."
+      "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed.",
+      "INSPECTION_INACTIVE": "Inactive inspection. Reactivate it before editing or attaching documents."
     }
   },
   "inspections": {

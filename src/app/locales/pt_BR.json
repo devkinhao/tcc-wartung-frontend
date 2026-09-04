@@ -458,6 +458,7 @@
         "step2": "Endereço da empresa",
         "done": "Tudo pronto"
       },
+      "cnpjFirst": "Informe o CNPJ para buscar os dados da empresa na Receita",
       "fields": {
         "fantasyName": "Nome fantasia",
         "legalName": "Razão social",
@@ -736,6 +737,7 @@
     "documents": {
       "loading": "Carregando documentos...",
       "empty": "Nenhum documento encontrado.",
+      "lockedHint": "Reative a inspeção para anexar ou remover documentos.",
       "table": {
         "name": "Nome",
         "size": "Tamanho",
@@ -843,7 +845,8 @@
       "FILE_EXTENSION_MISSING": "O arquivo precisa ter uma extensão.",
       "SERVICE_TYPE_ALREADY_EXISTS": "Este tipo de serviço já existe.",
       "SERVICE_TYPE_HAS_INSPECTIONS": "Não é possível excluir: este tipo de serviço possui inspeções vinculadas.",
-      "INSPECTION_ALREADY_RENEWED": "Esta inspeção já foi renovada."
+      "INSPECTION_ALREADY_RENEWED": "Esta inspeção já foi renovada.",
+      "INSPECTION_INACTIVE": "Inspeção inativa. Reative-a antes de editar ou anexar documentos."
     }
   },
   "inspections": {
