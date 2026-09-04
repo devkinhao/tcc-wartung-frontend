@@ -1,5 +1,5 @@
 import { useState, type SyntheticEvent } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -20,9 +20,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ArrowBackIcon      from "@mui/icons-material/ArrowBack";
 import WhatsAppIcon       from "@mui/icons-material/WhatsApp";
 import MoreVertIcon       from "@mui/icons-material/MoreVert";
+import ContentCopyIcon    from "@mui/icons-material/ContentCopy";
 import { useTranslation } from "react-i18next";
 
 import { useCustomerDetail }       from "../hooks/useCustomerDetail";
@@ -40,6 +40,7 @@ import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 import { UnsavedChangesGuard } from "@/components/UnsavedChangesGuard";
+import { useNotify } from "@/hooks/useNotify";
 import { typography } from "@/styles/typography";
 
 type TabKey = "general" | "address" | "inspections";
@@ -53,7 +54,7 @@ function isTabKey(value: string | null): value is TabKey {
 export default function CustomerDetailsPage() {
   const { t }        = useTranslation();
   const { id }       = useParams();
-  const navigate     = useNavigate();
+  const notify       = useNotify();
   const [searchParams, setSearchParams] = useSearchParams();
   const cities       = useCities();
 
@@ -173,22 +174,30 @@ export default function CustomerDetailsPage() {
         <Box sx={{ px: 2, py: 1.5 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
             <Box sx={{ minWidth: 0 }}>
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-                <Tooltip title={t("customerDetails.actions.back")}>
-                  <IconButton size="small" onClick={() => navigate(paths.customers)}
-                    aria-label={t("customerDetails.actions.back")}>
-                    <ArrowBackIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap>
-                  {view.legalName}
-                </Typography>
-              </Stack>
+              <Typography fontWeight={typography.weight.bold} color="text.primary" noWrap>
+                {view.legalName}
+              </Typography>
 
               <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 0.5, flexWrap: "wrap" }}>
-                <Typography variant="body2" color="text.secondary">
-                  {t("customerDetails.summary.cnpj")} {view.cnpj}
-                </Typography>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <Typography variant="body2" color="text.secondary">
+                    {t("customerDetails.summary.cnpj")} {view.cnpj}
+                  </Typography>
+                  <Tooltip title={t("customerDetails.actions.copyCnpj")}>
+                    <IconButton
+                      size="small"
+                      aria-label={t("customerDetails.actions.copyCnpj")}
+                      onClick={() => {
+                        navigator.clipboard
+                          ?.writeText(view.cnpj)
+                          .then(() => notify.success("notify.success.copied"))
+                          .catch(() => notify.error("notify.error.generic"));
+                      }}
+                    >
+                      <ContentCopyIcon sx={{ fontSize: 16 }} />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
                 <Chip
                   size="small"
                   label={view.isCustomer ? t("customerDetails.status.active") : t("customerDetails.status.inactive")}

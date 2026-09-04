@@ -418,8 +418,7 @@
       "cnpj": "CNPJ",
       "city": "City",
       "isCustomer": "Customer?",
-      "abvtex": "ABVTEX",
-      "activeInspections": "Active insp.",
+      "activeInspections": "Active inspections",
       "nextExpiration": "Expiration",
       "actions": "Actions",
       "inactive": "Inactive"
@@ -602,9 +601,9 @@
       "inactive": "INACTIVE"
     },
     "actions": {
-      "back": "Back",
       "actions": "Actions",
       "delete": "Delete company",
+      "copyCnpj": "Copy CNPJ",
       "whatsapp": "WhatsApp",
       "email": "Email"
     },
@@ -782,6 +781,7 @@
   "notify": {
     "success": {
       "saved": "Changes saved successfully",
+      "copied": "Copied to clipboard",
       "passwordChanged": "Password changed successfully",
       "reportGenerated": "Report generated — check your downloads.",
       "profileUpdated": "Profile updated successfully",

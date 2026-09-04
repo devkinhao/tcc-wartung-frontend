@@ -5,7 +5,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Customer } from "../types/customersList";
-import { AbvtexChip } from "./AbvtexChip";
 import { SortableHeader } from "@/components/SortableHeader";
 import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
@@ -37,20 +36,19 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
     <DataTableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="24%" />
-            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="16%" />
-            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="14%" />
-            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="10%" />
-            <SortableHeader label={t("customers.table.abvtex")} column="abvtexSeal" {...sharedSortProps} align="center" width="12%" />
-            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="12%" />
-            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="12%" />
+            <SortableHeader label={t("customers.table.legalName")} column="legalName" {...sharedSortProps} width="26%" />
+            <SortableHeader label={t("customers.table.cnpj")} column="cnpj" {...sharedSortProps} width="17%" />
+            <SortableHeader label={t("customers.table.city")} column="city" {...sharedSortProps} width="16%" />
+            <SortableHeader label={t("customers.table.isCustomer")} column="isCustomer" {...sharedSortProps} align="center" width="11%" />
+            <SortableHeader label={t("customers.table.activeInspections")} column="activeInspections" {...sharedSortProps} align="center" width="16%" />
+            <SortableHeader label={t("customers.table.nextExpiration")} column="nextExpirationDate" {...sharedSortProps} align="center" width="14%" />
           </TableRow>
         </TableHead>
 
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+              <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
                 <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1.5 }}>
                   <CircularProgress size={18} />
                   <Typography variant="body2" color="text.secondary">{t("customers.loading")}</Typography>
@@ -59,7 +57,7 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
             </TableRow>
           ) : customers.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+              <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                 <Typography variant="body2" color="text.secondary">{t("customers.empty")}</Typography>
               </TableCell>
             </TableRow>
@@ -99,7 +97,6 @@ export function CustomersTable({ customers, loading, sortBy, sortDir, onSort }: 
                       variant={c.isCustomer ? "filled" : "outlined"}
                     />
                   </TableCell>
-                  <TableCell align="center"><AbvtexChip seal={c.abvtexSeal} /></TableCell>
                   <TableCell align="center">{c.activeInspections}</TableCell>
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                     <ExpirationChip date={c.nextExpirationDate} alertDays={alertDays} />
