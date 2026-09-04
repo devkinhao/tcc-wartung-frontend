@@ -1,9 +1,28 @@
-import { useEffect, useMemo } from "react";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+/** Domínio. */
 import { useAuth } from "@/features/auth/useAuth";
 import { usePreferences } from "@/features/preferences/usePreferences";
+/** Estilização. */
 import { tokens } from "@/styles/tokens";
 import { typography } from "@/styles/typography";
+/** MUI Material. */
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+/** React. */
+import { useEffect, useMemo } from "react";
+
+/** Tipos personalizados para o tema do MUI. */
+declare module "@mui/material/styles" {
+  interface TypeText {
+    contrast: string;
+  }
+
+  interface Palette {
+    autofill: string;
+  }
+
+  interface PaletteOptions {
+    autofill?: string;
+  }
+}
 
 function buildTheme(mode: "light" | "dark") {
   const t = tokens[mode];
@@ -14,24 +33,21 @@ function buildTheme(mode: "light" | "dark") {
       primary: { main: t.brand.blue },
       secondary: { main: t.brand.green },
       background: { default: t.bg.screen, paper: t.bg.card },
-      text: { primary: t.text.primary, secondary: t.text.secondary },
+      text: {
+        primary: t.text.primary,
+        secondary: t.text.secondary,
+        contrast: t.text.contrast,
+      },
+      autofill: t.bg.autofill,
       success: { main: t.semantic.success },
       warning: { main: t.semantic.warning },
       error: { main: t.semantic.danger },
     },
-    shape: { borderRadius: 8 },
+    /** Forma dos componentes do sistema. */
+    shape: { borderRadius: 15 },
     typography: {
       fontFamily: typography.fontFamily,
-      // Base de 16px (o padrão do MUI é 14). O sistema é usado no dia a dia por
-      // um público mais velho — todo o texto derivado desta base fica ~15% maior.
       fontSize: 16,
-      // Pesos já usados de forma consistente pelo app para títulos de página
-      // (h6, via Breadcrumb size="large") e cabeçalhos de seção/card
-      // (subtitle1/subtitle2) — centralizados aqui em vez de repetidos
-      // como fontWeight inline em cada Typography.
-      h6: { fontWeight: typography.weight.semibold },
-      subtitle1: { fontWeight: typography.weight.semibold },
-      subtitle2: { fontWeight: typography.weight.bold },
     },
     components: {
       MuiCssBaseline: {
@@ -48,6 +64,16 @@ function buildTheme(mode: "light" | "dark") {
       },
       MuiAppBar: { styleOverrides: { root: { backgroundColor: t.bg.header } } },
       MuiDrawer: { styleOverrides: { paper: { backgroundColor: t.bg.sidebar } } },
+      MuiButton: {
+        styleOverrides: {
+          root: { textTransform: "none" },
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: { textTransform: "none" },
+        },
+      },
       MuiListItemButton: {
         styleOverrides: {
           root: {
@@ -60,6 +86,7 @@ function buildTheme(mode: "light" | "dark") {
 }
 
 export function MuiThemeProvider({ children }: { children: React.ReactNode }) {
+  /** Hooks */
   const { isAuthenticated } = useAuth();
   const { preferences } = usePreferences();
 
@@ -67,7 +94,6 @@ export function MuiThemeProvider({ children }: { children: React.ReactNode }) {
     ? "light"
     : (String(preferences.THEME || localStorage.getItem("theme") || "light").toLowerCase() as "light" | "dark");
 
-  // Persist choice (optional)
   useEffect(() => {
     localStorage.setItem("theme", mode);
   }, [mode]);

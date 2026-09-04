@@ -13,8 +13,15 @@
     "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters)"
   },
   "common": {
-    "logoAlt": "Logo",
-    "avatarAlt": "Avatar",
+    "alt": {
+      "logo": "Wartung logo",
+      "avatar": "User avatar"
+    },
+    "tooltip": {
+      "logo": "Go to home page",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
     "userAvatar": "User avatar",
     "noDataAvailable": "No data available at the moment",
     "yes": "Yes",
@@ -30,9 +37,7 @@
       "close": "Close",
       "confirm": "Confirm",
       "retry": "Retry",
-      "more": "More actions",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password"
+      "more": "More actions"
     },
     "loading": "Loading...",
     "cep": {
@@ -509,23 +514,36 @@
     }
   },
   "login": {
+    "title": "Welcome to Wartung",
+    "subtitle": "Sign in to your account to continue.",
     "fields": {
       "username": "Username",
-      "password": "Password"
+      "password": "Password",
+      "placeholder": {
+        "username": "Enter the username",
+        "password": "Enter the password"
+      }
     },
     "actions": {
       "signIn": "Sign in",
       "signingIn": "Signing in...",
       "waitSeconds": "Wait {{seconds}}s...",
-      "forgotPassword": "Forgot my password"
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot my password",
+      "tooltip": {
+        "rememberMe": "Remember the username on this device",
+        "forgotPassword": "Go to password reset",
+        "signIn": "Log in to Wartung"
+      }
     },
     "welcome": {
-      "title": "Welcome!",
-      "subtitle": "Manage companies and inspections with ease."
+      "title": "Management of Engenharia Maas",
+      "subtitle": "Manage customers and inspections with ease, all in one place."
     },
     "errors": {
-      "invalidCredentials": "Invalid username or password",
-      "tooManyAttempts": "Too many login attempts. Please wait a moment before trying again."
+      "mandatoryCredentials": "Username and password are required.",
+      "invalidCredentials": "Invalid username or password.",
+      "tooManyAttempts": "Too many login attempts, please wait."
     }
   },
   "forgotPassword": {

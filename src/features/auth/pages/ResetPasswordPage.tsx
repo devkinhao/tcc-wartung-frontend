@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
       >
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-            <Box component="img" src="/logo.png" alt={t("common.logoAlt")} sx={{ height: 40 }} />
+            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 40 }} />
             <Typography variant="h6" fontWeight={typography.weight.extrabold} color="primary">
               {t("app.brandName")}
             </Typography>

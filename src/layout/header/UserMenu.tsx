@@ -83,7 +83,7 @@ export function UserMenu() {
             <Avatar
               src={avatarSrc}
               sx={{ width: 32, height: 32 }}
-              alt={t("common.avatarAlt")}
+              alt={t("common.alt.avatar")}
             />
           ) : (
             <Avatar sx={{ width: 32, height: 32 }} aria-label={t("common.userAvatar")}>

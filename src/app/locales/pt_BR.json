@@ -13,8 +13,15 @@
     "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres)"
   },
   "common": {
-    "logoAlt": "Logo",
-    "avatarAlt": "Avatar",
+    "alt": {
+      "logo": "Logo Wartung",
+      "avatar": "Avatar do usuário"
+    },
+    "tooltip": {
+      "logo": "Ir para a página inicial",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha"
+    },
     "userAvatar": "Avatar do usuário",
     "noDataAvailable": "Nenhum dado disponível no momento",
     "yes": "Sim",
@@ -30,9 +37,7 @@
       "close": "Fechar",
       "confirm": "Confirmar",
       "retry": "Tentar novamente",
-      "more": "Mais ações",
-      "showPassword": "Mostrar senha",
-      "hidePassword": "Ocultar senha"
+      "more": "Mais ações"
     },
     "loading": "Carregando...",
     "cep": {
@@ -509,23 +514,36 @@
     }
   },
   "login": {
+    "title": "Bem-vindo(a) ao Wartung",
+    "subtitle": "Entre na sua conta para continuar.",
     "fields": {
-      "username": "Usuário",
-      "password": "Senha"
+      "username": "Nome de usuário",
+      "password": "Senha",
+      "placeholder": {
+        "username": "Informe o usuário",
+        "password": "Informe a senha"
+      }
     },
     "actions": {
       "signIn": "Entrar",
       "signingIn": "Entrando...",
       "waitSeconds": "Aguarde {{seconds}}s...",
-      "forgotPassword": "Esqueci minha senha"
+      "rememberMe": "Lembrar de mim",
+      "forgotPassword": "Esqueci minha senha",
+      "tooltip": {
+        "rememberMe": "Lembrar o nome de usuário neste dispositivo",
+        "forgotPassword": "Ir para a redefinição de senha",
+        "signIn": "Iniciar sessão no Wartung"
+      }
     },
     "welcome": {
-      "title": "Bem-vindo!",
-      "subtitle": "Gerencie empresas e inspeções com facilidade."
+      "title": "A gestão da Engenharia Maas",
+      "subtitle": "Gerencie clientes e inspeções com facilidade, tudo em um só lugar."
     },
     "errors": {
-      "invalidCredentials": "Usuário ou senha inválidos",
-      "tooManyAttempts": "Muitas tentativas de login. Aguarde um momento antes de tentar novamente."
+      "mandatoryCredentials": "Usuário e senha são obrigatórios.",
+      "invalidCredentials": "Usuário ou senha inválidos.",
+      "tooManyAttempts": "Muitas tentativas de login, por favor aguarde."
     }
   },
   "forgotPassword": {

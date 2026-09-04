@@ -238,7 +238,7 @@ export default function UserProfile() {
                     <Avatar
                       src={avatarPreview}
                       sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}
-                      alt={t("common.avatarAlt")}
+                      alt={t("common.alt.avatar")}
                     />
                   ) : (
                     <Avatar sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}>

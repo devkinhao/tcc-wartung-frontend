@@ -1,28 +1,38 @@
-import { IconButton, InputAdornment, Tooltip } from "@mui/material";
+/** MUI Ícones. */
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+/** MUI Material. */
+import { IconButton, InputAdornment } from "@mui/material";
+/** React. */
 import { useTranslation } from "react-i18next";
+/** Componentes */
+import { Tooltip } from "./Tooltip";
 
-type Props = {
-  /** true = senha visível (mostra o ícone de "ocultar"). */
+/** Props para o componente. */
+type PasswordVisibilityToggleProps = {
   visible: boolean;
   onToggle: () => void;
 };
 
-/**
- * Adorno de fim para campos de senha: alterna a visibilidade do texto.
- * Centraliza o botão + tooltip + aria-label, antes repetidos em cada tela
- * com campo de senha (login, redefinir senha, perfil, cadastro de usuário).
- */
-export function PasswordVisibilityToggle({ visible, onToggle }: Props) {
+/** Adorno de fim para campos de senha, alterna a visibilidade do texto. */
+export function PasswordVisibilityToggle({ visible, onToggle }: PasswordVisibilityToggleProps) {
   const { t } = useTranslation();
-  const label = visible ? t("common.actions.hidePassword") : t("common.actions.showPassword");
+  const label = visible ? t("common.tooltip.hidePassword") : t("common.tooltip.showPassword");
 
   return (
     <InputAdornment position="end">
       <Tooltip title={label}>
-        <IconButton onClick={onToggle} edge="end" aria-label={label}>
-          {visible ? <VisibilityOffIcon /> : <VisibilityIcon />}
+        <IconButton
+          size="small"
+          edge="end"
+          onClick={onToggle}
+          aria-label={label}
+        >
+          {visible ? (
+            <VisibilityOffIcon fontSize="small" />
+          ) : (
+            <VisibilityIcon fontSize="small" />
+          )}
         </IconButton>
       </Tooltip>
     </InputAdornment>

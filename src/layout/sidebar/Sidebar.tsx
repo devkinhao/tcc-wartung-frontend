@@ -150,7 +150,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             flexShrink: 0,
           }}
         >
-          <Box component="img" src="/logo.png" alt={t("common.logoAlt")} sx={{ height: 32, width: "auto" }} />
+          <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 32, width: "auto" }} />
         </Box>
 
         {!collapsed && (

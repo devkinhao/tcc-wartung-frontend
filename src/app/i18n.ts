@@ -1,5 +1,6 @@
-/** React I18Next. */
+/** I18Next. */
 import i18n from "i18next";
+/** React. */
 import { initReactI18next } from "react-i18next";
 /** Traduções. */
 import enUS from "./locales/en_US.json";
