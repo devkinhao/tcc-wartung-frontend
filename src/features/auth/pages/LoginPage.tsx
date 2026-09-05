@@ -35,6 +35,26 @@ import { useAuth } from "../useAuth";
 /** Valor padrão para o tempo de espera. */
 const FALLBACK_RATE_LIMIT_COOLDOWN_SECONDS = 15;
 
+/** Nome de usuário lembrado neste dispositivo ("Lembrar de mim"). */
+const REMEMBERED_USERNAME_KEY = "login:username";
+
+function readRememberedUsername(): string | null {
+  try {
+    return localStorage.getItem(REMEMBERED_USERNAME_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function persistRememberedUsername(username: string | null) {
+  try {
+    if (username) localStorage.setItem(REMEMBERED_USERNAME_KEY, username);
+    else localStorage.removeItem(REMEMBERED_USERNAME_KEY);
+  } catch {
+    // localStorage indisponível (aba anônima, quota) — apenas ignora.
+  }
+}
+
 export default function LoginPage() {
   /** Hooks. */
   const navigate = useNavigate();
@@ -42,7 +62,8 @@ export default function LoginPage() {
   const { t } = useTranslation();
 
   /** Estados. */
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(() => readRememberedUsername() ?? "");
+  const [rememberMe, setRememberMe] = useState(() => readRememberedUsername() !== null);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -70,6 +91,7 @@ export default function LoginPage() {
 
     try {
       const { token } = await loginRequest({ username, password });
+      persistRememberedUsername(rememberMe ? username.trim() : null);
       await login(token);
       navigate(paths.home);
     } catch (err) {
@@ -97,21 +119,20 @@ export default function LoginPage() {
         size={{ xs: 12, md: 6 }}
         sx={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          flexDirection: "column",
           bgcolor: "background.paper",
+          px: 3,
+          overflowY: "auto",
         }}
       >
-        {/** Logo do sistema. */}
+        {/** Logo do sistema — ancorada no topo do painel, no fluxo. */}
         <Box
           sx={{
-            position: "absolute",
-            top: 30,
-            left: 20,
             display: "flex",
             alignItems: "center",
             gap: 1,
-            textDecoration: "none",
+            pt: 2.5,
+            flexShrink: 0,
           }}
         >
           <Box
@@ -133,8 +154,14 @@ export default function LoginPage() {
             {t("app.brandName")}
           </Typography>
         </Box>
-        {/** Formulário de login. */}
-        <Box display="flex" flexDirection="column" gap={5} width={415}>
+        {/** Formulário — centralizado no espaço restante; `my: auto` centraliza
+             quando sobra espaço e recolhe (sem cortar) em telas baixas. */}
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={5}
+          sx={{ width: 415, maxWidth: "100%", alignSelf: "center", my: "auto", py: 3 }}
+        >
           {/** Título e subtítulo. */}
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="h6" color="primary">
@@ -201,7 +228,14 @@ export default function LoginPage() {
               {/** Lembrar o usuário. */}
               <Tooltip title={t("login.actions.tooltip.rememberMe")}>
                 <FormControlLabel
-                  control={<Checkbox size="small" sx={{ p: 0.6 }} />}
+                  control={
+                    <Checkbox
+                      size="small"
+                      sx={{ p: 0.6 }}
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                  }
                   label={
                     <Typography variant="body2">
                       {t("login.actions.rememberMe")}
