@@ -347,6 +347,7 @@
         "security": "Segurança"
       },
       "permissionsHint": "Marque ou desmarque as permissões.",
+      "lastAdminLock": "Não é possível remover: este é o único administrador ativo do sistema.",
       "resetPasswordHint": "Defina uma nova senha para o usuário e clique em Resetar senha.",
       "newPassword": "Nova senha",
       "resetPassword": "Resetar senha"
@@ -888,7 +889,8 @@
       "SERVICE_TYPE_HAS_INSPECTIONS": "Não é possível excluir: este tipo de serviço possui inspeções vinculadas.",
       "INSPECTION_ALREADY_RENEWED": "Esta inspeção já foi renovada.",
       "INSPECTION_INACTIVE": "Inspeção inativa. Reative-a antes de editar ou anexar documentos.",
-      "SERVICE_FIELDS_REQUIRED": "Preencha os dados do equipamento exigidos para este serviço."
+      "SERVICE_FIELDS_REQUIRED": "Preencha os dados do equipamento exigidos para este serviço.",
+      "LAST_ADMIN": "Não é possível: o sistema precisa ter pelo menos um administrador ativo."
     }
   },
   "inspections": {

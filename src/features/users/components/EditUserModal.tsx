@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { qk } from "@/api/keys";
 import {
   Box,
   Button,
@@ -65,6 +67,22 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
   // permissions (store name, show description)
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+
+  // Lista de usuários (cache do react-query, já carregada pela UsersPage) —
+  // usada só para saber se este é o último admin ativo do sistema.
+  const { data: allUsers = [] } = useQuery({
+    queryKey: qk.users(),
+    queryFn: () => usersApi.findAll(),
+    enabled: open,
+  });
+  const activeAdminCount = useMemo(
+    () => allUsers.filter((u) => u.isActive && (u.permissions ?? []).includes("ROLE_ADMIN")).length,
+    [allUsers],
+  );
+  const isLastActiveAdmin =
+    (user?.isActive ?? false) &&
+    (user?.permissions ?? []).includes("ROLE_ADMIN") &&
+    activeAdminCount <= 1;
 
   // reset password
   const [newPassword, setNewPassword] = useState("");
@@ -298,18 +316,28 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 {allPermissions.map((perm) => {
                   const checked = selectedPermissions.includes(perm.name);
                   const label = perm.description || perm.name; // show ONLY description to the admin UI
-                  return (
+                  // Não deixa desmarcar o ROLE_ADMIN do último admin ativo — o
+                  // backend também barra (código LAST_ADMIN).
+                  const locked = perm.name === "ROLE_ADMIN" && isLastActiveAdmin;
+                  const control = (
                     <FormControlLabel
                       key={perm.id}
                       control={
                         <Checkbox
                           checked={checked}
                           onChange={(e) => togglePermission(perm.name, e.target.checked)}
-                          disabled={savingPerms}
+                          disabled={savingPerms || locked}
                         />
                       }
                       label={label}
                     />
+                  );
+                  return locked ? (
+                    <Tooltip key={perm.id} title={t("users.edit.lastAdminLock")} placement="right">
+                      <span>{control}</span>
+                    </Tooltip>
+                  ) : (
+                    control
                   );
                 })}
               </FormGroup>

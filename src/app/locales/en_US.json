@@ -347,6 +347,7 @@
         "security": "Security"
       },
       "permissionsHint": "Check or uncheck permissions.",
+      "lastAdminLock": "Cannot remove: this is the only active administrator in the system.",
       "resetPasswordHint": "Set a new password and click Reset password.",
       "newPassword": "New password",
       "resetPassword": "Reset password"
@@ -888,7 +889,8 @@
       "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections.",
       "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed.",
       "INSPECTION_INACTIVE": "Inactive inspection. Reactivate it before editing or attaching documents.",
-      "SERVICE_FIELDS_REQUIRED": "Fill in the equipment data required for this service."
+      "SERVICE_FIELDS_REQUIRED": "Fill in the equipment data required for this service.",
+      "LAST_ADMIN": "Not allowed: the system must keep at least one active administrator."
     }
   },
   "inspections": {
