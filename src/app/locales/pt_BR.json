@@ -895,9 +895,13 @@
       "onTrack": "Em dia"
     },
     "filters": {
-      "search": "Buscar por empresa ou serviço",
+      "search": "Buscar por empresa",
       "status": "Status",
       "allStatuses": "Todos os status",
+      "service": "Serviço",
+      "allServices": "Todos os serviços",
+      "manufacturer": "Fabricante",
+      "model": "Modelo",
       "clear": "Limpar filtros",
       "statusAll": "Todas",
       "statusExpired": "Vencidas",

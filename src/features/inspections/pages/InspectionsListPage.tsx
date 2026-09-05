@@ -5,6 +5,10 @@ import {
   Button,
   Chip,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TableBody,
   TableCell,
@@ -17,6 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
@@ -45,17 +50,24 @@ import {
   type InspectionSortableColumn,
   type InspectionStatus,
 } from "../api/inspections.list.api";
+import { getServiceTypes } from "../api/inspections.create.api";
 import { paths } from "@/routes/paths";
 
 const VALID_STATUSES: InspectionStatus[] = ["expired", "near", "ok"];
 
-const INITIAL_FILTERS: InspectionListFilters = { status: "", search: "" };
+const INITIAL_FILTERS: InspectionListFilters = {
+  status: "",
+  search: "",
+  serviceTypeId: "",
+  manufacturer: "",
+  model: "",
+};
 
 export default function InspectionsListPage() {
   const { t } = useTranslation();
   const alertDays = useAlertDays();
 
-  const [filters, setFilters]   = useSessionStorageState<InspectionListFilters>("inspections-list.filters", INITIAL_FILTERS);
+  const [filters, setFilters]   = useSessionStorageState<InspectionListFilters>("inspections-list.filters.v2", INITIAL_FILTERS);
   const [page, setPage]         = useSessionStorageState("inspections-list.page", 1);
   const [pageSize, setPageSize] = useSessionStorageState("inspections-list.pageSize", 10);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -99,7 +111,14 @@ export default function InspectionsListPage() {
   };
 
   const debouncedSearch = useDebouncedValue(filters.search, 400);
-  const queryFilters = { ...filters, search: debouncedSearch };
+  const debouncedManufacturer = useDebouncedValue(filters.manufacturer, 400);
+  const debouncedModel = useDebouncedValue(filters.model, 400);
+  const queryFilters: InspectionListFilters = {
+    ...filters,
+    search: debouncedSearch,
+    manufacturer: debouncedManufacturer,
+    model: debouncedModel,
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionsList({ ...queryFilters, page, pageSize, sortBy, sortDir }),
@@ -107,19 +126,30 @@ export default function InspectionsListPage() {
     placeholderData: (prev) => prev,
   });
 
+  const { data: serviceTypes = [] } = useQuery({
+    queryKey: qk.serviceTypes(),
+    queryFn: getServiceTypes,
+    staleTime: 5 * 60 * 1000,
+  });
+
   useScrollRestoration("inspections-list.scrollY", !isLoading);
 
   const items = data?.content ?? [];
   const total = data?.page.totalElements ?? 0;
-  const hasActiveFilters = filters.search.trim() !== "" || filters.status !== "";
+  const hasActiveFilters =
+    filters.search.trim() !== "" ||
+    filters.status !== "" ||
+    filters.serviceTypeId !== "" ||
+    filters.manufacturer.trim() !== "" ||
+    filters.model.trim() !== "";
 
-  function setStatus(status: InspectionStatus | "") {
-    setFilters((p) => ({ ...p, status }));
+  function setFilter<K extends keyof InspectionListFilters>(key: K, value: InspectionListFilters[K]) {
+    setFilters((p) => ({ ...p, [key]: value }));
     setPage(1);
   }
 
-  function setSearch(search: string) {
-    setFilters((p) => ({ ...p, search }));
+  function clearFilters() {
+    setFilters(INITIAL_FILTERS);
     setPage(1);
   }
 
@@ -220,15 +250,48 @@ export default function InspectionsListPage() {
           size="small"
           label={t("inspections.filters.search")}
           value={filters.search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{ minWidth: { xs: "100%", sm: 240 }, flex: { sm: 1 }, maxWidth: { sm: 340 } }}
+          onChange={(e) => setFilter("search", e.target.value)}
+          sx={{ minWidth: { xs: "100%", sm: 220 }, flex: { sm: 1 }, maxWidth: { sm: 300 } }}
+        />
+
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 170 } }}>
+          <InputLabel id="inspections-service">{t("inspections.filters.service")}</InputLabel>
+          <Select
+            labelId="inspections-service"
+            label={t("inspections.filters.service")}
+            value={filters.serviceTypeId === "" ? "" : String(filters.serviceTypeId)}
+            onChange={(e) =>
+              setFilter("serviceTypeId", e.target.value === "" ? "" : Number(e.target.value))
+            }
+          >
+            <MenuItem value="">{t("inspections.filters.allServices")}</MenuItem>
+            {serviceTypes.map((s) => (
+              <MenuItem key={s.id} value={String(s.id)}>{s.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          size="small"
+          label={t("inspections.filters.manufacturer")}
+          value={filters.manufacturer}
+          onChange={(e) => setFilter("manufacturer", e.target.value)}
+          sx={{ width: { xs: "100%", sm: 150 } }}
+        />
+
+        <TextField
+          size="small"
+          label={t("inspections.filters.model")}
+          value={filters.model}
+          onChange={(e) => setFilter("model", e.target.value)}
+          sx={{ width: { xs: "100%", sm: 150 } }}
         />
 
         <ToggleButtonGroup
           size="small"
           exclusive
           value={filters.status}
-          onChange={(_, value) => setStatus(value ?? "")}
+          onChange={(_, value) => setFilter("status", (value ?? "") as InspectionStatus | "")}
           sx={{
             maxWidth: "100%",
             overflowX: "auto",
@@ -247,6 +310,18 @@ export default function InspectionsListPage() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
+
+        {hasActiveFilters && (
+          <Button
+            size="small"
+            color="inherit"
+            onClick={clearFilters}
+            startIcon={<FilterAltOffIcon fontSize="small" />}
+            sx={{ flexShrink: 0, color: "text.secondary", whiteSpace: "nowrap" }}
+          >
+            {t("inspections.filters.clear")}
+          </Button>
+        )}
       </Stack>
 
       {/* Tabela */}
@@ -291,7 +366,21 @@ export default function InspectionsListPage() {
               </TableCell>
             </TableRow>
           ) : (
-            items.map((item) => (
+            items.map((item) => {
+              // Linha de baixo da coluna Serviço: dados do equipamento + observações,
+              // na ordem, separados por espaço. Ignora os campos ainda não preenchidos.
+              const equipmentLine = [
+                item.manufacturer,
+                item.model,
+                item.capacity,
+                item.cylinderCount,
+                item.btu,
+                item.notes,
+              ]
+                .filter((v) => v != null && String(v).trim() !== "")
+                .join(" ");
+
+              return (
               <TableRow
                 key={item.id}
                 hover
@@ -303,9 +392,9 @@ export default function InspectionsListPage() {
                   <Typography variant="body2" noWrap title={item.serviceTypeName}>
                     {item.serviceTypeName}
                   </Typography>
-                  {item.notes ? (
-                    <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }} title={item.notes}>
-                      {item.notes}
+                  {equipmentLine ? (
+                    <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }} title={equipmentLine}>
+                      {equipmentLine}
                     </Typography>
                   ) : null}
                 </TableCell>
@@ -349,7 +438,8 @@ export default function InspectionsListPage() {
                   />
                 </TableCell>
               </TableRow>
-            ))
+              );
+            })
           )}
         </TableBody>
       </DataTableContainer>

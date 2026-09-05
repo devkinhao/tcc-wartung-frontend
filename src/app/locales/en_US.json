@@ -895,9 +895,13 @@
       "onTrack": "On Track"
     },
     "filters": {
-      "search": "Search by company or service",
+      "search": "Search by company",
       "status": "Status",
       "allStatuses": "All statuses",
+      "service": "Service",
+      "allServices": "All services",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
       "clear": "Clear filters",
       "statusAll": "All",
       "statusExpired": "Overdue",
