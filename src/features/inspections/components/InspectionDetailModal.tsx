@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
@@ -26,7 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DownloadIcon from "@mui/icons-material/Download";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -58,7 +58,6 @@ import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
-import { DocumentPicker } from "./DocumentPicker";
 import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
 import { deactivationReasonKey } from "../deactivationReason";
@@ -115,9 +114,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
   const [draft, setDraft] = useState<InspectionDetailResponseDTO | null>(null);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
 
-  const [uploadOpen, setUploadOpen] = useState(false);
-  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [docMenuAnchor, setDocMenuAnchor] = useState<HTMLElement | null>(null);
   const [docMenuTarget, setDocMenuTarget] = useState<number | null>(null);
@@ -177,8 +175,6 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(id) }),
       ]);
       if (customerId) qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
-      setUploadOpen(false);
-      setUploadFiles([]);
       notify.success("notify.success.documentsUploaded");
     },
     onError: (err) => notify.fromError(err),
@@ -545,14 +541,28 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                     <span>
                       <Button
                         variant="outlined"
-                        startIcon={<UploadFileIcon />}
-                        onClick={() => setUploadOpen(true)}
-                        disabled={readOnly}
+                        startIcon={
+                          uploadMutation.isPending ? <CircularProgress size={16} /> : <AttachFileIcon />
+                        }
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={readOnly || uploadMutation.isPending}
                       >
-                        {t("inspectionDetails.documents.actions.upload")}
+                        {t("inspectionDetails.documents.picker.select")}
                       </Button>
                     </span>
                   </Tooltip>
+                  {/* Seleção anexa direto — sem etapa de "preparar" arquivos. */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? []);
+                      e.target.value = ""; // permite re-selecionar o mesmo arquivo
+                      if (files.length > 0) uploadMutation.mutate(files);
+                    }}
+                  />
                 </Stack>
 
                 <DataTableContainer stickyHeader={false}>
@@ -726,32 +736,6 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
             }}
           >
             {t("common.actions.confirm")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Upload de documentos */}
-      <Dialog open={uploadOpen} onClose={() => setUploadOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t("inspectionDetails.documents.uploadDialog.title")}</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} sx={{ mt: 1 }}>
-            <DocumentPicker files={uploadFiles} onChange={setUploadFiles} disabled={uploadMutation.isPending} />
-            <Typography variant="caption" color="text.secondary">
-              {t("inspectionDetails.documents.uploadDialog.hint")}
-            </Typography>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setUploadOpen(false)} disabled={uploadMutation.isPending}>
-            {t("common.actions.cancel")}
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={uploadMutation.isPending ? <CircularProgress size={16} /> : <UploadFileIcon />}
-            onClick={() => uploadMutation.mutate(uploadFiles)}
-            disabled={uploadMutation.isPending || uploadFiles.length === 0}
-          >
-            {t("inspectionDetails.documents.uploadDialog.upload")}
           </Button>
         </DialogActions>
       </Dialog>

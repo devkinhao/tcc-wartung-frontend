@@ -789,19 +789,13 @@
       "actions": {
         "view": "Ver documento",
         "download": "Baixar",
-        "delete": "Excluir",
-        "upload": "Enviar documento"
+        "delete": "Excluir"
       },
       "confirmDeleteTitle": "Excluir documento",
       "confirmDelete": "Tem certeza que deseja excluir este documento?",
       "previewUnsupported": "Pré-visualização não disponível para este tipo de arquivo. Baixe o arquivo para visualizá-lo.",
-      "uploadDialog": {
-        "title": "Enviar documento",
-        "hint": "Envie um documento relacionado a esta inspeção.",
-        "upload": "Enviar"
-      },
       "picker": {
-        "select": "Selecionar arquivos"
+        "select": "Anexar documentos"
       }
     },
     "audit": {
