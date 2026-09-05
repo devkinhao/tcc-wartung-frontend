@@ -34,6 +34,7 @@ import { daysFromToday } from "@/utils/date";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
 import { listAllInspections, type InspectionListItem } from "../../inspections/api/inspections.list.api";
+import { equipmentSummary } from "../../inspections/utils/equipmentSummary";
 import { RenewInspectionModal, type RenewableInspection } from "../../inspections/components/RenewInspectionModal";
 import {
   DeactivateInspectionModal,
@@ -114,6 +115,7 @@ function AttentionRow({
         : t("home.attention.dueIn", { count: absDays, unit: dayUnit });
 
   const whatsappLink = row.customerMobilePhone ? buildWhatsAppLink(row.customerMobilePhone) : null;
+  const equipmentLine = equipmentSummary(row);
 
   return (
     <Stack
@@ -142,7 +144,7 @@ function AttentionRow({
           }}
         >
           <Typography variant="subtitle1" color="text.primary" noWrap className="home-attention-service">
-            {row.notes ? `${row.serviceTypeName} — ${row.notes}` : row.serviceTypeName}
+            {equipmentLine ? `${row.serviceTypeName} — ${equipmentLine}` : row.serviceTypeName}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
             {row.customerCity ? `${row.customerLegalName} · ${row.customerCity}` : row.customerLegalName}

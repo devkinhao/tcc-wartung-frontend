@@ -51,6 +51,7 @@ import {
   type InspectionStatus,
 } from "../api/inspections.list.api";
 import { getServiceTypes } from "../api/inspections.create.api";
+import { equipmentSummary } from "../utils/equipmentSummary";
 import { paths } from "@/routes/paths";
 
 const VALID_STATUSES: InspectionStatus[] = ["expired", "near", "ok"];
@@ -367,18 +368,8 @@ export default function InspectionsListPage() {
             </TableRow>
           ) : (
             items.map((item) => {
-              // Linha de baixo da coluna Serviço: dados do equipamento + observações,
-              // na ordem, separados por espaço. Ignora os campos ainda não preenchidos.
-              const equipmentLine = [
-                item.manufacturer,
-                item.model,
-                item.capacity,
-                item.cylinderCount,
-                item.btu,
-                item.notes,
-              ]
-                .filter((v) => v != null && String(v).trim() !== "")
-                .join(" ");
+              // Linha de baixo da coluna Serviço: equipamento + observações.
+              const equipmentLine = equipmentSummary(item);
 
               return (
               <TableRow
