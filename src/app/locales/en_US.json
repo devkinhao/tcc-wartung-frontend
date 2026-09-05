@@ -561,7 +561,10 @@
     "title": "Forgot my password",
     "subtitle": "Enter your registered email and we'll send you a link to reset your password.",
     "fields": {
-      "email": "Email"
+      "email": "Email",
+      "placeholder": {
+        "email": "Enter your email"
+      }
     },
     "actions": {
       "send": "Send recovery link",
@@ -579,7 +582,11 @@
     "subtitle": "Create a new password to access your account.",
     "fields": {
       "newPassword": "New password",
-      "confirmPassword": "Confirm new password"
+      "confirmPassword": "Confirm new password",
+      "placeholder": {
+        "newPassword": "Create a new password",
+        "confirmPassword": "Repeat the new password"
+      }
     },
     "actions": {
       "submit": "Reset password",

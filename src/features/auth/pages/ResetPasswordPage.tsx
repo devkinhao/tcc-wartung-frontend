@@ -5,15 +5,18 @@ import { resetPassword } from "../api/auth.api";
 import { useTranslation } from "react-i18next";
 import { paths } from "@/routes/paths";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
   Grid,
   Paper,
-  TextField,
   Typography,
   Link,
 } from "@mui/material";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { FormField } from "@/components/form/FormField";
 import { typography } from "@/styles/typography";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 import { resetPasswordSchema } from "../schemas";
@@ -63,6 +66,10 @@ export default function ResetPasswordPage() {
     }
   };
 
+  const passwordIcon = (
+    <LockOutlinedIcon fontSize="small" sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }} />
+  );
+
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       <Grid
@@ -76,102 +83,125 @@ export default function ResetPasswordPage() {
         }}
       >
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 40 }} />
-            <Typography variant="h6" fontWeight={typography.weight.extrabold} color="primary">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 45, borderRadius: 1 }} />
+            <Typography variant="h6" fontWeight={typography.weight.bold} color="primary">
               {t("app.brandName")}
             </Typography>
           </Box>
 
-          <Typography variant="h6" fontWeight={typography.weight.bold} gutterBottom>
-            {t("resetPassword.title")}
-          </Typography>
-
           {submitted ? (
-            <>
-              <Typography variant="body2" sx={{ mb: 3 }}>
+            <Box display="flex" flexDirection="column" gap={1}>
+              <Typography variant="h6" color="primary">
+                {t("resetPassword.title")}
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 2 }}>
                 {t("resetPassword.success")}
               </Typography>
-              <Button onClick={() => navigate(paths.login)} size="large" fullWidth sx={{ py: 1.3 }}>
-                {t("resetPassword.actions.backToLogin")}
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={() => navigate(paths.login)}
+                endIcon={<ArrowForwardOutlinedIcon />}
+              >
+                <Typography variant="subtitle1">
+                  {t("resetPassword.actions.backToLogin")}
+                </Typography>
               </Button>
-            </>
+            </Box>
           ) : !token ? (
-            <>
-              <Typography variant="body2" color="error" sx={{ mb: 3 }}>
-                {t("resetPassword.errors.missingToken")}
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Typography variant="h6" color="primary">
+                {t("resetPassword.title")}
               </Typography>
+              <Alert severity="error">{t("resetPassword.errors.missingToken")}</Alert>
               <Link component={RouterLink} to={paths.forgotPassword} variant="body2">
                 {t("forgotPassword.title")}
               </Link>
-            </>
+            </Box>
           ) : (
-            <>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                {t("resetPassword.subtitle")}
-              </Typography>
+            <Box display="flex" flexDirection="column" gap={3}>
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Typography variant="h6" color="primary">
+                  {t("resetPassword.title")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t("resetPassword.subtitle")}
+                </Typography>
+              </Box>
 
-              <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: 2 }}>
-                <TextField
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+              >
+                <FormField
+                  required
                   label={t("resetPassword.fields.newPassword")}
+                  placeholder={t("resetPassword.fields.placeholder.newPassword")}
                   type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   autoComplete="new-password"
                   autoFocus
-                  fullWidth
-                  required
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <PasswordVisibilityToggle
-                          visible={showPassword}
-                          onToggle={() => setShowPassword((p) => !p)}
-                        />
-                      ),
-                    }
-                  }}
+                  startIcon={passwordIcon}
+                  endIcon={
+                    <PasswordVisibilityToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((p) => !p)}
+                    />
+                  }
                 />
 
-                <TextField
+                <FormField
+                  required
                   label={t("resetPassword.fields.confirmPassword")}
+                  placeholder={t("resetPassword.fields.placeholder.confirmPassword")}
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
-                  fullWidth
-                  required
                   error={passwordMismatch}
                   helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
+                  startIcon={passwordIcon}
                 />
 
-                {error && (
-                  <Typography variant="body2" color="error">
-                    {error}
-                  </Typography>
-                )}
+                {error && <Alert severity="error">{error}</Alert>}
 
                 <Button
+                  variant="contained"
                   type="submit"
+                  endIcon={!loading && <ArrowForwardOutlinedIcon />}
                   disabled={loading || !formValid}
-                  size="large"
-                  sx={{ py: 1.3 }}
+                  sx={{ mt: 1 }}
                 >
                   {loading ? (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <CircularProgress size={18} />
-                      {t("resetPassword.actions.submitting")}
+                      <Typography variant="subtitle1">
+                        {t("resetPassword.actions.submitting")}
+                      </Typography>
+                      <CircularProgress size={20} />
                     </Box>
                   ) : (
-                    t("resetPassword.actions.submit")
+                    <Typography variant="subtitle1">
+                      {t("resetPassword.actions.submit")}
+                    </Typography>
                   )}
                 </Button>
 
-                <Link component={RouterLink} to={paths.login} variant="body2" sx={{ justifySelf: "center" }}>
+                <Link
+                  component={RouterLink}
+                  to={paths.login}
+                  variant="body2"
+                  sx={{ alignSelf: "center" }}
+                >
                   {t("resetPassword.actions.backToLogin")}
                 </Link>
               </Box>
-            </>
+            </Box>
           )}
         </Paper>
       </Grid>

@@ -3,7 +3,19 @@ import { Link as RouterLink } from "react-router-dom";
 import { forgotPassword } from "../api/auth.api";
 import { useTranslation } from "react-i18next";
 import { paths } from "@/routes/paths";
-import { Box, Button, CircularProgress, Grid, Paper, TextField, Typography, Link } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+  Typography,
+  Link,
+} from "@mui/material";
+import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
+import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
+import { FormField } from "@/components/form/FormField";
 import { typography } from "@/styles/typography";
 import { forgotPasswordSchema } from "../schemas";
 
@@ -51,68 +63,96 @@ export default function ForgotPasswordPage() {
         }}
       >
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 40 }} />
-            <Typography variant="h6" fontWeight={typography.weight.extrabold} color="primary">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 45, borderRadius: 1 }} />
+            <Typography variant="h6" fontWeight={typography.weight.bold} color="primary">
               {t("app.brandName")}
             </Typography>
           </Box>
 
-          <Typography variant="h6" fontWeight={typography.weight.bold} gutterBottom>
-            {t("forgotPassword.title")}
-          </Typography>
-
           {submitted ? (
-            <>
-              <Typography variant="body2" sx={{ mb: 3 }}>
+            <Box display="flex" flexDirection="column" gap={1}>
+              <Typography variant="h6" color="primary">
+                {t("forgotPassword.title")}
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 2 }}>
                 {t("forgotPassword.success")}
               </Typography>
               <Link component={RouterLink} to={paths.login} variant="body2">
                 {t("forgotPassword.actions.backToLogin")}
               </Link>
-            </>
+            </Box>
           ) : (
-            <>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                {t("forgotPassword.subtitle")}
-              </Typography>
+            <Box display="flex" flexDirection="column" gap={3}>
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Typography variant="h6" color="primary">
+                  {t("forgotPassword.title")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t("forgotPassword.subtitle")}
+                </Typography>
+              </Box>
 
-              <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: 2 }}>
-                <TextField
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+              >
+                <FormField
+                  required
                   label={t("forgotPassword.fields.email")}
+                  placeholder={t("forgotPassword.fields.placeholder.email")}
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   autoFocus
-                  fullWidth
-                  required
                   error={emailInvalid}
                   helperText={emailInvalid ? t("forgotPassword.errors.invalidEmail") : undefined}
+                  startIcon={
+                    <MailOutlineOutlinedIcon
+                      fontSize="small"
+                      sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }}
+                    />
+                  }
                 />
 
-                {error && (
-                  <Typography variant="body2" color="error">
-                    {error}
-                  </Typography>
-                )}
+                {error && <Alert severity="error">{error}</Alert>}
 
-                <Button type="submit" disabled={loading || !email} size="large" sx={{ py: 1.3 }}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  endIcon={!loading && <ArrowForwardOutlinedIcon />}
+                  disabled={loading || !email}
+                  sx={{ mt: 1 }}
+                >
                   {loading ? (
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <CircularProgress size={18} />
-                      {t("forgotPassword.actions.sending")}
+                      <Typography variant="subtitle1">
+                        {t("forgotPassword.actions.sending")}
+                      </Typography>
+                      <CircularProgress size={20} />
                     </Box>
                   ) : (
-                    t("forgotPassword.actions.send")
+                    <Typography variant="subtitle1">
+                      {t("forgotPassword.actions.send")}
+                    </Typography>
                   )}
                 </Button>
 
-                <Link component={RouterLink} to={paths.login} variant="body2" sx={{ justifySelf: "center" }}>
+                <Link
+                  component={RouterLink}
+                  to={paths.login}
+                  variant="body2"
+                  sx={{ alignSelf: "center" }}
+                >
                   {t("forgotPassword.actions.backToLogin")}
                 </Link>
               </Box>
-            </>
+            </Box>
           )}
         </Paper>
       </Grid>
