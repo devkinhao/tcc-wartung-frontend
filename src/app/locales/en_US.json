@@ -161,6 +161,13 @@
         "onTrack": "On Track",
         "total": "total"
       },
+      "companyCounts": {
+        "title": "Companies",
+        "total": "Total",
+        "clients": "Clients",
+        "nonClients": "Non-clients",
+        "inactive": "Inactive"
+      },
       "expirationsByMonth": {
         "title": "Expirations by Month",
         "subtitle": "Next 12 months",
@@ -413,7 +420,10 @@
       "searchPlaceholder": "Search by legal name or CNPJ",
       "city": "City",
       "allCities": "All cities",
-      "isCustomer": "Customer",
+      "status": "Status",
+      "statusCustomer": "Clients",
+      "statusNonCustomer": "Non-clients",
+      "statusInactive": "Inactive",
       "all": "All",
       "month": "Month",
       "allMonths": "All months",

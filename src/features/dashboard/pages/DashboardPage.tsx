@@ -9,6 +9,7 @@ import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { getDashboard } from "../api/dashboard.api";
 import { InspectionStatusCards } from "../components/InspectionStatusCards";
+import { CompanyCountsCard } from "../components/CompanyCountsCard";
 import { ExpirationsByMonthChart } from "../components/ExpirationsByMonthChart";
 import { ServiceRankingChart } from "../components/ServiceRankingChart";
 import { CustomersByCityChart } from "../components/CustomersByCityChart";
@@ -34,13 +35,17 @@ export default function DashboardPage() {
 
       <Grid container spacing={2.5}>
 
-        {/* ── Linha 1: Status das inspeções (full width) ── */}
-        <Grid size={{ xs: 12 }}>
+        {/* ── Linha 1: Status das inspeções + contagem de empresas (metade cada) ── */}
+        <Grid size={{ xs: 12, md: 6 }}>
           <InspectionStatusCards
             data={data?.inspectionStatus}
             loading={isLoading}
             alertDays={alertDays}
           />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <CompanyCountsCard data={data?.companyCounts} loading={isLoading} />
         </Grid>
 
         {/* ── Linha 2: Vencimentos por mês (full width) ── */}

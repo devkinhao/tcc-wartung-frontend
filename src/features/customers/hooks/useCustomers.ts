@@ -25,6 +25,15 @@ async function fetchCustomers(params: {
   filters: CustomerFilterValues;
 }) {
   const { page, pageSize, sortBy, sortDir, filters } = params;
+
+  // Uma única seleção ("status") controla dois parâmetros do backend:
+  // cliente sim/não (isCustomer) e ativa/inativa (isActive).
+  const statusParams: { isCustomer?: boolean; isActive?: boolean } =
+    filters.status === "customer" ? { isCustomer: true }
+    : filters.status === "non-customer" ? { isCustomer: false }
+    : filters.status === "inactive" ? { isActive: false }
+    : {};
+
   const { data } = await api.get<SpringPageResponse>("/customers", {
     params: {
       page: page - 1, // Spring usa base 0
@@ -32,7 +41,7 @@ async function fetchCustomers(params: {
       sort: sortBy ? `${sortBy},${sortDir}` : "nextExpirationDate,asc",
       search: filters.search || undefined,
       city: filters.city || undefined,
-      isCustomer: filters.isCustomer === "" ? undefined : filters.isCustomer === "true",
+      ...statusParams,
       month: filters.month || undefined,
     },
   });
@@ -42,12 +51,12 @@ async function fetchCustomers(params: {
 const INITIAL_FILTERS: CustomerFilterValues = {
   search: "",
   city: "",
-  isCustomer: "",
+  status: "",
   month: "",
 };
 
 export function useCustomers() {
-  const [filters, setFilters] = useSessionStorageState<CustomerFilterValues>("customers-list.filters", INITIAL_FILTERS);
+  const [filters, setFilters] = useSessionStorageState<CustomerFilterValues>("customers-list.filters.v2", INITIAL_FILTERS);
   const [page, setPage] = useSessionStorageState("customers-list.page", 1);
   const [pageSize, setPageSize] = useSessionStorageState("customers-list.pageSize", 10);
   const [sortBy, setSortBy] = useSessionStorageState<keyof Customer | null>("customers-list.sortBy", "nextExpirationDate");

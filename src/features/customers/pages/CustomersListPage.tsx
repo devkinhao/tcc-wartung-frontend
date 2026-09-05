@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,22 @@ export default function CustomersListPage() {
 
   const { customers, loading, total, filters, setFilter, hasActiveFilters, clearFilters, pagination, sort } =
     useCustomers();
+
+  // Links externos (cards do dashboard) abrem a lista já filtrada por status.
+  // Consome o parâmetro na chegada, zerando os demais filtros para o número
+  // bater com o card de origem.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    const urlStatus = searchParams.get("status");
+    if (urlStatus && ["customer", "non-customer", "inactive"].includes(urlStatus)) {
+      clearFilters();
+      setFilter("status", urlStatus);
+      const next = new URLSearchParams(searchParams);
+      next.delete("status");
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useScrollRestoration("customers-list.scrollY", !loading);
 

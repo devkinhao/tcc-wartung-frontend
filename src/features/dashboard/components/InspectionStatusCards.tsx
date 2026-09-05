@@ -66,7 +66,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   }, []);
 
   if (loading || !data) {
-    return <Skeleton variant="rounded" height={220} />;
+    return <Skeleton variant="rounded" height={200} />;
   }
 
   const total = data.expired + data.nearExpiration + data.onTrack;
@@ -91,6 +91,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   return (
     <Card
       sx={{
+        height: "100%",
         transition: (th) => th.transitions.create("box-shadow"),
         "&:hover": { boxShadow: 4 },
       }}
@@ -102,20 +103,20 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
 
         <Stack
           direction={{ xs: "column", sm: "row" }}
-          spacing={3}
+          spacing={2}
           alignItems="center"
           sx={{ mt: 1 }}
         >
           {total > 0 && (
-            <Box sx={{ width: 180, height: 160, flexShrink: 0 }}>
-              <ResponsiveContainer key={renderKey} width="100%" height={160} minWidth={0} debounce={350}>
+            <Box sx={{ width: 130, height: 120, flexShrink: 0 }}>
+              <ResponsiveContainer key={renderKey} width="100%" height={120} minWidth={0} debounce={350}>
                 <PieChart accessibilityLayer={false}>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={45}
-                    outerRadius={70}
+                    innerRadius={34}
+                    outerRadius={54}
                     paddingAngle={3}
                     dataKey="value"
                   >

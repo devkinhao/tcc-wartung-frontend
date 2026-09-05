@@ -10,6 +10,9 @@ export const paths = {
   dashboard: "/dashboard",
 
   customers: "/customers",
+  // Abre a lista de empresas já filtrada (usado pelos cards do dashboard).
+  customersByStatus: (status: "customer" | "non-customer" | "inactive") =>
+    `/customers?status=${status}`,
   customerDetails: (id: number | string) => `/customers/${id}`,
   customerInspectionsTab: (id: number | string) => `/customers/${id}?tab=inspections`,
 

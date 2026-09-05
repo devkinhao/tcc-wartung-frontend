@@ -6,6 +6,15 @@ export type InspectionStatus = {
   onTrack: number;
 };
 
+export type CompanyCounts = {
+  /** Empresas ativas (total = clients + nonClients). */
+  total: number;
+  clients: number;
+  nonClients: number;
+  /** Empresas inativas (soft delete). */
+  inactive: number;
+};
+
 export type ExpirationByMonth = {
   year: number;
   month: number;
@@ -24,6 +33,7 @@ export type CustomersByCityItem = {
 
 export type DashboardData = {
   inspectionStatus: InspectionStatus;
+  companyCounts: CompanyCounts;
   expirationsByMonth: ExpirationByMonth[];
   serviceRanking: ServiceRankingItem[];
   customersByCity: CustomersByCityItem[];

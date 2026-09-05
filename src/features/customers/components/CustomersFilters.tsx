@@ -12,10 +12,11 @@ import {
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
 
+/** `status`: "" (todas) | "customer" | "non-customer" | "inactive" */
 export type CustomerFilterValues = {
   search: string;
   city: string;
-  isCustomer: string;
+  status: string;
   month: string;
 };
 
@@ -69,17 +70,18 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        <FormControl size="small" sx={{ width: { xs: "100%", sm: 130 } }}>
-          <InputLabel id="customers-isCustomer">{t("customers.filters.isCustomer")}</InputLabel>
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 150 } }}>
+          <InputLabel id="customers-status">{t("customers.filters.status")}</InputLabel>
           <Select
-            labelId="customers-isCustomer"
-            label={t("customers.filters.isCustomer")}
-            value={values.isCustomer}
-            onChange={(e) => onChange("isCustomer", String(e.target.value))}
+            labelId="customers-status"
+            label={t("customers.filters.status")}
+            value={values.status}
+            onChange={(e) => onChange("status", String(e.target.value))}
           >
             <MenuItem value="">{t("customers.filters.all")}</MenuItem>
-            <MenuItem value="true">{t("common.yes")}</MenuItem>
-            <MenuItem value="false">{t("common.no")}</MenuItem>
+            <MenuItem value="customer">{t("customers.filters.statusCustomer")}</MenuItem>
+            <MenuItem value="non-customer">{t("customers.filters.statusNonCustomer")}</MenuItem>
+            <MenuItem value="inactive">{t("customers.filters.statusInactive")}</MenuItem>
           </Select>
         </FormControl>
 

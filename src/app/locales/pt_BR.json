@@ -161,6 +161,13 @@
         "onTrack": "Em dia",
         "total": "total"
       },
+      "companyCounts": {
+        "title": "Empresas",
+        "total": "Total",
+        "clients": "Clientes",
+        "nonClients": "Não-clientes",
+        "inactive": "Inativas"
+      },
       "expirationsByMonth": {
         "title": "Vencimentos por Mês",
         "subtitle": "Próximos 12 meses",
@@ -413,8 +420,11 @@
       "searchPlaceholder": "Buscar por razão social ou CNPJ",
       "city": "Cidade",
       "allCities": "Todas as cidades",
-      "isCustomer": "Cliente",
-      "all": "Todos",
+      "status": "Situação",
+      "statusCustomer": "Clientes",
+      "statusNonCustomer": "Não-clientes",
+      "statusInactive": "Inativas",
+      "all": "Todas",
       "month": "Mês",
       "allMonths": "Todos os meses",
       "clear": "Limpar filtros"
