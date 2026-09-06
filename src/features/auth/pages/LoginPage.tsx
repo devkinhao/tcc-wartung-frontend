@@ -21,6 +21,7 @@ import {
   Grid,
   Link,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 /** Axios. */
 import { isAxiosError } from "axios";
@@ -35,9 +36,10 @@ import { useAuth } from "../useAuth";
 /** Valor padrão para o tempo de espera. */
 const FALLBACK_RATE_LIMIT_COOLDOWN_SECONDS = 15;
 
-/** Nome de usuário lembrado neste dispositivo ("Lembrar de mim"). */
+/** Nome de usuário lembrado no dispositivo. */
 const REMEMBERED_USERNAME_KEY = "login:username";
 
+/** Recupera o nome de usuário salvo no armazenamento local. */
 function readRememberedUsername(): string | null {
   try {
     return localStorage.getItem(REMEMBERED_USERNAME_KEY);
@@ -46,12 +48,13 @@ function readRememberedUsername(): string | null {
   }
 }
 
+/** Salva/remove o nome de usuário lembrado. */
 function persistRememberedUsername(username: string | null) {
   try {
     if (username) localStorage.setItem(REMEMBERED_USERNAME_KEY, username);
     else localStorage.removeItem(REMEMBERED_USERNAME_KEY);
   } catch {
-    // localStorage indisponível (aba anônima, quota) — apenas ignora.
+    /** Ignora quando o localStorage está indisponível, como em aba anônima etc. */
   }
 }
 
@@ -60,6 +63,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { t } = useTranslation();
+  const isShortScreen = useMediaQuery("(max-height: 800px)");
 
   /** Estados. */
   const [username, setUsername] = useState(() => readRememberedUsername() ?? "");
@@ -119,20 +123,22 @@ export default function LoginPage() {
         size={{ xs: 12, md: 6 }}
         sx={{
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
           bgcolor: "background.paper",
+          py: 12,
           px: 3,
-          overflowY: "auto",
         }}
       >
-        {/** Logo do sistema — ancorada no topo do painel, no fluxo. */}
+        {/** Logo do sistema ancorada no topo. */}
         <Box
           sx={{
+            position: "absolute",
+            top: 25,
+            left: 25,
             display: "flex",
             alignItems: "center",
             gap: 1,
-            pt: 2.5,
-            flexShrink: 0,
           }}
         >
           <Box
@@ -147,6 +153,7 @@ export default function LoginPage() {
           <Typography
             variant="h6"
             sx={{
+              display: isShortScreen ? "none" : "block",
               color: "primary.main",
               fontWeight: typography.weight.bold,
             }}
@@ -154,14 +161,8 @@ export default function LoginPage() {
             {t("app.brandName")}
           </Typography>
         </Box>
-        {/** Formulário — centralizado no espaço restante; `my: auto` centraliza
-             quando sobra espaço e recolhe (sem cortar) em telas baixas. */}
-        <Box
-          display="flex"
-          flexDirection="column"
-          gap={5}
-          sx={{ width: 415, maxWidth: "100%", alignSelf: "center", my: "auto", py: 3 }}
-        >
+        {/** Formulário de login centralizado. */}
+        <Box display="flex" flexDirection="column" gap={5} width={415}>
           {/** Título e subtítulo. */}
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="h6" color="primary">
@@ -283,15 +284,14 @@ export default function LoginPage() {
                 )}
               </Button>
             </Tooltip>
+            {/** Rodapé. */}
+            <Typography
+              variant="caption"
+              sx={{ color: "text.secondary", textAlign: "center", mt: 1 }}
+            >
+              &copy; {new Date().getFullYear()} {t("app.brandName")}
+            </Typography>
           </Box>
-          {/** Rodapé. */}
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            textAlign="center"
-          >
-            &copy; {new Date().getFullYear()} {t("app.brandName")}
-          </Typography>
         </Box>
       </Grid>
       {/** Container de boas-vindas. */}
