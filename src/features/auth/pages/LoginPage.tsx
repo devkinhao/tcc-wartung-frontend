@@ -21,15 +21,14 @@ import {
   Grid,
   Link,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
-/** Axios. */
+/** Cliente HTTP. */
 import { isAxiosError } from "axios";
 /** React. */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-/** Domínio. */
+/** Autenticação. */
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
 
@@ -63,11 +62,14 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { t } = useTranslation();
-  const isShortScreen = useMediaQuery("(max-height: 800px)");
 
   /** Estados. */
-  const [username, setUsername] = useState(() => readRememberedUsername() ?? "");
-  const [rememberMe, setRememberMe] = useState(() => readRememberedUsername() !== null);
+  const [username, setUsername] = useState(
+    () => readRememberedUsername() ?? "",
+  );
+  const [rememberMe, setRememberMe] = useState(
+    () => readRememberedUsername() !== null,
+  );
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -117,28 +119,36 @@ export default function LoginPage() {
   };
 
   return (
-    <Grid container sx={{ height: "100vh", width: "100vw" }}>
+    <Grid
+      container
+      sx={{
+        height: "100dvh",
+        maxHeight: "100dvh",
+        width: "100%",
+        overflowX: "hidden",
+      }}
+    >
       {/** Container do formulário. */}
       <Grid
         size={{ xs: 12, md: 6 }}
         sx={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          flexDirection: "column",
           bgcolor: "background.paper",
-          py: 12,
           px: 3,
+          overflowY: "auto",
         }}
       >
         {/** Logo do sistema ancorada no topo. */}
         <Box
           sx={{
-            position: "absolute",
-            top: 25,
-            left: 25,
             display: "flex",
             alignItems: "center",
-            gap: 1,
+            gap: 1.5,
+            pt: 2.5,
+            pl: 2.5,
+            pb: 0.5,
+            flexShrink: 0,
           }}
         >
           <Box
@@ -153,7 +163,6 @@ export default function LoginPage() {
           <Typography
             variant="h6"
             sx={{
-              display: isShortScreen ? "none" : "block",
               color: "primary.main",
               fontWeight: typography.weight.bold,
             }}
@@ -162,7 +171,17 @@ export default function LoginPage() {
           </Typography>
         </Box>
         {/** Formulário de login centralizado. */}
-        <Box display="flex" flexDirection="column" gap={5} width={415}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={5}
+          sx={{
+            maxWidth: "100%",
+            alignSelf: "center",
+            my: "auto",
+            py: 3,
+          }}
+        >
           {/** Título e subtítulo. */}
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="h6" color="primary">
