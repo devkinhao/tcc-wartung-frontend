@@ -83,8 +83,7 @@ const navigateCategory: ChatMenuOption = {
       "nav-company",
       "chatbot.menu.actions.company",
       paths.company,
-      "nav.myCompany",
-      ["ROLE_ADMIN"]
+      "nav.myCompany"
     ),
     navMenuAction("nav-users", "chatbot.menu.actions.users", paths.users, "nav.users", [
       "ROLE_ADMIN",

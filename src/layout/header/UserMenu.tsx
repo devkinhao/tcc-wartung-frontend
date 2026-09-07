@@ -9,7 +9,14 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { AdminPanelSettings, ExpandMore, Logout, Person, Tune } from "@mui/icons-material";
+import {
+  AdminPanelSettings,
+  Apartment,
+  ExpandMore,
+  Logout,
+  Person,
+  Tune,
+} from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/auth/useAuth";
@@ -115,6 +122,13 @@ export function UserMenu() {
             <Tune fontSize="small" />
           </ListItemIcon>
           {t("nav.preferences")}
+        </MenuItem>
+
+        <MenuItem onClick={() => go(paths.company)}>
+          <ListItemIcon>
+            <Apartment fontSize="small" />
+          </ListItemIcon>
+          {t("nav.myCompany")}
         </MenuItem>
 
         {isAdmin && (

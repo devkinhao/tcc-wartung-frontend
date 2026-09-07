@@ -46,7 +46,6 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
 
   [paths.company]: [
     { label: "nav.home",       path: paths.home },
-    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.myCompany" },
   ],
 

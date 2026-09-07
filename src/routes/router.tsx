@@ -71,6 +71,7 @@ export const router = createBrowserRouter([
           { path: "notifications", element: page(<NotificationsPage />) },
           { path: "users/me", element: page(<UserProfile />) },
           { path: "preferences", element: page(<Preferences />) },
+          { path: "company", element: page(<Company />) },
           {
             element: <RequirePermission permissions={ROUTE_PERMISSIONS.reports} />,
             children: [{ path: "reports", element: page(<Reports />) }],
@@ -80,7 +81,6 @@ export const router = createBrowserRouter([
             children: [
               { path: "admin-panel", element: page(<AdminPanel />) },
               { path: "service-types", element: page(<ServiceTypes />) },
-              { path: "company", element: page(<Company />) },
               { path: "users", element: page(<Users />) },
               { path: "configurations", element: page(<Configurations />) },
             ],

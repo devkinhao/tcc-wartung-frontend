@@ -7,7 +7,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { Apartment, AdminPanelSettings, Settings, Build } from "@mui/icons-material";
+import { AdminPanelSettings, Settings, Build } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
@@ -17,7 +17,6 @@ import { typography } from "@/styles/typography";
 
 const ITEMS = [
   { key: "serviceTypes", to: paths.serviceTypes, icon: Build },
-  { key: "company", to: paths.company, icon: Apartment },
   { key: "users", to: paths.users, icon: AdminPanelSettings },
   { key: "configurations", to: paths.configurations, icon: Settings },
 ] as const;
