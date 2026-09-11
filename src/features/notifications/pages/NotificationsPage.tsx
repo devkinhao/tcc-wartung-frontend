@@ -58,7 +58,7 @@ export default function NotificationsPage() {
   });
 
   const invalidateAll = () => {
-    qc.invalidateQueries({ queryKey: ["notifications"] });
+    qc.invalidateQueries({ queryKey: qk.notificationsAll });
     qc.invalidateQueries({ queryKey: qk.notificationsUnreadCount() });
   };
 

@@ -37,11 +37,9 @@ import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { AddInspectionModal } from "../components/AddInspectionModal";
-import { RenewInspectionModal, type RenewableInspection } from "../components/RenewInspectionModal";
-import { DeactivateInspectionModal, type DeactivatableInspection } from "../components/DeactivateInspectionModal";
-import { DeleteInspectionDialog, type DeletableInspection } from "../components/DeleteInspectionDialog";
 import { InspectionDetailModal } from "../components/InspectionDetailModal";
 import { InspectionRowActions } from "../components/InspectionRowActions";
+import { useInspectionRowActions } from "../hooks/useInspectionRowActions";
 import { deactivationReasonKey } from "../deactivationReason";
 import {
   listAllInspections,
@@ -72,9 +70,6 @@ export default function InspectionsListPage() {
   const [page, setPage]         = useSessionStorageState("inspections-list.page", 1);
   const [pageSize, setPageSize] = useSessionStorageState("inspections-list.pageSize", 10);
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
-  const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<DeletableInspection | null>(null);
   const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
   const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
 
@@ -110,6 +105,13 @@ export default function InspectionsListPage() {
       setSearchParams(next, { replace: true });
     }
   };
+
+  const {
+    openRenew: setRenewTarget,
+    openDeactivate: setDeactivateTarget,
+    openDelete: setDeleteTarget,
+    actionModals,
+  } = useInspectionRowActions({ onOpenDetail: setClickedDetailId });
 
   const debouncedSearch = useDebouncedValue(filters.search, 400);
   const debouncedManufacturer = useDebouncedValue(filters.manufacturer, 400);
@@ -216,22 +218,7 @@ export default function InspectionsListPage() {
         onClose={() => setIsAddOpen(false)}
         onOpenDetail={setClickedDetailId}
       />
-      <RenewInspectionModal
-        open={renewTarget !== null}
-        inspection={renewTarget}
-        onClose={() => setRenewTarget(null)}
-        onOpenDetail={setClickedDetailId}
-      />
-      <DeactivateInspectionModal
-        open={deactivateTarget !== null}
-        inspection={deactivateTarget}
-        onClose={() => setDeactivateTarget(null)}
-      />
-      <DeleteInspectionDialog
-        open={deleteTarget !== null}
-        inspection={deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-      />
+      {actionModals}
       <InspectionDetailModal
         inspectionId={detailId}
         open={detailId !== null}

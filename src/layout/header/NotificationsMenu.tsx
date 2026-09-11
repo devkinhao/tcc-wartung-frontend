@@ -63,7 +63,7 @@ export function NotificationsMenu({ disabled = false }: { disabled?: boolean }) 
   const items = data?.content ?? [];
 
   const invalidateAll = () => {
-    qc.invalidateQueries({ queryKey: ["notifications"] });
+    qc.invalidateQueries({ queryKey: qk.notificationsAll });
     qc.invalidateQueries({ queryKey: qk.notificationsUnreadCount() });
   };
 

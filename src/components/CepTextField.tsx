@@ -5,6 +5,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchCep, normalizeCep, type ViaCepResponseDTO } from "@/api/cep.api";
+import { qk } from "@/api/keys";
 import { maskCep } from "@/utils/masks";
 
 type Props = {
@@ -46,7 +47,7 @@ export function CepTextField({
   const normalizedCep = normalizeCep(value);
 
   const { data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ["cep", normalizedCep],
+    queryKey: qk.cepLookup(normalizedCep),
     queryFn: () => fetchCep(normalizedCep),
     enabled: !disabled && isValidCep(value),
     retry: false,

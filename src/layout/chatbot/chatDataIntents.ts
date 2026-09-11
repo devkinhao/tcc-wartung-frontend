@@ -1,15 +1,12 @@
 import { api } from "@/api/client";
 import { qk } from "@/api/keys";
+import type { SpringPage } from "@/api/pagination";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
 import { getUnreadNotificationCount } from "@/features/notifications/api/notifications.api";
 import type { ChatMenuOption } from "./chatMenu";
 
-type CustomersCountResponse = {
-  page: { totalElements: number };
-};
-
 async function fetchCustomersTotal(): Promise<number> {
-  const { data } = await api.get<CustomersCountResponse>("/customers", {
+  const { data } = await api.get<SpringPage<unknown>>("/customers", {
     params: { page: 0, size: 1, isCustomer: true },
   });
   return data.page.totalElements;

@@ -20,6 +20,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
+import { invalidateInspectionCaches } from "../cache";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { formatDateBR, todayISODate, addDaysISODate } from "@/utils/date";
@@ -151,13 +152,11 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
       return { created, failed };
     },
     onSuccess: ({ created, failed }) => {
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
-      qc.invalidateQueries({ queryKey: qk.dashboard() });
-      qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspection!.id) });
+      invalidateInspectionCaches(qc, {
+        inspectionId: inspection!.id,
+        customerId: inspection?.customerId,
+      });
       qc.invalidateQueries({ queryKey: qk.inspectionDocuments(created.id) });
-      if (inspection?.customerId) {
-        qc.invalidateQueries({ queryKey: qk.customerDetail(inspection.customerId) });
-      }
       setCreatedId(created.id);
       setFailedUploads(failed);
       if (failed > 0) {

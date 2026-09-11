@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Skeleton, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
@@ -7,6 +6,8 @@ import type { InspectionStatus } from "../api/dashboard.api";
 import { useTheme } from "@mui/material/styles";
 import { typography } from "@/styles/typography";
 import { paths } from "@/routes/paths";
+import { DashboardCard } from "./chart/DashboardCard";
+import { useChartRemountKey } from "./chart/useChartRemountKey";
 
 type Props = {
   data: InspectionStatus | undefined;
@@ -55,15 +56,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-
-  // Força uma remontagem única após o layout estabilizar — o ResponsiveContainer
-  // às vezes mede o container antes do reflow final (ex: fontes/grid ainda
-  // ajustando), e o Pie do recharts não recalcula a geometria sozinho depois.
-  const [renderKey, setRenderKey] = useState(0);
-  useEffect(() => {
-    const id = setTimeout(() => setRenderKey((k) => k + 1), 150);
-    return () => clearTimeout(id);
-  }, []);
+  const renderKey = useChartRemountKey();
 
   if (loading || !data) {
     return <Skeleton variant="rounded" height={200} />;
@@ -89,18 +82,7 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
   ].filter((d) => d.value > 0);
 
   return (
-    <Card
-      sx={{
-        height: "100%",
-        transition: (th) => th.transitions.create("box-shadow"),
-        "&:hover": { boxShadow: 4 },
-      }}
-    >
-      <CardContent>
-        <Typography variant="subtitle2" color="text.primary" gutterBottom>
-          {t("dashboard.cards.inspectionStatus.title")}
-        </Typography>
-
+    <DashboardCard title={t("dashboard.cards.inspectionStatus.title")}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -166,7 +148,6 @@ export function InspectionStatusCards({ data, loading, alertDays }: Props) {
         <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: "block" }}>
           {total} {t("dashboard.cards.inspectionStatus.total")}
         </Typography>
-      </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

@@ -1,9 +1,10 @@
-import { Box, Card, CardContent, Grid, Skeleton, Typography } from "@mui/material";
+import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import type { CompanyCounts } from "../api/dashboard.api";
 import { typography } from "@/styles/typography";
 import { paths } from "@/routes/paths";
+import { DashboardCard } from "./chart/DashboardCard";
 
 type Props = {
   data: CompanyCounts | undefined;
@@ -78,26 +79,14 @@ export function CompanyCountsCard({ data, loading }: Props) {
   ];
 
   return (
-    <Card
-      sx={{
-        height: "100%",
-        transition: (th) => th.transitions.create("box-shadow"),
-        "&:hover": { boxShadow: 4 },
-      }}
-    >
-      <CardContent>
-        <Typography variant="subtitle2" color="text.primary" gutterBottom>
-          {t("dashboard.cards.companyCounts.title")}
-        </Typography>
-
-        <Grid container spacing={1.5} sx={{ mt: 0.5 }}>
-          {tiles.map((tile) => (
-            <Grid key={tile.label} size={{ xs: 6 }}>
-              <Tile {...tile} />
-            </Grid>
-          ))}
-        </Grid>
-      </CardContent>
-    </Card>
+    <DashboardCard title={t("dashboard.cards.companyCounts.title")}>
+      <Grid container spacing={1.5} sx={{ mt: 0.5 }}>
+        {tiles.map((tile) => (
+          <Grid key={tile.label} size={{ xs: 6 }}>
+            <Tile {...tile} />
+          </Grid>
+        ))}
+      </Grid>
+    </DashboardCard>
   );
 }

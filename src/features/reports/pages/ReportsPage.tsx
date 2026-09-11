@@ -13,6 +13,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useTranslation } from "react-i18next";
 
@@ -74,7 +75,7 @@ export default function ReportsPage() {
 
   const cardSx = {
     borderRadius: 2,
-    transition: (th: any) =>
+    transition: (th: Theme) =>
       th.transitions.create("box-shadow", { duration: th.transitions.duration.short }),
     "&:hover": { boxShadow: 4 },
   } as const;

@@ -35,12 +35,8 @@ import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
 import { listAllInspections, type InspectionListItem } from "../../inspections/api/inspections.list.api";
 import { equipmentSummary } from "../../inspections/utils/equipmentSummary";
-import { RenewInspectionModal, type RenewableInspection } from "../../inspections/components/RenewInspectionModal";
-import {
-  DeactivateInspectionModal,
-  type DeactivatableInspection,
-} from "../../inspections/components/DeactivateInspectionModal";
 import { InspectionDetailModal } from "../../inspections/components/InspectionDetailModal";
+import { useInspectionRowActions } from "../../inspections/hooks/useInspectionRowActions";
 
 const ATTENTION_LIMIT = 6;
 
@@ -216,9 +212,12 @@ export default function HomePage() {
   const navigate = useNavigate();
   const alertDays = useAlertDays();
 
-  const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
-  const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
   const [detailId, setDetailId] = useState<number | null>(null);
+  const {
+    openRenew: setRenewTarget,
+    openDeactivate: setDeactivateTarget,
+    actionModals,
+  } = useInspectionRowActions({ onOpenDetail: setDetailId });
 
   const { data: dashboard, isLoading: loadingStatus } = useQuery({
     queryKey: qk.dashboard(),
@@ -357,18 +356,7 @@ export default function HomePage() {
         )}
       </Card>
 
-      <RenewInspectionModal
-        open={renewTarget !== null}
-        inspection={renewTarget}
-        onClose={() => setRenewTarget(null)}
-        onOpenDetail={setDetailId}
-      />
-
-      <DeactivateInspectionModal
-        open={deactivateTarget !== null}
-        inspection={deactivateTarget}
-        onClose={() => setDeactivateTarget(null)}
-      />
+      {actionModals}
 
       <InspectionDetailModal
         inspectionId={detailId}

@@ -5,6 +5,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchCnpj, normalizeCnpj, type ReceitaWsResponseDTO } from "@/api/cnpj.api";
+import { qk } from "@/api/keys";
 import { maskCnpj } from "@/utils/masks";
 
 /** Estágio da consulta do CNPJ à ReceitaWS, exposto ao formulário pai. */
@@ -52,7 +53,7 @@ export function CnpjTextField({
   const normalizedCnpj = normalizeCnpj(value);
 
   const { data, isFetching, isError, isSuccess } = useQuery({
-    queryKey: ["cnpj", normalizedCnpj],
+    queryKey: qk.cnpjLookup(normalizedCnpj),
     queryFn: () => fetchCnpj(normalizedCnpj),
     enabled: !disabled && isValidCnpj(value),
     retry: false,

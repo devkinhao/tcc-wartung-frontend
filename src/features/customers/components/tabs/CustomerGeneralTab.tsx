@@ -13,6 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 import { useTranslation } from "react-i18next";
@@ -50,7 +51,7 @@ type Props = {
 
 const cardSx = {
   borderRadius: 2,
-  transition: (t: any) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+  transition: (t: Theme) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
   "&:hover": { boxShadow: 4 },
 } as const;
 

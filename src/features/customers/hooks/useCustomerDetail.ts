@@ -45,41 +45,65 @@ export function useCustomerDetail(customerId: number) {
     setDraft(data);
   }, [data, editingGeneral, editingContacts, editingAddress]);
 
-  // ── onSuccess comum: atualiza cache + draft + fecha edição + toast ─────────
-  function makeOnSuccess(closeEditing: () => void) {
-    return (updated: CustomerDetailResponseDTO) => {
-      qc.setQueryData(qk.customerDetail(customerId), updated);
-      setDraft(updated);
-      closeEditing();
-      notify.success("notify.success.saved");
-    };
+  // ── Pós-salvar comum: atualiza cache + draft + fecha edição + toast ────────
+  function applySaved(updated: CustomerDetailResponseDTO, closeEditing: () => void) {
+    qc.setQueryData(qk.customerDetail(customerId), updated);
+    setDraft(updated);
+    closeEditing();
+    notify.success("notify.success.saved");
+  }
+
+  /**
+   * A listagem de empresas mostra nome, CNPJ, cidade, selo ABVTEX e "é cliente?".
+   * Sem invalidar, ela continua exibindo os valores antigos por até 5 min
+   * (staleTime global, com refetch no foco desligado).
+   */
+  function invalidateCustomerList() {
+    qc.invalidateQueries({ queryKey: qk.customersAll });
   }
 
   // ── Mutations ──────────────────────────────────────────────────────────────
   const generalMutation = useMutation({
     mutationFn: (payload: CustomerUpdateGeneralRequestDTO) =>
       updateCustomerGeneral(customerId, payload),
-    onSuccess: makeOnSuccess(() => setEditingGeneral(false)),
+    onSuccess: (updated) => {
+      invalidateCustomerList();
+      // A razão social aparece em cada linha da listagem de inspeções; e
+      // desmarcar "é cliente" faz o backend encerrar as inspeções ativas da
+      // empresa (InspectionService.deactivateAllByCustomerId), o que muda
+      // também a contagem por status do dashboard.
+      qc.invalidateQueries({ queryKey: qk.inspectionsListAll });
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
+      applySaved(updated, () => setEditingGeneral(false));
+    },
     onError:   (err) => notify.fromError(err),
   });
 
   const contactsMutation = useMutation({
     mutationFn: (payload: CustomerUpdateContactsRequestDTO) =>
       updateCustomerContacts(customerId, payload),
-    onSuccess: makeOnSuccess(() => setEditingContacts(false)),
+    // Telefones e e-mail não aparecem na listagem — só a ficha muda.
+    onSuccess: (updated) => applySaved(updated, () => setEditingContacts(false)),
     onError:   (err) => notify.fromError(err),
   });
 
   const addressMutation = useMutation({
     mutationFn: (payload: CustomerUpdateAddressRequestDTO) =>
       updateCustomerAddress(customerId, payload),
-    onSuccess: makeOnSuccess(() => setEditingAddress(false)),
+    onSuccess: (updated) => {
+      invalidateCustomerList(); // a listagem mostra a cidade
+      applySaved(updated, () => setEditingAddress(false));
+    },
     onError:   (err) => notify.fromError(err),
   });
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteCustomer(customerId),
     onSuccess:  () => {
+      // Sem isto a empresa excluída continua aparecendo na listagem para onde
+      // navegamos logo abaixo.
+      invalidateCustomerList();
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
       notify.success("notify.success.companyDeleted");
       navigate(paths.customers);
     },

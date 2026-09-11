@@ -57,6 +57,15 @@ export default function UserProfile() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarRemoved, setAvatarRemoved] = useState(false);
 
+  // `getAvatar` e o preview do arquivo escolhido criam object URLs (blob:) —
+  // revoga a anterior ao trocar/desmontar para não vazar memória.
+  React.useEffect(() => {
+    const current = avatarPreview;
+    return () => {
+      if (current?.startsWith("blob:")) URL.revokeObjectURL(current);
+    };
+  }, [avatarPreview]);
+
   const { data: user, isLoading } = useQuery<User>({
     queryKey: qk.me(),
     queryFn: getMe,
@@ -102,11 +111,11 @@ export default function UserProfile() {
 
     async onMutate(file) {
       await queryClient.cancelQueries({ queryKey: qk.me() });
-      const previousUser = queryClient.getQueryData<User>(["me"]);
+      const previousUser = queryClient.getQueryData<User>(qk.me());
 
       if (previousUser) {
         const previewUrl = URL.createObjectURL(file);
-        queryClient.setQueryData<User>(["me"], { ...previousUser, avatarUrl: previewUrl });
+        queryClient.setQueryData<User>(qk.me(), { ...previousUser, avatarUrl: previewUrl });
       }
 
       return { previousUser };
@@ -116,7 +125,7 @@ export default function UserProfile() {
     // (handleSaveProfile), então o "Perfil atualizado" do updateMutation cobre.
     onError(_, __, context) {
       notify.error("notify.error.saveFailed");
-      if (context?.previousUser) queryClient.setQueryData(["me"], context.previousUser);
+      if (context?.previousUser) queryClient.setQueryData(qk.me(), context.previousUser);
     },
 
     onSettled() {

@@ -6,9 +6,7 @@ export type PermissionResponseDTO = {
   description: string;
 };
 
-export const permissionsApi = {
-  async findAll(): Promise<PermissionResponseDTO[]> {
-    const { data } = await api.get<PermissionResponseDTO[]>("/permissions");
-    return data;
-  },
-};
+export async function getPermissions(): Promise<PermissionResponseDTO[]> {
+  const { data } = await api.get<PermissionResponseDTO[]>("/permissions");
+  return data;
+}

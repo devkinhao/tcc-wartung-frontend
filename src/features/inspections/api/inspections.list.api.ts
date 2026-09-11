@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { type SpringPage, toSpringPageParams } from "@/api/pagination";
 import type { InspectionDeactivationReason } from "../deactivationReason";
 
 export type InspectionListItem = {
@@ -44,20 +45,19 @@ export async function listAllInspections(
   sortBy: InspectionSortableColumn | null = null,
   sortDir: "asc" | "desc" = "asc"
 ) {
-  const { data } = await api.get<{ content: InspectionListItem[]; page: { totalElements: number } }>(
-    "/inspections",
-    {
-      params: {
-        page: page - 1,
+  const { data } = await api.get<SpringPage<InspectionListItem>>("/inspections", {
+    params: {
+      ...toSpringPageParams({
+        page,
         size: pageSize,
-        search: filters.search?.trim() || undefined,
-        status: filters.status || undefined,
-        serviceTypeId: filters.serviceTypeId || undefined,
-        manufacturer: filters.manufacturer?.trim() || undefined,
-        model: filters.model?.trim() || undefined,
         sort: sortBy ? `${sortBy},${sortDir}` : undefined,
-      },
-    }
-  );
+      }),
+      search: filters.search?.trim() || undefined,
+      status: filters.status || undefined,
+      serviceTypeId: filters.serviceTypeId || undefined,
+      manufacturer: filters.manufacturer?.trim() || undefined,
+      model: filters.model?.trim() || undefined,
+    },
+  });
   return data;
 }

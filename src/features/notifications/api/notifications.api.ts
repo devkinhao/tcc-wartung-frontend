@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import { type SpringPage, toSpringPageParams } from "@/api/pagination";
 
 export type NotificationResponseDTO = {
   id: number;
@@ -10,26 +11,15 @@ export type NotificationResponseDTO = {
   createdAt: string; // ISO date-time
 };
 
-type SpringPageResponse<T> = {
-  content: T[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
-};
-
 export async function listNotifications(params: {
   onlyUnread?: boolean;
   page: number;
   pageSize: number;
 }) {
-  const { data } = await api.get<SpringPageResponse<NotificationResponseDTO>>("/notifications", {
+  const { data } = await api.get<SpringPage<NotificationResponseDTO>>("/notifications", {
     params: {
       onlyUnread: params.onlyUnread || undefined,
-      page: params.page - 1,
-      size: params.pageSize,
+      ...toSpringPageParams({ page: params.page, size: params.pageSize }),
     },
   });
   return data;

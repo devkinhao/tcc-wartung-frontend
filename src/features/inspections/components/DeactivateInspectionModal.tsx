@@ -16,8 +16,8 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
+import { invalidateInspectionCaches } from "../cache";
 import { deactivateInspection } from "../api/inspections.deactivate.api";
 import { DEACTIVATION_REASONS, deactivationReasonKey, type InspectionDeactivationReason } from "../deactivationReason";
 
@@ -51,17 +51,10 @@ export function DeactivateInspectionModal({ open, onClose, inspection, onDeactiv
   const { mutate, isPending } = useMutation({
     mutationFn: () => deactivateInspection(inspection!.id, reason as InspectionDeactivationReason),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
-      qc.invalidateQueries({ queryKey: qk.dashboard() });
-      qc.invalidateQueries({ queryKey: qk.inspectionDetail(inspection!.id) });
-      if (inspection?.customerId) {
-        qc.invalidateQueries({ queryKey: qk.customerDetail(inspection.customerId) });
-      }
-      // Motivos de nível empresa alteram o cadastro dela e derrubam outras
-      // inspeções — a listagem de empresas precisa ser revalidada.
-      if (isCompanyLevel) {
-        qc.invalidateQueries({ queryKey: ["customers"] });
-      }
+      invalidateInspectionCaches(qc, {
+        inspectionId: inspection!.id,
+        customerId: inspection?.customerId,
+      });
       notify.success("notify.success.inspectionDeactivated");
       handleClose();
       onDeactivated?.();

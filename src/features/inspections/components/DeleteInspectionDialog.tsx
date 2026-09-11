@@ -9,8 +9,8 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
+import { invalidateInspectionCaches } from "../cache";
 import { deleteInspection } from "../api/inspections.detail.api";
 
 /** Dados mínimos da inspeção a excluir. */
@@ -38,11 +38,7 @@ export function DeleteInspectionDialog({ open, onClose, inspection, onDeleted }:
   const { mutate, isPending } = useMutation({
     mutationFn: () => deleteInspection(inspection!.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
-      qc.invalidateQueries({ queryKey: qk.dashboard() });
-      if (inspection?.customerId) {
-        qc.invalidateQueries({ queryKey: qk.customerDetail(inspection.customerId) });
-      }
+      invalidateInspectionCaches(qc, { customerId: inspection?.customerId });
       notify.success("notify.success.inspectionDeleted");
       onClose();
       onDeleted?.();

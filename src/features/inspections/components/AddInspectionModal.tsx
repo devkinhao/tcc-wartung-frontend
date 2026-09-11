@@ -24,6 +24,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
+import { invalidateInspectionCaches } from "../cache";
 import { useNotify } from "@/hooks/useNotify";
 import { uploadInspectionDocuments } from "../api/inspections.documents.api";
 import { DocumentPicker } from "./DocumentPicker";
@@ -175,11 +176,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
       return { created, failed };
     },
     onSuccess: ({ created, failed }) => {
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
-      qc.invalidateQueries({ queryKey: qk.dashboard() });
-      if (form.customer) {
-        qc.invalidateQueries({ queryKey: qk.customerDetail(form.customer.id) });
-      }
+      invalidateInspectionCaches(qc, { customerId: form.customer?.id });
       setCreatedId(created.id);
       setFailedUploads(failed);
       setStep(1);

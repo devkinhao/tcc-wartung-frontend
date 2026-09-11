@@ -1,4 +1,5 @@
-// src/services/userService.ts
+// Operações do próprio usuário logado (/users/me). A gestão de usuários pelo
+// admin fica em users.api.ts.
 import { api } from "@/api/client";
 import { User } from "../types/User";
 

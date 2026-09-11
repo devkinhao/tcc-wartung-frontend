@@ -45,7 +45,7 @@ export default function ConfigurationsPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.configurations() });
       qc.invalidateQueries({ queryKey: qk.dashboard() });
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
+      qc.invalidateQueries({ queryKey: qk.inspectionsListAll });
       notify.success("notify.success.saved");
     },
     onError: (err) => notify.fromError(err),

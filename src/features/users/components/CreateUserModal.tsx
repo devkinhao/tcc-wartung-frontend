@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
-import { usersApi, type UserCreateRequestDTO } from "../api/users.api";
+import { createUser, type UserCreateRequestDTO } from "../api/users.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
@@ -73,7 +73,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
         ...(form.creaNumber?.trim() ? { creaNumber: form.creaNumber.trim() } : {}),
       };
 
-      await usersApi.create(payload);
+      await createUser(payload);
 
       notify.success("notify.success.userCreated");
       onCreated?.();

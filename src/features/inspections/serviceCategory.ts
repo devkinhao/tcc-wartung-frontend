@@ -83,13 +83,6 @@ export function equipmentFieldErrors(
   return errors;
 }
 
-export function isEquipmentValid(
-  category: ServiceCategory | null | undefined,
-  values: EquipmentFieldValues,
-): boolean {
-  return Object.keys(equipmentFieldErrors(category, values)).length === 0;
-}
-
 type EquipmentSource = {
   manufacturer: string | null;
   model: string | null;

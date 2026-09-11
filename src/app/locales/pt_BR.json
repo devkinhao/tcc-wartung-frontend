@@ -19,12 +19,10 @@
       "avatar": "Avatar do usuário"
     },
     "tooltip": {
-      "logo": "Ir para a página inicial",
       "showPassword": "Mostrar senha",
       "hidePassword": "Ocultar senha"
     },
     "userAvatar": "Avatar do usuário",
-    "noDataAvailable": "Nenhum dado disponível no momento",
     "yes": "Sim",
     "no": "Não",
     "status": {
@@ -171,7 +169,6 @@
       "expirationsByMonth": {
         "title": "Vencimentos por Mês",
         "subtitle": "Próximos 12 meses",
-        "yAxisLabel": "Inspeções",
         "tooltipLabel": "vencimento(s)"
       },
       "topRequestedServices": {
@@ -180,7 +177,8 @@
       },
       "customersByCity": {
         "title": "Clientes por Cidade",
-        "tooltipLabel": "cliente(s)"
+        "tooltipLabel": "cliente(s)",
+        "others": "Outras"
       }
     },
     "description": "Uma visão geral dos números."
@@ -336,11 +334,11 @@
       "username": "Nome de usuário",
       "fullName": "Nome completo",
       "email": "E-mail",
-      "status": "Status",
-      "actions": "Ações"
+      "status": "Status"
     },
     "edit": {
       "title": "Editar usuário",
+      "notFound": "Usuário não encontrado.",
       "tabs": {
         "profile": "Perfil",
         "permissions": "Permissões",
@@ -378,7 +376,6 @@
     "title": "Meu perfil",
     "loading": "Carregando perfil...",
     "tabs": {
-      "profile": "Perfil",
       "preferences": "Preferências"
     },
     "fields": {
@@ -400,12 +397,8 @@
         "new": "Nova senha",
         "confirm": "Confirmar nova senha"
       },
-      "actions": {
-        "toggleVisibility": "Mostrar/ocultar senha"
-      },
       "errors": {
-        "mismatch": "As senhas não coincidem",
-        "changeFailed": "Erro ao alterar senha"
+        "mismatch": "As senhas não coincidem"
       }
     },
     "description": "Seus dados de acesso ao sistema."
@@ -437,13 +430,11 @@
       "isCustomer": "Cliente?",
       "activeInspections": "Inspeções ativas",
       "nextExpiration": "Vencimento",
-      "actions": "Ações",
       "inactive": "Inativa"
     },
     "loading": "Carregando empresas...",
     "empty": "Nenhuma empresa encontrada.",
     "rowMenu": {
-      "actionsLabel": "Ações",
       "view": "Ver cadastro",
       "address": "Ver endereço",
       "inspections": "Ver Inspeções"
@@ -456,11 +447,7 @@
       "table": {
         "inspectionDate": "Data da inspeção",
         "service": "Serviço",
-        "notes": "Observações",
-        "expiration": "Vencimento"
-      },
-      "actions": {
-        "openInspection": "Abrir inspeção"
+        "notes": "Observações"
       }
     },
     "addModal": {
@@ -519,9 +506,6 @@
         "title": "Empresa cadastrada com sucesso!",
         "question": "Deseja acessar o cadastro agora ou apenas fechar?",
         "summary": "{{name}} foi cadastrada."
-      },
-      "errors": {
-        "createFailed": "Não foi possível cadastrar a empresa. Verifique os dados e tente novamente."
       }
     }
   },
@@ -604,9 +588,6 @@
   "company": {
     "title": "Minha empresa",
     "loading": "Carregando dados da empresa...",
-    "actions": {
-      "saveChanges": "Salvar alterações"
-    },
     "fields": {
       "fantasyName": "Nome fantasia",
       "legalName": "Razão social",
@@ -661,19 +642,15 @@
     "tabs": {
       "general": "Dados gerais",
       "address": "Endereço",
-      "inspections": "Inspeções",
-      "movements": "Histórico"
+      "inspections": "Inspeções"
     },
     "errors": {
-      "updateGeneral": "Não foi possível atualizar os dados gerais.",
-      "updateContacts": "Não foi possível atualizar os contatos.",
       "updateAddress": "Não foi possível atualizar o endereço.",
       "delete": "Não foi possível excluir a empresa."
     },
     "general": {
       "title": "Dados gerais",
       "fields": {
-        "code": "Código",
         "legalName": "Razão social",
         "fantasyName": "Nome fantasia",
         "cnpj": "CNPJ",
@@ -719,7 +696,6 @@
         "renewed": "Renovada"
       },
       "actions": {
-        "openDocuments": "Abrir documentos",
         "rowMenu": "Ações da inspeção"
       }
     },
@@ -730,9 +706,6 @@
         "createdBy": "Usuário criação",
         "updatedAt": "Data/Hora de alteração",
         "updatedBy": "Usuário alteração"
-      },
-      "format": {
-        "dateTime": "{{date}} {{time}}"
       }
     }
   },
@@ -805,15 +778,7 @@
       "updatedBy": "Atualizado por"
     },
     "errors": {
-      "update": "Não foi possível atualizar a inspeção",
-      "uploadDoc": "Não foi possível enviar o documento.",
-      "uploadDocMissingFile": "Selecione um arquivo para enviar.",
-      "downloadDoc": "Não foi possível baixar o documento.",
-      "deleteDoc": "Não foi possível excluir o documento.",
       "artNumberFormat": "O número da ART deve estar no formato 0000000-0 ou 00000000-0"
-    },
-    "renew": {
-      "alreadyRenewed": "Esta inspeção já foi renovada."
     }
   },
   "notify": {
@@ -848,11 +813,7 @@
     "error": {
       "generic": "Ocorreu um erro. Tente novamente.",
       "saveFailed": "Erro ao salvar alterações",
-      "loadFailed": "Erro ao carregar dados",
-      "uploadFailed": "Erro ao enviar arquivo",
-      "deleteFailed": "Erro ao remover",
-      "downloadFailed": "Erro ao baixar arquivo",
-      "reportFailed": "Erro ao gerar relatório"
+      "downloadFailed": "Erro ao baixar arquivo"
     },
     "httpErrors": {
       "400": "Dados inválidos. Verifique os campos e tente novamente.",
@@ -900,7 +861,6 @@
     "filters": {
       "search": "Buscar por empresa",
       "status": "Status",
-      "allStatuses": "Todos os status",
       "service": "Serviço",
       "allServices": "Todos os serviços",
       "manufacturer": "Fabricante",

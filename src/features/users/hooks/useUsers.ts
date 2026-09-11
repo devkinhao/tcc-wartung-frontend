@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
-import { usersApi, type UserResponseDTO } from "../api/users.api";
+import { deleteUser, getUsers } from "../api/users.api";
+import type { User } from "../types/User";
 
 // --- Tipos e helpers de apresentação ---
 
@@ -21,7 +22,7 @@ function roleFromPermissions(perms: string[] | undefined): string {
   return p[0]?.replace("ROLE_", "") ?? "—";
 }
 
-function toRow(u: UserResponseDTO): UserRow {
+function toRow(u: User): UserRow {
   return {
     id: u.id,
     fullName: u.fullName,
@@ -58,7 +59,7 @@ export function useUsers(search = "") {
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: qk.users(),
-    queryFn: () => usersApi.findAll(),
+    queryFn: getUsers,
   });
 
   const rows = useMemo(() => {
@@ -80,7 +81,7 @@ export function useUsers(search = "") {
   const reload = () => queryClient.invalidateQueries({ queryKey: qk.users() });
 
   const deleteMutation = useMutation({
-    mutationFn: (user: UserRow) => usersApi.delete(user.id),
+    mutationFn: (user: UserRow) => deleteUser(user.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.users() });
       notify.success("notify.success.userDeleted");

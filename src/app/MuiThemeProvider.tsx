@@ -1,13 +1,8 @@
-/** Domínio. */
-import { useAuth } from "@/features/auth/useAuth";
-import { usePreferences } from "@/features/preferences/usePreferences";
-/** Estilização. */
+import { useThemeMode } from "./useThemeMode";
 import { tokens } from "@/styles/tokens";
 import { typography } from "@/styles/typography";
-/** MUI Material. */
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-/** React. */
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 /** Tipos personalizados para o tema do MUI. */
 declare module "@mui/material/styles" {
@@ -86,18 +81,7 @@ function buildTheme(mode: "light" | "dark") {
 }
 
 export function MuiThemeProvider({ children }: { children: React.ReactNode }) {
-  /** Hooks */
-  const { isAuthenticated } = useAuth();
-  const { preferences } = usePreferences();
-
-  const mode: "light" | "dark" = !isAuthenticated
-    ? "light"
-    : (String(preferences.THEME || localStorage.getItem("theme") || "light").toLowerCase() as "light" | "dark");
-
-  useEffect(() => {
-    localStorage.setItem("theme", mode);
-  }, [mode]);
-
+  const mode = useThemeMode();
   const theme = useMemo(() => buildTheme(mode), [mode]);
 
   return (

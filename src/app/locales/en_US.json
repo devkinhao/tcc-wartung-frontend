@@ -19,12 +19,10 @@
       "avatar": "User avatar"
     },
     "tooltip": {
-      "logo": "Go to home page",
       "showPassword": "Show password",
       "hidePassword": "Hide password"
     },
     "userAvatar": "User avatar",
-    "noDataAvailable": "No data available at the moment",
     "yes": "Yes",
     "no": "No",
     "status": {
@@ -171,7 +169,6 @@
       "expirationsByMonth": {
         "title": "Expirations by Month",
         "subtitle": "Next 12 months",
-        "yAxisLabel": "Inspections",
         "tooltipLabel": "expiration(s)"
       },
       "topRequestedServices": {
@@ -180,7 +177,8 @@
       },
       "customersByCity": {
         "title": "Customers by City",
-        "tooltipLabel": "customer(s)"
+        "tooltipLabel": "customer(s)",
+        "others": "Others"
       }
     },
     "description": "An overview of the numbers."
@@ -336,11 +334,11 @@
       "username": "Username",
       "fullName": "Full name",
       "email": "Email",
-      "status": "Status",
-      "actions": "Actions"
+      "status": "Status"
     },
     "edit": {
       "title": "Edit user",
+      "notFound": "User not found.",
       "tabs": {
         "profile": "Profile",
         "permissions": "Permissions",
@@ -378,7 +376,6 @@
     "title": "My profile",
     "loading": "Loading profile...",
     "tabs": {
-      "profile": "Profile",
       "preferences": "Preferences"
     },
     "fields": {
@@ -400,12 +397,8 @@
         "new": "New password",
         "confirm": "Confirm new password"
       },
-      "actions": {
-        "toggleVisibility": "Show/hide password"
-      },
       "errors": {
-        "mismatch": "Passwords do not match",
-        "changeFailed": "Failed to change password"
+        "mismatch": "Passwords do not match"
       }
     },
     "description": "Your system account details."
@@ -437,13 +430,11 @@
       "isCustomer": "Customer?",
       "activeInspections": "Active inspections",
       "nextExpiration": "Expiration",
-      "actions": "Actions",
       "inactive": "Inactive"
     },
     "loading": "Loading companies...",
     "empty": "No companies found.",
     "rowMenu": {
-      "actionsLabel": "Actions",
       "view": "View details",
       "address": "View address",
       "inspections": "View Inspections"
@@ -456,11 +447,7 @@
       "table": {
         "inspectionDate": "Inspection date",
         "service": "Service",
-        "notes": "Notes",
-        "expiration": "Expiration"
-      },
-      "actions": {
-        "openInspection": "Open inspection"
+        "notes": "Notes"
       }
     },
     "addModal": {
@@ -519,9 +506,6 @@
         "title": "Company registered successfully!",
         "question": "Do you want to open the record now or just close?",
         "summary": "{{name}} has been added."
-      },
-      "errors": {
-        "createFailed": "Could not register the company. Check the data and try again."
       }
     }
   },
@@ -604,9 +588,6 @@
   "company": {
     "title": "My company",
     "loading": "Loading company data...",
-    "actions": {
-      "saveChanges": "Save changes"
-    },
     "fields": {
       "fantasyName": "Trade name",
       "legalName": "Legal name",
@@ -661,19 +642,15 @@
     "tabs": {
       "general": "General",
       "address": "Address",
-      "inspections": "Inspections",
-      "movements": "History"
+      "inspections": "Inspections"
     },
     "errors": {
-      "updateGeneral": "Could not update general information.",
-      "updateContacts": "Could not update contacts.",
       "updateAddress": "Could not update the address.",
       "delete": "Could not delete the company."
     },
     "general": {
       "title": "General information",
       "fields": {
-        "code": "Code",
         "legalName": "Legal name",
         "fantasyName": "Trade name",
         "cnpj": "CNPJ",
@@ -719,7 +696,6 @@
         "renewed": "Renewed"
       },
       "actions": {
-        "openDocuments": "Open documents",
         "rowMenu": "Inspection actions"
       }
     },
@@ -730,9 +706,6 @@
         "createdBy": "Created by",
         "updatedAt": "Updated date/time",
         "updatedBy": "Updated by"
-      },
-      "format": {
-        "dateTime": "{{date}} {{time}}"
       }
     }
   },
@@ -805,15 +778,7 @@
       "updatedBy": "Updated by"
     },
     "errors": {
-      "update": "Could not update inspection",
-      "uploadDoc": "Could not upload document.",
-      "uploadDocMissingFile": "Please choose a file to upload.",
-      "downloadDoc": "Could not download document.",
-      "deleteDoc": "Could not delete document.",
       "artNumberFormat": "The ART number must be in the format 0000000-0 or 00000000-0"
-    },
-    "renew": {
-      "alreadyRenewed": "This inspection has already been renewed."
     }
   },
   "notify": {
@@ -848,11 +813,7 @@
     "error": {
       "generic": "An error occurred. Please try again.",
       "saveFailed": "Failed to save changes",
-      "loadFailed": "Failed to load data",
-      "uploadFailed": "Failed to upload file",
-      "deleteFailed": "Failed to remove",
-      "downloadFailed": "Failed to download file",
-      "reportFailed": "Failed to generate report"
+      "downloadFailed": "Failed to download file"
     },
     "httpErrors": {
       "400": "Invalid data. Please check the fields and try again.",
@@ -900,7 +861,6 @@
     "filters": {
       "search": "Search by company",
       "status": "Status",
-      "allStatuses": "All statuses",
       "service": "Service",
       "allServices": "All services",
       "manufacturer": "Manufacturer",

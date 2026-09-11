@@ -20,7 +20,6 @@ export async function getInspectionDetail(id: number) {
 }
 
 export async function updateInspection(id: number, dto: InspectionUpdateRequestDTO) {
-  // Backend may use PUT or PATCH. PATCH is used elsewhere in this frontend.
   const { data } = await api.patch<InspectionDetailResponseDTO>(`/inspections/${id}`, dto);
   return data;
 }

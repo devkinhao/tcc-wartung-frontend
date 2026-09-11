@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { jwtDecode } from "jwt-decode";
+import { isAxiosError } from "axios";
 import { AuthContext, type AuthStatus } from "./AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
@@ -54,8 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await validateWithBackend(stored);
       setStatus("authenticated");
-    } catch (err: any) {
-      if (err?.response?.status === 401 || err?.response?.status === 403) {
+    } catch (err) {
+      const status = isAxiosError(err) ? err.response?.status : undefined;
+      if (status === 401 || status === 403) {
         clearSession();
         setStatus("unauthenticated");
         return;
@@ -79,9 +81,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await validateWithBackend(jwt);
       setStatus("authenticated");
-    } catch (err: any) {
+    } catch (err) {
       clearSession();
-      setStatus(!err?.response ? "offline" : "unauthenticated");
+      setStatus(isAxiosError(err) && err.response ? "unauthenticated" : "offline");
     }
   }, [clearSession]);
 

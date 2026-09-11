@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { City } from "../types/City";
 import type { AbvtexSealType } from "../types/abvtexSeal";
-import { api } from "@/api/client";
+import { qk } from "@/api/keys";
+import { createCustomer, type CustomerCreateRequestDTO } from "../api/customers.create.api";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -83,8 +85,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
 
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [form, setForm] = useState<NewCompanyForm>(defaultForm);
-  const [submitting, setSubmitting] = useState(false);
   const [createdId, setCreatedId] = useState<number | null>(null);
+  const qc = useQueryClient();
 
   // Os demais campos do passo 1 só liberam depois que o CNPJ é consultado na
   // ReceitaWS (encontrado ou não) — assim os dados sempre são puxados primeiro.
@@ -108,7 +110,6 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const closeAndReset = () => {
     setStep(0);
     setForm(defaultForm);
-    setSubmitting(false);
     setCreatedId(null);
     setCnpjStatus("empty");
     onClose();
@@ -145,39 +146,37 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
   const step1Valid = detailsUnlocked && general.success && contacts.success;
   const step2Valid = address.success;
 
-  const onSubmit = async () => {
-    setSubmitting(true);
-
-    try {
-      const payload = {
+  const { mutate: submit, isPending: submitting } = useMutation({
+    mutationFn: () => {
+      const dto: CustomerCreateRequestDTO = {
         fantasyName: form.fantasyName.trim(),
         legalName: form.legalName.trim(),
         cnpj: form.cnpj.trim(),
+        abvtexSeal: form.abvtexSeal as AbvtexSealType,
         ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
         ...(form.mobile.trim() ? { mobilePhone: form.mobile.trim() } : {}),
         ...(form.email.trim() ? { email: form.email.trim() } : {}),
-        abvtexSeal: form.abvtexSeal,
         address: {
           street: form.street.trim(),
           complement: form.complement.trim(),
           neighborhood: form.neighborhood.trim(),
           number: form.number.trim(),
           zipCode: form.zipCode.trim(),
-          cityId: form.cityId,
+          cityId: form.cityId as number,
         },
       };
-
-      const res = await api.post("/customers", payload);
-      const id = res.data && typeof res.data.id === "number" ? (res.data.id as number) : null;
-      setCreatedId(id);
+      return createCustomer(dto);
+    },
+    onSuccess: (created) => {
+      setCreatedId(created.id);
       setStep(2);
+      qc.invalidateQueries({ queryKey: qk.customersAll });
+      // O dashboard conta empresas por situação (total / clientes / não-clientes).
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
       notify.success("notify.success.companyCreated");
-    } catch (e) {
-      notify.fromError(e);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    },
+    onError: (e) => notify.fromError(e),
+  });
 
   const goToCadastro = () => {
     if (createdId) navigate(paths.customerDetails(createdId));
@@ -503,7 +502,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         ) : step === 1 ? (
           <Button
             variant="contained"
-            onClick={onSubmit}
+            onClick={() => submit()}
             disabled={!step2Valid || submitting}
             startIcon={submitting ? <CircularProgress size={16} /> : undefined}
           >

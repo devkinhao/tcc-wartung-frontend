@@ -1,35 +1,18 @@
 import { useEffect } from "react";
-import { useAuth } from "@/features/auth/useAuth";
-import { usePreferences } from "@/features/preferences/usePreferences";
+import { useThemeMode } from "./useThemeMode";
 
 /**
- * Single place that applies theme to the DOM.
- * Rule:
- *  - Logged out => always LIGHT (Nielsen: predictable / consistent)
- *  - Logged in  => uses user preference (preferences.THEME), fallback to localStorage
+ * Único lugar que aplica o tema no DOM: alterna a classe `.dark` no <html> e
+ * persiste o modo no localStorage (para o próximo carregamento já abrir certo).
+ * A regra de qual é o modo fica em `useThemeMode`.
  */
 export function ThemeSync() {
-  const { isAuthenticated } = useAuth();
-  const { preferences } = usePreferences();
+  const mode = useThemeMode();
 
   useEffect(() => {
-    const root = document.documentElement;
-
-    if (!isAuthenticated) {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      return;
-    }
-
-    const theme = String(
-      preferences.THEME ?? localStorage.getItem("theme") ?? "light"
-    ).toLowerCase();
-
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-
-    localStorage.setItem("theme", theme);
-  }, [isAuthenticated, preferences.THEME]);
+    document.documentElement.classList.toggle("dark", mode === "dark");
+    localStorage.setItem("theme", mode);
+  }, [mode]);
 
   return null;
 }

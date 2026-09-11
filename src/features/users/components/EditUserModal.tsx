@@ -23,8 +23,16 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 
-import { usersApi, type UserResponseDTO, type UserUpdateRequestDTO } from "../api/users.api";
-import { permissionsApi, type PermissionResponseDTO } from "../api/permissions.api";
+import {
+  getUser,
+  getUsers,
+  resetUserPassword,
+  updateUser,
+  updateUserPermissions,
+  type UserUpdateRequestDTO,
+} from "../api/users.api";
+import { getPermissions, type PermissionResponseDTO } from "../api/permissions.api";
+import type { User } from "../types/User";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
@@ -56,7 +64,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const [savingPwd, setSavingPwd] = useState(false);
 
 
-  const [user, setUser] = useState<UserResponseDTO | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [allPermissions, setAllPermissions] = useState<PermissionResponseDTO[]>([]);
 
   // profile
@@ -72,7 +80,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   // usada só para saber se este é o último admin ativo do sistema.
   const { data: allUsers = [] } = useQuery({
     queryKey: qk.users(),
-    queryFn: () => usersApi.findAll(),
+    queryFn: getUsers,
     enabled: open,
   });
   const activeAdminCount = useMemo(
@@ -95,7 +103,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     setLoading(true);
 
     try {
-      const [u, perms] = await Promise.all([usersApi.findById(userId), permissionsApi.findAll()]);
+      const [u, perms] = await Promise.all([getUser(userId), getPermissions()]);
 
       setUser(u);
       setAllPermissions(perms);
@@ -140,7 +148,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
         ...(creaNumber.trim() ? { creaNumber: creaNumber.trim() } : {}),
       };
 
-      const updated = await usersApi.update(userId, dto);
+      const updated = await updateUser(userId, dto);
       setUser(updated);
 
       setFullName(updated.fullName ?? "");
@@ -163,10 +171,10 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
     setSavingPerms(true);
     try {
-      await usersApi.updatePermissions(userId, { permissions: selectedPermissions });
+      await updateUserPermissions(userId, { permissions: selectedPermissions });
 
       // refresh user to reflect backend truth
-      const refreshed = await usersApi.findById(userId);
+      const refreshed = await getUser(userId);
       setUser(refreshed);
       setSelectedPermissions(refreshed.permissions ?? []);
 
@@ -185,7 +193,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
     setSavingPwd(true);
     try {
-      await usersApi.resetPassword(userId, { newPassword: newPassword.trim() });
+      await resetUserPassword(userId, { newPassword: newPassword.trim() });
       setNewPassword("");
       setShowNewPassword(false);
       notify.success("notify.success.userPasswordReset");
@@ -196,7 +204,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     }
   }
 
-  const title = user ? `${user.fullName} (@${user.username})` : (t("users.edit.title") || "Edit user");
+  const title = user ? `${user.fullName} (@${user.username})` : t("users.edit.title");
 
   const profile = userProfileSchema.safeParse({
     fullName,
@@ -246,14 +254,14 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
           </Box>
         ) : !user ? (
           <Typography variant="body2" color="warning.main" sx={{ py: 2 }}>
-            {t("users.edit.notFound") || "User not found."}
+            {t("users.edit.notFound")}
           </Typography>
         ) : (
           <>
             <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tab label={t("users.edit.tabs.profile") || "Perfil"} />
-              <Tab label={t("users.edit.tabs.permissions") || "Permissões"} />
-              <Tab label={t("users.edit.tabs.security") || "Segurança"} />
+              <Tab label={t("users.edit.tabs.profile")} />
+              <Tab label={t("users.edit.tabs.permissions")} />
+              <Tab label={t("users.edit.tabs.security")} />
             </Tabs>
 
             {/* Perfil */}
@@ -261,7 +269,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
               <Stack spacing={2}>
                 <TextField
                   size="small"
-                  label={t("users.fields.fullName") || "Nome completo"}
+                  label={t("users.fields.fullName")}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={savingProfile}
@@ -273,7 +281,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 <MaskedTextField
                   mask="cpf"
                   size="small"
-                  label={t("users.fields.cpf") || "CPF"}
+                  label={t("users.fields.cpf")}
                   value={cpf}
                   onChange={(v) => setCpf(v)}
                   disabled={savingProfile}
@@ -282,7 +290,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 />
                 <TextField
                   size="small"
-                  label={t("users.fields.email") || "Email"}
+                  label={t("users.fields.email")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={savingProfile}
@@ -294,7 +302,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                 />
                 <TextField
                   size="small"
-                  label={t("users.fields.creaNumber") || "CREA"}
+                  label={t("users.fields.creaNumber")}
                   placeholder="CREA-SC"
                   value={creaNumber}
                   onChange={(e) => setCreaNumber(e.target.value)}
@@ -309,7 +317,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
             {/* Permissões */}
             <TabPanel value={tab} index={1}>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                {t("users.edit.permissionsHint") || "Marque/desmarque as permissões (exibir apenas a descrição)."}
+                {t("users.edit.permissionsHint")}
               </Typography>
 
               <FormGroup>
@@ -346,12 +354,12 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
             {/* Segurança (Password only) */}
             <TabPanel value={tab} index={2}>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                {t("users.edit.resetPasswordHint") || "Defina uma nova senha para o usuário e clique em Resetar senha."}
+                {t("users.edit.resetPasswordHint")}
               </Typography>
 
               <TextField
                 size="small"
-                label={t("users.edit.newPassword") || "Nova senha"}
+                label={t("users.edit.newPassword")}
                 type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -385,7 +393,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
             onClick={resetPassword}
             disabled={resetDisabled}
           >
-            {t("users.edit.resetPassword") || "Resetar senha"}
+            {t("users.edit.resetPassword")}
           </Button>
         ) : (
           <Box />

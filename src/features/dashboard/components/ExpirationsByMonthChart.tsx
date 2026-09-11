@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Skeleton, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell,
@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import type { ExpirationByMonth } from "../api/dashboard.api";
 import { typography } from "@/styles/typography";
+import { DashboardCard } from "./chart/DashboardCard";
+import { ChartTooltip } from "./chart/ChartTooltip";
 
 type Props = {
   data: ExpirationByMonth[] | undefined;
@@ -18,8 +20,15 @@ const MONTH_KEYS = [
   "july","august","september","october","november","december",
 ] as const;
 
+type MonthBar = {
+  label: string;
+  fullLabel: string;
+  count: number;
+  isCurrentMonth: boolean;
+};
+
 // Preenche os meses sem dados com count=0 para mostrar a série completa
-function buildSeries(data: ExpirationByMonth[], t: (k: string) => string) {
+function buildSeries(data: ExpirationByMonth[], t: (k: string) => string): MonthBar[] {
   const now = new Date();
   const map = new Map(data.map((d) => [`${d.year}-${d.month}`, d.count]));
 
@@ -28,12 +37,11 @@ function buildSeries(data: ExpirationByMonth[], t: (k: string) => string) {
     const year = d.getFullYear();
     const month = d.getMonth() + 1;
     const key = `${year}-${month}`;
-    const isCurrentMonth = i === 0;
     return {
       label: t(`months.${MONTH_KEYS[month - 1]}`).slice(0, 3),
       fullLabel: `${t(`months.${MONTH_KEYS[month - 1]}`)} ${year}`,
       count: map.get(key) ?? 0,
-      isCurrentMonth,
+      isCurrentMonth: i === 0,
     };
   });
 }
@@ -53,85 +61,64 @@ export function ExpirationsByMonthChart({ data, loading }: Props) {
   const currentMonthColor = theme.palette.warning.main;
 
   return (
-    <Card
-      sx={{
-        transition: (th) => th.transitions.create("box-shadow"),
-        "&:hover": { boxShadow: 4 },
-      }}
+    <DashboardCard
+      title={t("dashboard.cards.expirationsByMonth.title")}
+      subtitle={t("dashboard.cards.expirationsByMonth.subtitle")}
+      fullHeight={false}
     >
-      <CardContent>
-        <Typography variant="subtitle2" color="text.primary">
-          {t("dashboard.cards.expirationsByMonth.title")}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 2 }}>
-          {t("dashboard.cards.expirationsByMonth.subtitle")}
-        </Typography>
-
-        {!hasData ? (
-          <Box sx={{ height: 240, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              {t("dashboard.empty")}
-            </Typography>
-          </Box>
-        ) : (
-          <ResponsiveContainer width="100%" height={240} minWidth={0} debounce={350}>
-            <BarChart accessibilityLayer={false} data={series} barCategoryGap="35%">
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={theme.palette.divider}
-                vertical={false}
-              />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                allowDecimals={false}
-                tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
-                axisLine={false}
-                tickLine={false}
-                width={28}
-              />
-              <Tooltip
-                cursor={{ fill: theme.palette.action.hover }}
-                content={({ active, payload, label }) => {
-                  if (!active || !payload?.length) return null;
-                  const item = series.find((s) => s.label === label);
-                  return (
-                    <Box
-                      sx={{
-                        bgcolor: "background.paper",
-                        border: `1px solid ${theme.palette.divider}`,
-                        borderRadius: 1,
-                        px: 1.5,
-                        py: 1,
-                      }}
-                    >
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        {item?.fullLabel}
-                      </Typography>
-                      <Typography variant="body2" fontWeight={typography.weight.semibold}>
-                        {payload[0].value} {t("dashboard.cards.expirationsByMonth.tooltipLabel")}
-                      </Typography>
-                    </Box>
-                  );
-                }}
-              />
-              <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={48}>
-                {series.map((entry, i) => (
-                  <Cell
-                    key={i}
-                    fill={entry.isCurrentMonth ? currentMonthColor : barColor}
-                    opacity={entry.count === 0 ? 0.2 : 1}
+      {!hasData ? (
+        <Box sx={{ height: 240, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Typography variant="body2" color="text.secondary">
+            {t("dashboard.empty")}
+          </Typography>
+        </Box>
+      ) : (
+        <ResponsiveContainer width="100%" height={240} minWidth={0} debounce={350}>
+          <BarChart accessibilityLayer={false} data={series} barCategoryGap="35%">
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke={theme.palette.divider}
+              vertical={false}
+            />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              allowDecimals={false}
+              tick={{ fontSize: typography.size.chartTick, fill: theme.palette.text.secondary }}
+              axisLine={false}
+              tickLine={false}
+              width={28}
+            />
+            <Tooltip
+              cursor={{ fill: theme.palette.action.hover }}
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                const item = payload[0].payload as MonthBar;
+                return (
+                  <ChartTooltip
+                    label={item.fullLabel}
+                    value={payload[0].value}
+                    unit={t("dashboard.cards.expirationsByMonth.tooltipLabel")}
                   />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        )}
-      </CardContent>
-    </Card>
+                );
+              }}
+            />
+            <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={48}>
+              {series.map((entry, i) => (
+                <Cell
+                  key={i}
+                  fill={entry.isCurrentMonth ? currentMonthColor : barColor}
+                  opacity={entry.count === 0 ? 0.2 : 1}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </DashboardCard>
   );
 }

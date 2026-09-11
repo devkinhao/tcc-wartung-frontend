@@ -1,44 +1,50 @@
-import { useEffect, useState } from "react";
-import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import { useTheme, lighten } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import type { CustomersByCityItem } from "../api/dashboard.api";
 import { typography } from "@/styles/typography";
+import { DashboardCard } from "./chart/DashboardCard";
+import { ChartTooltip } from "./chart/ChartTooltip";
+import { getChartPalette } from "./chart/chartPalette";
+import { useChartRemountKey } from "./chart/useChartRemountKey";
 
 type Props = {
   data: CustomersByCityItem[] | undefined;
   loading: boolean;
 };
 
-// Paleta categórica derivada dos brand tokens do projeto
-const BASE_PALETTE = [
-  "#2A4C61", "#78744C", "#4A7FA5", "#A0956B",
-  "#3D6E8C", "#8F7E55", "#5B8FAF", "#B0A57A",
-];
+const MAX_SLICES = 6;
 
-// No tema escuro os tons originais (pensados para fundo claro) quase somem
-// no card quase preto — clareamos mantendo o matiz para preservar contraste.
-function getPalette(mode: "light" | "dark") {
-  return mode === "dark" ? BASE_PALETTE.map((c) => lighten(c, 0.35)) : BASE_PALETTE;
+// Agrupa cidades com participação pequena em "Outras" para não poluir o gráfico
+function prepareData(raw: CustomersByCityItem[], othersLabel: string): CustomersByCityItem[] {
+  if (raw.length <= MAX_SLICES) return raw;
+  const top = raw.slice(0, MAX_SLICES);
+  const rest = raw.slice(MAX_SLICES).reduce((acc, d) => acc + d.count, 0);
+  return [...top, { city: othersLabel, count: rest }];
 }
 
-// Agrupa cidades com participação pequena em "Outros" para não poluir o gráfico
-function prepareData(raw: CustomersByCityItem[], t: (k: string) => string) {
-  if (raw.length <= 6) return raw;
-  const top = raw.slice(0, 6);
-  const rest = raw.slice(6).reduce((acc, d) => acc + d.count, 0);
-  return [...top, { city: t("dashboard.empty"), count: rest }];
-}
+type PieLabelProps = {
+  cx?: number | string;
+  cy?: number | string;
+  midAngle?: number;
+  innerRadius?: number | string;
+  outerRadius?: number | string;
+  percent?: number;
+};
 
-// Renderiza o label personalizado com porcentagem
-function renderCustomLabel({
-  cx, cy, midAngle, innerRadius, outerRadius, percent,
-}: any) {
-  if (percent < 0.05) return null; // Não renderiza se fatia for muito pequena
+// Label da fatia com a porcentagem
+function renderPercentLabel(props: PieLabelProps) {
+  const share = props.percent ?? 0;
+  if (share < 0.05) return null; // fatia muito pequena: não rotula
   const RADIAN = Math.PI / 180;
+  const cx = Number(props.cx ?? 0);
+  const cy = Number(props.cy ?? 0);
+  const innerRadius = Number(props.innerRadius ?? 0);
+  const outerRadius = Number(props.outerRadius ?? 0);
+  const midAngle = props.midAngle ?? 0;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -52,7 +58,7 @@ function renderCustomLabel({
       fontSize={typography.size.chartLabel}
       fontWeight={typography.weight.semibold}
     >
-      {`${(percent * 100).toFixed(0)}%`}
+      {`${(share * 100).toFixed(0)}%`}
     </text>
   );
 }
@@ -60,98 +66,67 @@ function renderCustomLabel({
 export function CustomersByCityChart({ data, loading }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
-
-  // Força uma remontagem única após o layout estabilizar — o ResponsiveContainer
-  // às vezes mede o container antes do reflow final (ex: fontes/grid ainda
-  // ajustando), e o Pie do recharts não recalcula a geometria sozinho depois.
-  const [renderKey, setRenderKey] = useState(0);
-  useEffect(() => {
-    const id = setTimeout(() => setRenderKey((k) => k + 1), 150);
-    return () => clearTimeout(id);
-  }, []);
+  const remountKey = useChartRemountKey();
 
   if (loading || !data) {
     return <Skeleton variant="rounded" height={320} />;
   }
 
   const hasData = data.length > 0;
-  const series = prepareData(data, t);
-  const palette = getPalette(theme.palette.mode);
+  const series = prepareData(data, t("dashboard.cards.customersByCity.others"));
+  const palette = getChartPalette(theme.palette.mode);
 
   return (
-    <Card
-      sx={{
-        height: "100%",
-        transition: (th) => th.transitions.create("box-shadow"),
-        "&:hover": { boxShadow: 4 },
-      }}
-    >
-      <CardContent>
-        <Typography variant="subtitle2" color="text.primary" gutterBottom>
-          {t("dashboard.cards.customersByCity.title")}
-        </Typography>
+    <DashboardCard title={t("dashboard.cards.customersByCity.title")}>
+      {!hasData ? (
+        <Box sx={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Typography variant="body2" color="text.secondary">
+            {t("dashboard.empty")}
+          </Typography>
+        </Box>
+      ) : (
+        <ResponsiveContainer key={remountKey} width="100%" height={260} minWidth={0} debounce={350}>
+          <PieChart accessibilityLayer={false}>
+            <Pie
+              data={series}
+              dataKey="count"
+              nameKey="city"
+              cx="50%"
+              cy="48%"
+              outerRadius={95}
+              labelLine={false}
+              label={renderPercentLabel}
+            >
+              {series.map((_, i) => (
+                <Cell key={i} fill={palette[i % palette.length]} />
+              ))}
+            </Pie>
 
-        {!hasData ? (
-          <Box sx={{ height: 260, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="body2" color="text.secondary">
-              {t("dashboard.empty")}
-            </Typography>
-          </Box>
-        ) : (
-          <ResponsiveContainer key={renderKey} width="100%" height={260} minWidth={0} debounce={350}>
-            <PieChart accessibilityLayer={false}>
-              <Pie
-                data={series}
-                dataKey="count"
-                nameKey="city"
-                cx="50%"
-                cy="48%"
-                outerRadius={95}
-                labelLine={false}
-                label={renderCustomLabel}
-              >
-                {series.map((_, i) => (
-                  <Cell key={i} fill={palette[i % palette.length]} />
-                ))}
-              </Pie>
+            <Tooltip
+              content={({ active, payload }) => {
+                if (!active || !payload?.length) return null;
+                return (
+                  <ChartTooltip
+                    label={payload[0].name}
+                    value={payload[0].value}
+                    unit={t("dashboard.cards.customersByCity.tooltipLabel")}
+                  />
+                );
+              }}
+            />
 
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (!active || !payload?.length) return null;
-                  return (
-                    <Box
-                      sx={{
-                        bgcolor: "background.paper",
-                        border: `1px solid ${theme.palette.divider}`,
-                        borderRadius: 1,
-                        px: 1.5,
-                        py: 1,
-                      }}
-                    >
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        {payload[0].name}
-                      </Typography>
-                      <Typography variant="body2" fontWeight={typography.weight.semibold}>
-                        {payload[0].value} {t("dashboard.cards.customersByCity.tooltipLabel")}
-                      </Typography>
-                    </Box>
-                  );
-                }}
-              />
-
-              <Legend
-                iconType="circle"
-                iconSize={8}
-                formatter={(value) => (
-                  <span style={{ fontSize: typography.size.chartTick, color: theme.palette.text.secondary }}>
-                    {value}
-                  </span>
-                )}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        )}
-      </CardContent>
-    </Card>
+            <Legend
+              iconType="circle"
+              iconSize={8}
+              formatter={(value) => (
+                <span style={{ fontSize: typography.size.chartTick, color: theme.palette.text.secondary }}>
+                  {value}
+                </span>
+              )}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
+    </DashboardCard>
   );
 }

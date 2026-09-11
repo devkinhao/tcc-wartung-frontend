@@ -25,10 +25,8 @@ import { useTranslation } from "react-i18next";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
 import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
-import { RenewInspectionModal, type RenewableInspection } from "@/features/inspections/components/RenewInspectionModal";
-import { DeactivateInspectionModal, type DeactivatableInspection } from "@/features/inspections/components/DeactivateInspectionModal";
-import { DeleteInspectionDialog, type DeletableInspection } from "@/features/inspections/components/DeleteInspectionDialog";
 import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
+import { useInspectionRowActions } from "@/features/inspections/hooks/useInspectionRowActions";
 import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
 import { ExpirationChip } from "@/components/ExpirationChip";
 import { DataTableContainer } from "@/components/DataTableContainer";
@@ -45,12 +43,16 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
   const { t } = useTranslation();
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [renewTarget, setRenewTarget] = useState<RenewableInspection | null>(null);
-  const [deactivateTarget, setDeactivateTarget] = useState<DeactivatableInspection | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<DeletableInspection | null>(null);
   const [detailId, setDetailId] = useState<number | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuRow, setMenuRow] = useState<InspectionSummaryResponseDTO | null>(null);
+
+  const {
+    openRenew: setRenewTarget,
+    openDeactivate: setDeactivateTarget,
+    openDelete: setDeleteTarget,
+    actionModals,
+  } = useInspectionRowActions({ onOpenDetail: setDetailId });
 
   function openRowMenu(e: React.MouseEvent<HTMLElement>, row: InspectionSummaryResponseDTO) {
     setMenuAnchor(e.currentTarget);
@@ -243,24 +245,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
         </MenuItem>
       </Menu>
 
-      <RenewInspectionModal
-        open={renewTarget !== null}
-        inspection={renewTarget}
-        onClose={() => setRenewTarget(null)}
-        onOpenDetail={setDetailId}
-      />
-
-      <DeactivateInspectionModal
-        open={deactivateTarget !== null}
-        inspection={deactivateTarget}
-        onClose={() => setDeactivateTarget(null)}
-      />
-
-      <DeleteInspectionDialog
-        open={deleteTarget !== null}
-        inspection={deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-      />
+      {actionModals}
 
       <InspectionDetailModal
         inspectionId={detailId}

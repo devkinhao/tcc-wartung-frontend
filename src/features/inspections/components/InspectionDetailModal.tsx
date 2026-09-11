@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
@@ -46,13 +46,19 @@ import {
 } from "../api/inspections.documents.api";
 import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
+import { invalidateInspectionCaches } from "../cache";
 import { useNotify } from "@/hooks/useNotify";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
-import { DocxPreview } from "@/components/DocxPreview";
+// A biblioteca docx-preview tem ~200 KB e só é usada ao pré-visualizar um .docx.
+// Como este modal é importado pela home e pelas listagens, o import estático
+// colocava esse peso no carregamento inicial — aqui ela só desce sob demanda.
+const DocxPreview = lazy(() =>
+  import("@/components/DocxPreview").then((m) => ({ default: m.DocxPreview })),
+);
 import { typography } from "@/styles/typography";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
@@ -158,9 +164,7 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
     mutationFn: (payload: InspectionUpdateRequestDTO) => updateInspection(id, payload),
     onSuccess: (updated) => {
       qc.setQueryData(qk.inspectionDetail(id), updated);
-      qc.invalidateQueries({ queryKey: ["inspections-list"] });
-      qc.invalidateQueries({ queryKey: qk.dashboard() });
-      if (customerId) qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
+      invalidateInspectionCaches(qc, { customerId });
       setEditing(false);
       setDraft(null);
     },
@@ -693,12 +697,20 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
           ) : preview?.kind === "pdf" ? (
             <Box component="iframe" src={preview.url} title={preview.name} sx={{ width: "100%", height: "70vh", border: 0 }} />
           ) : preview?.kind === "docx" && preview.blob ? (
-            <DocxPreview
-              blob={preview.blob}
-              message={t("inspectionDetails.documents.previewUnsupported")}
-              downloadLabel={t("inspectionDetails.documents.actions.download")}
-              onDownload={() => handleDownload(preview.docId, preview.name)}
-            />
+            <Suspense
+              fallback={
+                <Stack alignItems="center" sx={{ py: 6 }}>
+                  <CircularProgress size={24} />
+                </Stack>
+              }
+            >
+              <DocxPreview
+                blob={preview.blob}
+                message={t("inspectionDetails.documents.previewUnsupported")}
+                downloadLabel={t("inspectionDetails.documents.actions.download")}
+                onDownload={() => handleDownload(preview.docId, preview.name)}
+              />
+            </Suspense>
           ) : preview?.kind === "unsupported" ? (
             <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
               <Typography variant="body2" color="text.secondary">

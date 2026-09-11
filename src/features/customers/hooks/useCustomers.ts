@@ -3,19 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { Customer } from "../types/customersList";
 import { qk } from "@/api/keys";
+import { type SpringPage, toSpringPageParams } from "@/api/pagination";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { CustomerFilterValues } from "../components/CustomersFilters";
-
-interface SpringPageResponse {
-  content: Customer[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
-}
 
 async function fetchCustomers(params: {
   page: number;
@@ -34,11 +25,13 @@ async function fetchCustomers(params: {
     : filters.status === "inactive" ? { isActive: false }
     : {};
 
-  const { data } = await api.get<SpringPageResponse>("/customers", {
+  const { data } = await api.get<SpringPage<Customer>>("/customers", {
     params: {
-      page: page - 1, // Spring usa base 0
-      size: pageSize,
-      sort: sortBy ? `${sortBy},${sortDir}` : "nextExpirationDate,asc",
+      ...toSpringPageParams({
+        page,
+        size: pageSize,
+        sort: sortBy ? `${sortBy},${sortDir}` : "nextExpirationDate,asc",
+      }),
       search: filters.search || undefined,
       city: filters.city || undefined,
       ...statusParams,
