@@ -27,6 +27,7 @@ const Users = lazy(() => import("@/features/users/pages/UsersPage"));
 const AdminPanel = lazy(() => import("@/features/adminPanel/pages/AdminPanelPage"));
 const Company = lazy(() => import("@/features/company/pages/CompanyPage"));
 const Configurations = lazy(() => import("@/features/configurations/pages/ConfigurationsPage"));
+const EmailSettings = lazy(() => import("@/features/configurations/pages/EmailSettingsPage"));
 const Reports = lazy(() => import("@/features/reports/pages/ReportsPage"));
 
 const pageFallback = (
@@ -83,6 +84,7 @@ export const router = createBrowserRouter([
               { path: "service-types", element: page(<ServiceTypes />) },
               { path: "users", element: page(<Users />) },
               { path: "configurations", element: page(<Configurations />) },
+              { path: "configurations/email", element: page(<EmailSettings />) },
             ],
           },
         ],

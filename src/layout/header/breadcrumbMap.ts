@@ -61,6 +61,12 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
     { label: "nav.configurations" },
   ],
 
+  [paths.emailSettings]: [
+    { label: "nav.home",           path: paths.home },
+    { label: "nav.adminPanel",     path: paths.adminPanel },
+    { label: "nav.emailSettings" },
+  ],
+
   [paths.userProfile]: [
     { label: "nav.home",      path: paths.home },
     { label: "nav.myProfile" },

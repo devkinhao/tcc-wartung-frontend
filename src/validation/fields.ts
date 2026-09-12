@@ -18,6 +18,9 @@ const orEmpty = (re: RegExp) => new RegExp(`^$|${re.source}`);
 // ── opcionais (aceitam "") ────────────────────────────────────────────────────
 export const cpf = z.string().regex(orEmpty(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/), "validation.cpfInvalid");
 export const email = z.string().regex(orEmpty(/^[^\s@]+@[^\s@]+\.[^\s@]+$/), "validation.emailInvalid");
+// Variante obrigatória de `email` — vazio já reprova (usada onde o backend exige
+// @NotBlank @Email, ex: remetente das configurações de e-mail).
+export const requiredEmail = z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "validation.emailInvalid");
 export const phone = z.string().regex(orEmpty(/^\(\d{2}\) \d{4}-\d{4}$/), "validation.phoneInvalid");
 export const mobilePhone = z.string().regex(orEmpty(/^\(\d{2}\) \d{5}-\d{4}$/), "validation.mobileInvalid");
 // ART do CREA-SC: 7-8 dígitos + verificador

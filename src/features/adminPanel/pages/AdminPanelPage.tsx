@@ -7,7 +7,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { AdminPanelSettings, Settings, Build } from "@mui/icons-material";
+import { AdminPanelSettings, Settings, Build, MailOutline } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 import { Breadcrumb } from "@/layout/header/Breadcrumb";
@@ -19,6 +19,7 @@ const ITEMS = [
   { key: "serviceTypes", to: paths.serviceTypes, icon: Build },
   { key: "users", to: paths.users, icon: AdminPanelSettings },
   { key: "configurations", to: paths.configurations, icon: Settings },
+  { key: "emailSettings", to: paths.emailSettings, icon: MailOutline },
 ] as const;
 
 export default function AdminPanelPage() {

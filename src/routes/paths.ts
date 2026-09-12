@@ -29,6 +29,7 @@ export const paths = {
   company: "/company",
   users: "/users",
   configurations: "/configurations",
+  emailSettings: "/configurations/email",
 
   userProfile: "/users/me",
   preferences: "/preferences",

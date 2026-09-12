@@ -86,6 +86,7 @@
     "myCompany": "My Company",
     "users": "Users",
     "configurations": "Configurations",
+    "emailSettings": "Email settings",
     "adminPanel": "Administration",
     "myProfile": "My Profile",
     "preferences": "Preferences",
@@ -108,6 +109,10 @@
       "configurations": {
         "title": "Configurations",
         "description": "General settings that control the system's behavior."
+      },
+      "emailSettings": {
+        "title": "Email settings",
+        "description": "SMTP server used to send emails, such as password resets."
       },
       "serviceTypes": {
         "title": "Services",
@@ -227,6 +232,20 @@
     },
     "actions": {
       "save": "Save settings"
+    },
+    "emailSettings": {
+      "description": "SMTP server used to send system emails, such as password resets.",
+      "passwordPlaceholder": "Leave blank to keep the current password",
+      "passwordHelper": "Leave blank to keep the current password",
+      "fields": {
+        "host": "Host",
+        "port": "Port",
+        "username": "Username",
+        "password": "Password",
+        "fromAddress": "Sender email",
+        "fromAddressDescription": "Address shown as the sender on emails sent by the system",
+        "sendCopyToSender": "Receive a blind copy (BCC) of sent emails"
+      }
     }
   },
   "serviceTypes": {
