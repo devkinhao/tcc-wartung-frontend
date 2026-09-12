@@ -56,7 +56,7 @@ export function CompanyCountsCard({ data, loading }: Props) {
       label: t("dashboard.cards.companyCounts.total"),
       value: data.total,
       color: "text.primary",
-      onClick: () => navigate(paths.customers),
+      onClick: () => navigate(paths.customersByStatus("all")),
     },
     {
       label: t("dashboard.cards.companyCounts.clients"),

@@ -25,13 +25,19 @@ export default function CustomersListPage() {
 
   // Links externos (cards do dashboard) abrem a lista já filtrada por status.
   // Consome o parâmetro na chegada, zerando os demais filtros para o número
-  // bater com o card de origem.
+  // bater com o card de origem. "all" (card "Total") só limpa — os filtros
+  // ficam salvos em sessionStorage entre navegações, então sem isso o card
+  // "Total" herdaria o status de uma visita anterior.
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     const urlStatus = searchParams.get("status");
-    if (urlStatus && ["customer", "non-customer", "inactive"].includes(urlStatus)) {
+    const isStatusFilter = urlStatus && ["customer", "non-customer", "inactive"].includes(urlStatus);
+
+    if (isStatusFilter || urlStatus === "all") {
       clearFilters();
-      setFilter("status", urlStatus);
+      if (isStatusFilter) {
+        setFilter("status", urlStatus);
+      }
       const next = new URLSearchParams(searchParams);
       next.delete("status");
       setSearchParams(next, { replace: true });

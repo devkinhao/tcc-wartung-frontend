@@ -11,7 +11,9 @@ export const paths = {
 
   customers: "/customers",
   // Abre a lista de empresas já filtrada (usado pelos cards do dashboard).
-  customersByStatus: (status: "customer" | "non-customer" | "inactive") =>
+  // "all" é o card "Total": sinaliza para limpar qualquer filtro de status
+  // que já esteja salvo (o filtro persiste em sessionStorage entre navegações).
+  customersByStatus: (status: "customer" | "non-customer" | "inactive" | "all") =>
     `/customers?status=${status}`,
   customerDetails: (id: number | string) => `/customers/${id}`,
   customerInspectionsTab: (id: number | string) => `/customers/${id}?tab=inspections`,
