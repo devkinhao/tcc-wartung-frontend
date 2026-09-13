@@ -271,6 +271,42 @@
       }
     }
   },
+  "reminders": {
+    "title": "Reminders",
+    "homeTitle": "Reminders",
+    "empty": "No reminders here.",
+    "actions": {
+      "add": "New",
+      "complete": "Mark as done",
+      "reopen": "Reopen",
+      "delete": "Delete reminder"
+    },
+    "form": {
+      "createTitle": "New reminder",
+      "editTitle": "Edit reminder",
+      "fields": {
+        "text": "Reminder",
+        "dueDate": "Date",
+        "dueTime": "Time (optional)"
+      },
+      "errors": {
+        "pastDate": "The date can't be in the past."
+      }
+    },
+    "confirmDelete": {
+      "title": "Delete reminder",
+      "message": "Are you sure you want to delete this reminder? This action cannot be undone."
+    },
+    "context": {
+      "customer": "{{customer}}",
+      "inspection": "{{service}} — {{customer}}"
+    },
+    "due": {
+      "today": "Due today",
+      "overdue": "Overdue by {{count}} {{unit}}",
+      "in": "Due in {{count}} {{unit}}"
+    }
+  },
   "serviceTypes": {
     "title": "Services",
     "description": "Manage the services available for inspections.",
@@ -846,7 +882,8 @@
       "userPasswordReset": "User password reset successfully",
       "serviceCreated": "Service created successfully",
       "serviceUpdated": "Service updated successfully",
-      "serviceDeleted": "Service deleted successfully"
+      "serviceDeleted": "Service deleted successfully",
+      "reminderDeleted": "Reminder deleted successfully"
     },
     "warning": {
       "inspectionRenewedDocsFailed": "Inspection renewed, but there was an error attaching the documents",

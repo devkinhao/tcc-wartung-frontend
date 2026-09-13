@@ -19,6 +19,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import { useTranslation } from "react-i18next";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
+import { RemindersCard } from "@/features/reminders/components/RemindersCard";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
 import { companyContactsSchema, companyGeneralSchema } from "../../schemas";
@@ -276,6 +277,8 @@ export function CustomerGeneralTab({
           </Grid>
         </CardContent>
       </Card>
+
+      <RemindersCard customerId={view.id} />
 
       <AuditFooter {...audit} />
     </Stack>

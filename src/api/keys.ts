@@ -22,10 +22,14 @@ export const qk = {
   notificationsUnreadCount: () => ["notifications-unread-count"] as const,
   cnpjLookup: (digits: string) => ["cnpj", digits] as const,
   cepLookup: (digits: string) => ["cep", digits] as const,
+  remindersByCustomer: (customerId: number) => ["reminders", "customer", customerId] as const,
+  remindersByInspection: (inspectionId: number) => ["reminders", "inspection", inspectionId] as const,
+  remindersDue: () => ["reminders", "due"] as const,
 
   // Prefixos para invalidar todas as variações de uma lista de uma vez
   // (o React Query casa por prefixo: ["customers"] cobre ["customers", {...}]).
   customersAll: ["customers"] as const,
   inspectionsListAll: ["inspections-list"] as const,
   notificationsAll: ["notifications"] as const,
+  remindersAll: ["reminders"] as const,
 };

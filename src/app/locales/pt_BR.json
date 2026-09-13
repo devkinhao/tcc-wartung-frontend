@@ -271,6 +271,42 @@
       }
     }
   },
+  "reminders": {
+    "title": "Lembretes",
+    "homeTitle": "Lembretes",
+    "empty": "Nenhum lembrete por aqui.",
+    "actions": {
+      "add": "Novo",
+      "complete": "Marcar como concluído",
+      "reopen": "Reabrir",
+      "delete": "Excluir lembrete"
+    },
+    "form": {
+      "createTitle": "Novo lembrete",
+      "editTitle": "Editar lembrete",
+      "fields": {
+        "text": "Lembrete",
+        "dueDate": "Data",
+        "dueTime": "Horário (opcional)"
+      },
+      "errors": {
+        "pastDate": "A data não pode ser retroativa."
+      }
+    },
+    "confirmDelete": {
+      "title": "Excluir lembrete",
+      "message": "Tem certeza que deseja excluir este lembrete? Essa ação não pode ser desfeita."
+    },
+    "context": {
+      "customer": "{{customer}}",
+      "inspection": "{{service}} — {{customer}}"
+    },
+    "due": {
+      "today": "Vence hoje",
+      "overdue": "Venceu há {{count}} {{unit}}",
+      "in": "Vence em {{count}} {{unit}}"
+    }
+  },
   "serviceTypes": {
     "title": "Serviços",
     "description": "Gerencie os serviços disponíveis para as inspeções.",
@@ -846,7 +882,8 @@
       "userPasswordReset": "Senha do usuário redefinida com sucesso",
       "serviceCreated": "Serviço criado com sucesso",
       "serviceUpdated": "Serviço atualizado com sucesso",
-      "serviceDeleted": "Serviço excluído com sucesso"
+      "serviceDeleted": "Serviço excluído com sucesso",
+      "reminderDeleted": "Lembrete excluído com sucesso"
     },
     "warning": {
       "inspectionRenewedDocsFailed": "Inspeção renovada, mas houve erro ao anexar os documentos",
