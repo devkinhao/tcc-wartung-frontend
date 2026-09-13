@@ -37,6 +37,7 @@ import { listAllInspections, type InspectionListItem } from "../../inspections/a
 import { equipmentSummary } from "../../inspections/utils/equipmentSummary";
 import { InspectionDetailModal } from "../../inspections/components/InspectionDetailModal";
 import { useInspectionRowActions } from "../../inspections/hooks/useInspectionRowActions";
+import { RemindersCard } from "@/features/reminders/components/RemindersCard";
 
 const ATTENTION_LIMIT = 6;
 
@@ -64,13 +65,13 @@ function HomeStatCard({
     <Tooltip title={tooltip}>
       <Card sx={{ flex: 1, borderTop: 4, borderTopColor: color }}>
         <CardActionArea onClick={onClick} sx={{ height: "100%" }}>
-          <CardContent>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+          <CardContent sx={{ py: 1.25 }}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Box>
-                <Typography variant="subtitle1" color="text.primary">
+                <Typography variant="body2" color="text.primary">
                   {label}
                 </Typography>
-                <Typography variant="h3" fontWeight={800} color={color} lineHeight={1.1} sx={{ mt: 0.5 }}>
+                <Typography variant="h5" fontWeight={800} color={color} lineHeight={1.1} sx={{ mt: 0.25 }}>
                   {value}
                 </Typography>
               </Box>
@@ -263,7 +264,14 @@ export default function HomePage() {
     });
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 1100 }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 2000,
+        containerType: "inline-size",
+        containerName: "home-page",
+      }}
+    >
       <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
         {t("home.title")}
       </Typography>
@@ -271,90 +279,144 @@ export default function HomePage() {
         {t("home.subtitle")}
       </Typography>
 
-      {/* Cartões de ação */}
-      {loadingStatus || !status ? (
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} variant="rounded" height={128} sx={{ flex: 1 }} />
-          ))}
-        </Stack>
-      ) : (
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <HomeStatCard
-            label={t("home.cards.expired")}
-            value={status.expired}
-            tone="expired"
-            icon={<ErrorOutlineIcon fontSize="large" />}
-            tooltip={t("home.cards.tooltip.expired")}
-            onClick={() => navigate(paths.inspectionsByStatus("expired"))}
-          />
-          <HomeStatCard
-            label={t("home.cards.near", { days: alertDays })}
-            value={status.nearExpiration}
-            tone="near"
-            icon={<WarningAmberIcon fontSize="large" />}
-            tooltip={t("home.cards.tooltip.near", { days: alertDays })}
-            onClick={() => navigate(paths.inspectionsByStatus("near"))}
-          />
-          <HomeStatCard
-            label={t("home.cards.onTrack")}
-            value={status.onTrack}
-            tone="ok"
-            icon={<CheckCircleOutlineIcon fontSize="large" />}
-            tooltip={t("home.cards.tooltip.onTrack")}
-            onClick={() => navigate(paths.inspectionsByStatus("ok"))}
-          />
-        </Stack>
-      )}
-
-      {/* Inspeções que precisam de atenção */}
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 4, mb: 1.5 }}>
-        <Typography variant="h6" fontWeight={700}>
-          {t("home.attention.title")}
-        </Typography>
-        <Button
-          endIcon={<ArrowForwardIcon />}
-          onClick={() => navigate(paths.inspections)}
-          sx={{ textTransform: "none" }}
+      {/* Coluna esquerda: cartões de vencimento + inspeções que precisam de atenção.
+          Coluna direita: lembretes, com altura independente — não empurra a coluna
+          esquerda para baixo conforme a lista de lembretes cresce.
+          Responsivo via CSS container queries (não JS/ResizeObserver): recolher a
+          sidebar só muda o `margin-left` do conteúdo (ver Layout.tsx), não a
+          viewport, então breakpoints do MUI (que reagem à viewport) não serviriam
+          aqui. Container queries reagem à largura real do container, sem o
+          ResizeObserver+debounce que tínhamos antes — que podia "prender" um valor
+          intermediário errado se o gap entre eventos de resize (ex: mover a janela
+          entre monitores com DPI diferente) passasse do tempo de debounce. */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignItems: "flex-start",
+          "@container home-page (min-width: 900px)": {
+            flexDirection: "row",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            flex: "1 1 100%",
+            containerType: "inline-size",
+            containerName: "home-left-col",
+            "@container home-page (min-width: 900px)": {
+              flex: "0 1 65%",
+            },
+          }}
         >
-          {t("home.attention.seeAll")}
-        </Button>
-      </Stack>
-
-      <Card>
-        {loadingUpcoming ? (
-          <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center" sx={{ py: 5 }}>
-            <CircularProgress size={20} />
-            <Typography color="text.secondary">{t("common.loading")}</Typography>
-          </Stack>
-        ) : rows.length === 0 ? (
-          <Typography color="text.secondary" sx={{ py: 5, textAlign: "center" }}>
-            {t("home.attention.empty")}
-          </Typography>
-        ) : (
-          <>
-            {rows.map((row, index) => (
-              <Box key={row.id}>
-                {index > 0 && <Divider />}
-                <AttentionRow row={row} onRenew={openRenew} onDeactivate={openDeactivate} onOpenDetail={setDetailId} />
-              </Box>
-            ))}
-
-            {overflow > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              "@container home-left-col (min-width: 600px)": {
+                flexDirection: "row",
+              },
+            }}
+          >
+            {loadingStatus || !status ? (
+              [0, 1, 2].map((i) => (
+                <Skeleton key={i} variant="rounded" height={72} sx={{ flex: 1 }} />
+              ))
+            ) : (
               <>
-                <Divider />
-                <Button
-                  fullWidth
+                <HomeStatCard
+                  label={t("home.cards.expired")}
+                  value={status.expired}
+                  tone="expired"
+                  icon={<ErrorOutlineIcon />}
+                  tooltip={t("home.cards.tooltip.expired")}
                   onClick={() => navigate(paths.inspectionsByStatus("expired"))}
-                  sx={{ textTransform: "none", py: 1.5 }}
-                >
-                  {t("home.attention.more", { count: overflow })}
-                </Button>
+                />
+                <HomeStatCard
+                  label={t("home.cards.near", { days: alertDays })}
+                  value={status.nearExpiration}
+                  tone="near"
+                  icon={<WarningAmberIcon />}
+                  tooltip={t("home.cards.tooltip.near", { days: alertDays })}
+                  onClick={() => navigate(paths.inspectionsByStatus("near"))}
+                />
+                <HomeStatCard
+                  label={t("home.cards.onTrack")}
+                  value={status.onTrack}
+                  tone="ok"
+                  icon={<CheckCircleOutlineIcon />}
+                  tooltip={t("home.cards.tooltip.onTrack")}
+                  onClick={() => navigate(paths.inspectionsByStatus("ok"))}
+                />
               </>
             )}
-          </>
-        )}
-      </Card>
+          </Box>
+
+          {/* Inspeções que precisam de atenção */}
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 4, mb: 1.5 }}>
+            <Typography variant="h6" fontWeight={700}>
+              {t("home.attention.title")}
+            </Typography>
+            <Button
+              endIcon={<ArrowForwardIcon />}
+              onClick={() => navigate(paths.inspections)}
+              sx={{ textTransform: "none" }}
+            >
+              {t("home.attention.seeAll")}
+            </Button>
+          </Stack>
+
+          <Card>
+            {loadingUpcoming ? (
+              <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center" sx={{ py: 5 }}>
+                <CircularProgress size={20} />
+                <Typography color="text.secondary">{t("common.loading")}</Typography>
+              </Stack>
+            ) : rows.length === 0 ? (
+              <Typography color="text.secondary" sx={{ py: 5, textAlign: "center" }}>
+                {t("home.attention.empty")}
+              </Typography>
+            ) : (
+              <>
+                {rows.map((row, index) => (
+                  <Box key={row.id}>
+                    {index > 0 && <Divider />}
+                    <AttentionRow row={row} onRenew={openRenew} onDeactivate={openDeactivate} onOpenDetail={setDetailId} />
+                  </Box>
+                ))}
+
+                {overflow > 0 && (
+                  <>
+                    <Divider />
+                    <Button
+                      fullWidth
+                      onClick={() => navigate(paths.inspectionsByStatus("expired"))}
+                      sx={{ textTransform: "none", py: 1.5 }}
+                    >
+                      {t("home.attention.more", { count: overflow })}
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
+          </Card>
+        </Box>
+
+        <Box
+          sx={{
+            width: "100%",
+            flex: "1 1 100%",
+            "@container home-page (min-width: 900px)": {
+              flex: "0 1 35%",
+            },
+          }}
+        >
+          <RemindersCard due title={t("reminders.homeTitle")} />
+        </Box>
+      </Box>
 
       {actionModals}
 

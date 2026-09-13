@@ -50,6 +50,7 @@ import { invalidateInspectionCaches } from "../cache";
 import { useNotify } from "@/hooks/useNotify";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
+import { RemindersCard } from "@/features/reminders/components/RemindersCard";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
@@ -642,6 +643,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   </TableBody>
                 </DataTableContainer>
               </Box>
+
+              <RemindersCard inspectionId={id} />
 
               <AuditFooter
                 createdBy={view.createdByUsername}
