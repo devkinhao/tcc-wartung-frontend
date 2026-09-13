@@ -19,6 +19,7 @@
       "avatar": "Avatar do usuário"
     },
     "tooltip": {
+      "logo": "Ir para a página inicial",
       "showPassword": "Mostrar senha",
       "hidePassword": "Ocultar senha"
     },
@@ -79,11 +80,18 @@
     "home": "Início",
     "customersList": "Empresas",
     "inspections": "Inspeções",
+    "dashboard": "Dashboard",
+    "reports": "Relatórios",
+    "tooltip": {
+      "home": "Ir para o início",
+      "customersList": "Ver empresas cadastradas",
+      "inspections": "Acessar inspeções vinculadas",
+      "dashboard": "Consultar dashboard do sistema",
+      "reports": "Gerar relatórios"
+    },
     "inspectionsList": "Inspeções",
     "notificationsList": "Notificações",
     "serviceTypes": "Serviços",
-    "reports": "Relatórios",
-    "myCompany": "Minha Empresa",
     "users": "Usuários",
     "configurations": "Configurações",
     "emailSettings": "Configurações de e-mail",
@@ -91,8 +99,7 @@
     "myProfile": "Meu Perfil",
     "preferences": "Preferências",
     "customerDetails": "Detalhes da Empresa",
-    "companyDetails": "Detalhes da Empresa",
-    "analytics": "Análise"
+    "companyDetails": "Detalhes da Empresa"
   },
   "adminPanel": {
     "title": "Painel administrativo",
@@ -127,12 +134,28 @@
     }
   },
   "userMenu": {
-    "myProfile": "Meu perfil",
-    "logout": "Sair"
+    "myProfile": "Meu Perfil",
+    "myCompany": "Minha Empresa",
+    "documents": "Documentos",
+    "settings": "Configurações",
+    "admin": "Admin",
+    "logout": "Sair",
+    "tooltip": {
+      "title": "Abrir menu de usuário",
+      "myProfile": "Acessar meu perfil",
+      "myCompany": "Ver minha empresa",
+      "documents": "Vizualizar documentos anexados",
+      "settings": "Ir para as configurações",
+      "admin": "Acessar painel administrativo",
+      "logout": "Finalizar sessão atual"
+    }
   },
   "notifications": {
-    "ariaLabel": "Notificações",
     "title": "Notificações",
+    "tooltip": {
+      "title": "Ver notificações"
+    },
+    "ariaLabel": "Notificações",
     "description": "Histórico de notificações do sistema.",
     "empty": "Nenhuma notificação encontrada",
     "emptyUnread": "Nenhuma notificação não lida",
@@ -540,16 +563,16 @@
       }
     },
     "actions": {
-      "signIn": "Entrar",
-      "signingIn": "Entrando...",
-      "waitSeconds": "Aguarde {{seconds}}s...",
       "rememberMe": "Lembrar de mim",
       "forgotPassword": "Esqueci minha senha",
+      "signIn": "Entrar",
       "tooltip": {
         "rememberMe": "Lembrar o nome de usuário neste dispositivo",
         "forgotPassword": "Ir para a redefinição de senha",
         "signIn": "Iniciar sessão no Wartung"
-      }
+      },
+      "signingIn": "Entrando...",
+      "waitSeconds": "Aguarde {{seconds}}s..."
     },
     "welcome": {
       "title": "A gestão da Engenharia Maas",
@@ -966,7 +989,9 @@
   },
   "chatbot": {
     "title": "Assistente",
-    "openLabel": "Abrir assistente",
+    "tooltip": {
+      "title": "Abrir assistente virtual"
+    },
     "responses": {
       "navigated": "Abrindo {{page}}...",
       "loading": "Consultando...",

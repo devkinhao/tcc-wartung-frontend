@@ -2,15 +2,12 @@
 export const tokens = {
   light: {
     bg: {
-      sidebar: "#FAFAFA",
-      sidebarSelected: "#EFEFEC",
-      header: "#e6e3e3",
-      screen: "#F5F5F5",
-      card: "#FFFEFD",
-      offWhite: "#E5E4DE",
-      tableHeader: "#E8E8E8",
-      tableBody: "#F2F2F2",
+      sidebar: "#f8f7f5",
+      header: "#f3f2ef",
+      screen: "#fbfaf8",
+      card: "#fffefd",
       autofill: "#e8f0fe",
+      selected: "#e9e7e3",
     },
     text: { primary: "#303030", secondary: "#707070", contrast: "#fffefd" },
     brand: { blue: "#335e78", green: "#78744c" },
@@ -20,14 +17,11 @@ export const tokens = {
   dark: {
     bg: {
       sidebar: "#252527",
-      sidebarSelected: "#27272A",
       header: "#09090B",
       screen: "#151516",
       card: "#111113",
-      offWhite: "#1F1F23",
-      tableHeader: "#18181B",
-      tableBody: "#111113",
       autofill: "#e8f0fe",
+      selected: "#e9e7e3",
     },
     text: { primary: "#F4F4F5", secondary: "#A1A1AA", contrast: "#303030" },
     brand: { blue: "#6FA3C8", green: "#A6A072" },

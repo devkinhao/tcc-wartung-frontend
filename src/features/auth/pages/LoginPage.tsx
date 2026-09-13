@@ -1,16 +1,12 @@
-/** Componentes. */
 import { FormField } from "@/components/form/FormField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
-/** Rotas. */
 import { paths } from "@/routes/paths";
-/** Estilização. */
 import { typography } from "@/styles/typography";
-/** MUI Ícones. */
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-/** MUI Material. */
 import {
   Alert,
   Box,
@@ -22,13 +18,10 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-/** Cliente HTTP. */
 import { isAxiosError } from "axios";
-/** React. */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-/** Autenticação. */
 import { login as loginRequest } from "../api/auth.api";
 import { useAuth } from "../useAuth";
 
@@ -76,14 +69,14 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
 
-  /** Atualiza o tempo de espera. */
+  /** Reduz o cooldown do login enquanto a conta está temporariamente bloqueada por excesso de tentativas. */
   useEffect(() => {
     if (cooldown <= 0) return;
     const id = setInterval(() => setCooldown((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
   }, [cooldown]);
 
-  /** Manipula o envio do formulário. */
+  /** Valida as credenciais, envia o login e define o estado de erro ou cooldown conforme a resposta da API. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -128,49 +121,19 @@ export default function LoginPage() {
         overflowX: "hidden",
       }}
     >
-      {/** Container do formulário. */}
+      {/** Bloco principal do formulário de autenticação. */}
       <Grid
         size={{ xs: 12, md: 6 }}
         sx={{
           display: "flex",
           flexDirection: "column",
           bgcolor: "background.paper",
-          px: 3,
           overflowY: "auto",
         }}
       >
-        {/** Logo do sistema ancorada no topo. */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-            pt: 2.5,
-            pl: 2.5,
-            pb: 0.5,
-            flexShrink: 0,
-          }}
-        >
-          <Box
-            component="img"
-            src="/logo.png"
-            alt={t("common.alt.logo")}
-            sx={{
-              height: 45,
-              borderRadius: 1,
-            }}
-          />
-          <Typography
-            variant="h6"
-            sx={{
-              color: "primary.main",
-              fontWeight: typography.weight.bold,
-            }}
-          >
-            {t("app.brandName")}
-          </Typography>
-        </Box>
-        {/** Formulário de login centralizado. */}
+        {/** Logo do sistema exibida no topo do painel de login. */}
+        <SystemLogo />
+        {/** Área central do formulário. */}
         <Box
           display="flex"
           flexDirection="column"
@@ -182,7 +145,7 @@ export default function LoginPage() {
             py: 3,
           }}
         >
-          {/** Título e subtítulo. */}
+          {/** Cabeçalho da tela com a mensagem inicial do sistema. */}
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="h6" color="primary">
               {t("login.title")}
@@ -200,7 +163,7 @@ export default function LoginPage() {
             flexDirection="column"
             gap={2}
           >
-            {/** Nome de usuário. */}
+            {/** Campo de usuário, com memória do último login salvo localmente. */}
             <FormField
               required
               autoComplete="username"
@@ -215,7 +178,7 @@ export default function LoginPage() {
                 />
               }
             />
-            {/** Senha. */}
+            {/** Campo de senha com alternância de visibilidade. */}
             <FormField
               required
               label={t("login.fields.password")}
@@ -237,7 +200,7 @@ export default function LoginPage() {
                 />
               }
             />
-            {/** Ações do formulário. */}
+            {/** Opções de acesso e links auxiliares do formulário. */}
             <Box
               display="flex"
               justifyContent="space-between"
@@ -245,7 +208,7 @@ export default function LoginPage() {
               ml={0.6}
               mb={1}
             >
-              {/** Lembrar o usuário. */}
+              {/** Permite recordar o nome de usuário no navegador. */}
               <Tooltip title={t("login.actions.tooltip.rememberMe")}>
                 <FormControlLabel
                   control={
@@ -263,7 +226,7 @@ export default function LoginPage() {
                   }
                 />
               </Tooltip>
-              {/** Esquecimento de senha. */}
+              {/** Link de recuperação de acesso para redefinição de senha. */}
               <Tooltip title={t("login.actions.tooltip.forgotPassword")}>
                 <Link
                   component={RouterLink}
@@ -274,9 +237,9 @@ export default function LoginPage() {
                 </Link>
               </Tooltip>
             </Box>
-            {/** Mensagem de erro. */}
+            {/** Exibe a mensagem de erro da autenticação ou do rate limit. */}
             {error && <Alert severity="error">{error}</Alert>}
-            {/** Botão de envio. */}
+            {/** Botão principal para autenticar o usuário. */}
             <Tooltip title={t("login.actions.tooltip.signIn")}>
               <Button
                 variant="contained"
@@ -303,7 +266,7 @@ export default function LoginPage() {
                 )}
               </Button>
             </Tooltip>
-            {/** Rodapé. */}
+            {/** Rodapé da tela com a marca e ano atual. */}
             <Typography
               variant="caption"
               sx={{ color: "text.secondary", textAlign: "center", mt: 1 }}
@@ -313,7 +276,7 @@ export default function LoginPage() {
           </Box>
         </Box>
       </Grid>
-      {/** Container de boas-vindas. */}
+      {/** Painel visual de boas-vindas. */}
       <Grid
         size={{ md: 6 }}
         sx={{

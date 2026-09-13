@@ -1,5 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Tooltip } from "@/components/Tooltip";
+import { canAccess } from "@/features/auth/permissions";
+import { useAuth } from "@/features/auth/useAuth";
+import { getAvatar } from "@/features/users/api/user.api";
+import { useMe } from "@/hooks/useMe";
+import { paths } from "@/routes/paths";
+import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
+import { typography } from "@/styles/typography";
+import { getFirstName } from "@/utils/getFirstName";
+import {
+  AdminPanelSettings,
+  Apartment,
+  Article,
+  ExpandMore,
+  Logout,
+  Person,
+  Settings,
+} from "@mui/icons-material";
 import {
   Avatar,
   Button,
@@ -9,43 +25,37 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import {
-  AdminPanelSettings,
-  Apartment,
-  ExpandMore,
-  Logout,
-  Person,
-  Tune,
-} from "@mui/icons-material";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { useAuth } from "@/features/auth/useAuth";
-import { useMe } from "@/hooks/useMe";
-import { getAvatar } from "@/features/users/api/user.api";
-import { getFirstName } from "@/utils/getFirstName";
-import { paths } from "@/routes/paths";
-import { canAccess } from "@/features/auth/permissions";
-import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
+import { useNavigate } from "react-router-dom";
 
 export function UserMenu() {
+  /** Hooks. */
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { data: user } = useMe();
 
+  /** Estados. */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
-  const firstName = useMemo(() => (user ? getFirstName(user.fullName) : ""), [user]);
-  const isAdmin = useMemo(
-    () => canAccess(user?.permissions ?? [], ROUTE_PERMISSIONS.admin),
-    [user]
+  /** Indica se o menu está aberto. */
+  const open = Boolean(anchorEl);
+
+  /** Primeiro nome do usuário para exibição compacta no botão do menu. */
+  const firstName = useMemo(
+    () => (user ? getFirstName(user.fullName) : ""),
+    [user],
   );
 
-  // O endpoint de avatar exige autenticação — um <img src> direto não envia o
-  // Bearer token, então precisa ser buscado via axios (blob) como no perfil.
+  /** Verifica se o usuário tem acesso ao painel administrativo. */
+  const isAdmin = useMemo(
+    () => canAccess(user?.permissions ?? [], ROUTE_PERMISSIONS.admin),
+    [user],
+  );
+
+  /** Avatar  obtido via API autenticada. */
   useEffect(() => {
     if (!user?.id || !user.avatarUrl) {
       setAvatarSrc(null);
@@ -67,13 +77,16 @@ export function UserMenu() {
 
   if (!user) return null;
 
+  /** Fecha o menu do usuário e centraliza o fluxo de navegação. */
   const close = () => setAnchorEl(null);
 
+  /** Navega para a rota escolhida e fecha o menu antes da transição. */
   const go = (path: string) => {
     close();
     navigate(path);
   };
 
+  /** Finaliza a sessão do usuário e o redireciona para a tela de login. */
   const handleLogout = () => {
     close();
     logout();
@@ -82,72 +95,104 @@ export function UserMenu() {
 
   return (
     <>
-      <Button
-        color="inherit"
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-        startIcon={
-          avatarSrc ? (
-            <Avatar
-              src={avatarSrc}
-              sx={{ width: 32, height: 32 }}
-              alt={t("common.alt.avatar")}
-            />
-          ) : (
-            <Avatar sx={{ width: 32, height: 32 }} aria-label={t("common.userAvatar")}>
-              {firstName?.[0] ?? "U"}
-            </Avatar>
-          )
-        }
-        endIcon={<ExpandMore />}
-        sx={{ textTransform: "none" }}
-      >
-        <Typography variant="body2">{firstName}</Typography>
-      </Button>
-
+      {/** Botão principal do usuário no cabeçalho. */}
+      <Tooltip title={t("userMenu.tooltip.title")}>
+        <Button
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+          startIcon={
+            avatarSrc ? (
+              <Avatar
+                src={avatarSrc}
+                sx={{ width: 32, height: 32 }}
+                alt={t("common.alt.avatar")}
+              />
+            ) : (
+              <Avatar
+                sx={{ width: 32, height: 32 }}
+                aria-label={t("common.userAvatar")}
+              >
+                {firstName?.[0] ?? "U"}
+              </Avatar>
+            )
+          }
+          endIcon={<ExpandMore color="action" />}
+        >
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: typography.weight.medium }}
+            color="text.primary"
+          >
+            {firstName}
+          </Typography>
+        </Button>
+      </Tooltip>
+      {/** Menu contextual com dados do usuário e ações de navegação. */}
       <Menu
         anchorEl={anchorEl}
         open={open}
         onClose={close}
-        slotProps={{ paper: { sx: { width: 220 } } }}
+        slotProps={{ paper: { sx: { width: 240 } } }}
       >
-        <MenuItem onClick={() => go(paths.userProfile)}>
-          <ListItemIcon>
-            <Person fontSize="small" />
-          </ListItemIcon>
-          {t("userMenu.myProfile")}
-        </MenuItem>
-
-        <MenuItem onClick={() => go(paths.preferences)}>
-          <ListItemIcon>
-            <Tune fontSize="small" />
-          </ListItemIcon>
-          {t("nav.preferences")}
-        </MenuItem>
-
-        <MenuItem onClick={() => go(paths.company)}>
-          <ListItemIcon>
-            <Apartment fontSize="small" />
-          </ListItemIcon>
-          {t("nav.myCompany")}
-        </MenuItem>
-
-        {isAdmin && (
-          <MenuItem onClick={() => go(paths.adminPanel)}>
+        {/** Acesso ao perfil do usuário autenticado. */}
+        <Tooltip title={t("userMenu.tooltip.myProfile")} placement="left">
+          <MenuItem onClick={() => go(paths.userProfile)}>
             <ListItemIcon>
-              <AdminPanelSettings fontSize="small" />
+              <Person fontSize="small" />
             </ListItemIcon>
-            {t("nav.adminPanel")}
+            {t("userMenu.myProfile")}
           </MenuItem>
+        </Tooltip>
+        {/** Acesso aos dados da empresa vinculada ao usuário. */}
+        <Tooltip title={t("userMenu.tooltip.myCompany")} placement="left">
+          <MenuItem onClick={() => go(paths.company)}>
+            <ListItemIcon>
+              <Apartment fontSize="small" />
+            </ListItemIcon>
+            {t("userMenu.myCompany")}
+          </MenuItem>
+        </Tooltip>
+        {/** Seção de documentos ou anexos do usuário. */}
+        <Tooltip title={t("userMenu.tooltip.documents")} placement="left">
+          <MenuItem>
+            <ListItemIcon>
+              <Article fontSize="small" />
+            </ListItemIcon>
+            {t("userMenu.documents")}
+          </MenuItem>
+        </Tooltip>
+        {/** Ajustes pessoais e preferências da aplicação. */}
+        <Tooltip title={t("userMenu.tooltip.settings")} placement="left">
+          <MenuItem onClick={() => go(paths.preferences)}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            {t("userMenu.settings")}
+          </MenuItem>
+        </Tooltip>
+        {/** Área administrativa exclusiva para usuários com permissão. */}
+        {isAdmin && (
+          <Tooltip title={t("userMenu.tooltip.admin")} placement="left">
+            <MenuItem
+              onClick={() => go(paths.adminPanel)}
+              sx={{ color: "secondary.main" }}
+            >
+              <ListItemIcon sx={{ color: "secondary.main" }}>
+                <AdminPanelSettings fontSize="small" />
+              </ListItemIcon>
+              {t("userMenu.admin")}
+            </MenuItem>
+          </Tooltip>
         )}
-
         <Divider />
-
-        <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
-          <ListItemIcon sx={{ color: "error.main" }}>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          {t("userMenu.logout")}
-        </MenuItem>
+        {/** Encerramento da sessão ativa do usuário. */}
+        <Tooltip title={t("userMenu.tooltip.logout")} placement="left">
+          <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
+            <ListItemIcon sx={{ color: "error.main" }}>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            {t("userMenu.logout")}
+          </MenuItem>
+        </Tooltip>
       </Menu>
     </>
   );

@@ -19,6 +19,7 @@
       "avatar": "User avatar"
     },
     "tooltip": {
+      "logo": "Go to homepage",
       "showPassword": "Show password",
       "hidePassword": "Hide password"
     },
@@ -79,11 +80,18 @@
     "home": "Home",
     "customersList": "Companies",
     "inspections": "Inspections",
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "tooltip": {
+      "home": "Go to homepage",
+      "customersList": "View registered companies",
+      "inspections": "Access linked inspections",
+      "dashboard": "View system dashboard",
+      "reports": "Generate reports"
+    },
     "inspectionsList": "Inspections",
     "notificationsList": "Notifications",
     "serviceTypes": "Services",
-    "reports": "Reports",
-    "myCompany": "My Company",
     "users": "Users",
     "configurations": "Configurations",
     "emailSettings": "Email settings",
@@ -91,8 +99,7 @@
     "myProfile": "My Profile",
     "preferences": "Preferences",
     "customerDetails": "Company Details",
-    "companyDetails": "Company Details",
-    "analytics": "Analytics"
+    "companyDetails": "Company Details"
   },
   "adminPanel": {
     "title": "Admin panel",
@@ -127,12 +134,28 @@
     }
   },
   "userMenu": {
-    "myProfile": "My profile",
-    "logout": "Sign out"
+    "myProfile": "My Profile",
+    "myCompany": "My Company",
+    "documents": "Documents",
+    "settings": "Settings",
+    "admin": "Admin",
+    "logout": "Sign out",
+    "tooltip": {
+      "title": "Open user menu",
+      "myProfile": "Access my profile",
+      "myCompany": "View my company",
+      "documents": "View attached documents",
+      "settings": "Go to settings",
+      "admin": "Access administrative panel",
+      "logout": "End current session"
+    }
   },
   "notifications": {
-    "ariaLabel": "Notifications",
     "title": "Notifications",
+    "tooltip": {
+      "title": "View notifications"
+    },
+    "ariaLabel": "Notifications",
     "description": "History of system notifications.",
     "empty": "No notifications found",
     "emptyUnread": "No unread notifications",
@@ -540,16 +563,16 @@
       }
     },
     "actions": {
-      "signIn": "Sign in",
-      "signingIn": "Signing in...",
-      "waitSeconds": "Wait {{seconds}}s...",
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot my password",
+      "signIn": "Sign in",
       "tooltip": {
         "rememberMe": "Remember the username on this device",
         "forgotPassword": "Go to password reset",
         "signIn": "Log in to Wartung"
-      }
+      },
+      "signingIn": "Signing in...",
+      "waitSeconds": "Wait {{seconds}}s..."
     },
     "welcome": {
       "title": "Management of Engenharia Maas",
@@ -966,7 +989,9 @@
   },
   "chatbot": {
     "title": "Assistant",
-    "openLabel": "Open assistant",
+    "tooltip": {
+      "title": "Open virtual assistant"
+    },
     "responses": {
       "navigated": "Opening {{page}}...",
       "loading": "Looking that up...",

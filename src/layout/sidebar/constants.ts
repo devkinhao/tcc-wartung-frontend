@@ -1,3 +1,5 @@
-// Fonte única de verdade para larguras do sidebar
+/** Largura da sidebar quando expandida. */
 export const DRAWER_WIDTH = 220;
-export const DRAWER_COLLAPSED_WIDTH = 72;
+
+/** Largura da sidebar quando fechada. */
+export const DRAWER_COLLAPSED_WIDTH = 85;
