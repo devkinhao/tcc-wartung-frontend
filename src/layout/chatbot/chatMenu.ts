@@ -53,7 +53,7 @@ const navigateCategory: ChatMenuOption = {
   introKey: "chatbot.menu.categories.navigate.intro",
   children: [
     navMenuAction("nav-home", "chatbot.menu.actions.dashboard", paths.home, "nav.home"),
-    navMenuAction("nav-analytics", "chatbot.menu.actions.analytics", paths.dashboard, "nav.analytics"),
+    navMenuAction("nav-analytics", "chatbot.menu.actions.analytics", paths.dashboard, "nav.dashboard"),
     navMenuAction(
       "nav-customers",
       "chatbot.menu.actions.customers",
