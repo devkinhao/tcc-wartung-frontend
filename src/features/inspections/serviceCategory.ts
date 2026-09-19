@@ -50,7 +50,15 @@ export function getServiceFields(category: ServiceCategory | null | undefined): 
   return category ? SERVICE_CATEGORY_FIELDS[category] : NO_FIELDS;
 }
 
-const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["cylinderCount", "btu"]);
+/** Chave i18n da unidade de capacidade exibida ao lado do rótulo do campo
+ * (ex: "Capacidade (Litros)") — categorias fora daqui não usam o campo capacity. */
+export const CAPACITY_UNIT_KEY: Partial<Record<ServiceCategory, string>> = {
+  CALDEIRA: "inspectionDetails.fields.capacityUnit.liters",
+  COMPRESSOR: "inspectionDetails.fields.capacityUnit.liters",
+  ELEVADOR: "inspectionDetails.fields.capacityUnit.kg",
+};
+
+const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["capacity", "cylinderCount", "btu"]);
 
 /**
  * Valida os campos de equipamento conforme a categoria do serviço. Não usa o

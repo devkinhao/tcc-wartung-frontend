@@ -825,6 +825,10 @@
       "manufacturer": "Manufacturer",
       "model": "Model",
       "capacity": "Capacity",
+      "capacityUnit": {
+        "liters": "Liters",
+        "kg": "Kg"
+      },
       "cylinderCount": "Number of cylinders",
       "btu": "BTUs"
     },

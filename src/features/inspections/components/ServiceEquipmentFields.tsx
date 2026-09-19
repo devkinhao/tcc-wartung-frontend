@@ -1,6 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
+  CAPACITY_UNIT_KEY,
   getServiceFields,
   type EquipmentFieldKey,
   type EquipmentFieldValues,
@@ -18,10 +19,9 @@ type Props = {
 const MAX_LENGTH: Partial<Record<EquipmentFieldKey, number>> = {
   manufacturer: 60,
   model: 60,
-  capacity: 30,
 };
 
-const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["cylinderCount", "btu"]);
+const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["capacity", "cylinderCount", "btu"]);
 
 /**
  * Campos de equipamento da inspeção — só os aplicáveis ao serviço escolhido
@@ -40,10 +40,14 @@ export function ServiceEquipmentFields({ category, values, onChange, disabled = 
     <Grid container spacing={2}>
       {fields.map((field) => {
         const error = errors[field];
+        const unitKey = field === "capacity" && category ? CAPACITY_UNIT_KEY[category] : undefined;
+        const label = unitKey
+          ? `${t(`inspectionDetails.fields.${field}`)} (${t(unitKey)})`
+          : t(`inspectionDetails.fields.${field}`);
         return (
           <Grid key={field} size={{ xs: 12, md: mdWidth }}>
             <TextField
-              label={t(`inspectionDetails.fields.${field}`)}
+              label={label}
               size="small"
               fullWidth
               required={required.includes(field)}
