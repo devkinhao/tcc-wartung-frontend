@@ -21,7 +21,8 @@
     "tooltip": {
       "logo": "Ir para a página inicial",
       "showPassword": "Mostrar senha",
-      "hidePassword": "Ocultar senha"
+      "hidePassword": "Ocultar senha",
+      "goTo": "Ir para {{page}}"
     },
     "userAvatar": "Avatar do usuário",
     "yes": "Sim",

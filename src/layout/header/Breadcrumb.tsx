@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Link, Tooltip, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { BreadcrumbItem } from "./breadcrumbMap";
 import { typography } from "@/styles/typography";
@@ -27,15 +27,16 @@ export function Breadcrumb({ items, size = "default" }: Props) {
 
         if (c.path && !last) {
           return (
-            <Link
-              key={i}
-              underline="hover"
-              color="inherit"
-              sx={{ cursor: "pointer" }}
-              onClick={() => navigate(c.path!)}
-            >
-              {label}
-            </Link>
+            <Tooltip key={i} title={t("common.tooltip.goTo", { page: label })}>
+              <Link
+                underline="hover"
+                color="inherit"
+                sx={{ cursor: "pointer" }}
+                onClick={() => navigate(c.path!)}
+              >
+                {label}
+              </Link>
+            </Tooltip>
           );
         }
 

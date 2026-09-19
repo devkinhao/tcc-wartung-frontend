@@ -21,7 +21,8 @@
     "tooltip": {
       "logo": "Go to homepage",
       "showPassword": "Show password",
-      "hidePassword": "Hide password"
+      "hidePassword": "Hide password",
+      "goTo": "Go to {{page}}"
     },
     "userAvatar": "User avatar",
     "yes": "Yes",
