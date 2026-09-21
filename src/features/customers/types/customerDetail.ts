@@ -45,6 +45,7 @@ export type CustomerDetailResponseDTO = {
   mobilePhone: string;
   email: string;
   isCustomer: boolean;
+  isActive: boolean;
   abvtexSeal: AbvtexSealType;
   address: AddressResponseDTO;
 

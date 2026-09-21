@@ -24,6 +24,8 @@ type Props = {
   view: CustomerDetailResponseDTO;
   editing: boolean;
   saving: boolean;
+  /** true quando a empresa está desativada (LOG_ATIVO = false) — bloqueia toda edição */
+  readOnly?: boolean;
   cities: { id: number; name: string }[];
   onEdit: () => void;
   onCancel: () => void;
@@ -39,6 +41,7 @@ export function CustomerAddressTab({
   view,
   editing,
   saving,
+  readOnly = false,
   cities,
   onEdit,
   onCancel,
@@ -83,6 +86,7 @@ export function CustomerAddressTab({
               editing={editing}
               saving={saving}
               saveDisabled={!isAddressValid}
+              readOnly={readOnly}
               onEdit={onEdit}
               onCancel={onCancel}
               onSave={onSave}

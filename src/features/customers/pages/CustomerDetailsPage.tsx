@@ -1,6 +1,7 @@
 import { useState, type SyntheticEvent } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import {
+  Alert,
   Box,
   Button,
   Chip,
@@ -124,6 +125,13 @@ export default function CustomerDetailsPage() {
       <Box sx={{ mb: 1 }}>
         <Breadcrumb items={breadcrumbItems} size="large" />
       </Box>
+
+      {/* Empresa desativada (LOG_ATIVO = false) — ficha somente leitura */}
+      {!view.isActive && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {t("customerDetails.deactivated.banner")}
+        </Alert>
+      )}
 
       {/* Aviso: desativar o cliente desativa automaticamente as inspeções ativas dele */}
       <Dialog open={confirmDeactivateOpen} onClose={() => setConfirmDeactivateOpen(false)} maxWidth="xs" fullWidth>
@@ -265,6 +273,7 @@ export default function CustomerDetailsPage() {
             updatedBy: view.updatedByUsername,
             updatedAt: view.updatedAt,
           }}
+          readOnly={!view.isActive}
           updateField={updateField}
           editingGeneral={editingGeneral}
           savingGeneral={mutations.general.isPending}
@@ -290,6 +299,7 @@ export default function CustomerDetailsPage() {
           view={view}
           editing={editingAddress}
           saving={mutations.address.isPending}
+          readOnly={!view.isActive}
           cities={cities}
           updateAddress={updateAddress}
           onCepFound={handleCepFound}
@@ -314,6 +324,7 @@ export default function CustomerDetailsPage() {
           customerLegalName={view.legalName}
           customerCnpj={view.cnpj}
           inspections={view.inspections}
+          readOnly={!view.isActive}
         />
       )}
     </Box>

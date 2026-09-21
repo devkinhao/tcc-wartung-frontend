@@ -73,13 +73,13 @@ function context(reminder: ReminderResponseDTO, t: (key: string, opts?: Record<s
   return null;
 }
 
-type Props = { title?: string } & ReminderScope;
+type Props = { title?: string; readOnly?: boolean } & ReminderScope;
 
 // Tempo mostrando a caixinha marcada antes de começar a sumir — dá tempo do
 // usuário ver que a ação registrou, em vez do item só desaparecer na hora.
 const CHECKED_PAUSE_MS = 500;
 
-export function RemindersCard({ title, ...scope }: Props) {
+export function RemindersCard({ title, readOnly = false, ...scope }: Props) {
   const { t } = useTranslation();
   const { reminders, loading, create, isCreating, update, isUpdating, complete, reopen, remove } = useReminders(scope);
   // Só nessa visão (home) concluir remove o item da lista — nos cards de
@@ -197,9 +197,11 @@ export function RemindersCard({ title, ...scope }: Props) {
       <CardContent>
         <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" sx={{ mb: 1.5 }}>
           <Typography variant="subtitle2">{title ?? t("reminders.title")}</Typography>
-          <Button size="small" startIcon={<AddIcon />} onClick={openCreate} sx={{ textTransform: "none" }}>
-            {t("reminders.actions.add")}
-          </Button>
+          {!readOnly && (
+            <Button size="small" startIcon={<AddIcon />} onClick={openCreate} sx={{ textTransform: "none" }}>
+              {t("reminders.actions.add")}
+            </Button>
+          )}
         </Stack>
 
         {loading ? (
@@ -293,14 +295,16 @@ export function RemindersCard({ title, ...scope }: Props) {
       </CardContent>
 
       <Menu anchorEl={menuState?.anchorEl} open={menuState !== null} onClose={() => setMenuState(null)}>
-        <MenuItem
-          onClick={() => {
-            if (menuState) openEdit(menuState.reminder);
-            setMenuState(null);
-          }}
-        >
-          {t("common.actions.edit")}
-        </MenuItem>
+        {!readOnly && (
+          <MenuItem
+            onClick={() => {
+              if (menuState) openEdit(menuState.reminder);
+              setMenuState(null);
+            }}
+          >
+            {t("common.actions.edit")}
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             if (menuState) setConfirmDeleteId(menuState.reminder.id);

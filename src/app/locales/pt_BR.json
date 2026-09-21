@@ -715,6 +715,9 @@
       "title": "Marcar como não-cliente",
       "message": "Esta empresa deixará de ser cliente. Todas as inspeções ativas dela serão desativadas automaticamente. Deseja continuar?"
     },
+    "deactivated": {
+      "banner": "Esta empresa está desativada. Os dados dela, inspeções e lembretes não podem ser editados."
+    },
     "summary": {
       "cnpj": "CNPJ",
       "phone": "Telefone",
@@ -930,6 +933,7 @@
       "SERVICE_TYPE_HAS_INSPECTIONS": "Não é possível excluir: este tipo de serviço possui inspeções vinculadas.",
       "INSPECTION_ALREADY_RENEWED": "Esta inspeção já foi renovada.",
       "INSPECTION_INACTIVE": "Inspeção inativa. Reative-a antes de editar ou anexar documentos.",
+      "CUSTOMER_INACTIVE": "Esta empresa está desativada e não pode ser editada.",
       "SERVICE_FIELDS_REQUIRED": "Preencha os dados do equipamento exigidos para este serviço.",
       "LAST_ADMIN": "Não é possível: o sistema precisa ter pelo menos um administrador ativo."
     }

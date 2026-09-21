@@ -715,6 +715,9 @@
       "title": "Mark as non-customer",
       "message": "This company will no longer be a customer. All of its active inspections will be automatically deactivated. Do you want to continue?"
     },
+    "deactivated": {
+      "banner": "This company is deactivated. Its data, inspections and reminders cannot be edited."
+    },
     "summary": {
       "cnpj": "CNPJ",
       "phone": "Phone",
@@ -930,6 +933,7 @@
       "SERVICE_TYPE_HAS_INSPECTIONS": "Cannot delete: this service type has linked inspections.",
       "INSPECTION_ALREADY_RENEWED": "This inspection has already been renewed.",
       "INSPECTION_INACTIVE": "Inactive inspection. Reactivate it before editing or attaching documents.",
+      "CUSTOMER_INACTIVE": "This company is deactivated and cannot be edited.",
       "SERVICE_FIELDS_REQUIRED": "Fill in the equipment data required for this service.",
       "LAST_ADMIN": "Not allowed: the system must keep at least one active administrator."
     }

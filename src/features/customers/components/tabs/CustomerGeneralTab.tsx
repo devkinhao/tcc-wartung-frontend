@@ -34,6 +34,8 @@ type Props = {
     updatedBy: string | null;
     updatedAt: string | null;
   };
+  /** true quando a empresa está desativada (LOG_ATIVO = false) — bloqueia toda edição */
+  readOnly?: boolean;
   // Geral
   editingGeneral: boolean;
   savingGeneral: boolean;
@@ -59,6 +61,7 @@ const cardSx = {
 export function CustomerGeneralTab({
   view,
   audit,
+  readOnly = false,
   editingGeneral, savingGeneral, onEditGeneral, onCancelGeneral, onSaveGeneral,
   editingContacts, savingContacts, onEditContacts, onCancelContacts, onSaveContacts,
   updateField,
@@ -95,6 +98,7 @@ export function CustomerGeneralTab({
             editing={editingGeneral}
             saving={savingGeneral}
             saveDisabled={!isGeneralValid}
+            readOnly={readOnly}
             onEdit={onEditGeneral}
             onCancel={onCancelGeneral}
             onSave={onSaveGeneral}
@@ -192,6 +196,7 @@ export function CustomerGeneralTab({
             editing={editingContacts}
             saving={savingContacts}
             saveDisabled={!isContactsValid}
+            readOnly={readOnly}
             onEdit={onEditContacts}
             onCancel={onCancelContacts}
             onSave={onSaveContacts}
@@ -278,7 +283,7 @@ export function CustomerGeneralTab({
         </CardContent>
       </Card>
 
-      <RemindersCard customerId={view.id} />
+      <RemindersCard customerId={view.id} readOnly={readOnly} />
 
       <AuditFooter {...audit} />
     </Stack>

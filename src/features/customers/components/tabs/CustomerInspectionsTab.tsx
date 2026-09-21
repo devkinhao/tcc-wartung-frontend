@@ -37,9 +37,11 @@ type Props = {
   customerLegalName: string;
   customerCnpj: string;
   inspections?: InspectionSummaryResponseDTO[];
+  /** true quando a empresa está desativada (LOG_ATIVO = false) — bloqueia novas inspeções e renovações */
+  readOnly?: boolean;
 };
 
-export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections }: Props) {
+export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections, readOnly = false }: Props) {
   const { t } = useTranslation();
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -100,9 +102,11 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
           {t("customerDetails.inspections.title")}
         </Typography>
 
-        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-          {t("inspections.actions.addInspection")}
-        </Button>
+        {!readOnly && (
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+            {t("inspections.actions.addInspection")}
+          </Button>
+        )}
       </Stack>
 
       <AddInspectionModal
@@ -215,7 +219,7 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
 
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
         <MenuItem
-          disabled={menuRow?.isRenewed}
+          disabled={menuRow?.isRenewed || readOnly}
           onClick={() => {
             if (menuRow) renewFromRow(menuRow);
             closeRowMenu();
