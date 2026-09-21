@@ -247,12 +247,14 @@
     "title": "Configurações do sistema",
     "description": "Ajustes gerais que controlam o comportamento do sistema.",
     "fields": {
-      "diasAlertaVencimento": "Dias de alerta de vencimento",
-      "diasAlertaVencimentoDescription": "Quantidade de dias antes do vencimento em que a inspeção passa a ser sinalizada como próxima do vencimento",
+      "expirationAlertDays": "Dias de alerta de vencimento",
+      "expirationAlertDaysDescription": "Quantidade de dias antes do vencimento em que a inspeção passa a ser sinalizada como próxima do vencimento",
       "allowedFileExtensions": "Extensões de arquivo permitidas",
       "allowedFileExtensionsDescription": "Extensões aceitas no upload de documentos, separadas por vírgula (ex: pdf,jpg,png)",
       "maxFileSizeMb": "Tamanho máximo de arquivo (MB)",
-      "maxFileSizeMbDescription": "Tamanho máximo permitido, em megabytes, para upload de documentos"
+      "maxFileSizeMbDescription": "Tamanho máximo permitido, em megabytes, para upload de documentos",
+      "reminderDeleteAfterDays": "Dias para exclusão de lembretes vencidos",
+      "reminderDeleteAfterDaysDescription": "Quantidade de dias após o vencimento em que um lembrete não concluído é excluído automaticamente"
     },
     "actions": {
       "save": "Salvar configurações"
