@@ -644,7 +644,7 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                 </DataTableContainer>
               </Box>
 
-              <RemindersCard inspectionId={id} />
+              <RemindersCard inspectionId={id} readOnly={readOnly} />
 
               <AuditFooter
                 createdBy={view.createdByUsername}
