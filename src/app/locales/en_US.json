@@ -98,6 +98,7 @@
     "emailSettings": "Email settings",
     "adminPanel": "Administration",
     "myProfile": "My Profile",
+    "documents": "Documents",
     "preferences": "Preferences",
     "customerDetails": "Company Details",
     "companyDetails": "Company Details"
@@ -397,6 +398,33 @@
         "description": "Active overdue inspections from active customers, grouped by customer."
       }
     }
+  },
+  "userDocuments": {
+    "title": "My documents",
+    "description": "Store reports, certificates and other personal documents.",
+    "loading": "Loading documents...",
+    "empty": "No documents found.",
+    "picker": {
+      "select": "Attach documents"
+    },
+    "viewMode": {
+      "list": "List view",
+      "grid": "Grid view"
+    },
+    "table": {
+      "name": "Name",
+      "size": "Size",
+      "uploadDate": "Upload date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View document",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "confirmDeleteTitle": "Delete document",
+    "confirmDelete": "Are you sure you want to delete this document?",
+    "previewUnsupported": "Preview not available for this file type. Download the file to view it."
   },
   "users": {
     "title": "Users",

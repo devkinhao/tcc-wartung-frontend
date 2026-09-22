@@ -98,6 +98,7 @@
     "emailSettings": "Configurações de e-mail",
     "adminPanel": "Administração",
     "myProfile": "Meu Perfil",
+    "documents": "Documentos",
     "preferences": "Preferências",
     "customerDetails": "Detalhes da Empresa",
     "companyDetails": "Detalhes da Empresa"
@@ -397,6 +398,33 @@
         "description": "Inspeções ativas com prazo expirado, de clientes ativos, agrupadas por cliente."
       }
     }
+  },
+  "userDocuments": {
+    "title": "Meus documentos",
+    "description": "Armazene laudos, certificados e outros documentos pessoais.",
+    "loading": "Carregando documentos...",
+    "empty": "Nenhum documento encontrado.",
+    "picker": {
+      "select": "Anexar documentos"
+    },
+    "viewMode": {
+      "list": "Ver em lista",
+      "grid": "Ver em grade"
+    },
+    "table": {
+      "name": "Nome",
+      "size": "Tamanho",
+      "uploadDate": "Data de envio",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Ver documento",
+      "download": "Baixar",
+      "delete": "Excluir"
+    },
+    "confirmDeleteTitle": "Excluir documento",
+    "confirmDelete": "Tem certeza que deseja excluir este documento?",
+    "previewUnsupported": "Pré-visualização não disponível para este tipo de arquivo. Baixe o arquivo para visualizá-lo."
   },
   "users": {
     "title": "Usuários",

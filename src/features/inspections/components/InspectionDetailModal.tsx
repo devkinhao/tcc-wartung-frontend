@@ -52,6 +52,7 @@ import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
 import { RemindersCard } from "@/features/reminders/components/RemindersCard";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
+import { guessMimeType, isDocx } from "@/utils/fileType";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
 // A biblioteca docx-preview tem ~200 KB e só é usada ao pré-visualizar um .docx.
@@ -72,28 +73,6 @@ import { deactivationReasonKey } from "../deactivationReason";
 function toISODate(value?: string | null) {
   if (!value) return "";
   return value.split("T")[0];
-}
-
-// O backend devolve o download sempre como "application/octet-stream" —
-// deduzimos o tipo real pela extensão pra saber o que dá pra pré-visualizar
-// inline no navegador (imagem/PDF) e o que só dá pra baixar (docx, xlsx, etc).
-function guessMimeType(name: string): string | null {
-  const ext = name.split(".").pop()?.toLowerCase();
-  switch (ext) {
-    case "pdf": return "application/pdf";
-    case "png": return "image/png";
-    case "jpg":
-    case "jpeg": return "image/jpeg";
-    case "gif": return "image/gif";
-    case "bmp": return "image/bmp";
-    case "webp": return "image/webp";
-    case "svg": return "image/svg+xml";
-    default: return null;
-  }
-}
-
-function isDocx(name: string): boolean {
-  return name.toLowerCase().endsWith(".docx");
 }
 
 type Props = {

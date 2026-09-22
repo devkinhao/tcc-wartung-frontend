@@ -153,7 +153,7 @@ export function UserMenu() {
         </Tooltip>
         {/** Seção de documentos ou anexos do usuário. */}
         <Tooltip title={t("userMenu.tooltip.documents")} placement="left">
-          <MenuItem>
+          <MenuItem onClick={() => go(paths.documents)}>
             <ListItemIcon>
               <Article fontSize="small" />
             </ListItemIcon>

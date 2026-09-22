@@ -34,5 +34,6 @@ export const paths = {
   emailSettings: "/configurations/email",
 
   userProfile: "/users/me",
+  documents: "/documents",
   preferences: "/preferences",
 } as const;

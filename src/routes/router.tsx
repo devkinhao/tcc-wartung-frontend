@@ -22,6 +22,7 @@ const InspectionsListPage = lazy(() => import("@/features/inspections/pages/Insp
 const NotificationsPage = lazy(() => import("@/features/notifications/pages/NotificationsPage"));
 const ServiceTypes = lazy(() => import("@/features/serviceTypes/pages/ServiceTypesPage"));
 const UserProfile = lazy(() => import("@/features/users/pages/UserProfilePage"));
+const UserDocuments = lazy(() => import("@/features/users/pages/UserDocumentsPage"));
 const Preferences = lazy(() => import("@/features/preferences/pages/PreferencesPage"));
 const Users = lazy(() => import("@/features/users/pages/UsersPage"));
 const AdminPanel = lazy(() => import("@/features/adminPanel/pages/AdminPanelPage"));
@@ -71,6 +72,7 @@ export const router = createBrowserRouter([
           { path: "inspections", element: page(<InspectionsListPage />) },
           { path: "notifications", element: page(<NotificationsPage />) },
           { path: "users/me", element: page(<UserProfile />) },
+          { path: "documents", element: page(<UserDocuments />) },
           { path: "preferences", element: page(<Preferences />) },
           { path: "company", element: page(<Company />) },
           {
