@@ -13,6 +13,7 @@ export async function updateMe(data: {
   cpf?: string;
   email?: string;
   creaNumber?: string;
+  profession?: string;
 }) {
   await api.patch("/users/me", data);
 }

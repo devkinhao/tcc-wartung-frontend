@@ -5,6 +5,7 @@ export type User = {
   cpf: string | null;
   email: string | null;
   creaNumber: string | null;
+  profession: string | null;
   isActive: boolean;
   permissions: string[];
   avatarUrl: string | null;

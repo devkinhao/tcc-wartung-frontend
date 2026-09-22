@@ -72,6 +72,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
   const [creaNumber, setCreaNumber] = useState("");
+  const [profession, setProfession] = useState("");
 
   // permissions (store name, show description)
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
@@ -112,6 +113,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setCpf(u.cpf ?? "");
       setEmail(u.email ?? "");
       setCreaNumber(u.creaNumber ?? "");
+      setProfession(u.profession ?? "");
       setSelectedPermissions(Array.isArray(u.permissions) ? u.permissions : []);
 
       setNewPassword("");
@@ -146,6 +148,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
         ...(cpf.trim() ? { cpf: cpf.trim() } : {}),
         ...(email.trim() ? { email: email.trim() } : {}),
         ...(creaNumber.trim() ? { creaNumber: creaNumber.trim() } : {}),
+        ...(profession.trim() ? { profession: profession.trim() } : {}),
       };
 
       const updated = await updateUser(userId, dto);
@@ -155,6 +158,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
       setCpf(updated.cpf ?? "");
       setEmail(updated.email ?? "");
       setCreaNumber(updated.creaNumber ?? "");
+      setProfession(updated.profession ?? "");
 
       onChanged?.();
       notify.success("notify.success.userUpdated");
@@ -211,6 +215,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     cpf: cpf.trim(),
     email: email.trim(),
     creaNumber: creaNumber.trim(),
+    profession: profession.trim(),
   });
   const cpfError = cpf.trim() !== "" && !!fieldError(profile, "cpf");
   const emailError = email.trim() !== "" && !!fieldError(profile, "email");
@@ -309,6 +314,16 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   disabled={savingProfile}
                   slotProps={{
                     htmlInput: { maxLength: 10 }
+                  }}
+                />
+                <TextField
+                  size="small"
+                  label={t("users.fields.profession")}
+                  value={profession}
+                  onChange={(e) => setProfession(e.target.value)}
+                  disabled={savingProfile}
+                  slotProps={{
+                    htmlInput: { maxLength: 60 }
                   }}
                 />
               </Stack>

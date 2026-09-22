@@ -10,6 +10,7 @@ const profileShape = {
   cpf: f.cpf,
   email: f.email,
   creaNumber: z.string().max(10),
+  profession: z.string().max(60),
 };
 
 export const userProfileSchema = z.object(profileShape);

@@ -468,7 +468,8 @@
         "fullName": "Nome completo",
         "cpf": "CPF",
         "email": "E-mail",
-        "creaNumber": "CREA"
+        "creaNumber": "CREA",
+        "profession": "Profissão"
       },
       "helpers": {
         "username": "Somente letras minúsculas e números (mínimo 4 caracteres)."
@@ -478,7 +479,8 @@
       "fullName": "Nome completo",
       "cpf": "CPF",
       "email": "E-mail",
-      "creaNumber": "CREA"
+      "creaNumber": "CREA",
+      "profession": "Profissão"
     }
   },
   "userProfile": {
@@ -491,7 +493,8 @@
       "fullName": "Nome completo",
       "cpf": "CPF",
       "email": "E-mail",
-      "crea": "CREA"
+      "crea": "CREA",
+      "profession": "Profissão"
     },
     "actions": {
       "editProfile": "Editar perfil",

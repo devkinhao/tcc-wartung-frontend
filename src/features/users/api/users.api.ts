@@ -11,6 +11,7 @@ export type UserCreateRequestDTO = {
   cpf?: string;
   email?: string;
   creaNumber?: string;
+  profession?: string;
 };
 
 export type UserUpdateRequestDTO = {
@@ -18,6 +19,7 @@ export type UserUpdateRequestDTO = {
   cpf?: string;
   email?: string;
   creaNumber?: string;
+  profession?: string;
 };
 
 export type UserResetPasswordRequestDTO = {

@@ -75,6 +75,7 @@ export default function UserProfile() {
   const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
   const [creaNumber, setCreaNumber] = useState("");
+  const [profession, setProfession] = useState("");
 
   function loadAvatarPreview(u: User) {
     if (u.id && u.avatarUrl) {
@@ -93,6 +94,7 @@ export default function UserProfile() {
     setCpf(user.cpf ?? "");
     setEmail(user.email ?? "");
     setCreaNumber(user.creaNumber ?? "");
+    setProfession(user.profession ?? "");
     loadAvatarPreview(user);
   }, [user]);
 
@@ -173,6 +175,7 @@ export default function UserProfile() {
       ...(cpf.trim() ? { cpf: cpf.trim() } : {}),
       ...(email.trim() ? { email: email.trim() } : {}),
       ...(creaNumber.trim() ? { creaNumber: creaNumber.trim() } : {}),
+      ...(profession.trim() ? { profession: profession.trim() } : {}),
     });
 
     if (avatarFile) {
@@ -189,6 +192,7 @@ export default function UserProfile() {
     setCpf(user.cpf ?? "");
     setEmail(user.email ?? "");
     setCreaNumber(user.creaNumber ?? "");
+    setProfession(user.profession ?? "");
     setAvatarFile(null);
     setAvatarRemoved(false);
     loadAvatarPreview(user);
@@ -204,6 +208,7 @@ export default function UserProfile() {
     cpf: cpf.trim(),
     email: email.trim(),
     creaNumber: creaNumber.trim(),
+    profession: profession.trim(),
   });
   const cpfError = cpf.trim() !== "" && !!fieldError(profile, "cpf");
   const emailError = email.trim() !== "" && !!fieldError(profile, "email");
@@ -374,6 +379,20 @@ export default function UserProfile() {
                       disabled={!isEditing}
                       slotProps={{
                         htmlInput: { maxLength: 10 }
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      fullWidth
+                      label={t("userProfile.fields.profession")}
+                      value={profession}
+                      onChange={(e) => setProfession(e.target.value)}
+                      size="small"
+                      disabled={!isEditing}
+                      slotProps={{
+                        htmlInput: { maxLength: 60 }
                       }}
                     />
                   </Grid>

@@ -468,7 +468,8 @@
         "fullName": "Full name",
         "cpf": "CPF",
         "email": "Email",
-        "creaNumber": "CREA"
+        "creaNumber": "CREA",
+        "profession": "Profession"
       },
       "helpers": {
         "username": "Lowercase letters and numbers only (minimum 4 characters)."
@@ -478,7 +479,8 @@
       "fullName": "Full name",
       "cpf": "CPF",
       "email": "Email",
-      "creaNumber": "CREA"
+      "creaNumber": "CREA",
+      "profession": "Profession"
     }
   },
   "userProfile": {
@@ -491,7 +493,8 @@
       "fullName": "Full name",
       "cpf": "CPF",
       "email": "Email",
-      "crea": "CREA"
+      "crea": "CREA",
+      "profession": "Profession"
     },
     "actions": {
       "editProfile": "Edit profile",

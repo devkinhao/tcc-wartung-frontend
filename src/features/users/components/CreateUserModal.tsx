@@ -40,6 +40,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
     cpf: "",
     email: "",
     creaNumber: "",
+    profession: "",
   });
 
   function resetForm() {
@@ -50,6 +51,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
       cpf: "",
       email: "",
       creaNumber: "",
+      profession: "",
     });
     setConfirmPassword("");
     setShowPassword(false);
@@ -71,6 +73,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
         ...(form.cpf?.trim() ? { cpf: form.cpf.trim() } : {}),
         ...(form.email?.trim() ? { email: form.email.trim() } : {}),
         ...(form.creaNumber?.trim() ? { creaNumber: form.creaNumber.trim() } : {}),
+        ...(form.profession?.trim() ? { profession: form.profession.trim() } : {}),
       };
 
       await createUser(payload);
@@ -98,6 +101,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
     cpf,
     email,
     creaNumber: form.creaNumber?.trim() ?? "",
+    profession: form.profession?.trim() ?? "",
   });
 
   // Erros de formato só aparecem depois que o usuário digitou algo no campo.
@@ -247,6 +251,20 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               disabled={submitting}
               slotProps={{
                 htmlInput: { maxLength: 10 }
+              }}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <TextField
+              size="small"
+              fullWidth
+              label={t("users.create.fields.profession")}
+              value={form.profession ?? ""}
+              onChange={(e) => setForm((p) => ({ ...p, profession: e.target.value }))}
+              disabled={submitting}
+              slotProps={{
+                htmlInput: { maxLength: 60 }
               }}
             />
           </Grid>
