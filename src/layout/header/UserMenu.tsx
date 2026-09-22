@@ -18,11 +18,13 @@ import {
 } from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   Button,
   Divider,
   ListItemIcon,
   Menu,
   MenuItem,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
@@ -131,8 +133,42 @@ export function UserMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={close}
-        slotProps={{ paper: { sx: { width: 240 } } }}
+        slotProps={{ paper: { sx: { width: 260 } } }}
       >
+        {/** Resumo do usuário autenticado — não interativo, só identifica quem está logado. */}
+        <Box sx={{ px: 2, py: 1.5 }}>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            {avatarSrc ? (
+              <Avatar src={avatarSrc} sx={{ width: 40, height: 40 }} alt={t("common.alt.avatar")} />
+            ) : (
+              <Avatar sx={{ width: 40, height: 40 }} aria-label={t("common.userAvatar")}>
+                {firstName?.[0] ?? "U"}
+              </Avatar>
+            )}
+            <Box sx={{ minWidth: 0 }}>
+              <Typography
+                variant="body2"
+                fontWeight={typography.weight.semibold}
+                color="text.primary"
+                noWrap
+                title={user.fullName}
+              >
+                {user.fullName}
+              </Typography>
+              {user.email && (
+                <Typography variant="caption" color="text.secondary" noWrap title={user.email} sx={{ display: "block" }}>
+                  {user.email}
+                </Typography>
+              )}
+              {user.profession && (
+                <Typography variant="caption" color="text.secondary" noWrap title={user.profession} sx={{ display: "block" }}>
+                  {user.profession}
+                </Typography>
+              )}
+            </Box>
+          </Stack>
+        </Box>
+        <Divider />
         {/** Acesso ao perfil do usuário autenticado. */}
         <Tooltip title={t("userMenu.tooltip.myProfile")} placement="left">
           <MenuItem onClick={() => go(paths.userProfile)}>
