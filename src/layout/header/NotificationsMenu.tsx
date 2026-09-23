@@ -122,6 +122,8 @@ export function NotificationsMenu({
         anchorEl={anchorEl}
         open={open && !disabled}
         onClose={() => setAnchorEl(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{ paper: { sx: { width: 360 } } }}
       >
         <Stack

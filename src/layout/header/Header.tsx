@@ -3,6 +3,7 @@ import { AppBar, Box, Toolbar } from "@mui/material";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
 
+/** Cabeçalho fixo da aplicação, acompanhando a largura da sidebar. */
 export default function Header({ drawerWidth }: { drawerWidth: number }) {
   /** Hooks. */
   const { preferences } = usePreferences();

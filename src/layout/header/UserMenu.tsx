@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { Tooltip } from "@/components/Tooltip";
 import { canAccess } from "@/features/auth/permissions";
 import { useAuth } from "@/features/auth/useAuth";
@@ -5,12 +6,12 @@ import { getAvatar } from "@/features/users/api/user.api";
 import { useMe } from "@/hooks/useMe";
 import { paths } from "@/routes/paths";
 import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
-import { typography } from "@/styles/typography";
 import { getFirstName } from "@/utils/getFirstName";
 import {
   AdminPanelSettings,
   Apartment,
   Article,
+  ExpandLess,
   ExpandMore,
   Logout,
   Person,
@@ -19,7 +20,6 @@ import {
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   ListItemIcon,
   Menu,
@@ -31,6 +31,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+/** Menu do usuário no cabeçalho, com atalhos de navegação e encerramento de sessão. */
 export function UserMenu() {
   /** Hooks. */
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export function UserMenu() {
     [user],
   );
 
-  /** Avatar  obtido via API autenticada. */
+  /** Avatar obtido via API autenticada. */
   useEffect(() => {
     if (!user?.id || !user.avatarUrl) {
       setAvatarSrc(null);
@@ -98,36 +99,32 @@ export function UserMenu() {
   return (
     <>
       {/** Botão principal do usuário no cabeçalho. */}
-      <Tooltip title={t("userMenu.tooltip.title")}>
-        <Button
-          onClick={(e) => setAnchorEl(e.currentTarget)}
-          startIcon={
-            avatarSrc ? (
-              <Avatar
-                src={avatarSrc}
-                sx={{ width: 32, height: 32 }}
-                alt={t("common.alt.avatar")}
-              />
-            ) : (
-              <Avatar
-                sx={{ width: 32, height: 32 }}
-                aria-label={t("common.userAvatar")}
-              >
-                {firstName?.[0] ?? "U"}
-              </Avatar>
-            )
-          }
-          endIcon={<ExpandMore color="action" />}
-        >
-          <Typography
-            variant="body2"
-            sx={{ fontWeight: typography.weight.medium }}
-            color="text.primary"
-          >
-            {firstName}
-          </Typography>
-        </Button>
-      </Tooltip>
+      <Button
+        tooltip={t("userMenu.tooltip.title")}
+        variant="text"
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        startIcon={
+          avatarSrc ? (
+            <Avatar
+              src={avatarSrc}
+              sx={{ width: 32, height: 32 }}
+              alt={t("common.alt.avatar")}
+            />
+          ) : (
+            <Avatar
+              sx={{ width: 32, height: 32 }}
+              aria-label={t("common.userAvatar")}
+            >
+              {firstName?.[0] ?? "U"}
+            </Avatar>
+          )
+        }
+        endIcon={
+          open ? <ExpandLess color="action" /> : <ExpandMore color="action" />
+        }
+      >
+        <Typography sx={{ color: "text.primary" }}>{firstName}</Typography>
+      </Button>
       {/** Menu contextual com dados do usuário e ações de navegação. */}
       <Menu
         anchorEl={anchorEl}
@@ -135,41 +132,23 @@ export function UserMenu() {
         onClose={close}
         slotProps={{ paper: { sx: { width: 260 } } }}
       >
-        {/** Resumo do usuário autenticado — não interativo, só identifica quem está logado. */}
+        {/** Informações do usuário autenticado. */}
         <Box sx={{ px: 2, py: 1.5 }}>
-          <Stack direction="row" spacing={1.5} alignItems="center">
-            {avatarSrc ? (
-              <Avatar src={avatarSrc} sx={{ width: 40, height: 40 }} alt={t("common.alt.avatar")} />
-            ) : (
-              <Avatar sx={{ width: 40, height: 40 }} aria-label={t("common.userAvatar")}>
-                {firstName?.[0] ?? "U"}
-              </Avatar>
-            )}
-            <Box sx={{ minWidth: 0 }}>
-              <Typography
-                variant="body2"
-                fontWeight={typography.weight.semibold}
-                color="text.primary"
-                noWrap
-                title={user.fullName}
-              >
-                {user.fullName}
+          <Stack direction="column">
+            {user.profession && (
+              <Typography variant="subtitle1" noWrap>
+                {user.profession}
               </Typography>
-              {user.email && (
-                <Typography variant="caption" color="text.secondary" noWrap title={user.email} sx={{ display: "block" }}>
-                  {user.email}
-                </Typography>
-              )}
-              {user.profession && (
-                <Typography variant="caption" color="text.secondary" noWrap title={user.profession} sx={{ display: "block" }}>
-                  {user.profession}
-                </Typography>
-              )}
-            </Box>
+            )}
+            {user.email && (
+              <Typography variant="caption" color="text.secondary" noWrap>
+                {user.email}
+              </Typography>
+            )}
           </Stack>
         </Box>
-        <Divider />
-        {/** Acesso ao perfil do usuário autenticado. */}
+        <Divider sx={{ my: 1 }} />
+        {/** Acesso ao perfil do usuário. */}
         <Tooltip title={t("userMenu.tooltip.myProfile")} placement="left">
           <MenuItem onClick={() => go(paths.userProfile)}>
             <ListItemIcon>

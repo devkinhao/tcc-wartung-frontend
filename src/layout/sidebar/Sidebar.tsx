@@ -3,7 +3,6 @@ import { Tooltip } from "@/components/Tooltip";
 import { canAccess } from "@/features/auth/permissions";
 import { useMe } from "@/hooks/useMe";
 import { paths } from "@/routes/paths";
-import { typography } from "@/styles/typography";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import {
   Box,
@@ -80,8 +79,7 @@ const SidebarItem = memo(function SidebarItem({
         }}
         slotProps={{
           primary: {
-            variant: "body2",
-            fontWeight: typography.weight.medium,
+            variant: "body1",
             noWrap: true,
           },
         }}

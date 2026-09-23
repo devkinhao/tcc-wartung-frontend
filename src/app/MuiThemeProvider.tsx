@@ -74,10 +74,10 @@ function buildTheme(mode: "light" | "dark") {
       },
       subtitle1: {
         fontSize: typography.textScale.md,
-        fontWeight: typography.weight.bold,
+        fontWeight: typography.weight.semibold,
       },
       subtitle2: {
-        fontSize: typography.textScale.md,
+        fontSize: typography.textScale.sm,
         fontWeight: typography.weight.semibold,
       },
       body1: { fontSize: typography.textScale.md },
