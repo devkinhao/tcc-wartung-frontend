@@ -66,10 +66,6 @@ export default function ResetPasswordPage() {
     }
   };
 
-  const passwordIcon = (
-    <LockOutlinedIcon fontSize="small" sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }} />
-  );
-
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       <Grid
@@ -147,7 +143,7 @@ export default function ResetPasswordPage() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   autoComplete="new-password"
                   autoFocus
-                  startIcon={passwordIcon}
+                  startIcon={LockOutlinedIcon}
                   endIcon={
                     <PasswordVisibilityToggle
                       visible={showPassword}
@@ -166,7 +162,7 @@ export default function ResetPasswordPage() {
                   autoComplete="new-password"
                   error={passwordMismatch}
                   helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
-                  startIcon={passwordIcon}
+                  startIcon={LockOutlinedIcon}
                 />
 
                 {error && <Alert severity="error">{error}</Alert>}

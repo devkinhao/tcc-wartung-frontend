@@ -1,16 +1,15 @@
+import { Button } from "@/components/Button";
 import { FormField } from "@/components/form/FormField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
 import { paths } from "@/routes/paths";
-import { typography } from "@/styles/typography";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import {
   Alert,
   Box,
-  Button,
   Checkbox,
   CircularProgress,
   FormControlLabel,
@@ -116,7 +115,6 @@ export default function LoginPage() {
       container
       sx={{
         height: "100dvh",
-        maxHeight: "100dvh",
         width: "100%",
         overflowX: "hidden",
       }}
@@ -146,11 +144,11 @@ export default function LoginPage() {
           }}
         >
           {/** Cabeçalho da tela com a mensagem inicial do sistema. */}
-          <Box display="flex" flexDirection="column" gap={1}>
-            <Typography variant="h6" color="primary">
+          <Box display="flex" flexDirection="column" gap={1.5}>
+            <Typography variant="h2" sx={{ color: "primary.main" }}>
               {t("login.title")}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {t("login.subtitle")}
             </Typography>
           </Box>
@@ -171,28 +169,18 @@ export default function LoginPage() {
               placeholder={t("login.fields.placeholder.username")}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              startIcon={
-                <PersonOutlineOutlinedIcon
-                  fontSize="small"
-                  sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }}
-                />
-              }
+              startIcon={PersonOutlineOutlinedIcon}
             />
             {/** Campo de senha com alternância de visibilidade. */}
             <FormField
               required
+              autoComplete="current-password"
               label={t("login.fields.password")}
               placeholder={t("login.fields.placeholder.password")}
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              startIcon={
-                <LockOutlinedIcon
-                  fontSize="small"
-                  sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }}
-                />
-              }
+              startIcon={LockOutlinedIcon}
               endIcon={
                 <PasswordVisibilityToggle
                   visible={showPassword}
@@ -229,9 +217,9 @@ export default function LoginPage() {
               {/** Link de recuperação de acesso para redefinição de senha. */}
               <Tooltip title={t("login.actions.tooltip.forgotPassword")}>
                 <Link
+                  variant="body2"
                   component={RouterLink}
                   to={paths.forgotPassword}
-                  variant="body2"
                 >
                   {t("login.actions.forgotPassword")}
                 </Link>
@@ -240,32 +228,24 @@ export default function LoginPage() {
             {/** Exibe a mensagem de erro da autenticação ou do rate limit. */}
             {error && <Alert severity="error">{error}</Alert>}
             {/** Botão principal para autenticar o usuário. */}
-            <Tooltip title={t("login.actions.tooltip.signIn")}>
-              <Button
-                variant="contained"
-                type="submit"
-                endIcon={!loading && <ArrowForwardOutlinedIcon />}
-                disabled={loading || cooldown > 0}
-                sx={{ mt: 1 }}
-              >
-                {loading ? (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="subtitle1">
-                      {t("login.actions.signingIn")}
-                    </Typography>
-                    <CircularProgress size={20} />
-                  </Box>
-                ) : cooldown > 0 ? (
-                  <Typography variant="subtitle1">
-                    {t("login.actions.waitSeconds", { seconds: cooldown })}
-                  </Typography>
-                ) : (
-                  <Typography variant="subtitle1">
-                    {t("login.actions.signIn")}
-                  </Typography>
-                )}
-              </Button>
-            </Tooltip>
+            <Button
+              tooltip={t("login.actions.tooltip.signIn")}
+              type="submit"
+              endIcon={!loading && <ArrowForwardOutlinedIcon />}
+              disabled={loading || cooldown > 0}
+              sx={{ mt: 1 }}
+            >
+              {loading ? (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  {t("login.actions.signingIn")}
+                  <CircularProgress size={18} />
+                </Box>
+              ) : cooldown > 0 ? (
+                t("login.actions.waitSeconds", { seconds: cooldown })
+              ) : (
+                t("login.actions.signIn")
+              )}
+            </Button>
             {/** Rodapé da tela com a marca e ano atual. */}
             <Typography
               variant="caption"
@@ -290,18 +270,10 @@ export default function LoginPage() {
         }}
       >
         <Box sx={{ textAlign: "right" }}>
-          <Typography
-            variant="h5"
-            fontWeight={typography.weight.bold}
-            gutterBottom
-          >
+          <Typography variant="h2" gutterBottom>
             {t("login.welcome.title")}
           </Typography>
-          <Typography
-            variant="body1"
-            fontWeight={typography.weight.regular}
-            color="text.contrast"
-          >
+          <Typography variant="body1" color="text.contrast">
             {t("login.welcome.subtitle")}
           </Typography>
         </Box>

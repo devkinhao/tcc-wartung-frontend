@@ -1,16 +1,17 @@
+import type { SvgIconComponent } from "@mui/icons-material";
 import { Grid, TextField, type TextFieldProps } from "@mui/material";
 import { forwardRef, type ReactNode } from "react";
 import { FormLabel } from "./FormLabel";
 
 export type FormFieldProps = Omit<TextFieldProps, "label"> & {
   label?: ReactNode;
-  startIcon?: ReactNode;
+  startIcon?: SvgIconComponent;
   endIcon?: ReactNode;
 };
 
 /** Campo de texto reutilizável que permite renderização de label. */
 export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ label, required, startIcon, endIcon, ...props }, ref) => (
+  ({ label, required, startIcon: StartIcon, endIcon, ...props }, ref) => (
     <Grid container>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <TextField
@@ -25,7 +26,12 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
           /** Permite inserir ícones de início/fim no campo de texto. */
           input: {
             ...props.slotProps?.input,
-            startAdornment: startIcon,
+            startAdornment: StartIcon && (
+              <StartIcon
+                fontSize="small"
+                sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }}
+              />
+            ),
             endAdornment: endIcon,
           },
         }}

@@ -53,24 +53,44 @@ function buildTheme(mode: "light" | "dark") {
     typography: {
       fontFamily: typography.fontFamily,
       /**
-       * Cada variante é fixada em um dos 3 tamanhos permitidos (14/16/18px,
-       * ver typography.textScale) — a hierarquia entre títulos/textos vem do
-       * peso da fonte, não do tamanho, já que o padrão do sistema restringe
-       * a escala a esses três valores.
+       * Cada variante é fixada em um dos tamanhos permitidos.
+       * A hierarquia entre títulos/textos vem do peso da fonte, não do tamanho.
        */
-      h1: { fontSize: typography.textScale.lg, fontWeight: typography.weight.extrabold },
-      h2: { fontSize: typography.textScale.lg, fontWeight: typography.weight.bold },
-      h3: { fontSize: typography.textScale.lg, fontWeight: typography.weight.bold },
-      h4: { fontSize: typography.textScale.lg, fontWeight: typography.weight.semibold },
-      h5: { fontSize: typography.textScale.lg, fontWeight: typography.weight.semibold },
-      h6: { fontSize: typography.textScale.md, fontWeight: typography.weight.semibold },
-      subtitle1: { fontSize: typography.textScale.md, fontWeight: typography.weight.medium },
-      subtitle2: { fontSize: typography.textScale.sm, fontWeight: typography.weight.medium },
+      h1: {
+        fontSize: typography.textScale.xl,
+        fontWeight: typography.weight.bold,
+      },
+      h2: {
+        fontSize: typography.textScale.xl,
+        fontWeight: typography.weight.semibold,
+      },
+      h3: {
+        fontSize: typography.textScale.lg,
+        fontWeight: typography.weight.bold,
+      },
+      h4: {
+        fontSize: typography.textScale.lg,
+        fontWeight: typography.weight.semibold,
+      },
+      subtitle1: {
+        fontSize: typography.textScale.md,
+        fontWeight: typography.weight.bold,
+      },
+      subtitle2: {
+        fontSize: typography.textScale.md,
+        fontWeight: typography.weight.semibold,
+      },
       body1: { fontSize: typography.textScale.md },
       body2: { fontSize: typography.textScale.sm },
-      button: { fontSize: typography.textScale.sm, fontWeight: typography.weight.medium },
+      button: {
+        fontSize: typography.textScale.md,
+        fontWeight: typography.weight.regular,
+      },
       caption: { fontSize: typography.textScale.sm },
-      overline: { fontSize: typography.textScale.sm, fontWeight: typography.weight.semibold },
+      overline: {
+        fontSize: typography.textScale.sm,
+        fontWeight: typography.weight.semibold,
+      },
     },
     components: {
       MuiCssBaseline: {

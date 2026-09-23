@@ -112,12 +112,7 @@ export default function ForgotPasswordPage() {
                   autoFocus
                   error={emailInvalid}
                   helperText={emailInvalid ? t("forgotPassword.errors.invalidEmail") : undefined}
-                  startIcon={
-                    <MailOutlineOutlinedIcon
-                      fontSize="small"
-                      sx={{ p: 0.2, mr: 0.5, color: "action.disabled" }}
-                    />
-                  }
+                  startIcon={MailOutlineOutlinedIcon}
                 />
 
                 {error && <Alert severity="error">{error}</Alert>}

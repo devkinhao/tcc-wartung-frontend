@@ -1,5 +1,4 @@
 import { paths } from "@/routes/paths";
-import { typography } from "@/styles/typography";
 import { Box, Typography, type SxProps, type Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
@@ -13,6 +12,7 @@ type SystemLogoProps = {
   sx?: SxProps<Theme>;
 };
 
+/** Logo do sistema, opcionalmente navegável e com nome do sistema ao lado. */
 export function SystemLogo({
   navigable = false,
   to = paths.home,
@@ -28,19 +28,10 @@ export function SystemLogo({
         component="img"
         src="/logo.png"
         alt={t("common.alt.logo")}
-        sx={{
-          height: 45,
-          borderRadius: 1,
-        }}
+        sx={{ height: 45, borderRadius: 1 }}
       />
       {showLabel && (
-        <Typography
-          variant="h6"
-          sx={{
-            color: "primary.main",
-            fontWeight: typography.weight.bold,
-          }}
-        >
+        <Typography variant="h3" sx={{ color: "primary.main" }}>
           {t("app.brandName")}
         </Typography>
       )}
