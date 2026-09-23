@@ -6,8 +6,10 @@ import { useNotify } from "@/hooks/useNotify";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
 import type { CustomerDetailResponseDTO, AddressResponseDTO } from "../types/customerDetail";
 import {
+  deactivateCustomer,
   deleteCustomer,
   getCustomerDetail,
+  reactivateCustomer,
   updateCustomerAddress,
   updateCustomerContacts,
   updateCustomerGeneral,
@@ -110,6 +112,33 @@ export function useCustomerDetail(customerId: number) {
     onError:    (err) => notify.fromError(err),
   });
 
+  const deactivateMutation = useMutation({
+    mutationFn: () => deactivateCustomer(customerId),
+    onSuccess:  (updated) => {
+      qc.setQueryData(qk.customerDetail(customerId), updated);
+      setDraft(updated);
+      invalidateCustomerList();
+      // Desativar a empresa encerra as inspeções ativas dela (mesmo efeito de
+      // marcar "não-cliente" — ver InspectionService.deactivateAllByCustomerId).
+      qc.invalidateQueries({ queryKey: qk.inspectionsListAll });
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
+      notify.success("notify.success.companyDeactivated");
+    },
+    onError:    (err) => notify.fromError(err),
+  });
+
+  const reactivateMutation = useMutation({
+    mutationFn: () => reactivateCustomer(customerId),
+    onSuccess:  (updated) => {
+      qc.setQueryData(qk.customerDetail(customerId), updated);
+      setDraft(updated);
+      invalidateCustomerList();
+      qc.invalidateQueries({ queryKey: qk.dashboard() });
+      notify.success("notify.success.companyReactivated");
+    },
+    onError:    (err) => notify.fromError(err),
+  });
+
   // ── Helpers de draft ───────────────────────────────────────────────────────
   const updateField = useCallback(
     <K extends keyof CustomerDetailResponseDTO>(
@@ -176,10 +205,12 @@ export function useCustomerDetail(customerId: number) {
     handleCepFound,
     // mutations
     mutations: {
-      general:  generalMutation,
-      contacts: contactsMutation,
-      address:  addressMutation,
-      delete:   deleteMutation,
+      general:    generalMutation,
+      contacts:   contactsMutation,
+      address:    addressMutation,
+      delete:     deleteMutation,
+      deactivate: deactivateMutation,
+      reactivate: reactivateMutation,
     },
   };
 }

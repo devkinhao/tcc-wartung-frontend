@@ -734,6 +734,8 @@
     "actions": {
       "actions": "Actions",
       "delete": "Delete company",
+      "deactivate": "Deactivate company",
+      "reactivate": "Reactivate company",
       "copyCnpj": "Copy CNPJ",
       "whatsapp": "WhatsApp",
       "email": "Email"
@@ -741,6 +743,10 @@
     "confirmDelete": {
       "title": "Delete company",
       "message": "Are you sure you want to delete the company \"{{name}}\"? It will no longer appear in the system's lists."
+    },
+    "confirmDeactivateCompany": {
+      "title": "Deactivate company",
+      "message": "Are you sure you want to deactivate the company \"{{name}}\"? It will no longer be a customer and all of its active inspections will be closed automatically. The company's data will be read-only until it's reactivated."
     },
     "confirmDeactivate": {
       "title": "Mark as non-customer",
@@ -915,6 +921,8 @@
       "documentDeleted": "Document deleted successfully",
       "companyCreated": "Company created successfully",
       "companyDeleted": "Company deleted successfully",
+      "companyDeactivated": "Company deactivated successfully",
+      "companyReactivated": "Company reactivated successfully",
       "userCreated": "User created successfully",
       "userUpdated": "User updated successfully",
       "userDeleted": "User deleted successfully",

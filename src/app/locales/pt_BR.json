@@ -734,6 +734,8 @@
     "actions": {
       "actions": "Ações",
       "delete": "Excluir empresa",
+      "deactivate": "Desativar empresa",
+      "reactivate": "Reativar empresa",
       "copyCnpj": "Copiar CNPJ",
       "whatsapp": "WhatsApp",
       "email": "E-mail"
@@ -741,6 +743,10 @@
     "confirmDelete": {
       "title": "Excluir empresa",
       "message": "Tem certeza que deseja excluir a empresa \"{{name}}\"? Ela deixará de aparecer nas listagens do sistema."
+    },
+    "confirmDeactivateCompany": {
+      "title": "Desativar empresa",
+      "message": "Tem certeza que deseja desativar a empresa \"{{name}}\"? Ela deixará de ser cliente e todas as inspeções ativas dela serão encerradas automaticamente. Os dados da empresa ficarão somente leitura até ela ser reativada."
     },
     "confirmDeactivate": {
       "title": "Marcar como não-cliente",
@@ -915,6 +921,8 @@
       "documentDeleted": "Documento excluído com sucesso",
       "companyCreated": "Empresa cadastrada com sucesso",
       "companyDeleted": "Empresa excluída com sucesso",
+      "companyDeactivated": "Empresa desativada com sucesso",
+      "companyReactivated": "Empresa reativada com sucesso",
       "userCreated": "Usuário criado com sucesso",
       "userUpdated": "Usuário atualizado com sucesso",
       "userDeleted": "Usuário excluído com sucesso",

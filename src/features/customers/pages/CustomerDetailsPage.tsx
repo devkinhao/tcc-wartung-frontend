@@ -82,6 +82,7 @@ export default function CustomerDetailsPage() {
   const [menuEl, setMenuEl] = useState<HTMLElement | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [confirmDeactivateOpen, setConfirmDeactivateOpen] = useState(false);
+  const [confirmDeactivateCompanyOpen, setConfirmDeactivateCompanyOpen] = useState(false);
 
   if (isLoading || !view) {
     return (
@@ -128,7 +129,20 @@ export default function CustomerDetailsPage() {
 
       {/* Empresa desativada (LOG_ATIVO = false) — ficha somente leitura */}
       {!view.isActive && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert
+          severity="warning"
+          sx={{ mb: 2 }}
+          action={
+            <Button
+              color="warning"
+              size="small"
+              onClick={() => mutations.reactivate.mutate()}
+              disabled={mutations.reactivate.isPending}
+            >
+              {t("customerDetails.actions.reactivate")}
+            </Button>
+          }
+        >
           {t("customerDetails.deactivated.banner")}
         </Alert>
       )}
@@ -147,6 +161,29 @@ export default function CustomerDetailsPage() {
             onClick={() => {
               setConfirmDeactivateOpen(false);
               saveGeneral();
+            }}
+          >
+            {t("common.actions.confirm")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirmação de desativação direta da empresa (fora do fluxo de inspeção) */}
+      <Dialog open={confirmDeactivateCompanyOpen} onClose={() => setConfirmDeactivateCompanyOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>{t("customerDetails.confirmDeactivateCompany.title")}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            {t("customerDetails.confirmDeactivateCompany.message", { name: view.legalName })}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeactivateCompanyOpen(false)}>{t("common.actions.cancel")}</Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              setConfirmDeactivateCompanyOpen(false);
+              mutations.deactivate.mutate();
             }}
           >
             {t("common.actions.confirm")}
@@ -238,13 +275,18 @@ export default function CustomerDetailsPage() {
                   <IconButton
                     aria-label={t("customerDetails.actions.actions")}
                     onClick={(e) => setMenuEl(e.currentTarget)}
-                    disabled={mutations.delete.isPending}
+                    disabled={mutations.delete.isPending || mutations.deactivate.isPending}
                   >
                     <MoreVertIcon />
                   </IconButton>
                 </span>
               </Tooltip>
               <Menu open={Boolean(menuEl)} anchorEl={menuEl} onClose={() => setMenuEl(null)}>
+                {view.isActive && (
+                  <MenuItem onClick={() => { setMenuEl(null); setConfirmDeactivateCompanyOpen(true); }}>
+                    {t("customerDetails.actions.deactivate")}
+                  </MenuItem>
+                )}
                 <MenuItem onClick={() => { setMenuEl(null); setConfirmDeleteOpen(true); }}>
                   {t("customerDetails.actions.delete")}
                 </MenuItem>

@@ -47,3 +47,13 @@ export async function updateCustomerAddress(id: number, dto: CustomerUpdateAddre
 export async function deleteCustomer(id: number) {
   await api.delete(`/customers/${id}`);
 }
+
+export async function deactivateCustomer(id: number) {
+  const { data } = await api.post<CustomerDetailResponseDTO>(`/customers/${id}/deactivate`);
+  return data;
+}
+
+export async function reactivateCustomer(id: number) {
+  const { data } = await api.post<CustomerDetailResponseDTO>(`/customers/${id}/reactivate`);
+  return data;
+}
