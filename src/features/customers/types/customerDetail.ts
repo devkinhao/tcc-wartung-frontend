@@ -29,6 +29,12 @@ export type InspectionSummaryResponseDTO = {
   inspectionDate: string; // LocalDate ISO
   serviceType: ServiceTypeResponseDTO;
   notes: string | null;
+  artNumber: string | null;
+  manufacturer: string | null;
+  model: string | null;
+  capacity: string | null;
+  cylinderCount: number | null;
+  btu: number | null;
   expirationDate: string; // LocalDate ISO
   isActive: boolean;
   isRenewed: boolean;

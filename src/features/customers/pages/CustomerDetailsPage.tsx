@@ -208,7 +208,7 @@ export default function CustomerDetailsPage() {
                 </Stack>
                 <Chip
                   size="small"
-                  label={view.isCustomer ? t("customerDetails.status.active") : t("customerDetails.status.inactive")}
+                  label={view.isCustomer ? t("customerDetails.status.customer") : t("customerDetails.status.nonCustomer")}
                   color={view.isCustomer ? "success" : "default"}
                 />
                 <Typography variant="body2" color="text.secondary">

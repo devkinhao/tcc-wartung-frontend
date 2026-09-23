@@ -728,8 +728,8 @@
   "customerDetails": {
     "loading": "Loading company...",
     "status": {
-      "active": "ACTIVE",
-      "inactive": "INACTIVE"
+      "customer": "CUSTOMER",
+      "nonCustomer": "NON-CUSTOMER"
     },
     "actions": {
       "actions": "Actions",
@@ -770,7 +770,7 @@
         "fantasyName": "Trade name",
         "cnpj": "CNPJ",
         "abvtexSeal": "ABVTEX seal",
-        "customerActive": "Active customer?"
+        "isCustomer": "Is a customer?"
       }
     },
     "contacts": {
@@ -800,7 +800,6 @@
         "open": "Open",
         "inspectionDate": "Inspection Date",
         "service": "Service",
-        "notes": "Notes",
         "expiration": "Expiration",
         "documents": "Documents",
         "status": "Status"

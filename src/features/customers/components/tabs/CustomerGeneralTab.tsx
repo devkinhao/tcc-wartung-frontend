@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  Chip,
   FormControl,
   Grid,
   IconButton,
@@ -167,22 +166,18 @@ export function CustomerGeneralTab({
             </Grid>
 
             <Grid size={{ xs: 12, md: 3 }}>
-              <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary">
-                  {t("customerDetails.general.fields.customerActive")}
-                </Typography>
-                <Chip
-                  label={view.isCustomer ? t("common.yes") : t("common.no")}
-                  color={view.isCustomer ? "success" : "default"}
-                  variant={view.isCustomer ? "filled" : "outlined"}
-                  sx={{ width: "fit-content" }}
-                  onClick={
-                    editingGeneral
-                      ? () => updateField("isCustomer", !view.isCustomer)
-                      : undefined
-                  }
-                />
-              </Stack>
+              <FormControl fullWidth size="small" disabled={!editingGeneral}>
+                <InputLabel id="is-customer-label">{t("customerDetails.general.fields.isCustomer")}</InputLabel>
+                <Select
+                  labelId="is-customer-label"
+                  label={t("customerDetails.general.fields.isCustomer")}
+                  value={view.isCustomer ? "yes" : "no"}
+                  onChange={(e) => updateField("isCustomer", e.target.value === "yes")}
+                >
+                  <MenuItem value="yes">{t("common.yes")}</MenuItem>
+                  <MenuItem value="no">{t("common.no")}</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </CardContent>

@@ -728,8 +728,8 @@
   "customerDetails": {
     "loading": "Carregando empresa...",
     "status": {
-      "active": "ATIVO",
-      "inactive": "INATIVO"
+      "customer": "CLIENTE",
+      "nonCustomer": "NÃO CLIENTE"
     },
     "actions": {
       "actions": "Ações",
@@ -770,7 +770,7 @@
         "fantasyName": "Nome fantasia",
         "cnpj": "CNPJ",
         "abvtexSeal": "Selo ABVTEX",
-        "customerActive": "Cliente ativo?"
+        "isCustomer": "É cliente?"
       }
     },
     "contacts": {
@@ -800,7 +800,6 @@
         "open": "Abrir",
         "inspectionDate": "Data da Inspeção",
         "service": "Serviço",
-        "notes": "Observações",
         "expiration": "Vencimento",
         "documents": "Documentos",
         "status": "Status"
