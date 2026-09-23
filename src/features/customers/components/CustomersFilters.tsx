@@ -102,17 +102,16 @@ export function CustomersFilters({ values, onChange, cities, hasActiveFilters, o
           </Select>
         </FormControl>
 
-        {hasActiveFilters && (
-          <Button
-            size="small"
-            color="inherit"
-            onClick={onClear}
-            startIcon={<FilterAltOffIcon fontSize="small" />}
-            sx={{ flexShrink: 0, color: "text.secondary", whiteSpace: "nowrap" }}
-          >
-            {t("customers.filters.clear")}
-          </Button>
-        )}
+        <Button
+          size="small"
+          color="inherit"
+          onClick={onClear}
+          disabled={!hasActiveFilters}
+          startIcon={<FilterAltOffIcon fontSize="small" />}
+          sx={{ flexShrink: 0, color: "text.secondary", whiteSpace: "nowrap" }}
+        >
+          {t("customers.filters.clear")}
+        </Button>
       </Stack>
     </Box>
   );

@@ -226,9 +226,14 @@ export default function InspectionsListPage() {
       />
 
       {/* Filtros */}
+      {/* Larguras/paddings enxutos de propósito: com o botão "Limpar filtros"
+          sempre visível (não só quando há filtro ativo), a barra inteira
+          precisa caber numa linha só em 1366px de largura com a sidebar
+          aberta (~1098px úteis) — sem essa folga o botão sozinho quebra
+          pra linha de baixo. */}
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        spacing={1.5}
+        spacing={1}
         alignItems={{ sm: "center" }}
         flexWrap="wrap"
         useFlexGap
@@ -239,10 +244,10 @@ export default function InspectionsListPage() {
           label={t("inspections.filters.search")}
           value={filters.search}
           onChange={(e) => setFilter("search", e.target.value)}
-          sx={{ minWidth: { xs: "100%", sm: 220 }, flex: { sm: 1 }, maxWidth: { sm: 300 } }}
+          sx={{ minWidth: { xs: "100%", sm: 200 }, flex: { sm: 1 }, maxWidth: { sm: 260 } }}
         />
 
-        <FormControl size="small" sx={{ width: { xs: "100%", sm: 170 } }}>
+        <FormControl size="small" sx={{ width: { xs: "100%", sm: 155 } }}>
           <InputLabel id="inspections-service">{t("inspections.filters.service")}</InputLabel>
           <Select
             labelId="inspections-service"
@@ -264,7 +269,7 @@ export default function InspectionsListPage() {
           label={t("inspections.filters.manufacturer")}
           value={filters.manufacturer}
           onChange={(e) => setFilter("manufacturer", e.target.value)}
-          sx={{ width: { xs: "100%", sm: 150 } }}
+          sx={{ width: { xs: "100%", sm: 120 } }}
         />
 
         <TextField
@@ -272,7 +277,7 @@ export default function InspectionsListPage() {
           label={t("inspections.filters.model")}
           value={filters.model}
           onChange={(e) => setFilter("model", e.target.value)}
-          sx={{ width: { xs: "100%", sm: 150 } }}
+          sx={{ width: { xs: "100%", sm: 120 } }}
         />
 
         <ToggleButtonGroup
@@ -284,7 +289,7 @@ export default function InspectionsListPage() {
             maxWidth: "100%",
             overflowX: "auto",
             flexShrink: 0,
-            "& .MuiToggleButton-root": { textTransform: "none", px: 1.5, whiteSpace: "nowrap" },
+            "& .MuiToggleButton-root": { textTransform: "none", px: 1, whiteSpace: "nowrap" },
             "& .Mui-selected": {
               bgcolor: "primary.main",
               color: "primary.contrastText",
@@ -299,17 +304,22 @@ export default function InspectionsListPage() {
           ))}
         </ToggleButtonGroup>
 
-        {hasActiveFilters && (
-          <Button
-            size="small"
-            color="inherit"
-            onClick={clearFilters}
-            startIcon={<FilterAltOffIcon fontSize="small" />}
-            sx={{ flexShrink: 0, color: "text.secondary", whiteSpace: "nowrap" }}
-          >
-            {t("inspections.filters.clear")}
-          </Button>
-        )}
+        <Button
+          size="small"
+          color="inherit"
+          onClick={clearFilters}
+          disabled={!hasActiveFilters}
+          startIcon={<FilterAltOffIcon fontSize="small" />}
+          sx={{
+            flexShrink: 0,
+            color: "text.secondary",
+            whiteSpace: "nowrap",
+            px: 1,
+            "& .MuiButton-startIcon": { mr: 0.75 },
+          }}
+        >
+          {t("inspections.filters.clear")}
+        </Button>
       </Stack>
 
       {/* Tabela */}
@@ -337,20 +347,9 @@ export default function InspectionsListPage() {
           ) : items.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
-                {hasActiveFilters ? (
-                  <Typography variant="body2" color="text.secondary">
-                    {t("inspections.emptyFiltered")}
-                  </Typography>
-                ) : (
-                  <>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                      {t("inspections.empty")}
-                    </Typography>
-                    <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
-                      {t("inspections.actions.addInspection")}
-                    </Button>
-                  </>
-                )}
+                <Typography variant="body2" color="text.secondary">
+                  {hasActiveFilters ? t("inspections.emptyFiltered") : t("inspections.empty")}
+                </Typography>
               </TableCell>
             </TableRow>
           ) : (
