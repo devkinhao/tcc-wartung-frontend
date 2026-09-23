@@ -655,23 +655,29 @@
     }
   },
   "forgotPassword": {
-    "title": "Esqueci minha senha",
-    "subtitle": "Informe seu e-mail cadastrado e enviaremos um link para redefinir sua senha.",
+    "title": "Recupere seu acesso",
+    "subtitle": "Informe seu e-mail cadastrado e enviaremos instruções para redefinir sua senha.",
     "fields": {
       "email": "E-mail",
       "placeholder": {
-        "email": "Informe seu e-mail"
+        "email": "johndoe@email.com"
       }
     },
     "actions": {
-      "send": "Enviar link de recuperação",
-      "sending": "Enviando...",
-      "backToLogin": "Voltar para o login"
+      "send": "Enviar",
+      "backToLogin": "Voltar para o login",
+      "tooltip": {
+        "send": "Enviar link de recuperação para o e-mail informado",
+        "backToLogin": "Ir para a tela de login"
+      },
+      "sending": "Enviando..."
     },
+    "sent": "E-mail enviado com sucesso!",
     "success": "Se o e-mail informado estiver cadastrado, você receberá um link para redefinir sua senha em instantes.",
     "errors": {
-      "invalidEmail": "Informe um e-mail válido",
-      "generic": "Não foi possível processar sua solicitação. Tente novamente."
+      "requiredEmail": "O e-mail é obrigatório.",
+      "invalidEmail": "O e-mail informado é inválido.",
+      "generic": "Não foi possível processar sua solicitação, tente novamente."
     }
   },
   "resetPassword": {

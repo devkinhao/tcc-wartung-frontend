@@ -4,9 +4,11 @@ import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle"
 import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
 import { paths } from "@/routes/paths";
-import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import {
+  ArrowForwardOutlined,
+  LockOutlined,
+  PersonOutlineOutlined,
+} from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -20,8 +22,9 @@ import {
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login as loginRequest } from "../api/auth.api";
+import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import { useAuth } from "../useAuth";
 
 /** Valor padrão para o tempo de espera. */
@@ -67,6 +70,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
+  /** Alterna entre o formulário de login e o de recuperação de senha, sem navegar de rota. */
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   /** Reduz o cooldown do login enquanto a conta está temporariamente bloqueada por excesso de tentativas. */
   useEffect(() => {
@@ -137,123 +142,132 @@ export default function LoginPage() {
           flexDirection="column"
           gap={5}
           sx={{
-            maxWidth: "100%",
+            maxWidth: 365,
             alignSelf: "center",
             my: "auto",
+            mx: 3,
             py: 3,
           }}
         >
-          {/** Cabeçalho da tela com a mensagem inicial do sistema. */}
-          <Box display="flex" flexDirection="column" gap={1.5}>
-            <Typography variant="h2" sx={{ color: "primary.main" }}>
-              {t("login.title")}
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {t("login.subtitle")}
-            </Typography>
-          </Box>
-          {/** Campos do formulário. */}
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            display="flex"
-            flexDirection="column"
-            gap={2}
-          >
-            {/** Campo de usuário, com memória do último login salvo localmente. */}
-            <FormField
-              required
-              autoComplete="username"
-              label={t("login.fields.username")}
-              placeholder={t("login.fields.placeholder.username")}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              startIcon={PersonOutlineOutlinedIcon}
-            />
-            {/** Campo de senha com alternância de visibilidade. */}
-            <FormField
-              required
-              autoComplete="current-password"
-              label={t("login.fields.password")}
-              placeholder={t("login.fields.placeholder.password")}
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              startIcon={LockOutlinedIcon}
-              endIcon={
-                <PasswordVisibilityToggle
-                  visible={showPassword}
-                  onToggle={() => setShowPassword((p) => !p)}
+          {showForgotPassword ? (
+            /** Substitui o login pela recuperação de senha no lugar, sem navegar de rota. */
+            <ForgotPasswordForm onBack={() => setShowForgotPassword(false)} />
+          ) : (
+            <>
+              {/** Cabeçalho da tela com a mensagem inicial do sistema. */}
+              <Box display="flex" flexDirection="column" gap={1.5}>
+                <Typography variant="h2" sx={{ color: "primary.main" }}>
+                  {t("login.title")}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {t("login.subtitle")}
+                </Typography>
+              </Box>
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+              >
+                {/** Campo de usuário, com memória do último login salvo localmente. */}
+                <FormField
+                  autoFocus
+                  required
+                  autoComplete="username"
+                  label={t("login.fields.username")}
+                  placeholder={t("login.fields.placeholder.username")}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  startIcon={PersonOutlineOutlined}
                 />
-              }
-            />
-            {/** Opções de acesso e links auxiliares do formulário. */}
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              ml={0.6}
-              mb={1}
-            >
-              {/** Permite recordar o nome de usuário no navegador. */}
-              <Tooltip title={t("login.actions.tooltip.rememberMe")}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      size="small"
-                      sx={{ p: 0.6 }}
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
+                {/** Campo de senha com alternância de visibilidade. */}
+                <FormField
+                  required
+                  autoComplete="current-password"
+                  label={t("login.fields.password")}
+                  placeholder={t("login.fields.placeholder.password")}
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  startIcon={LockOutlined}
+                  endIcon={
+                    <PasswordVisibilityToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((p) => !p)}
                     />
                   }
-                  label={
-                    <Typography variant="body2">
-                      {t("login.actions.rememberMe")}
-                    </Typography>
-                  }
                 />
-              </Tooltip>
-              {/** Link de recuperação de acesso para redefinição de senha. */}
-              <Tooltip title={t("login.actions.tooltip.forgotPassword")}>
-                <Link
-                  variant="body2"
-                  component={RouterLink}
-                  to={paths.forgotPassword}
+                {/** Opções de acesso e links auxiliares do formulário. */}
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  ml={0.6}
+                  mb={1}
                 >
-                  {t("login.actions.forgotPassword")}
-                </Link>
-              </Tooltip>
-            </Box>
-            {/** Exibe a mensagem de erro da autenticação ou do rate limit. */}
-            {error && <Alert severity="error">{error}</Alert>}
-            {/** Botão principal para autenticar o usuário. */}
-            <Button
-              tooltip={t("login.actions.tooltip.signIn")}
-              type="submit"
-              endIcon={!loading && <ArrowForwardOutlinedIcon />}
-              disabled={loading || cooldown > 0}
-              sx={{ mt: 1 }}
-            >
-              {loading ? (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  {t("login.actions.signingIn")}
-                  <CircularProgress size={18} />
+                  {/** Permite recordar o nome de usuário no navegador. */}
+                  <Tooltip title={t("login.actions.tooltip.rememberMe")}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          sx={{ p: 0.6 }}
+                          checked={rememberMe}
+                          onChange={(e) => setRememberMe(e.target.checked)}
+                        />
+                      }
+                      label={
+                        <Typography variant="body2">
+                          {t("login.actions.rememberMe")}
+                        </Typography>
+                      }
+                    />
+                  </Tooltip>
+                  {/** Substitui o login pela recuperação de senha, sem navegar de rota. */}
+                  <Tooltip title={t("login.actions.tooltip.forgotPassword")}>
+                    <Link
+                      variant="body2"
+                      component="button"
+                      type="button"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      {t("login.actions.forgotPassword")}
+                    </Link>
+                  </Tooltip>
                 </Box>
-              ) : cooldown > 0 ? (
-                t("login.actions.waitSeconds", { seconds: cooldown })
-              ) : (
-                t("login.actions.signIn")
-              )}
-            </Button>
-            {/** Rodapé da tela com a marca e ano atual. */}
-            <Typography
-              variant="caption"
-              sx={{ color: "text.secondary", textAlign: "center", mt: 1 }}
-            >
-              &copy; {new Date().getFullYear()} {t("app.brandName")}
-            </Typography>
-          </Box>
+                {/** Exibe a mensagem de erro da autenticação ou do rate limit. */}
+                {error && <Alert severity="error">{error}</Alert>}
+                {/** Botão principal para autenticar o usuário. */}
+                <Button
+                  tooltip={t("login.actions.tooltip.signIn")}
+                  type="submit"
+                  endIcon={!loading && <ArrowForwardOutlined />}
+                  disabled={loading || cooldown > 0}
+                  sx={{ mt: 1 }}
+                >
+                  {loading ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      {t("login.actions.signingIn")}
+                      <CircularProgress size={18} />
+                    </Box>
+                  ) : cooldown > 0 ? (
+                    t("login.actions.waitSeconds", { seconds: cooldown })
+                  ) : (
+                    t("login.actions.signIn")
+                  )}
+                </Button>
+              </Box>
+            </>
+          )}
+          {/** Rodapé da tela com a marca e ano atual. */}
+          <Typography
+            variant="caption"
+            sx={{ color: "text.secondary", textAlign: "center", mt: -1.5 }}
+          >
+            &copy; {new Date().getFullYear()} {t("app.brandName")}
+          </Typography>
         </Box>
       </Grid>
       {/** Painel visual de boas-vindas. */}

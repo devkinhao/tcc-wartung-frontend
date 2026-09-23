@@ -12,7 +12,6 @@ import { ROUTE_PERMISSIONS } from "./routePermissions";
 // Cada página é carregada sob demanda (code-splitting) — o bundle inicial fica
 // só com o necessário para o login e a moldura do app. Apenas o LoginPage é
 // eager, por ser a primeira tela.
-const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPasswordPage"));
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPasswordPage"));
 const Home = lazy(() => import("@/features/home/pages/HomePage"));
 const Dashboard = lazy(() => import("@/features/dashboard/pages/DashboardPage"));
@@ -54,7 +53,6 @@ const page = (node: ReactNode) => <Suspense fallback={pageFallback}>{node}</Susp
  */
 export const router = createBrowserRouter([
   { path: paths.login, element: <Login /> },
-  { path: paths.forgotPassword, element: page(<ForgotPassword />) },
   { path: paths.resetPassword, element: page(<ResetPassword />) },
   {
     element: <PrivateRoute />,

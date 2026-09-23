@@ -111,7 +111,7 @@ export default function ResetPasswordPage() {
                 {t("resetPassword.title")}
               </Typography>
               <Alert severity="error">{t("resetPassword.errors.missingToken")}</Alert>
-              <Link component={RouterLink} to={paths.forgotPassword} variant="body2">
+              <Link component={RouterLink} to={paths.login} variant="body2">
                 {t("forgotPassword.title")}
               </Link>
             </Box>

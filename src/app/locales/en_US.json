@@ -655,23 +655,29 @@
     }
   },
   "forgotPassword": {
-    "title": "Forgot my password",
-    "subtitle": "Enter your registered email and we'll send you a link to reset your password.",
+    "title": "Recover your access",
+    "subtitle": "Enter your registered email and we'll send you instructions to reset your password.",
     "fields": {
-      "email": "Email",
+      "email": "E-mail",
       "placeholder": {
-        "email": "Enter your email"
+        "email": "johndoe@email.com"
       }
     },
     "actions": {
-      "send": "Send recovery link",
-      "sending": "Sending...",
-      "backToLogin": "Back to login"
+      "send": "Send",
+      "backToLogin": "Back to login",
+      "tooltip": {
+        "send": "Send a recovery link to the provided email",
+        "backToLogin": "Go to the login screen"
+      },
+      "sending": "Sending..."
     },
+    "sent": "Email sent successfully!",
     "success": "If the email you entered is registered, you'll receive a password reset link shortly.",
     "errors": {
-      "invalidEmail": "Enter a valid email",
-      "generic": "Could not process your request. Please try again."
+      "requiredEmail": "Email is required.",
+      "invalidEmail": "Entered e-mail is invalid.",
+      "generic": "Could not process your request, please try again."
     }
   },
   "resetPassword": {
