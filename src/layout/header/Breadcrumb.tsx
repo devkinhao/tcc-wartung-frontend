@@ -1,37 +1,39 @@
-import { useNavigate } from "react-router-dom";
-import { Breadcrumbs, Link, Tooltip, Typography } from "@mui/material";
+import { Tooltip } from "@/components/Tooltip";
+import { Breadcrumbs, Link, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import type { BreadcrumbItem } from "./breadcrumbMap";
-import { typography } from "@/styles/typography";
 
-type Props = {
+type BreadcrumbProps = {
   items: BreadcrumbItem[];
-  /** "large" estiliza o item atual (último) como um título de página — usado
-   * quando o breadcrumb substitui o título/subtítulo que ficava na própria página. */
-  size?: "default" | "large";
 };
 
-export function Breadcrumb({ items, size = "default" }: Props) {
-  const navigate  = useNavigate();
-  const { t }     = useTranslation();
+/** Trilha de navegação da página, com o item atual estilizado como título. */
+export function Breadcrumb({ items }: BreadcrumbProps) {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
-  // Se o label começa com "nav." é uma chave i18n, senão é texto final (nome do cliente/inspeção)
+  /** Se o label começa com "nav." é uma chave I18n, senão é texto final (nome do cliente/inspeção). */
   const resolve = (label: string) =>
     label.startsWith("nav.") ? t(label) : label;
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
       {items.map((c, i) => {
-        const last  = i === items.length - 1;
+        const last = i === items.length - 1;
         const label = resolve(c.label);
 
         if (c.path && !last) {
           return (
-            <Tooltip key={i} title={t("common.tooltip.goTo", { page: label })}>
+            <Tooltip
+              key={i}
+              title={t("common.tooltip.goTo", {
+                page: label.toLocaleLowerCase(),
+              })}
+            >
               <Link
                 underline="hover"
-                color="inherit"
-                sx={{ cursor: "pointer" }}
+                sx={{ color: "text.secondary", cursor: "pointer" }}
                 onClick={() => navigate(c.path!)}
               >
                 {label}
@@ -39,22 +41,9 @@ export function Breadcrumb({ items, size = "default" }: Props) {
             </Tooltip>
           );
         }
-
-        if (last && size === "large") {
-          return (
-            <Typography key={i} variant="h6" color="text.primary" fontWeight={typography.weight.bold}>
-              {label}
-            </Typography>
-          );
-        }
-
+        /** Item atual sem path ou último da lista, não é clicável e substitui o título da página. */
         return (
-          <Typography
-            key={i}
-            variant="body2"
-            color={last ? "text.primary" : "text.secondary"}
-            fontWeight={last ? typography.weight.bold : typography.weight.medium}
-          >
+          <Typography key={i} variant="h4" sx={{ color: "text.primary" }}>
             {label}
           </Typography>
         );

@@ -124,7 +124,7 @@ export default function CustomerDetailsPage() {
       <UnsavedChangesGuard when={hasUnsavedChanges} />
 
       <Box sx={{ mb: 1 }}>
-        <Breadcrumb items={breadcrumbItems} size="large" />
+        <Breadcrumb items={breadcrumbItems} />
       </Box>
 
       {/* Empresa desativada (LOG_ATIVO = false) — ficha somente leitura */}

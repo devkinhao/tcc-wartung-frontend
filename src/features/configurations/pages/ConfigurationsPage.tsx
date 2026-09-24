@@ -75,7 +75,7 @@ export default function ConfigurationsPage() {
   return (
     <Box sx={{ maxWidth: 896 }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.configurations]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.configurations]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("configurations.description")}
         </Typography>

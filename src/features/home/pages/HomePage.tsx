@@ -33,6 +33,8 @@ import { getExpirationStatus } from "@/utils/expirationStatus";
 import { daysFromToday } from "@/utils/date";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
+import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { listAllInspections, type InspectionListItem } from "../../inspections/api/inspections.list.api";
 import { equipmentSummary } from "../../inspections/utils/equipmentSummary";
 import { InspectionDetailModal } from "../../inspections/components/InspectionDetailModal";
@@ -272,9 +274,7 @@ export default function HomePage() {
         containerName: "home-page",
       }}
     >
-      <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
-        {t("home.title")}
-      </Typography>
+      <Breadcrumb items={breadcrumbMap[paths.home]} />
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         {t("home.subtitle")}
       </Typography>

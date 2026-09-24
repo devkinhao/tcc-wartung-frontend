@@ -5,12 +5,7 @@ export type BreadcrumbItem = {
   path?: string;
 };
 
-/**
- * Mapa de breadcrumbs para rotas estáticas — cada página renderiza o próprio
- * breadcrumb (no lugar do título/subtítulo, que ficavam redundantes com ele).
- * A rota dinâmica /customers/:id monta os itens na própria página, com dados
- * reais da query (nome do cliente).
- */
+/** Mapa de breadcrumbs para rotas estáticas, em que cada página renderiza o próprio breadcrumb. */
 export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
   [paths.home]: [{ label: "nav.home" }],
 
@@ -20,70 +15,70 @@ export const breadcrumbMap: Record<string, BreadcrumbItem[]> = {
   ],
 
   [paths.customers]: [
-    { label: "nav.home",         path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.customersList" },
   ],
 
   [paths.inspections]: [
-    { label: "nav.home",            path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.inspectionsList" },
   ],
 
   [paths.notifications]: [
-    { label: "nav.home",              path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.notificationsList" },
   ],
 
   [paths.reports]: [
-    { label: "nav.home",   path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.reports" },
   ],
 
   [paths.adminPanel]: [
-    { label: "nav.home",       path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.adminPanel" },
   ],
 
   [paths.company]: [
-    { label: "nav.home",       path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.myCompany" },
   ],
 
   [paths.users]: [
-    { label: "nav.home",       path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.users" },
   ],
 
   [paths.configurations]: [
-    { label: "nav.home",           path: paths.home },
-    { label: "nav.adminPanel",     path: paths.adminPanel },
+    { label: "nav.home", path: paths.home },
+    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.configurations" },
   ],
 
   [paths.emailSettings]: [
-    { label: "nav.home",           path: paths.home },
-    { label: "nav.adminPanel",     path: paths.adminPanel },
+    { label: "nav.home", path: paths.home },
+    { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.emailSettings" },
   ],
 
   [paths.userProfile]: [
-    { label: "nav.home",      path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.myProfile" },
   ],
 
   [paths.documents]: [
-    { label: "nav.home",      path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.documents" },
   ],
 
   [paths.preferences]: [
-    { label: "nav.home",       path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.preferences" },
   ],
 
   [paths.serviceTypes]: [
-    { label: "nav.home",       path: paths.home },
+    { label: "nav.home", path: paths.home },
     { label: "nav.adminPanel", path: paths.adminPanel },
     { label: "nav.serviceTypes" },
   ],

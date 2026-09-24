@@ -214,7 +214,7 @@ export default function UserDocumentsPage() {
   return (
     <Box sx={{ maxWidth: 960 }}>
       <Box sx={{ mb: 2 }}>
-        <Breadcrumb items={breadcrumbMap[paths.documents]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.documents]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("userDocuments.description")}
         </Typography>

@@ -115,7 +115,7 @@ export default function EmailSettingsPage() {
   return (
     <Box sx={{ maxWidth: 720 }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.emailSettings]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.emailSettings]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("configurations.emailSettings.description")}
         </Typography>

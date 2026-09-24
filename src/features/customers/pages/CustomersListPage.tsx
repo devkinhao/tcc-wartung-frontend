@@ -51,7 +51,7 @@ export default function CustomersListPage() {
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.customers]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.customers]} />
           <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
             {t("customers.description")}
           </Typography>

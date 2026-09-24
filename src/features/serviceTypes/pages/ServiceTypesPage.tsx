@@ -84,7 +84,7 @@ export default function ServiceTypesPage() {
         sx={{ mb: 2 }}
       >
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.serviceTypes]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.serviceTypes]} />
           <Typography variant="body2" color="text.secondary">
             {t("serviceTypes.description")}
           </Typography>

@@ -220,7 +220,7 @@ export default function CompanyPage() {
   return (
     <Box sx={{ maxWidth: 960 }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.company]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.company]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("company.description")}
         </Typography>

@@ -94,7 +94,7 @@ export default function NotificationsPage() {
         sx={{ mb: 3 }}
       >
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.notifications]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.notifications]} />
           <Typography variant="body2" color="text.secondary">
             {t("notifications.description")}
           </Typography>

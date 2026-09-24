@@ -83,7 +83,7 @@ export default function ReportsPage() {
   return (
     <Box sx={{ maxWidth: 760 }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.reports]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.reports]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("reports.description")}
         </Typography>

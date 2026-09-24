@@ -88,7 +88,7 @@ export default function UsersPage() {
         sx={{ mb: 2 }}
       >
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.users]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.users]} />
           <Typography variant="body2" color="text.secondary">
             {t("users.description")}
           </Typography>

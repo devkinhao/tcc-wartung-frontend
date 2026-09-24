@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -29,7 +29,7 @@ export default function AdminPanelPage() {
   return (
     <Box sx={{ maxWidth: 960 }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.adminPanel]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.adminPanel]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("adminPanel.description")}
         </Typography>

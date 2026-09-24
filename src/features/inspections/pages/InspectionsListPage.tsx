@@ -198,7 +198,7 @@ export default function InspectionsListPage() {
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.inspections]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.inspections]} />
           <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
             {t("inspections.description")}
           </Typography>

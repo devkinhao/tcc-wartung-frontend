@@ -1138,7 +1138,6 @@
     }
   },
   "home": {
-    "title": "Início",
     "subtitle": "Suas inspeções que precisam de atenção.",
     "cards": {
       "expired": "Vencidas",

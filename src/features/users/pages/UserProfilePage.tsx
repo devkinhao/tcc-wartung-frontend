@@ -229,7 +229,7 @@ export default function UserProfile() {
     <>
       <Box sx={{ maxWidth: 896 }}>
         <Box sx={{ mb: 3 }}>
-          <Breadcrumb items={breadcrumbMap[paths.userProfile]} size="large" />
+          <Breadcrumb items={breadcrumbMap[paths.userProfile]} />
           <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
             {t("userProfile.description")}
           </Typography>

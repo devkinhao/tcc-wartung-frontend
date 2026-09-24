@@ -27,7 +27,7 @@ export default function DashboardPage() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.dashboard]} size="large" />
+        <Breadcrumb items={breadcrumbMap[paths.dashboard]} />
         <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
           {t("dashboard.description")}
         </Typography>
