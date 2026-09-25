@@ -29,7 +29,7 @@ import {
 import { CepTextField } from "@/components/CepTextField";
 import { MaskedTextField } from "@/components/MaskedTextField";
 import { useNotify } from "@/hooks/useNotify";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import type { ViaCepResponseDTO } from "@/api/cep.api";
@@ -219,12 +219,7 @@ export default function CompanyPage() {
 
   return (
     <Box sx={{ maxWidth: 960 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.company]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("company.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.company]} subtitle={t("company.description")} />
 
       <Card sx={{ borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>

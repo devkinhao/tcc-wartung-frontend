@@ -38,7 +38,7 @@ import type {
 } from "../api/customers.detail.api";
 import { paths } from "@/routes/paths";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import type { BreadcrumbItem } from "@/layout/header/breadcrumbMap";
 import { UnsavedChangesGuard } from "@/components/UnsavedChangesGuard";
 import { useNotify } from "@/hooks/useNotify";
@@ -123,9 +123,7 @@ export default function CustomerDetailsPage() {
     <Box sx={{ width: "100%" }}>
       <UnsavedChangesGuard when={hasUnsavedChanges} />
 
-      <Box sx={{ mb: 1 }}>
-        <Breadcrumb items={breadcrumbItems} />
-      </Box>
+      <PageHeader items={breadcrumbItems} />
 
       {/* Empresa desativada (LOG_ATIVO = false) — ficha somente leitura */}
       {!view.isActive && (

@@ -34,7 +34,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { formatDateBR } from "@/utils/date";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { AddInspectionModal } from "../components/AddInspectionModal";
 import { InspectionDetailModal } from "../components/InspectionDetailModal";
@@ -197,12 +197,10 @@ export default function InspectionsListPage() {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
-        <Box>
-          <Breadcrumb items={breadcrumbMap[paths.inspections]} />
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-            {t("inspections.description")}
-          </Typography>
-        </Box>
+        <PageHeader
+          items={breadcrumbMap[paths.inspections]}
+          subtitle={t("inspections.description")}
+        />
         <Button
           variant="contained"
           startIcon={<AddIcon />}

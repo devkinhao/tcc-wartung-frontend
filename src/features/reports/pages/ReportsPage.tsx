@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 
 import { useNotify } from "@/hooks/useNotify";
 import { useCities } from "@/features/customers/hooks/useCities";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import {
@@ -82,12 +82,7 @@ export default function ReportsPage() {
 
   return (
     <Box sx={{ maxWidth: 760 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.reports]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("reports.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.reports]} subtitle={t("reports.description")} />
 
       <Stack spacing={2.5}>
 

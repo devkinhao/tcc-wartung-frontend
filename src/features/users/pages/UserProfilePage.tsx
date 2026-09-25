@@ -34,7 +34,7 @@ import { MaskedTextField } from "@/components/MaskedTextField";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
 import { fieldError } from "@/validation/fields";
 import { userProfileSchema, changePasswordSchema } from "../schemas";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
@@ -228,12 +228,7 @@ export default function UserProfile() {
   return (
     <>
       <Box sx={{ maxWidth: 896 }}>
-        <Box sx={{ mb: 3 }}>
-          <Breadcrumb items={breadcrumbMap[paths.userProfile]} />
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-            {t("userProfile.description")}
-          </Typography>
-        </Box>
+        <PageHeader items={breadcrumbMap[paths.userProfile]} subtitle={t("userProfile.description")} />
 
         {isLoading ? (
           <Stack direction="row" spacing={2} alignItems="center">

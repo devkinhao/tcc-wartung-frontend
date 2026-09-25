@@ -10,7 +10,7 @@ import {
 import { AdminPanelSettings, Settings, Build, MailOutline } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
@@ -28,12 +28,7 @@ export default function AdminPanelPage() {
 
   return (
     <Box sx={{ maxWidth: 960 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.adminPanel]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("adminPanel.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.adminPanel]} subtitle={t("adminPanel.description")} />
 
       <Grid container spacing={2.5}>
         {ITEMS.map(({ key, to, icon: Icon }) => (

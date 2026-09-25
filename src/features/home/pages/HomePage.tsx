@@ -33,7 +33,7 @@ import { getExpirationStatus } from "@/utils/expirationStatus";
 import { daysFromToday } from "@/utils/date";
 import { buildWhatsAppLink } from "@/utils/whatsapp";
 import { getDashboard } from "@/features/dashboard/api/dashboard.api";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { listAllInspections, type InspectionListItem } from "../../inspections/api/inspections.list.api";
 import { equipmentSummary } from "../../inspections/utils/equipmentSummary";
@@ -274,11 +274,7 @@ export default function HomePage() {
         containerName: "home-page",
       }}
     >
-      <Breadcrumb items={breadcrumbMap[paths.home]} />
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        {t("home.subtitle")}
-      </Typography>
-
+      <PageHeader items={breadcrumbMap[paths.home]} subtitle={t("home.subtitle")} />
       {/* Coluna esquerda: cartões de vencimento + inspeções que precisam de atenção.
           Coluna direita: lembretes, com altura independente — não empurra a coluna
           esquerda para baixo conforme a lista de lembretes cresce.

@@ -28,7 +28,7 @@ import type { ServiceTypeResponseDTO } from "../api/serviceTypes.api";
 import { CreateServiceTypeModal } from "../components/CreateServiceTypeModal";
 import { EditServiceTypeModal } from "../components/EditServiceTypeModal";
 import { DataTableContainer } from "@/components/DataTableContainer";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 
@@ -84,10 +84,10 @@ export default function ServiceTypesPage() {
         sx={{ mb: 2 }}
       >
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.serviceTypes]} />
-          <Typography variant="body2" color="text.secondary">
-            {t("serviceTypes.description")}
-          </Typography>
+          <PageHeader
+            items={breadcrumbMap[paths.serviceTypes]}
+            subtitle={t("serviceTypes.description")}
+          />
 
           {error && (
             <Typography variant="body2" sx={{ mt: 1 }} color="error">

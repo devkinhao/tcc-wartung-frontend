@@ -1,10 +1,10 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
 import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { getDashboard } from "../api/dashboard.api";
@@ -26,12 +26,7 @@ export default function DashboardPage() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.dashboard]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("dashboard.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.dashboard]} subtitle={t("dashboard.description")} />
 
       <Grid container spacing={2.5}>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +11,7 @@ import { Pagination } from "@/components/Pagination";
 import { useCities } from "../hooks/useCities";
 import { AddCompanyModal } from "../components/AddCompanyModal";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 
@@ -50,12 +50,10 @@ export default function CustomersListPage() {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
-        <Box>
-          <Breadcrumb items={breadcrumbMap[paths.customers]} />
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-            {t("customers.description")}
-          </Typography>
-        </Box>
+        <PageHeader
+          items={breadcrumbMap[paths.customers]}
+          subtitle={t("customers.description")}
+        />
         <Button
           variant="contained"
           startIcon={<AddIcon />}

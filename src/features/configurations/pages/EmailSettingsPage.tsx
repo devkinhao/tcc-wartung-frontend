@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, CircularProgress, Divider, FormControlLabel, Grid, Skeleton, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, Divider, FormControlLabel, Grid, Skeleton, Stack, Switch, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -9,7 +9,7 @@ import { fieldError } from "@/validation/fields";
 import { emailSettingsSchema } from "@/features/configurations/schemas";
 import { digitsOnly } from "@/utils/masks";
 import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import {
@@ -114,12 +114,10 @@ export default function EmailSettingsPage() {
 
   return (
     <Box sx={{ maxWidth: 720 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.emailSettings]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("configurations.emailSettings.description")}
-        </Typography>
-      </Box>
+      <PageHeader
+        items={breadcrumbMap[paths.emailSettings]}
+        subtitle={t("configurations.emailSettings.description")}
+      />
 
       <Card sx={{ borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>

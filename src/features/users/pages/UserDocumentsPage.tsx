@@ -40,7 +40,7 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { DataTableContainer } from "@/components/DataTableContainer";
@@ -213,12 +213,10 @@ export default function UserDocumentsPage() {
 
   return (
     <Box sx={{ maxWidth: 960 }}>
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumb items={breadcrumbMap[paths.documents]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("userDocuments.description")}
-        </Typography>
-      </Box>
+      <PageHeader
+        items={breadcrumbMap[paths.documents]}
+        subtitle={t("userDocuments.description")}
+      />
 
       <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
         <Stack

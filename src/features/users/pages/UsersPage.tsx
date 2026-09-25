@@ -29,7 +29,7 @@ import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
 import { SortableHeader } from "@/components/SortableHeader";
 import { DataTableContainer } from "@/components/DataTableContainer";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 
@@ -88,10 +88,10 @@ export default function UsersPage() {
         sx={{ mb: 2 }}
       >
         <Box>
-          <Breadcrumb items={breadcrumbMap[paths.users]} />
-          <Typography variant="body2" color="text.secondary">
-            {t("users.description")}
-          </Typography>
+          <PageHeader
+            items={breadcrumbMap[paths.users]}
+            subtitle={t("users.description")}
+          />
 
           {error && (
             <Typography variant="body2" sx={{ mt: 1 }} color="error">

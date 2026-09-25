@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, CircularProgress, Divider, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, Divider, Skeleton, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -7,7 +7,7 @@ import { qk } from "@/api/keys";
 import { useNotify } from "@/hooks/useNotify";
 import { toCamelCase } from "@/utils/strings";
 import { digitsOnly } from "@/utils/masks";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { getConfigurations, updateConfigurations } from "../api/configurations.api";
@@ -74,12 +74,7 @@ export default function ConfigurationsPage() {
 
   return (
     <Box sx={{ maxWidth: 896 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.configurations]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("configurations.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.configurations]} subtitle={t("configurations.description")} />
 
       <Card sx={{ borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>

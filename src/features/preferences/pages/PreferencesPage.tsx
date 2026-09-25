@@ -25,7 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
@@ -170,12 +170,7 @@ export default function PreferencesPage() {
 
   return (
     <Box sx={{ maxWidth: 720 }}>
-      <Box sx={{ mb: 3 }}>
-        <Breadcrumb items={breadcrumbMap[paths.preferences]} />
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-          {t("preferences.description")}
-        </Typography>
-      </Box>
+      <PageHeader items={breadcrumbMap[paths.preferences]} subtitle={t("preferences.description")} />
 
       {isLoading || loadingOptions || !options ? (
         <Skeleton variant="rounded" height={280} />

@@ -1,38 +1,35 @@
-// Fonte única de verdade para os caminhos de rota do app.
-// Usado por App.tsx (definição das rotas), pelo menu lateral, pelos breadcrumbs
-// e por qualquer navigate()/<Link to> — evita strings de rota duplicadas e
-// divergentes espalhadas pelo código.
+/** Definição de rotas do sistema, usado pelo menu lateral, breadcrumbs e qualquer navegação. */
 export const paths = {
   login: "/login",
   resetPassword: "/reset-password",
+
   home: "/home",
-  dashboard: "/dashboard",
-
   customers: "/customers",
-  // Abre a lista de empresas já filtrada (usado pelos cards do dashboard).
-  // "all" é o card "Total": sinaliza para limpar qualquer filtro de status
-  // que já esteja salvo (o filtro persiste em sessionStorage entre navegações).
-  customersByStatus: (status: "customer" | "non-customer" | "inactive" | "all") =>
-    `/customers?status=${status}`,
+  /** Usado pelos cards do dashboard, abrindo a lista de empresas já filtrada. */
+  customersByStatus: (
+    status: "customer" | "non-customer" | "inactive" | "all",
+  ) => `/customers?status=${status}`,
   customerDetails: (id: number | string) => `/customers/${id}`,
-  customerInspectionsTab: (id: number | string) => `/customers/${id}?tab=inspections`,
-
+  customerInspectionsTab: (id: number | string) =>
+    `/customers/${id}?tab=inspections`,
   inspections: "/inspections",
-  inspectionsByStatus: (status: "expired" | "near" | "ok") => `/inspections?status=${status}`,
-  // A inspeção abre num modal na lista; o link direto (notificações) usa ?inspection=.
+  inspectionsByStatus: (status: "expired" | "near" | "ok") =>
+    `/inspections?status=${status}`,
+  /** Inspeções são abertas em uma modal na lista. */
   inspectionDetails: (id: number | string) => `/inspections?inspection=${id}`,
-
-  serviceTypes: "/service-types",
+  dashboard: "/dashboard",
+  reports: "/reports",
 
   notifications: "/notifications",
-  reports: "/reports",
-  adminPanel: "/admin-panel",
+
+  userProfile: "/users/me",
   company: "/company",
+  documents: "/documents",
+  preferences: "/preferences",
+  adminPanel: "/admin-panel",
+
+  serviceTypes: "/service-types",
   users: "/users",
   configurations: "/configurations",
   emailSettings: "/configurations/email",
-
-  userProfile: "/users/me",
-  documents: "/documents",
-  preferences: "/preferences",
 } as const;

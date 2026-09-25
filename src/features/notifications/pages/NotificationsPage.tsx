@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
 import { formatDateTimeBR } from "@/utils/date";
-import { Breadcrumb } from "@/layout/header/Breadcrumb";
+import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
 import {
@@ -93,12 +93,10 @@ export default function NotificationsPage() {
         spacing={2}
         sx={{ mb: 3 }}
       >
-        <Box>
-          <Breadcrumb items={breadcrumbMap[paths.notifications]} />
-          <Typography variant="body2" color="text.secondary">
-            {t("notifications.description")}
-          </Typography>
-        </Box>
+        <PageHeader
+          items={breadcrumbMap[paths.notifications]}
+          subtitle={t("notifications.description")}
+        />
 
         <Button
           variant="outlined"
