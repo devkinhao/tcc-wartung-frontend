@@ -4,6 +4,8 @@ import { isAxiosError } from "axios";
 import { AuthContext, type AuthStatus } from "./AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
+import { qk } from "@/api/keys";
+import type { User } from "@/features/users/types/User";
 import { ASSISTANT_STORAGE_KEYS } from "@/layout/chatbot/storage";
 
 // --- Funções puras — sem estado React, fora do componente ---
@@ -19,10 +21,18 @@ function isTokenValid(jwt: string): boolean {
   }
 }
 
-function validateWithBackend(jwt: string) {
-  return api.get("/users/me", {
+/**
+ * Valida o token contra o backend e devolve o usuário autenticado.
+ *
+ * O retorno é aproveitado para semear o cache do React Query (ver `bootstrap` e
+ * `login`): sem isso, o `useMe()` buscaria `/users/me` de novo logo em seguida,
+ * duplicando a mesma requisição a cada carga da página.
+ */
+async function validateWithBackend(jwt: string): Promise<User> {
+  const response = await api.get<User>("/users/me", {
     headers: { Authorization: `Bearer ${jwt}` },
   });
+  return response.data;
 }
 
 // --- Provider ---
@@ -55,7 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(stored);
 
     try {
-      await validateWithBackend(stored);
+      const user = await validateWithBackend(stored);
+      // Aproveita a resposta que já veio, em vez de deixar o useMe() refazer a
+      // mesma chamada logo depois.
+      queryClient.setQueryData(qk.me(), user);
       setStatus("authenticated");
     } catch (err) {
       const status = isAxiosError(err) ? err.response?.status : undefined;
@@ -66,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setStatus("offline");
     }
-  }, [clearSession]);
+  }, [clearSession, queryClient]);
 
   const login = useCallback(async (jwt: string) => {
     localStorage.setItem("token", jwt);
@@ -81,13 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStatus("checking");
 
     try {
-      await validateWithBackend(jwt);
+      const user = await validateWithBackend(jwt);
+      queryClient.setQueryData(qk.me(), user);
       setStatus("authenticated");
     } catch (err) {
       clearSession();
       setStatus(isAxiosError(err) && err.response ? "unauthenticated" : "offline");
     }
-  }, [clearSession]);
+  }, [clearSession, queryClient]);
 
   const logout = useCallback(() => {
     clearSession();
