@@ -3,6 +3,7 @@
 
 export const qk = {
   me: () => ["me"] as const,
+  avatar: (userId: number) => ["avatar", userId] as const,
   preferences: () => ["preferences"] as const,
   preferenceOptions: () => ["preference-options"] as const,
   cities: () => ["cities"] as const,

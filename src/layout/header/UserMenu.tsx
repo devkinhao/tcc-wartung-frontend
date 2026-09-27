@@ -2,7 +2,7 @@ import { Button } from "@/components/Button";
 import { Tooltip } from "@/components/Tooltip";
 import { canAccess } from "@/features/auth/permissions";
 import { useAuth } from "@/features/auth/useAuth";
-import { getAvatar } from "@/features/users/api/user.api";
+import { useAvatarUrl } from "@/hooks/useAvatarUrl";
 import { useMe } from "@/hooks/useMe";
 import { paths } from "@/routes/paths";
 import { ROUTE_PERMISSIONS } from "@/routes/routePermissions";
@@ -27,7 +27,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,6 @@ export function UserMenu() {
 
   /** Estados. */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   /** Indica se o menu está aberto. */
   const open = Boolean(anchorEl);
@@ -58,25 +57,8 @@ export function UserMenu() {
     [user],
   );
 
-  /** Avatar obtido via API autenticada. */
-  useEffect(() => {
-    if (!user?.id || !user.avatarUrl) {
-      setAvatarSrc(null);
-      return;
-    }
-
-    let objectUrl: string | null = null;
-    getAvatar(user.id)
-      .then((url) => {
-        objectUrl = url;
-        setAvatarSrc(url);
-      })
-      .catch(() => setAvatarSrc(null));
-
-    return () => {
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [user?.id, user?.avatarUrl]);
+  /** Avatar obtido via API autenticada, compartilhado com as demais telas pelo cache. */
+  const avatarSrc = useAvatarUrl(user?.id, user?.avatarUrl);
 
   if (!user) return null;
 

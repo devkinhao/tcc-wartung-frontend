@@ -36,10 +36,16 @@ export async function removeAvatar() {
   return api.delete("/users/me/avatar");
 }
 
-export async function getAvatar(userId: number): Promise<string> {
+/**
+ * Devolve o Blob da foto, e nao uma object URL, de proposito: o Blob pode ser
+ * cacheado e compartilhado pelo React Query, enquanto cada componente cria (e
+ * revoga) a propria object URL. Se a URL fosse cacheada, um componente ao
+ * desmontar revogaria a imagem ainda em uso por outro.
+ */
+export async function getAvatarBlob(userId: number): Promise<Blob> {
   const response = await api.get(`/users/${userId}/avatar`, {
     responseType: "blob",
   });
 
-  return URL.createObjectURL(response.data);
+  return response.data;
 }

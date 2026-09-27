@@ -26,7 +26,8 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
 import { User } from "../types/User";
-import { changePassword, getAvatar, getMe, removeAvatar, updateMe, uploadAvatar } from "../api/user.api";
+import { useAvatarUrl } from "@/hooks/useAvatarUrl";
+import { changePassword, getMe, removeAvatar, updateMe, uploadAvatar } from "../api/user.api";
 import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
@@ -53,18 +54,20 @@ export default function UserProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  // Preview do arquivo recém-escolhido, antes de salvar. O avatar já salvo vem
+  // do cache compartilhado (useAvatarUrl), e não é responsabilidade desta tela.
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarRemoved, setAvatarRemoved] = useState(false);
 
-  // `getAvatar` e o preview do arquivo escolhido criam object URLs (blob:) —
-  // revoga a anterior ao trocar/desmontar para não vazar memória.
+  // O preview local cria uma object URL (blob:) — revoga a anterior ao
+  // trocar/desmontar para não vazar memória.
   React.useEffect(() => {
-    const current = avatarPreview;
+    const current = localPreview;
     return () => {
       if (current?.startsWith("blob:")) URL.revokeObjectURL(current);
     };
-  }, [avatarPreview]);
+  }, [localPreview]);
 
   const { data: user, isLoading } = useQuery<User>({
     queryKey: qk.me(),
@@ -77,16 +80,6 @@ export default function UserProfile() {
   const [creaNumber, setCreaNumber] = useState("");
   const [profession, setProfession] = useState("");
 
-  function loadAvatarPreview(u: User) {
-    if (u.id && u.avatarUrl) {
-      getAvatar(u.id)
-        .then(setAvatarPreview)
-        .catch(() => setAvatarPreview(null));
-    } else {
-      setAvatarPreview(null);
-    }
-  }
-
   React.useEffect(() => {
     if (!user) return;
 
@@ -95,8 +88,12 @@ export default function UserProfile() {
     setEmail(user.email ?? "");
     setCreaNumber(user.creaNumber ?? "");
     setProfession(user.profession ?? "");
-    loadAvatarPreview(user);
   }, [user]);
+
+  const savedAvatarUrl = useAvatarUrl(user?.id, user?.avatarUrl);
+
+  /** O que aparece na tela: o arquivo escolhido agora tem precedência sobre o salvo. */
+  const avatarPreview = localPreview ?? (avatarRemoved ? null : savedAvatarUrl);
 
   const updateMutation = useMutation({
     mutationFn: updateMe,
@@ -132,6 +129,9 @@ export default function UserProfile() {
 
     onSettled() {
       queryClient.invalidateQueries({ queryKey: qk.me() });
+      // Sem isso o Blob antigo continuaria no cache e o menu do topo seguiria
+      // exibindo a foto anterior até a próxima recarga da página.
+      if (user?.id) queryClient.invalidateQueries({ queryKey: qk.avatar(user.id) });
     },
   });
 
@@ -139,6 +139,7 @@ export default function UserProfile() {
     mutationFn: removeAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qk.me() });
+      if (user?.id) queryClient.removeQueries({ queryKey: qk.avatar(user.id) });
     },
     onError: (err) => notify.fromError(err),
   });
@@ -159,13 +160,13 @@ export default function UserProfile() {
     if (!e.target.files?.length) return;
     const file = e.target.files[0];
     setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
+    setLocalPreview(URL.createObjectURL(file));
     setAvatarRemoved(false);
   }
 
   function handleRemoveAvatar() {
     setAvatarFile(null);
-    setAvatarPreview(null);
+    setLocalPreview(null);
     setAvatarRemoved(true);
   }
 
@@ -195,7 +196,7 @@ export default function UserProfile() {
     setProfession(user.profession ?? "");
     setAvatarFile(null);
     setAvatarRemoved(false);
-    loadAvatarPreview(user);
+    setLocalPreview(null);
     setIsEditing(false);
   }
 
