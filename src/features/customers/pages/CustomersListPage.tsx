@@ -58,6 +58,7 @@ export default function CustomersListPage() {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => setIsAddOpen(true)}
+          data-tour="customers.add"
           sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
         >
           {t("customers.actions.addCompany")}

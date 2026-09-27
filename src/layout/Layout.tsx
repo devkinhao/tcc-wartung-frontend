@@ -1,3 +1,4 @@
+import { TourProvider } from "@/features/tour/TourProvider";
 import { usePreferences } from "@/features/preferences/usePreferences";
 import { Box, Toolbar } from "@mui/material";
 import { useState } from "react";
@@ -21,29 +22,33 @@ export default function Layout() {
   const showChatbot = preferences.CHATBOT_ENABLED !== "false";
 
   return (
-    <Box sx={{ height: "100dvh", bgcolor: "background.default" }}>
-      {/** Navegação lateral principal. */}
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((p) => !p)} />
-      {/** Cabeçalho global do sistema, com ajuste de largura conforme a sidebar. */}
-      <Header drawerWidth={drawerWidth} />
-      <Box
-        sx={{
-          /** Compensa a largura da sidebar para manter o conteúdo principal alinhado. */
-          ml: `${drawerWidth}px`,
-          transition: (t) =>
-            t.transitions.create("margin-left", {
-              duration: t.transitions.duration.standard,
-            }),
-        }}
-      >
-        {/** Reserva o espaço vertical do AppBar fixo no topo para o conteúdo da página não ficar escondido atrás do cabeçalho. */}
-        <Toolbar />
-        {/** Área principal da aplicação onde a rota ativa é renderizada. */}
-        <Box component="main" sx={{ p: 3 }}>
-          <Outlet />
+    /** Os tutoriais guiados atravessam telas (menu lateral → formulário), então o
+        estado deles mora aqui, acima das rotas, junto com o overlay que os desenha. */
+    <TourProvider>
+      <Box sx={{ height: "100dvh", bgcolor: "background.default" }}>
+        {/** Navegação lateral principal. */}
+        <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((p) => !p)} />
+        {/** Cabeçalho global do sistema, com ajuste de largura conforme a sidebar. */}
+        <Header drawerWidth={drawerWidth} />
+        <Box
+          sx={{
+            /** Compensa a largura da sidebar para manter o conteúdo principal alinhado. */
+            ml: `${drawerWidth}px`,
+            transition: (t) =>
+              t.transitions.create("margin-left", {
+                duration: t.transitions.duration.standard,
+              }),
+          }}
+        >
+          {/** Reserva o espaço vertical do AppBar fixo no topo para o conteúdo da página não ficar escondido atrás do cabeçalho. */}
+          <Toolbar />
+          {/** Área principal da aplicação onde a rota ativa é renderizada. */}
+          <Box component="main" sx={{ p: 3 }}>
+            <Outlet />
+          </Box>
+          {showChatbot && <ChatButton />}
         </Box>
-        {showChatbot && <ChatButton />}
       </Box>
-    </Box>
+    </TourProvider>
   );
 }

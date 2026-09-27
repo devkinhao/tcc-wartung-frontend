@@ -87,7 +87,7 @@ export default function ReportsPage() {
       <Stack spacing={2.5}>
 
         {/* ── Relatório 1 — Empresas ──────────────────────────────────── */}
-        <Card sx={cardSx}>
+        <Card sx={cardSx} data-tour="reports.companies">
           <CardContent>
             <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.companies.title")}
@@ -108,7 +108,13 @@ export default function ReportsPage() {
               {t("reports.filters.title")}
             </Typography>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} sx={{ mb: 2 }} flexWrap="wrap">
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={1.5}
+              sx={{ mb: 2 }}
+              flexWrap="wrap"
+              data-tour="reports.filters"
+            >
               {/* Tipo de empresa */}
               <FormControl size="small" sx={{ minWidth: 200 }}>
                 <InputLabel>{t("reports.filters.isCustomer.label")}</InputLabel>
@@ -188,7 +194,7 @@ export default function ReportsPage() {
         </Card>
 
         {/* ── Relatório 2 — Vencimentos por mês e cliente ─────────────── */}
-        <Card sx={cardSx}>
+        <Card sx={cardSx} data-tour="reports.expiring">
           <CardContent>
             <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.expiringInspections.title")}
@@ -219,7 +225,7 @@ export default function ReportsPage() {
         </Card>
 
         {/* ── Relatório 3 — Inspeções vencidas ────────────────────────── */}
-        <Card sx={cardSx}>
+        <Card sx={cardSx} data-tour="reports.overdue">
           <CardContent>
             <Typography variant="subtitle1" color="text.primary">
               {t("reports.items.overdueInspections.title")}

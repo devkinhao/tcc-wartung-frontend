@@ -230,7 +230,10 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
           </Box>
         ) : (
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
+            {/* Os `data-tour` ancoram os passos do tutorial guiado de nova
+                inspeção — ficam na célula, não no campo, para o destaque
+                envolver rótulo e ajuda. Ver src/features/tour. */}
+            <Grid size={{ xs: 12 }} data-tour="inspection.customer">
               {lockedCustomer ? (
                 <TextField
                   label={t("inspections.addModal.fields.customer")}
@@ -278,7 +281,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
             </Grid>
 
             <Grid size={{ xs: 12 }}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" data-tour="inspection.serviceType">
                 <InputLabel id="add-inspection-service-type" required>
                   {t("inspectionDetails.fields.service")}
                 </InputLabel>
@@ -302,6 +305,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
 
             <Grid size={{ xs: 12, md: 6 }}>
               <TextField
+                data-tour="inspection.inspectionDate"
                 label={t("inspectionDetails.fields.inspectionDate")}
                 type="date"
                 size="small"
@@ -315,7 +319,8 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
               />
             </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }}>
+            {/* Célula, não campo: o destaque precisa cobrir os atalhos +1/+2/+3 anos. */}
+            <Grid size={{ xs: 12, md: 6 }} data-tour="inspection.expirationDate">
               <TextField
                 label={t("inspectionDetails.fields.expirationDate")}
                 type="date"
@@ -357,6 +362,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
 
             <Grid size={{ xs: 12, md: 6 }}>
               <MaskedTextField
+                data-tour="inspection.artNumber"
                 mask="art"
                 label={t("inspectionDetails.fields.artNumber")}
                 size="small"
@@ -371,7 +377,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
             </Grid>
 
             {getServiceFields(selectedCategory).fields.length > 0 ? (
-              <Grid size={{ xs: 12 }}>
+              <Grid size={{ xs: 12 }} data-tour="inspection.equipment">
                 <ServiceEquipmentFields
                   category={selectedCategory}
                   values={form.equipment}
@@ -398,7 +404,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
               />
             </Grid>
 
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{ xs: 12 }} data-tour="inspection.documents">
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 {t("inspections.addModal.documents.title")}
               </Typography>
@@ -422,6 +428,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
           <Button
             variant="contained"
             onClick={() => save()}
+            data-tour="inspection.submit"
             disabled={!isValid || submitting}
             startIcon={submitting ? <CircularProgress size={16} /> : undefined}
           >

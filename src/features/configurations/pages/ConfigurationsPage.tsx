@@ -87,6 +87,8 @@ export default function ConfigurationsPage() {
               return (
                 <TextField
                   key={config.name}
+                  /** Âncora do tutorial guiado da janela de alerta. Ver src/features/tour. */
+                  data-tour={`config:${config.name}`}
                   fullWidth
                   required
                   label={label}
@@ -110,6 +112,7 @@ export default function ConfigurationsPage() {
             <Button
               variant="contained"
               color="primary"
+              data-tour="config.save"
               disabled={isSaving || Object.keys(draft).length === 0 || hasBlankConfig}
               onClick={() => save(draft)}
             >

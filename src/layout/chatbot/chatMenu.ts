@@ -1,135 +1,73 @@
-import type { NavigateFunction } from "react-router-dom";
-import type { TFunction } from "i18next";
-import type { QueryClient } from "@tanstack/react-query";
-import { paths } from "@/routes/paths";
-import { dataActions } from "./chatDataIntents";
-import { faqActions } from "./chatFaqIntents";
+import { availableTours } from "@/features/tour/tours";
 
-export type ChatActionContext = {
-  navigate: NavigateFunction;
-  t: TFunction;
-  queryClient: QueryClient;
+/**
+ * Menu do assistente, em dois níveis: a raiz oferece assuntos, cada assunto
+ * oferece o que se pode pedir dentro dele.
+ *
+ * Hoje só existe o assunto "Ajuda e tutoriais". A hierarquia está aqui desde já
+ * porque a lista cresce por assunto, não por opção solta: uma lista plana com
+ * três assuntos viraria quinze botões num painel de 360px. Para acrescentar um
+ * assunto novo, basta outra `section` em `buildChatMenu` — o painel e a conversa
+ * não mudam.
+ */
+export type ChatOption =
+  | ChatSection
+  | { kind: "tour"; id: string; labelKey: string; tourId: string }
+  | { kind: "answer"; id: string; labelKey: string; answerKey: string; withSupportEmail?: boolean };
+
+export type ChatSection = {
+  kind: "section";
+  id: string;
+  labelKey: string;
+  /** O que o bot diz ao abrir o assunto. */
+  introKey: string;
+  options: ChatOption[];
 };
 
-export type ChatMenuOption =
-  | {
-      id: string;
-      kind: "category";
-      labelKey: string;
-      introKey: string;
-      children: ChatMenuOption[];
-    }
-  | {
-      id: string;
-      kind: "action";
-      labelKey: string;
-      permissions?: string[];
-      respond: (ctx: ChatActionContext) => string | Promise<string>;
-    };
-
-function navMenuAction(
-  id: string,
-  labelKey: string,
-  path: string,
-  pageLabelKey: string,
-  permissions?: string[]
-): ChatMenuOption {
+/**
+ * Monta o menu para as permissões do usuário. Os tutoriais vêm da própria
+ * definição dos tours, então um tutorial de tela que ele não acessa não aparece
+ * aqui — a regra de permissão fica em um lugar só (ver `availableTours`).
+ */
+export function buildChatMenu(permissions: string[]): ChatSection {
   return {
-    id,
-    kind: "action",
-    labelKey,
-    permissions,
-    respond: ({ navigate, t }) => {
-      navigate(path);
-      return t("chatbot.responses.navigated", { page: t(pageLabelKey) });
-    },
+    kind: "section",
+    id: "root",
+    labelKey: "chatbot.title",
+    introKey: "chatbot.prompt",
+    options: [
+      {
+        kind: "section",
+        id: "help",
+        labelKey: "chatbot.sections.help.label",
+        introKey: "chatbot.sections.help.intro",
+        options: availableTours(permissions).map((tour) => ({
+          kind: "tour" as const,
+          id: `tour:${tour.id}`,
+          labelKey: tour.titleKey,
+          tourId: tour.id,
+        })),
+      },
+      {
+        kind: "answer",
+        id: "support",
+        labelKey: "chatbot.options.support",
+        answerKey: "chatbot.answers.support",
+        withSupportEmail: true,
+      },
+    ],
   };
 }
 
-const navigateCategory: ChatMenuOption = {
-  id: "navigate",
-  kind: "category",
-  labelKey: "chatbot.menu.categories.navigate.label",
-  introKey: "chatbot.menu.categories.navigate.intro",
-  children: [
-    navMenuAction("nav-home", "chatbot.menu.actions.dashboard", paths.home, "nav.home"),
-    navMenuAction("nav-analytics", "chatbot.menu.actions.analytics", paths.dashboard, "nav.dashboard"),
-    navMenuAction(
-      "nav-customers",
-      "chatbot.menu.actions.customers",
-      paths.customers,
-      "nav.customersList"
-    ),
-    navMenuAction(
-      "nav-inspections",
-      "chatbot.menu.actions.inspections",
-      paths.inspections,
-      "nav.inspectionsList"
-    ),
-    navMenuAction(
-      "nav-notifications",
-      "chatbot.menu.actions.notifications",
-      paths.notifications,
-      "nav.notificationsList"
-    ),
-    navMenuAction(
-      "nav-reports",
-      "chatbot.menu.actions.reports",
-      paths.reports,
-      "nav.reports",
-      ["ROLE_ACCESS_REPORTS"]
-    ),
-    navMenuAction(
-      "nav-company",
-      "chatbot.menu.actions.company",
-      paths.company,
-      "nav.myCompany"
-    ),
-    navMenuAction("nav-users", "chatbot.menu.actions.users", paths.users, "nav.users", [
-      "ROLE_ADMIN",
-    ]),
-    navMenuAction(
-      "nav-configurations",
-      "chatbot.menu.actions.configurations",
-      paths.configurations,
-      "nav.configurations",
-      ["ROLE_ADMIN"]
-    ),
-    navMenuAction(
-      "nav-profile",
-      "chatbot.menu.actions.profile",
-      paths.userProfile,
-      "nav.myProfile"
-    ),
-    navMenuAction(
-      "nav-preferences",
-      "chatbot.menu.actions.preferences",
-      paths.preferences,
-      "nav.preferences"
-    ),
-  ],
-};
+/** Desce o caminho de seções abertas; um caminho inválido volta para a raiz. */
+export function resolveSection(root: ChatSection, path: string[]): ChatSection {
+  let current = root;
 
-const dataCategory: ChatMenuOption = {
-  id: "data",
-  kind: "category",
-  labelKey: "chatbot.menu.categories.data.label",
-  introKey: "chatbot.menu.categories.data.intro",
-  children: dataActions,
-};
+  for (const id of path) {
+    const next = current.options.find((option) => option.id === id);
+    if (next?.kind !== "section") return root;
+    current = next;
+  }
 
-const faqCategory: ChatMenuOption = {
-  id: "faq",
-  kind: "category",
-  labelKey: "chatbot.menu.categories.faq.label",
-  introKey: "chatbot.menu.categories.faq.intro",
-  children: faqActions,
-};
-
-export const chatMenuRoot: ChatMenuOption = {
-  id: "root",
-  kind: "category",
-  labelKey: "chatbot.title",
-  introKey: "chatbot.menu.root.intro",
-  children: [navigateCategory, dataCategory, faqCategory],
-};
+  return current;
+}

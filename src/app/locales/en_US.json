@@ -338,23 +338,6 @@
       "title": "Edit service"
     }
   },
-  "help": {
-    "faq": {
-      "q1": {
-        "answer": "Go to Companies and click New company. Fill in the details and confirm."
-      },
-      "q2": {
-        "answer": "Go to Preferences and select the desired language/theme."
-      },
-      "q3": {
-        "answer": "In Reports, choose a type and click Generate report."
-      }
-    },
-    "support": {
-      "description": "If you need help, contact support.",
-      "emailLabel": "Email:"
-    }
-  },
   "reports": {
     "title": "Reports",
     "description": "Generate PDF reports for analysis or printing.",
@@ -1084,56 +1067,160 @@
     "tooltip": {
       "title": "Open virtual assistant"
     },
-    "responses": {
-      "navigated": "Opening {{page}}...",
-      "loading": "Looking that up...",
-      "queryError": "I couldn't fetch that information right now. Please try again shortly.",
-      "inspectionsExpired": "You have {{count}} expired inspections.",
-      "inspectionsNear": "You have {{count}} inspections nearing expiration.",
-      "inspectionsOnTrack": "You have {{count}} inspections on track.",
-      "notificationsUnread": "You have {{count}} unread notifications.",
-      "customersTotal": "You have {{count}} companies registered."
+    "greeting": "Hi! I am the Wartung assistant.",
+    "prompt": "What do you need help with?",
+    "empty": "No tutorials available for your access level.",
+    "options": {
+      "support": "Contact support"
     },
-    "menu": {
-      "back": "Back to menu",
-      "root": {
-        "intro": "Hi! Choose one of the options below."
-      },
-      "categories": {
-        "navigate": {
-          "label": "Navigate",
-          "intro": "Where would you like to go?"
+    "answers": {
+      "startingTour": "Got it. I will highlight each step right on the screen — just follow the bubble. To leave early, close the bubble with the X.",
+      "tourFinished": "All done. Anything else I can help with?",
+      "tourStopped": "No problem, we stopped there. Want to try again or look at something else?",
+      "support": "If something is not working, contact support at this address:"
+    },
+    "sections": {
+      "help": {
+        "label": "Help and tutorials",
+        "intro": "I can walk you through it step by step, right on the screen. Which task do you want to see?"
+      }
+    },
+    "actions": {
+      "back": "Back"
+    }
+  },
+  "tour": {
+    "progress": "Step {{current}} of {{total}}",
+    "clickHint": "Click the highlighted item",
+    "targetMissing": "The item for this step is not on screen right now. Follow the guidance above or move on.",
+    "actions": {
+      "next": "Next",
+      "back": "Back",
+      "finish": "Finish",
+      "exit": "Exit tutorial"
+    },
+    "newInspection": {
+      "title": "Register an inspection",
+      "summary": "From the menu to saving, including the expiration shortcuts.",
+      "steps": {
+        "menu": {
+          "title": "Start from the menu",
+          "body": "Click Inspections in the sidebar. That is how you reach every registered inspection."
         },
-        "data": {
-          "label": "Check data",
-          "intro": "What would you like to check?"
+        "openForm": {
+          "title": "Open the form",
+          "body": "Click New inspection. The form opens on top of the list, without leaving the screen."
         },
-        "faq": {
-          "label": "Questions and support",
-          "intro": "What do you need help with?"
+        "customer": {
+          "title": "Pick the company",
+          "body": "Type part of the name or the CNPJ. The search runs on the server with every keystroke, so the company does not have to be on the page of the list you are looking at."
+        },
+        "serviceType": {
+          "title": "Pick the service type",
+          "body": "This field decides the rest of the form: each service requires different equipment fields, which show up further down once you choose."
+        },
+        "inspectionDate": {
+          "title": "Inspection date",
+          "body": "This is the day the service was carried out, not today."
+        },
+        "expirationDate": {
+          "title": "Expiration and the shortcuts",
+          "body": "The +1, +2 and +3 year buttons work out the expiration from the inspection date. They only become available once that date is filled in."
+        },
+        "artNumber": {
+          "title": "ART number",
+          "body": "Optional. The field formats itself as you type, so just enter the digits."
+        },
+        "equipment": {
+          "title": "Equipment details",
+          "body": "These fields change with the service type: boilers and compressors ask for manufacturer, model and capacity; gas asks for the cylinder count; fire hoses ask for nothing. If nothing showed up, pick the service type first."
+        },
+        "documents": {
+          "title": "Attachments",
+          "body": "You can attach the report and photos now. If a file fails, the inspection is still created and the system tells you how many did not upload."
+        },
+        "submit": {
+          "title": "Create the inspection",
+          "body": "The button only unlocks once the required fields are valid. After saving, the system offers to open the inspection you just created."
         }
-      },
-      "actions": {
-        "dashboard": "Go to home",
-        "customers": "View companies",
-        "inspections": "View inspections",
-        "notifications": "View notifications",
-        "reports": "Reports",
-        "company": "My company",
-        "users": "Users",
-        "configurations": "Configurations",
-        "profile": "My profile",
-        "preferences": "Preferences",
-        "inspectionsExpired": "Expired inspections",
-        "inspectionsNear": "Inspections nearing expiration",
-        "inspectionsOnTrack": "Inspections on track",
-        "notificationsUnread": "Unread notifications",
-        "customersTotal": "Total companies",
-        "faqAddCustomer": "How to add a company",
-        "faqPreferences": "How to change preferences",
-        "faqReports": "How to generate reports",
-        "faqSupport": "Talk to support",
-        "analytics": "View analytics"
+      }
+    },
+    "newCompany": {
+      "title": "Register a company",
+      "summary": "The CNPJ and the ZIP code fill in almost everything.",
+      "steps": {
+        "menu": {
+          "title": "Start from the menu",
+          "body": "Click Companies in the sidebar."
+        },
+        "openForm": {
+          "title": "Open the form",
+          "body": "Click New company. The form has two steps: details and address."
+        },
+        "cnpj": {
+          "title": "Start with the CNPJ",
+          "body": "Enter the CNPJ first. The system looks it up at the Receita Federal and brings back the legal name, trade name, phone, email and address. The other fields stay locked on purpose until that lookup finishes."
+        },
+        "review": {
+          "title": "Check what came back",
+          "body": "The Receita data is a starting point and stays editable. Check the legal name and fill in the mobile number, which is what the WhatsApp shortcut on the home screen uses."
+        },
+        "next": {
+          "title": "Move on to the address",
+          "body": "Click Next. The button only unlocks once the legal name and the CNPJ are valid."
+        },
+        "zipCode": {
+          "title": "The ZIP code fills the address",
+          "body": "Enter the ZIP code and the system completes street, neighborhood and city. That leaves you the number and the complement."
+        },
+        "finish": {
+          "title": "Finish",
+          "body": "On saving, the system offers to open the record or to create this company's first inspection right away — the second path saves you from searching for the company again."
+        }
+      }
+    },
+    "reports": {
+      "title": "Understand the reports",
+      "summary": "What each one covers and why only one has filters.",
+      "steps": {
+        "menu": {
+          "title": "Open the reports",
+          "body": "Click Reports in the sidebar. There are three PDF reports, generated on the spot."
+        },
+        "companies": {
+          "title": "Companies report",
+          "body": "Lists the registered companies with contact details and address. It is the only one of the three that takes filters."
+        },
+        "filters": {
+          "title": "These filters apply only to the report above",
+          "body": "Company type, ABVTEX seal and city narrow down the companies report alone. The two reports below have no filters: they always come out complete."
+        },
+        "expiring": {
+          "title": "Expirations by month",
+          "body": "Groups the inspections that are still due by month and by customer. Use it to plan the next round of calls."
+        },
+        "overdue": {
+          "title": "Overdue inspections",
+          "body": "Covers what is already past its date. This is the report for chasing what fell behind."
+        }
+      }
+    },
+    "alertWindow": {
+      "title": "Adjust the expiration warning",
+      "summary": "The number that decides what counts as nearing expiration.",
+      "steps": {
+        "field": {
+          "title": "Expiration alert days",
+          "body": "This number sets how many days before its expiration an inspection starts counting as nearing expiration. The default is 30."
+        },
+        "save": {
+          "title": "Save",
+          "body": "The change applies system-wide: the home screen card, the inspection list filter and the email warnings all switch to the new value."
+        },
+        "effect": {
+          "title": "Here is the effect",
+          "body": "This home screen card counts exactly the inspections inside that window, and its own label shows the configured number of days."
+        }
       }
     }
   },

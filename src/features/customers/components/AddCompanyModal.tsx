@@ -272,7 +272,9 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               autopreenchimento do CnpjTextField/CepTextField com o resultado
               em cache, sobrescrevendo edições manuais do usuário. */}
           <Grid container spacing={2} sx={{ display: step === 0 ? "flex" : "none" }}>
-            <Grid size={{ xs: 12, md: 6 }}>
+            {/* Os `data-tour` ancoram os passos do tutorial guiado de nova
+                empresa. Ver src/features/tour. */}
+            <Grid size={{ xs: 12, md: 6 }} data-tour="company.cnpj">
               <CnpjTextField
                 label={t("customers.addModal.fields.cnpj")}
                 value={form.cnpj}
@@ -306,7 +308,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
               />
             </Grid>
 
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{ xs: 12 }} data-tour="company.legalName">
               <TextField
                 label={t("customers.addModal.fields.legalName")}
                 placeholder={t("customers.addModal.placeholders.legalName")}
@@ -389,7 +391,7 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
           </Grid>
 
           <Grid container spacing={2} sx={{ display: step === 1 ? "flex" : "none" }}>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid size={{ xs: 12, md: 3 }} data-tour="company.zipCode">
               <CepTextField
                 value={form.zipCode}
                 onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
@@ -496,13 +498,19 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         )}
 
         {step === 0 ? (
-          <Button variant="contained" onClick={() => setStep(1)} disabled={!step1Valid}>
+          <Button
+            variant="contained"
+            onClick={() => setStep(1)}
+            data-tour="company.next"
+            disabled={!step1Valid}
+          >
             {t("customers.addModal.actions.next")}
           </Button>
         ) : step === 1 ? (
           <Button
             variant="contained"
             onClick={() => submit()}
+            data-tour="company.finish"
             disabled={!step2Valid || submitting}
             startIcon={submitting ? <CircularProgress size={16} /> : undefined}
           >

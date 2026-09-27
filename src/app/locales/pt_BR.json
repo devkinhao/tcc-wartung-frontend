@@ -338,23 +338,6 @@
       "title": "Editar serviço"
     }
   },
-  "help": {
-    "faq": {
-      "q1": {
-        "answer": "Acesse Empresas e clique em Nova empresa. Preencha os dados e confirme."
-      },
-      "q2": {
-        "answer": "Vá em Preferências e selecione o idioma/tema desejados."
-      },
-      "q3": {
-        "answer": "Em Relatórios, escolha um tipo e clique em Gerar relatório."
-      }
-    },
-    "support": {
-      "description": "Se precisar de ajuda, entre em contato com o suporte.",
-      "emailLabel": "E-mail:"
-    }
-  },
   "reports": {
     "title": "Relatórios",
     "description": "Gere relatórios em PDF para análise ou impressão.",
@@ -1084,56 +1067,160 @@
     "tooltip": {
       "title": "Abrir assistente virtual"
     },
-    "responses": {
-      "navigated": "Abrindo {{page}}...",
-      "loading": "Consultando...",
-      "queryError": "Não consegui buscar essa informação agora. Tente novamente em instantes.",
-      "inspectionsExpired": "Você tem {{count}} inspeções vencidas.",
-      "inspectionsNear": "Você tem {{count}} inspeções próximas do vencimento.",
-      "inspectionsOnTrack": "Você tem {{count}} inspeções em dia.",
-      "notificationsUnread": "Você tem {{count}} notificações não lidas.",
-      "customersTotal": "Você tem {{count}} empresas cadastradas."
+    "greeting": "Olá! Eu sou o assistente do Wartung.",
+    "prompt": "Com o que você precisa de ajuda?",
+    "empty": "Nenhum tutorial disponível para o seu acesso.",
+    "options": {
+      "support": "Falar com o suporte"
     },
-    "menu": {
-      "back": "Voltar ao menu",
-      "root": {
-        "intro": "Olá! Escolha uma das opções abaixo."
-      },
-      "categories": {
-        "navigate": {
-          "label": "Navegar",
-          "intro": "Para onde você quer ir?"
+    "answers": {
+      "startingTour": "Combinado. Vou destacar cada passo direto na tela — é só seguir o balão. Para sair antes do fim, feche o balão no X.",
+      "tourFinished": "Pronto, terminamos. Posso ajudar em mais alguma coisa?",
+      "tourStopped": "Tudo bem, paramos por aqui. Quer tentar de novo ou ver outro assunto?",
+      "support": "Se algo não estiver funcionando, fale com o suporte por este e-mail:"
+    },
+    "sections": {
+      "help": {
+        "label": "Ajuda e tutoriais",
+        "intro": "Posso te guiar passo a passo, na própria tela. Qual tarefa você quer ver?"
+      }
+    },
+    "actions": {
+      "back": "Voltar"
+    }
+  },
+  "tour": {
+    "progress": "Passo {{current}} de {{total}}",
+    "clickHint": "Clique no item destacado",
+    "targetMissing": "O item deste passo não está na tela agora. Siga a orientação acima ou avance.",
+    "actions": {
+      "next": "Próximo",
+      "back": "Voltar",
+      "finish": "Concluir",
+      "exit": "Sair do tutorial"
+    },
+    "newInspection": {
+      "title": "Cadastrar uma inspeção",
+      "summary": "Do menu até salvar, incluindo os atalhos de vencimento.",
+      "steps": {
+        "menu": {
+          "title": "Comece pelo menu",
+          "body": "Clique em Inspeções na barra lateral. É por aqui que se chega a todas as inspeções cadastradas."
         },
-        "data": {
-          "label": "Consultar dados",
-          "intro": "O que você quer consultar?"
+        "openForm": {
+          "title": "Abra o formulário",
+          "body": "Clique em Nova inspeção. O cadastro abre sobre a lista, sem sair da tela."
         },
-        "faq": {
-          "label": "Dúvidas e suporte",
-          "intro": "Sobre o que você tem dúvida?"
+        "customer": {
+          "title": "Escolha a empresa",
+          "body": "Digite parte do nome ou do CNPJ. A busca é feita no servidor a cada letra, então a empresa não precisa estar na página da lista que você está vendo."
+        },
+        "serviceType": {
+          "title": "Escolha o tipo de serviço",
+          "body": "Este campo decide o resto do formulário: cada serviço exige campos de equipamento diferentes, que aparecem mais abaixo depois da escolha."
+        },
+        "inspectionDate": {
+          "title": "Data da inspeção",
+          "body": "É o dia em que o serviço foi executado, não o dia de hoje."
+        },
+        "expirationDate": {
+          "title": "Vencimento e os atalhos",
+          "body": "Os botões +1, +2 e +3 anos calculam o vencimento a partir da data da inspeção. Eles só ficam disponíveis depois que essa data estiver preenchida."
+        },
+        "artNumber": {
+          "title": "Número da ART",
+          "body": "Opcional. O campo se formata sozinho conforme você digita; basta informar os números."
+        },
+        "equipment": {
+          "title": "Dados do equipamento",
+          "body": "Estes campos mudam conforme o tipo de serviço: caldeira e compressor pedem fabricante, modelo e capacidade; gás pede a quantidade de cilindros; mangueira de incêndio não pede nenhum. Se nada apareceu, escolha antes o tipo de serviço."
+        },
+        "documents": {
+          "title": "Anexos",
+          "body": "Você pode anexar o laudo e as fotos agora. Se algum arquivo falhar, a inspeção ainda é criada e o sistema avisa quantos não subiram."
+        },
+        "submit": {
+          "title": "Criar a inspeção",
+          "body": "O botão só libera quando os campos obrigatórios estiverem válidos. Depois de salvar, o sistema oferece abrir a inspeção recém-criada."
         }
-      },
-      "actions": {
-        "dashboard": "Ir para o início",
-        "customers": "Ver empresas",
-        "inspections": "Ver inspeções",
-        "notifications": "Ver notificações",
-        "reports": "Relatórios",
-        "company": "Minha empresa",
-        "users": "Usuários",
-        "configurations": "Configurações",
-        "profile": "Meu perfil",
-        "preferences": "Preferências",
-        "inspectionsExpired": "Inspeções vencidas",
-        "inspectionsNear": "Inspeções próximas do vencimento",
-        "inspectionsOnTrack": "Inspeções em dia",
-        "notificationsUnread": "Notificações não lidas",
-        "customersTotal": "Total de empresas",
-        "faqAddCustomer": "Como cadastrar uma empresa",
-        "faqPreferences": "Como alterar preferências",
-        "faqReports": "Como gerar relatórios",
-        "faqSupport": "Falar com o suporte",
-        "analytics": "Ver análise"
+      }
+    },
+    "newCompany": {
+      "title": "Cadastrar uma empresa",
+      "summary": "CNPJ e CEP preenchem quase tudo sozinhos.",
+      "steps": {
+        "menu": {
+          "title": "Comece pelo menu",
+          "body": "Clique em Empresas na barra lateral."
+        },
+        "openForm": {
+          "title": "Abra o formulário",
+          "body": "Clique em Nova empresa. O cadastro tem dois passos: dados e endereço."
+        },
+        "cnpj": {
+          "title": "Comece pelo CNPJ",
+          "body": "Digite o CNPJ primeiro. O sistema consulta a Receita Federal e traz razão social, nome fantasia, telefone, e-mail e endereço. Os outros campos ficam bloqueados de propósito até essa consulta terminar."
+        },
+        "review": {
+          "title": "Confira o que veio",
+          "body": "Os dados da Receita são um ponto de partida e continuam editáveis. Vale conferir a razão social e preencher o celular, que é o número usado no atalho do WhatsApp da tela inicial."
+        },
+        "next": {
+          "title": "Vá para o endereço",
+          "body": "Clique em Próximo. O botão só libera quando razão social e CNPJ estiverem válidos."
+        },
+        "zipCode": {
+          "title": "O CEP preenche o endereço",
+          "body": "Informe o CEP e o sistema completa rua, bairro e cidade. Sobra para você o número e o complemento."
+        },
+        "finish": {
+          "title": "Concluir",
+          "body": "Ao salvar, o sistema oferece abrir o cadastro ou já criar a primeira inspeção dessa empresa — o segundo caminho evita ter que procurar a empresa de novo."
+        }
+      }
+    },
+    "reports": {
+      "title": "Entender os relatórios",
+      "summary": "O que cada um traz e por que só um tem filtros.",
+      "steps": {
+        "menu": {
+          "title": "Abra os relatórios",
+          "body": "Clique em Relatórios na barra lateral. São três relatórios em PDF, gerados na hora."
+        },
+        "companies": {
+          "title": "Relatório de empresas",
+          "body": "Lista as empresas cadastradas com contato e endereço. É o único dos três que aceita filtros."
+        },
+        "filters": {
+          "title": "Os filtros valem só para o relatório acima",
+          "body": "Tipo de empresa, selo ABVTEX e cidade recortam apenas o relatório de empresas. Os dois relatórios abaixo não têm filtro: saem sempre completos."
+        },
+        "expiring": {
+          "title": "Vencimentos por mês",
+          "body": "Agrupa por mês e por cliente as inspeções que ainda vão vencer. Serve para planejar os próximos contatos."
+        },
+        "overdue": {
+          "title": "Inspeções vencidas",
+          "body": "Traz o que já passou do prazo. É o relatório para cobrar o que ficou para trás."
+        }
+      }
+    },
+    "alertWindow": {
+      "title": "Ajustar o aviso de vencimento",
+      "summary": "O número que decide o que é próximo do vencimento.",
+      "steps": {
+        "field": {
+          "title": "Dias de aviso de vencimento",
+          "body": "Este número define quantos dias antes do vencimento uma inspeção passa a contar como próxima do vencimento. O padrão é 30."
+        },
+        "save": {
+          "title": "Salvar",
+          "body": "A mudança vale para o sistema inteiro: o cartão da tela inicial, o filtro da lista de inspeções e os avisos por e-mail passam a usar o novo valor."
+        },
+        "effect": {
+          "title": "O efeito aparece aqui",
+          "body": "Este cartão da tela inicial conta exatamente as inspeções dentro dessa janela, e o próprio rótulo mostra o número de dias configurado."
+        }
       }
     }
   },

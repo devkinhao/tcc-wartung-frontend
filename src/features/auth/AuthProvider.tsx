@@ -4,6 +4,7 @@ import { isAxiosError } from "axios";
 import { AuthContext, type AuthStatus } from "./AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
+import { ASSISTANT_STORAGE_KEYS } from "@/layout/chatbot/storage";
 
 // --- Funções puras — sem estado React, fora do componente ---
 
@@ -34,7 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const clearSession = useCallback(() => {
     localStorage.removeItem("token");
-    localStorage.removeItem("chatbot:v1:messages");
+    // Conversa do assistente e tutoriais concluidos sao por usuario.
+    ASSISTANT_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
     setToken(null);
     localStorage.setItem("theme", "light");
     document.documentElement.classList.remove("dark");

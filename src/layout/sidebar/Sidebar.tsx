@@ -1,6 +1,7 @@
 import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
 import { canAccess } from "@/features/auth/permissions";
+import { sidebarTarget } from "@/features/tour/target";
 import { useMe } from "@/hooks/useMe";
 import { paths } from "@/routes/paths";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
@@ -53,6 +54,8 @@ const SidebarItem = memo(function SidebarItem({
     <ListItemButton
       component={NavLink}
       to={item.to}
+      /** Âncora dos tutoriais guiados, que começam ensinando o caminho no menu. */
+      data-tour={sidebarTarget(item.to)}
       sx={(theme) => ({
         minHeight: 50,
         px: 0,

@@ -205,6 +205,7 @@ export default function InspectionsListPage() {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => setIsAddOpen(true)}
+          data-tour="inspections.add"
           sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
         >
           {t("inspections.actions.addInspection")}

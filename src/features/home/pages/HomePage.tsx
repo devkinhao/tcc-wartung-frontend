@@ -52,6 +52,7 @@ function HomeStatCard({
   icon,
   tooltip,
   onClick,
+  tourId,
 }: {
   label: string;
   value: number;
@@ -59,13 +60,15 @@ function HomeStatCard({
   icon: React.ReactNode;
   tooltip: string;
   onClick: () => void;
+  /** Âncora de tutorial guiado, quando o cartão é o destino de algum passo. */
+  tourId?: string;
 }) {
   const color =
     tone === "expired" ? "error.main" : tone === "near" ? "warning.main" : "success.main";
 
   return (
     <Tooltip title={tooltip}>
-      <Card sx={{ flex: 1, borderTop: 4, borderTopColor: color }}>
+      <Card data-tour={tourId} sx={{ flex: 1, borderTop: 4, borderTopColor: color }}>
         <CardActionArea onClick={onClick} sx={{ height: "100%" }}>
           <CardContent sx={{ py: 1.25 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -338,6 +341,7 @@ export default function HomePage() {
                   icon={<WarningAmberIcon />}
                   tooltip={t("home.cards.tooltip.near", { days: alertDays })}
                   onClick={() => navigate(paths.inspectionsByStatus("near"))}
+                  tourId="home.nearCard"
                 />
                 <HomeStatCard
                   label={t("home.cards.onTrack")}
