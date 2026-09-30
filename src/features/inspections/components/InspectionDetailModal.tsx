@@ -66,6 +66,7 @@ import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { toUpperCaseInput } from "@/utils/strings";
 import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
 import { deactivationReasonKey } from "../deactivationReason";
@@ -504,7 +505,7 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                     minRows={3}
                     value={editing ? draft?.notes ?? "" : view.notes ?? ""}
                     onChange={(e) =>
-                      setDraft((prev) => (prev ? { ...prev, notes: e.target.value } : prev))
+                      setDraft((prev) => (prev ? { ...prev, notes: toUpperCaseInput(e.target.value) } : prev))
                     }
                     disabled={!editing}
                     slotProps={{ htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH } }}

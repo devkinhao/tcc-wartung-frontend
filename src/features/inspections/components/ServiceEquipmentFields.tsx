@@ -1,5 +1,6 @@
 import { Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { toUpperCaseInput } from "@/utils/strings";
 import {
   CAPACITY_UNIT_KEY,
   getServiceFields,
@@ -22,6 +23,9 @@ const MAX_LENGTH: Partial<Record<EquipmentFieldKey, number>> = {
 };
 
 const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["capacity", "cylinderCount", "btu"]);
+
+/** Texto livre gravado em caixa alta pelo backend — o campo já mostra assim ao digitar. */
+const UPPERCASE_FIELDS = new Set<EquipmentFieldKey>(["manufacturer", "model"]);
 
 /**
  * Campos de equipamento da inspeção — só os aplicáveis ao serviço escolhido
@@ -53,7 +57,9 @@ export function ServiceEquipmentFields({ category, values, onChange, disabled = 
               required={required.includes(field)}
               type={NUMERIC_FIELDS.has(field) ? "number" : "text"}
               value={values[field]}
-              onChange={(e) => onChange(field, e.target.value)}
+              onChange={(e) =>
+                onChange(field, UPPERCASE_FIELDS.has(field) ? toUpperCaseInput(e.target.value) : e.target.value)
+              }
               disabled={disabled}
               error={!!error}
               helperText={error ? t(error) : undefined}
