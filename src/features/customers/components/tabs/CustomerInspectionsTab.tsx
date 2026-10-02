@@ -137,10 +137,13 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
               <TableCell align="center" sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell sx={{ width: "53%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
+              <TableCell sx={{ width: "48%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
               <TableCell align="center" sx={{ width: "13%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
               <TableCell align="center" sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "11%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.status")}</b></TableCell>
+              {/* "Desativada" é o rótulo mais longo que pode aparecer aqui (ver Chip abaixo) —
+                  o MUI Chip tem max-width: 100% embutido, então a coluna precisa de espaço
+                  de verdade pra não cortar, não só o texto precisar ser curto. */}
+              <TableCell align="center" sx={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.status")}</b></TableCell>
               <TableCell align="center" sx={{ width: "6%" }} />
             </TableRow>
           </TableHead>

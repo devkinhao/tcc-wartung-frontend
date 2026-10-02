@@ -361,22 +361,37 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
           ) : (
             <Stack spacing={2}>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap" }}>
-                <Chip
-                  size="small"
-                  label={
-                    view.isActive
-                      ? t("inspectionDetails.status.active")
-                      : t("inspectionDetails.status.inactive")
-                  }
-                  color={view.isActive ? "success" : "default"}
-                />
+                {/* "Desativada" já diz que a inspeção não está ativa — mostrar junto o chip
+                    genérico "Inativa" seria repetir a mesma informação duas vezes. O motivo
+                    some aqui por extenso (não só numa tooltip, fácil de passar batido) —
+                    mesma regra de preenchido/contornado da tabela de inspeções da empresa:
+                    preenchido só quando ativa. */}
+                {!view.isActive && view.deactivationReason ? (
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    color="warning"
+                    label={t("inspections.deactivate.archivedChip")}
+                  />
+                ) : (
+                  <Chip
+                    size="small"
+                    variant={view.isActive ? "filled" : "outlined"}
+                    label={
+                      view.isActive
+                        ? t("inspectionDetails.status.active")
+                        : t("inspectionDetails.status.inactive")
+                    }
+                    color={view.isActive ? "success" : "default"}
+                  />
+                )}
                 {view.isRenewed ? (
                   <Chip size="small" label={t("inspectionDetails.status.renewed")} color="info" />
                 ) : null}
                 {!view.isActive && view.deactivationReason ? (
-                  <Tooltip title={t(deactivationReasonKey(view.deactivationReason))}>
-                    <Chip size="small" color="warning" label={t("inspections.deactivate.archivedChip")} />
-                  </Tooltip>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("inspections.deactivate.reasonLabel")}: {t(deactivationReasonKey(view.deactivationReason))}
+                  </Typography>
                 ) : null}
 
                 <Typography variant="body2" color="text.secondary" sx={{ display: "flex", gap: 0.5 }}>

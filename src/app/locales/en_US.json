@@ -1073,7 +1073,7 @@
       "companyClosedWarning": "The company will be marked inactive and drop out of the tracking views.",
       "confirm": "Confirm",
       "action": "Deactivate inspection",
-      "archivedChip": "Inspection deactivated"
+      "archivedChip": "Deactivated"
     }
   },
   "chatbot": {
