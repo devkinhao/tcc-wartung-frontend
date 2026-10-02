@@ -167,7 +167,12 @@
       "unread": "Unread",
       "all": "All"
     },
-    "receivedAt": "Received on {{date}}"
+    "receivedAt": "Received on {{date}}",
+    "indicator": {
+      "single": "New notification: {{title}}",
+      "multiple": "{{count}} new notifications",
+      "dismiss": "Dismiss"
+    }
   },
   "pagination": {
     "rowsPerPage": "Rows per page:",
