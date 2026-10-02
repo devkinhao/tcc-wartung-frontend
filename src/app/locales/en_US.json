@@ -231,6 +231,8 @@
     "showNotificationsDescription": "Show notifications in the system",
     "chatbotEnabled": "Chatbot",
     "chatbotEnabledDescription": "Show the chat assistant in the system",
+    "notificationSoundEnabled": "Notification sound",
+    "notificationSoundEnabledDescription": "Play a sound when a new notification arrives",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -245,6 +247,10 @@
         "false": "Disabled"
       },
       "CHATBOT_ENABLED": {
+        "true": "Enabled",
+        "false": "Disabled"
+      },
+      "NOTIFICATION_SOUND_ENABLED": {
         "true": "Enabled",
         "false": "Disabled"
       }

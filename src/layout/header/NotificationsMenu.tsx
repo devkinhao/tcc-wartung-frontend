@@ -9,6 +9,8 @@ import {
 } from "@/features/notifications/api/notifications.api";
 import { resolveNotificationLink } from "@/features/notifications/utils";
 import { NotificationListItem } from "@/features/notifications/components/NotificationListItem";
+import { usePreferences } from "@/features/preferences/usePreferences";
+import { playNotificationSound } from "@/utils/notificationSound";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
 import { Close, Notifications } from "@mui/icons-material";
@@ -54,6 +56,10 @@ export function NotificationsMenu({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { preferences } = usePreferences();
+  // Subconfiguração de SHOW_NOTIFICATIONS, opt-in (padrão desligado) — ver
+  // PreferencesPage e UserService.DEFAULT_PREFERENCES.
+  const soundEnabled = preferences.NOTIFICATION_SOUND_ENABLED === "true";
   // Estado (não ref) porque o Popper do aviso precisa do elemento durante a
   // renderização pra se ancorar nele — ler `ref.current` no JSX não é permitido.
   const [bellEl, setBellEl] = useState<HTMLButtonElement | null>(null);
@@ -126,7 +132,11 @@ export function NotificationsMenu({
     } else if (newOnes.length > 1) {
       setIndicator(t("notifications.indicator.multiple", { count: newOnes.length }));
     }
-  }, [scanData, t]);
+
+    if (newOnes.length > 0 && soundEnabled) {
+      playNotificationSound();
+    }
+  }, [scanData, t, soundEnabled]);
 
   const items = data?.content ?? [];
 

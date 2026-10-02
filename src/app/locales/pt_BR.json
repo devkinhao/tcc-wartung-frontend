@@ -231,6 +231,8 @@
     "showNotificationsDescription": "Exibir notificações no sistema",
     "chatbotEnabled": "Chatbot",
     "chatbotEnabledDescription": "Exibir o assistente de chat no sistema",
+    "notificationSoundEnabled": "Som da notificação",
+    "notificationSoundEnabledDescription": "Tocar um som quando uma notificação nova chegar",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -245,6 +247,10 @@
         "false": "Desativadas"
       },
       "CHATBOT_ENABLED": {
+        "true": "Ativado",
+        "false": "Desativado"
+      },
+      "NOTIFICATION_SOUND_ENABLED": {
         "true": "Ativado",
         "false": "Desativado"
       }
