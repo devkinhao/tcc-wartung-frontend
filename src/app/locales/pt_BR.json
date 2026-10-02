@@ -166,7 +166,8 @@
     "filters": {
       "unread": "Não lidas",
       "all": "Todas"
-    }
+    },
+    "receivedAt": "Recebida em {{date}}"
   },
   "pagination": {
     "rowsPerPage": "Registros por página:",
@@ -255,7 +256,9 @@
       "maxFileSizeMb": "Tamanho máximo de arquivo (MB)",
       "maxFileSizeMbDescription": "Tamanho máximo permitido, em megabytes, para upload de documentos",
       "reminderDeleteAfterDays": "Dias para exclusão de lembretes vencidos",
-      "reminderDeleteAfterDaysDescription": "Quantidade de dias após o vencimento em que um lembrete não concluído é excluído automaticamente"
+      "reminderDeleteAfterDaysDescription": "Quantidade de dias após o vencimento em que um lembrete não concluído é excluído automaticamente",
+      "reminderAlertDays": "Dias de antecedência do alerta de lembrete",
+      "reminderAlertDaysDescription": "Quantidade de dias antes do vencimento em que um lembrete pendente passa a gerar uma notificação"
     },
     "actions": {
       "save": "Salvar configurações"

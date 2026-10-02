@@ -8,9 +8,9 @@ import {
   type NotificationResponseDTO,
 } from "@/features/notifications/api/notifications.api";
 import { resolveNotificationLink } from "@/features/notifications/utils";
+import { NotificationListItem } from "@/features/notifications/components/NotificationListItem";
 import { paths } from "@/routes/paths";
 import { typography } from "@/styles/typography";
-import { formatDateTimeBR } from "@/utils/date";
 import { Notifications } from "@mui/icons-material";
 import {
   Badge,
@@ -29,8 +29,11 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-/** Quantidade máxima de notificações exibidas na prévia. */
-const PREVIEW_SIZE = 5;
+/** Quantidade máxima de notificações exibidas na prévia — poucas o bastante pra
+ * caber sem rolagem em telas baixas (1366x768), já com o cabeçalho e o botão
+ * "ver todas". A mensagem agora vem em até 3 linhas (ver NotificationListItem),
+ * então cada item ocupa mais altura do que antes. */
+const PREVIEW_SIZE = 4;
 
 /** Exibe o menu de notificações não lidas. */
 export function NotificationsMenu({
@@ -171,37 +174,7 @@ export function NotificationsMenu({
                 py: 1.25,
               }}
             >
-              <Box
-                sx={{
-                  mt: 0.75,
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                  bgcolor: n.read ? "transparent" : "primary.main",
-                }}
-              />
-              <Box sx={{ minWidth: 0 }}>
-                <Typography
-                  variant="body2"
-                  fontWeight={
-                    n.read ? typography.weight.regular : typography.weight.bold
-                  }
-                  noWrap
-                >
-                  {n.title}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ display: "block" }}
-                >
-                  {n.message}
-                </Typography>
-                <Typography variant="caption" color="text.disabled">
-                  {formatDateTimeBR(n.createdAt)}
-                </Typography>
-              </Box>
+              <NotificationListItem notification={n} dense />
             </MenuItem>
           ))
         )}

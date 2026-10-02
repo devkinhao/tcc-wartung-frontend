@@ -166,7 +166,8 @@
     "filters": {
       "unread": "Unread",
       "all": "All"
-    }
+    },
+    "receivedAt": "Received on {{date}}"
   },
   "pagination": {
     "rowsPerPage": "Rows per page:",
@@ -255,7 +256,9 @@
       "maxFileSizeMb": "Maximum file size (MB)",
       "maxFileSizeMbDescription": "Maximum allowed size, in megabytes, for document uploads",
       "reminderDeleteAfterDays": "Days until overdue reminders are deleted",
-      "reminderDeleteAfterDaysDescription": "Number of days after the due date an uncompleted reminder is automatically deleted"
+      "reminderDeleteAfterDaysDescription": "Number of days after the due date an uncompleted reminder is automatically deleted",
+      "reminderAlertDays": "Reminder alert lead time (days)",
+      "reminderAlertDaysDescription": "Number of days before the due date that a pending reminder starts generating a notification"
     },
     "actions": {
       "save": "Save settings"
