@@ -13,9 +13,11 @@ export function TableContainer({
   children,
   stickyHeader = true,
 }: TableContainerProps) {
-  /** Referências e estados. */
-  const boxRef = useRef<HTMLDivElement>(null);
+  /** Estados. */
   const [overflowing, setOverflowing] = useState(false);
+
+  /** Referências. */
+  const boxRef = useRef<HTMLDivElement>(null);
 
   /** Detecta quando as colunas não cabem na largura disponível. */
   useLayoutEffect(() => {

@@ -173,7 +173,7 @@ export function CustomerInspectionsTab({
             </TableCell>
             <TableCell
               sx={{
-                width: "53%",
+                width: "48%",
                 ...ELLIPSIS_SX,
               }}
             >
@@ -200,7 +200,7 @@ export function CustomerInspectionsTab({
             <TableCell
               align="center"
               sx={{
-                width: "11%",
+                width: "16%",
                 ...ELLIPSIS_SX,
               }}
             >

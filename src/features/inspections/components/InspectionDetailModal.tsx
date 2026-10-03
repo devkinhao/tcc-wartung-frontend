@@ -1,5 +1,3 @@
-import { lazy, Suspense, useRef, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -21,18 +19,33 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { lazy, Suspense, useRef, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-import CloseIcon from "@mui/icons-material/Close";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import DownloadIcon from "@mui/icons-material/Download";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import CloseIcon from "@mui/icons-material/Close";
+import DownloadIcon from "@mui/icons-material/Download";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Tooltip from "@mui/material/Tooltip";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { qk } from "@/api/keys";
+import { AuditFooter } from "@/components/AuditFooter";
+import { EditableCardHeader } from "@/components/EditableCardHeader";
+import { MaskedTextField } from "@/components/MaskedTextField";
+import { TableContainer } from "@/components/table/TableContainer";
+import { RemindersCard } from "@/features/reminders/components/RemindersCard";
+import { useNotify } from "@/hooks/useNotify";
+import { paths } from "@/routes/paths";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { typography } from "@/styles/typography";
+import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
+import { guessMimeType, isDocx } from "@/utils/fileType";
+import { fieldError } from "@/validation/fields";
 import {
   getInspectionDetail,
   updateInspection,
@@ -44,33 +57,19 @@ import {
   listInspectionDocuments,
   uploadInspectionDocuments,
 } from "../api/inspections.documents.api";
-import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
-import { qk } from "@/api/keys";
 import { invalidateInspectionCaches } from "../cache";
-import { useNotify } from "@/hooks/useNotify";
-import { ELLIPSIS_SX } from "@/styles/ellipsis";
-import { EditableCardHeader } from "@/components/EditableCardHeader";
-import { AuditFooter } from "@/components/AuditFooter";
-import { RemindersCard } from "@/features/reminders/components/RemindersCard";
-import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
-import { guessMimeType, isDocx } from "@/utils/fileType";
-import { paths } from "@/routes/paths";
-import { TableContainer } from "@/components/table/TableContainer";
+import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { deactivationReasonKey } from "../deactivationReason";
+import { inspectionFormSchema } from "../schemas";
+import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
+import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
+import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 // A biblioteca docx-preview tem ~200 KB e só é usada ao pré-visualizar um .docx.
 // Como este modal é importado pela home e pelas listagens, o import estático
 // colocava esse peso no carregamento inicial — aqui ela só desce sob demanda.
 const DocxPreview = lazy(() =>
   import("@/components/DocxPreview").then((m) => ({ default: m.DocxPreview })),
 );
-import { typography } from "@/styles/typography";
-import { MaskedTextField } from "@/components/MaskedTextField";
-import { fieldError } from "@/validation/fields";
-import { inspectionFormSchema } from "../schemas";
-import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
-import { toUpperCaseInput } from "@/utils/strings";
-import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
-import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
-import { deactivationReasonKey } from "../deactivationReason";
 
 function toISODate(value?: string | null) {
   if (!value) return "";
@@ -406,15 +405,25 @@ export function InspectionDetailModal({
                 alignItems="center"
                 sx={{ flexWrap: "wrap" }}
               >
-                <Chip
-                  size="small"
-                  label={
-                    view.isActive
-                      ? t("inspectionDetails.status.active")
-                      : t("inspectionDetails.status.inactive")
-                  }
-                  color={view.isActive ? "success" : "default"}
-                />
+                {!view.isActive && view.deactivationReason ? (
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    color="warning"
+                    label={t("inspections.deactivate.archivedChip")}
+                  />
+                ) : (
+                  <Chip
+                    size="small"
+                    variant={view.isActive ? "filled" : "outlined"}
+                    label={
+                      view.isActive
+                        ? t("inspectionDetails.status.active")
+                        : t("inspectionDetails.status.inactive")
+                    }
+                    color={view.isActive ? "success" : "default"}
+                  />
+                )}
                 {view.isRenewed ? (
                   <Chip
                     size="small"
@@ -423,15 +432,10 @@ export function InspectionDetailModal({
                   />
                 ) : null}
                 {!view.isActive && view.deactivationReason ? (
-                  <Tooltip
-                    title={t(deactivationReasonKey(view.deactivationReason))}
-                  >
-                    <Chip
-                      size="small"
-                      color="warning"
-                      label={t("inspections.deactivate.archivedChip")}
-                    />
-                  </Tooltip>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("inspections.deactivate.reasonLabel")}:{" "}
+                    {t(deactivationReasonKey(view.deactivationReason))}
+                  </Typography>
                 ) : null}
 
                 <Typography
@@ -707,10 +711,7 @@ export function InspectionDetailModal({
                     ) : documents?.length ? (
                       documents.map((d) => (
                         <TableRow key={d.id} hover>
-                          <TableCell
-                            sx={ELLIPSIS_SX}
-                            title={d.name}
-                          >
+                          <TableCell sx={ELLIPSIS_SX} title={d.name}>
                             {d.name}
                           </TableCell>
                           <TableCell
