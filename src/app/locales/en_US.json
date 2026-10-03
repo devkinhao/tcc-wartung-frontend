@@ -3,15 +3,15 @@
     "brandName": "Wartung"
   },
   "validation": {
-    "required": "Required field",
-    "cnpjInvalid": "Invalid CNPJ",
-    "cepInvalid": "Invalid ZIP code. Use the format 00000-000",
-    "emailInvalid": "Invalid email",
-    "phoneInvalid": "Invalid phone number",
-    "mobileInvalid": "Invalid mobile number",
-    "cpfInvalid": "Invalid CPF",
-    "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters)",
-    "positiveIntegerInvalid": "Enter a positive whole number"
+    "required": "Field is required.",
+    "cnpjInvalid": "Invalid CNPJ.",
+    "cepInvalid": "Invalid CEP.",
+    "emailInvalid": "Invalid email.",
+    "phoneInvalid": "Invalid phone number.",
+    "mobileInvalid": "Invalid mobile number.",
+    "cpfInvalid": "Invalid CPF.",
+    "usernameInvalid": "Only lowercase letters and numbers (minimum 4 characters).",
+    "positiveIntegerInvalid": "Enter a positive whole number."
   },
   "common": {
     "alt": {
@@ -42,7 +42,8 @@
     },
     "loading": "Loading...",
     "cep": {
-      "notFound": "ZIP code not found"
+      "notFound": "ZIP code not found",
+      "unavailable": "Could not look up the ZIP code right now. Fill in the address manually."
     },
     "cnpj": {
       "notFound": "CNPJ not found in Receita Federal"
@@ -571,22 +572,22 @@
       }
     },
     "addModal": {
-      "title": "New company",
+      "description": "Fill in the details to register a new company in the system.",
+      "discard": {
+        "tooltip": {
+          "stay": "Go back to editing",
+          "leave": "Discard the registration and close"
+        }
+      },
       "steps": {
-        "info": "Information",
-        "address": "Address",
-        "done": "Done"
+        "info": "Registration Data",
+        "address": "Address"
       },
-      "stepHints": {
-        "step1": "Company data and contact",
-        "step2": "Company address",
-        "done": "All set"
-      },
-      "cnpjFirst": "Enter the CNPJ to look up the company data from Receita",
+      "cnpjFirst": "Type the CNPJ to look up the company data from Receita.",
       "fields": {
+        "cnpj": "Inform the CNPJ",
         "fantasyName": "Trade name",
         "legalName": "Legal name",
-        "cnpj": "CNPJ",
         "abvtexSeal": "ABVTEX seal",
         "phone": "Phone",
         "mobile": "Mobile",
@@ -596,36 +597,40 @@
         "number": "Number",
         "complement": "Complement",
         "neighborhood": "Neighborhood",
-        "city": "City"
-      },
-      "placeholders": {
-        "fantasyName": "Type the trade name...",
-        "legalName": "Type the legal name...",
-        "cnpj": "00.000.000/0000-00",
-        "abvtexSeal": "Select the ABVTEX seal",
-        "phone": "Type the phone number...",
-        "mobile": "Type the mobile number...",
-        "email": "name@domain.com",
-        "zipCode": "00000-000",
-        "street": "Type the street...",
-        "number": "Type the number...",
-        "complement": "Type the complement...",
-        "neighborhood": "Type the neighborhood...",
-        "city": "Select a city"
+        "city": "City",
+        "placeholder": {
+          "fantasyName": "Inform the trade name",
+          "legalName": "Type the legal name",
+          "email": "name@domain.com",
+          "city": "Select a city",
+          "street": "Inform the street",
+          "number": "Inform the number",
+          "complement": "Inform the complement",
+          "neighborhood": "Inform the neighborhood"
+        }
       },
       "actions": {
         "previous": "Previous",
         "next": "Next",
-        "finish": "Finish",
-        "saving": "Saving...",
+        "finish": "Register Company",
+        "tooltip": {
+          "previous": "Back to the previous step",
+          "next": "Go to the next step",
+          "finish": "Finish registering the company"
+        },
+        "saving": "Saving..."
+      }
+    },
+    "createdModal": {
+      "title": "Registration completed successfully!",
+      "message": "The company {{name}} has been registered, what would you like to do now?",
+      "actions": {
         "close": "Close",
-        "openRecord": "Open record",
-        "newInspection": "Add inspection"
-      },
-      "success": {
-        "title": "Company registered successfully!",
-        "question": "Do you want to open the record now or just close?",
-        "summary": "{{name}} has been added."
+        "openRecord": "See Company",
+        "tooltip": {
+          "close": "Go back to the company list",
+          "openRecord": "Go to registered company"
+        }
       }
     }
   },
@@ -668,7 +673,7 @@
     "fields": {
       "email": "E-mail",
       "placeholder": {
-        "email": "johndoe@email.com"
+        "email": "name@domain.com"
       }
     },
     "actions": {
@@ -1283,9 +1288,9 @@
   },
   "unsavedChanges": {
     "title": "Unsaved changes",
-    "message": "You have changes that haven't been saved. If you leave now, they'll be lost.",
-    "stay": "Keep editing",
-    "leave": "Leave without saving"
+    "message": "You have unsaved changes, are you sure you want to leave? If you leave now, they'll be discarded.",
+    "stay": "Cancel",
+    "leave": "Leave Without Saving"
   },
   "audit": {
     "created": "Created by {{by}} on {{at}}",

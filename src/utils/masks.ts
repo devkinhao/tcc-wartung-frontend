@@ -1,83 +1,63 @@
 /**
  * Funções de máscara para campos de formulário.
- *
- * Cada função recebe o valor atual (com ou sem máscara) e devolve
- * o valor formatado progressivamente enquanto o usuário digita.
+ * Cada função recebe o valor atual (com ou sem máscara) e devolve o valor formatado progressivamente enquanto o usuário digita.
  * O valor armazenado no estado é sempre a string mascarada.
  */
-
 export type MaskType = "cpf" | "cnpj" | "phone" | "mobile" | "cep" | "art";
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Extrai apenas os dígitos de uma string */
+/** Extrai apenas os dígitos de uma string. */
 export function digitsOnly(value: string): string {
   return value.replace(/\D/g, "");
 }
 
-// ── Máscaras ─────────────────────────────────────────────────────────────────
+/**
+ * Formata os dígitos do valor pelo padrão, em que "#" é um dígito.
+ * Os separadores só aparecem quando há dígito depois deles e os dígitos excedentes são descartados.
+ */
+function formatByPattern(value: string, pattern: string): string {
+  const digits = digitsOnly(value);
+  let result = "";
+  let next = 0;
 
-/** CPF: 000.000.000-00 */
-export function maskCpf(value: string): string {
-  const d = digitsOnly(value).slice(0, 11);
-  if (d.length <= 3) return d;
-  if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
-  if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
-  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9, 11)}`;
+  for (const char of pattern) {
+    if (next >= digits.length) break;
+    result += char === "#" ? digits[next++] : char;
+  }
+
+  return result;
 }
 
-/** CNPJ: 00.000.000/0000-00 */
-export function maskCnpj(value: string): string {
-  const d = digitsOnly(value).slice(0, 14);
-  if (d.length <= 2) return d;
-  if (d.length <= 5) return `${d.slice(0, 2)}.${d.slice(2)}`;
-  if (d.length <= 8) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5)}`;
-  if (d.length <= 12) return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8)}`;
-  return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12, 14)}`;
-}
+/** Formato para o CPF é "000.000.000-00" */
+export const maskCpf = (value: string) =>
+  formatByPattern(value, "###.###.###-##");
 
-/** Telefone fixo: (00) 0000-0000  (máx 10 dígitos) */
-export function maskPhone(value: string): string {
-  const d = digitsOnly(value).slice(0, 10);
-  if (d.length === 0) return "";
-  if (d.length <= 2) return `(${d}`;
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
-}
+/** Formato para o CNPJ é "00.000.000/0000-00" */
+export const maskCnpj = (value: string) =>
+  formatByPattern(value, "##.###.###/####-##");
 
-/** Celular: (00) 00000-0000  (máx 11 dígitos) */
-export function maskMobile(value: string): string {
-  const d = digitsOnly(value).slice(0, 11);
-  if (d.length === 0) return "";
-  if (d.length <= 2) return `(${d}`;
-  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-}
+/** Formato para o telefone fixo é "(00) 0000-0000" */
+export const maskPhone = (value: string) =>
+  formatByPattern(value, "(##) ####-####");
 
-/** CEP: 00000-000 */
-export function maskCep(value: string): string {
-  const d = digitsOnly(value).slice(0, 8);
-  if (d.length <= 5) return d;
-  return `${d.slice(0, 5)}-${d.slice(5)}`;
-}
+/** Formato para o celular é "(00) 00000-0000" */
+export const maskMobile = (value: string) =>
+  formatByPattern(value, "(##) #####-####");
+
+/** Formato para o CEP é "00000-000" */
+export const maskCep = (value: string) => formatByPattern(value, "#####-###");
 
 /**
- * Número da ART (CREA-SC): dígito verificador sempre após o hífen.
- * Aceita ARTs antigas (7 dígitos + verificador → 0000000-0) e
- * novas (8 dígitos + verificador → 00000000-0).
- *
- * O hífen é sempre inserido antes do último dígito digitado, então ao digitar
- * uma ART de 8 dígitos o agrupamento se ajusta ao teclar o verificador.
+ * Para o número da ART (CREA-SC), o dígito verificador é sempre após o hífen.
+ * Aceita ARTs antigas (7 dígitos + verificador → 0000000-0) e novas (8 dígitos + verificador → 00000000-0).
+ * O hífen é sempre inserido antes do último dígito digitado, então ao digitar uma ART de 8 dígitos o agrupamento se ajusta ao teclar o verificador.
  */
 export function maskArt(value: string): string {
-  const d = digitsOnly(value).slice(0, 9);
-  if (d.length <= 7) return d;
-  return `${d.slice(0, d.length - 1)}-${d.slice(d.length - 1)}`;
+  const digits = digitsOnly(value).slice(0, 9);
+  if (digits.length <= 7) return digits;
+  return `${digits.slice(0, -1)}-${digits.slice(-1)}`;
 }
 
-// ── Dispatcher ────────────────────────────────────────────────────────────────
-
-const MASK_FNS: Record<MaskType, (v: string) => string> = {
+const MASK_FNS: Record<MaskType, (value: string) => string> = {
   cpf: maskCpf,
   cnpj: maskCnpj,
   phone: maskPhone,
@@ -86,12 +66,12 @@ const MASK_FNS: Record<MaskType, (v: string) => string> = {
   art: maskArt,
 };
 
+/** Aplica ao valor a máscara do tipo informado. */
 export function applyMask(value: string, type: MaskType): string {
   return MASK_FNS[type](value);
 }
 
-// ── Placeholders ──────────────────────────────────────────────────────────────
-
+/** Placeholder de cada máscara, exibido no campo vazio. */
 export const MASK_PLACEHOLDERS: Record<MaskType, string> = {
   cpf: "000.000.000-00",
   cnpj: "00.000.000/0000-00",

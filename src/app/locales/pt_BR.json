@@ -3,15 +3,15 @@
     "brandName": "Wartung"
   },
   "validation": {
-    "required": "Campo obrigatório",
-    "cnpjInvalid": "CNPJ inválido",
-    "cepInvalid": "CEP inválido. Use o formato 00000-000",
-    "emailInvalid": "E-mail inválido",
-    "phoneInvalid": "Telefone inválido",
-    "mobileInvalid": "Celular inválido",
-    "cpfInvalid": "CPF inválido",
-    "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres)",
-    "positiveIntegerInvalid": "Informe um número inteiro positivo"
+    "required": "O campo é obrigatório.",
+    "cnpjInvalid": "CNPJ inválido.",
+    "cepInvalid": "CEP inválido.",
+    "emailInvalid": "E-mail inválido.",
+    "phoneInvalid": "Telefone inválido.",
+    "mobileInvalid": "Celular inválido.",
+    "cpfInvalid": "CPF inválido.",
+    "usernameInvalid": "Somente letras minúsculas e números (mínimo 4 caracteres).",
+    "positiveIntegerInvalid": "Informe um número inteiro positivo."
   },
   "common": {
     "alt": {
@@ -42,7 +42,8 @@
     },
     "loading": "Carregando...",
     "cep": {
-      "notFound": "CEP não encontrado"
+      "notFound": "CEP não encontrado",
+      "unavailable": "Não foi possível consultar o CEP agora. Preencha o endereço manualmente."
     },
     "cnpj": {
       "notFound": "CNPJ não encontrado na Receita Federal"
@@ -571,22 +572,22 @@
       }
     },
     "addModal": {
-      "title": "Nova empresa",
+      "description": "Preencha os dados para cadastrar uma nova empresa no sistema.",
+      "discard": {
+        "tooltip": {
+          "stay": "Voltar para a edição",
+          "leave": "Descartar o cadastro e fechar"
+        }
+      },
       "steps": {
-        "info": "Informações",
-        "address": "Endereço",
-        "done": "Concluído"
+        "info": "Dados Cadastrais",
+        "address": "Endereço"
       },
-      "stepHints": {
-        "step1": "Dados da empresa e contato",
-        "step2": "Endereço da empresa",
-        "done": "Tudo pronto"
-      },
-      "cnpjFirst": "Informe o CNPJ para buscar os dados da empresa na Receita",
+      "cnpjFirst": "Digite o CNPJ para buscar os dados da empresa na Receita.",
       "fields": {
+        "cnpj": "Informe o CNPJ",
         "fantasyName": "Nome fantasia",
         "legalName": "Razão social",
-        "cnpj": "CNPJ",
         "abvtexSeal": "Selo ABVTEX",
         "phone": "Telefone",
         "mobile": "Celular",
@@ -596,36 +597,40 @@
         "number": "Número",
         "complement": "Complemento",
         "neighborhood": "Bairro",
-        "city": "Cidade"
-      },
-      "placeholders": {
-        "fantasyName": "Digite o nome fantasia...",
-        "legalName": "Digite a razão social...",
-        "cnpj": "00.000.000/0000-00",
-        "abvtexSeal": "Selecione o selo ABVTEX",
-        "phone": "Digite o telefone...",
-        "mobile": "Digite o celular...",
-        "email": "nome@dominio.com",
-        "zipCode": "00000-000",
-        "street": "Digite o logradouro...",
-        "number": "Digite o número...",
-        "complement": "Digite o complemento...",
-        "neighborhood": "Digite o bairro...",
-        "city": "Selecione a cidade"
+        "city": "Cidade",
+        "placeholder": {
+          "fantasyName": "Informe o nome fantasia",
+          "legalName": "Informe a razão social",
+          "email": "nome@dominio.com",
+          "city": "Selecione a cidade",
+          "street": "Informe a rua/avenida",
+          "number": "Informe o número",
+          "complement": "Informe o complemento",
+          "neighborhood": "Informe o bairro"
+        }
       },
       "actions": {
         "previous": "Anterior",
         "next": "Próximo",
-        "finish": "Concluir",
-        "saving": "Salvando...",
+        "finish": "Cadastrar Empresa",
+        "tooltip": {
+          "previous": "Voltar para a etapa anterior",
+          "next": "Ir para a próxima etapa",
+          "finish": "Finalizar cadastro da empresa"
+        },
+        "saving": "Salvando..."
+      }
+    },
+    "createdModal": {
+      "title": "Cadastro realizado com sucesso!",
+      "message": "A empresa {{name}} foi cadastrada, o que você deseja fazer agora?",
+      "actions": {
         "close": "Fechar",
-        "openRecord": "Acessar cadastro",
-        "newInspection": "Cadastrar inspeção"
-      },
-      "success": {
-        "title": "Empresa cadastrada com sucesso!",
-        "question": "Deseja acessar o cadastro agora ou apenas fechar?",
-        "summary": "{{name}} foi cadastrada."
+        "openRecord": "Ver Empresa",
+        "tooltip": {
+          "close": "Voltar para a lista de empresas",
+          "openRecord": "Ir para a empresa cadastrada"
+        }
       }
     }
   },
@@ -668,7 +673,7 @@
     "fields": {
       "email": "E-mail",
       "placeholder": {
-        "email": "johndoe@email.com"
+        "email": "nome@dominio.com"
       }
     },
     "actions": {
@@ -1282,10 +1287,10 @@
     }
   },
   "unsavedChanges": {
-    "title": "Alterações não salvas",
-    "message": "Você tem alterações que ainda não foram salvas. Se sair agora, elas serão perdidas.",
-    "stay": "Continuar editando",
-    "leave": "Sair sem salvar"
+    "title": "Alterações não salvas!",
+    "message": "Você tem alterações que ainda não foram salvas, tem certeza que gostaria de sair? Se sair agora, elas serão descartadas.",
+    "stay": "Cancelar",
+    "leave": "Sair sem Salvar"
   },
   "audit": {
     "created": "Cadastrado por {{by}} em {{at}}",

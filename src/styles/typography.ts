@@ -20,7 +20,7 @@ export const typography = {
    * São usados para fixar cada variante do MUI a um valor exato.
    */
   textScale: {
-    /** 12px, para tooltips do sistema. */
+    /** 12px, para tooltips do sistema e textos de ajuda dos campos. */
     xs: "0.75rem",
     /** 14px, usado em textos auxiliares, legendas e rótulos. */
     sm: "0.875rem",

@@ -1,50 +1,70 @@
-import { useCallback, useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { City } from "../types/City";
-import type { AbvtexSealType } from "../types/abvtexSeal";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
+import { isValidCnpj, type ReceitaWsResponseDTO } from "@/api/cnpj.api";
 import { qk } from "@/api/keys";
-import { createCustomer, type CustomerCreateRequestDTO } from "../api/customers.create.api";
-import { useNavigate } from "react-router-dom";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { Modal } from "@/components/Modal";
+import { Tooltip } from "@/components/Tooltip";
+import { Button } from "@/components/button/Button";
+import { EMPTY_HELPER_TEXT, FormField } from "@/components/form/FormField";
+import { useCepLookup } from "@/hooks/useCepLookup";
+import { useCnpjLookup, type CnpjLookupStatus } from "@/hooks/useCnpjLookup";
+import { useNotify } from "@/hooks/useNotify";
+import { maskPhone } from "@/utils/masks";
+import { fieldError } from "@/validation/fields";
+import {
+  AccountBalanceOutlined,
+  ArrowBack,
+  ArrowForward,
+  BusinessOutlined,
+  Check,
+  CheckOutlined,
+  Close,
+  ErrorOutlineOutlined,
+  MailOutlineOutlined,
+  PhoneOutlined,
+  RefreshOutlined,
+  SmartphoneOutlined,
+  StorefrontOutlined,
+} from "@mui/icons-material";
 import {
   Box,
-  Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
+  InputAdornment,
   MenuItem,
-  Select,
   Step,
   StepLabel,
   Stepper,
-  TextField,
-  Tooltip,
-  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
+import { useCallback, useMemo, useState, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { CepTextField } from "@/components/CepTextField";
-import { CnpjTextField, type CnpjLookupStatus } from "@/components/CnpjTextField";
-import { fieldError } from "@/validation/fields";
-import { companyGeneralSchema, companyContactsSchema, companyAddressSchema } from "../schemas";
-import { useNotify } from "@/hooks/useNotify";
-import { MaskedTextField } from "@/components/MaskedTextField";
-import { maskPhone } from "@/utils/masks";
-import { paths } from "@/routes/paths";
-import type { ViaCepResponseDTO } from "@/api/cep.api";
-import type { ReceitaWsResponseDTO } from "@/api/cnpj.api";
+import {
+  createCustomer,
+  type CustomerCreateRequestDTO,
+} from "../api/customers.create.api";
+import {
+  companyAddressSchema,
+  companyContactsSchema,
+  companyGeneralSchema,
+} from "../schemas";
+import type { City } from "../types/City";
+import type { AbvtexSealType } from "../types/abvtexSeal";
+import { CompanyCreatedModal } from "./CompanyCreatedModal";
 
 type AddCompanyModalProps = {
   open: boolean;
   onClose: () => void;
+  /** Cidades disponíveis para o endereço. */
   cities: City[];
 };
 
+/** Campos do formulário editados como texto livre. */
+type TextFieldKey = Exclude<keyof NewCompanyForm, "abvtexSeal" | "cityId">;
+
+/** Valores do formulário como digitados, em que cidade e selo guardam a opção selecionada. */
 type NewCompanyForm = {
   fantasyName: string;
   legalName: string;
@@ -62,6 +82,7 @@ type NewCompanyForm = {
   cityId: number | "";
 };
 
+/** Valores iniciais do formulário. */
 const defaultForm: NewCompanyForm = {
   fantasyName: "",
   legalName: "",
@@ -79,22 +100,78 @@ const defaultForm: NewCompanyForm = {
   cityId: "",
 };
 
-export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps) {
+/** Ícone de status de uma consulta automática (CNPJ/CEP), exibido no fim do campo. Com onRetry, o erro vira um botão de tentar de novo. */
+function LookupStatusIcon({
+  isFetching,
+  isError,
+  isFound,
+  onRetry,
+}: {
+  isFetching: boolean;
+  isError: boolean;
+  isFound: boolean;
+  onRetry?: () => void;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <InputAdornment position="end">
+      {isFetching ? (
+        <CircularProgress size={18} />
+      ) : isError && onRetry ? (
+        <Tooltip title={t("common.actions.retry")}>
+          <IconButton
+            size="small"
+            aria-label={t("common.actions.retry")}
+            onClick={onRetry}
+          >
+            <RefreshOutlined fontSize="small" color="error" />
+          </IconButton>
+        </Tooltip>
+      ) : isError ? (
+        <ErrorOutlineOutlined fontSize="small" color="error" />
+      ) : isFound ? (
+        <CheckOutlined fontSize="small" color="success" />
+      ) : null}
+    </InputAdornment>
+  );
+}
+
+/** Modal de cadastro de empresa em duas etapas, dados e endereço e, ao concluir, abre a modal de próximos passos. */
+export function AddCompanyModal({
+  open,
+  onClose,
+  cities,
+}: AddCompanyModalProps) {
+  /** Hooks. */
   const { t } = useTranslation();
   const notify = useNotify();
-
-  const [step, setStep] = useState<0 | 1 | 2>(0);
-  const [form, setForm] = useState<NewCompanyForm>(defaultForm);
-  const [createdId, setCreatedId] = useState<number | null>(null);
   const qc = useQueryClient();
 
-  // Os demais campos do passo 1 só liberam depois que o CNPJ é consultado na
-  // ReceitaWS (encontrado ou não) — assim os dados sempre são puxados primeiro.
+  /** Estados. */
+  const [step, setStep] = useState<0 | 1>(0);
+  const [form, setForm] = useState<NewCompanyForm>(defaultForm);
+  /** Empresa recém-cadastrada, que abre a modal de próximos passos. */
+  const [created, setCreated] = useState<{ id: number; name: string } | null>(
+    null,
+  );
   const [cnpjStatus, setCnpjStatus] = useState<CnpjLookupStatus>("empty");
+  /** Indica que o usuário saiu do campo de CNPJ, o que passa a exibir o erro de CNPJ inválido. Volta a falso ao digitar. */
+  const [cnpjBlurred, setCnpjBlurred] = useState(false);
+  /** Indica que o erro de CNPJ obrigatório foi sinalizado ao tentar avançar. Some ao digitar e só volta em uma nova tentativa. */
+  const [cnpjRequiredFlagged, setCnpjRequiredFlagged] = useState(false);
+  /** Indica que o usuário tentou avançar do primeiro passo, o que passa a exibir os erros de campos obrigatórios. */
+  const [step1Attempted, setStep1Attempted] = useState(false);
+  /** Indica que o usuário tentou concluir o cadastro, o que passa a exibir os erros de campos obrigatórios do endereço. */
+  const [step2Attempted, setStep2Attempted] = useState(false);
+  /** CNPJ recusado pelo backend por já estar cadastrado. O erro some quando o CNPJ é alterado. */
+  const [duplicateCnpj, setDuplicateCnpj] = useState<string | null>(null);
+  const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+
+  /** Os demais campos só são liberados depois que a consulta do CNPJ termina, com o CNPJ encontrado ou não. */
   const detailsUnlocked = cnpjStatus === "found" || cnpjStatus === "notFound";
 
-  const navigate = useNavigate();
-
+  /** Opções do select de selo ABVTEX, já traduzidas. */
   const abvtexOptions = useMemo(
     () =>
       [
@@ -104,92 +181,185 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
         { value: "PRATA" as const, label: t("abvtex.silver") },
         { value: "OURO" as const, label: t("abvtex.gold") },
       ] satisfies Array<{ value: AbvtexSealType; label: string }>,
-    [t]
+    [t],
   );
 
+  /** Limpa o formulário e fecha a modal. */
   const closeAndReset = () => {
     setStep(0);
     setForm(defaultForm);
-    setCreatedId(null);
+    setCreated(null);
     setCnpjStatus("empty");
+    setCnpjBlurred(false);
+    setCnpjRequiredFlagged(false);
+    setStep1Attempted(false);
+    setStep2Attempted(false);
+    setDuplicateCnpj(null);
+    setConfirmDiscardOpen(false);
     onClose();
   };
 
-  // Valida contra os schemas de empresa (espelham CustomerCreateRequestDTO +
-  // AddressRequestDTO no backend). Passo 1 = dados + contatos, passo 2 = endereço.
+  /** Valores dos campos sem espaços nas pontas, usados na validação e no envio. */
+  const cnpj = form.cnpj.trim();
+  const phone = form.phone.trim();
+  const mobile = form.mobile.trim();
+  const email = form.email.trim();
+  const zipCode = form.zipCode.trim();
+
+  /** Validação pelos schemas de empresa, que espelham o DTO de criação do backend. */
   const general = companyGeneralSchema.safeParse({
     fantasyName: form.fantasyName,
     legalName: form.legalName,
-    cnpj: form.cnpj.trim(),
+    cnpj,
   });
   const contacts = companyContactsSchema.safeParse({
-    phone: form.phone.trim(),
-    mobilePhone: form.mobile.trim(),
-    email: form.email.trim(),
+    phone,
+    mobilePhone: mobile,
+    email,
   });
   const address = companyAddressSchema.safeParse({
     street: form.street,
     number: form.number,
     complement: form.complement,
     neighborhood: form.neighborhood,
-    zipCode: form.zipCode.trim(),
+    zipCode,
     cityId: typeof form.cityId === "number" ? form.cityId : 0,
   });
 
-  // Erros de formato — visíveis quando o campo está preenchido mas inválido
-  const cnpjError   = form.cnpj.trim()   !== "" && !!fieldError(general, "cnpj");
-  const zipError    = form.zipCode.trim() !== "" && !!fieldError(address, "zipCode");
-  const emailError  = form.email.trim()  !== "" && !!fieldError(contacts, "email");
-  const phoneError  = form.phone.trim()  !== "" && !!fieldError(contacts, "phone");
-  const mobileError = form.mobile.trim() !== "" && !!fieldError(contacts, "mobilePhone");
+  /** Erros de formato, exibidos só quando o campo está preenchido, mas inválido. O CNPJ só é sinalizado depois que o usuário sai do campo. */
+  const cnpjError =
+    cnpjBlurred &&
+    cnpj !== "" &&
+    (!!fieldError(general, "cnpj") || !isValidCnpj(cnpj));
+  const zipError = zipCode !== "" && !!fieldError(address, "zipCode");
+  const emailError = email !== "" && !!fieldError(contacts, "email");
+  const phoneError = phone !== "" && !!fieldError(contacts, "phone");
+  const mobileError = mobile !== "" && !!fieldError(contacts, "mobilePhone");
 
-  const step1Valid = detailsUnlocked && general.success && contacts.success;
+  /** Erros de campos obrigatórios, sinalizados somente após a tentativa de avançar ou concluir. */
+  const cnpjRequiredError = cnpjRequiredFlagged && cnpj === "";
+  const cnpjDuplicateError =
+    duplicateCnpj !== null && form.cnpj === duplicateCnpj;
+  const zipRequiredError = step2Attempted && zipCode === "";
+  const streetError = step2Attempted && !!fieldError(address, "street");
+  const cityError = step2Attempted && typeof form.cityId !== "number";
+  const legalNameError =
+    step1Attempted && detailsUnlocked && !!fieldError(general, "legalName");
+
+  /** Cada passo só avança com seus campos válidos. */
+  const step1Valid =
+    detailsUnlocked &&
+    general.success &&
+    contacts.success &&
+    !cnpjDuplicateError;
   const step2Valid = address.success;
 
+  /** Move o foco para o primeiro campo inválido, para o usuário corrigir sem procurar o erro. */
+  const focusFirstInvalid = (candidates: Array<[boolean, string]>) => {
+    const id = candidates.find(([invalid]) => invalid)?.[1];
+    if (id) document.getElementById(id)?.focus();
+  };
+
+  /** Avança para o endereço se o primeiro passo estiver válido, senão, exibe os erros e foca o primeiro campo inválido. */
+  const handleNext = () => {
+    if (step1Valid) return setStep(1);
+    setStep1Attempted(true);
+    setCnpjRequiredFlagged(true);
+    focusFirstInvalid([
+      [
+        !detailsUnlocked || !!fieldError(general, "cnpj") || cnpjDuplicateError,
+        "company-cnpj",
+      ],
+      [!!fieldError(general, "legalName"), "company-legalName"],
+      [!!fieldError(contacts, "phone"), "company-phone"],
+      [!!fieldError(contacts, "mobilePhone"), "company-mobile"],
+      [!!fieldError(contacts, "email"), "company-email"],
+    ]);
+  };
+
+  /** Cadastra a empresa se o endereço estiver válido, senão, exibe os erros e foca o primeiro campo inválido. */
+  const handleFinish = () => {
+    if (step2Valid) return submit();
+    setStep2Attempted(true);
+    focusFirstInvalid([
+      [!!fieldError(address, "zipCode"), "company-zipCode"],
+      [!!fieldError(address, "cityId"), "company-city"],
+      [!!fieldError(address, "street"), "company-street"],
+    ]);
+  };
+
+  /** Atualiza parte do formulário, mantendo os demais campos. */
+  const updateForm = (patch: Partial<NewCompanyForm>) =>
+    setForm((p) => ({ ...p, ...patch }));
+
+  /** Atualiza um campo de texto do formulário com o valor digitado (já mascarado, se houver máscara). */
+  const setField =
+    (key: TextFieldKey) =>
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      updateForm({ [key]: e.target.value });
+
+  /** Texto de ajuda do campo, sendo a mensagem de erro, ou o texto vazio que reserva a linha dela. */
+  const helper = (error: boolean, messageKey: string) =>
+    error ? t(messageKey) : EMPTY_HELPER_TEXT;
+
+  /** Cadastra a empresa e, em caso de sucesso, abre a modal de próximos passos. */
   const { mutate: submit, isPending: submitting } = useMutation({
     mutationFn: () => {
       const dto: CustomerCreateRequestDTO = {
         fantasyName: form.fantasyName.trim(),
         legalName: form.legalName.trim(),
-        cnpj: form.cnpj.trim(),
+        cnpj,
         abvtexSeal: form.abvtexSeal as AbvtexSealType,
-        ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
-        ...(form.mobile.trim() ? { mobilePhone: form.mobile.trim() } : {}),
-        ...(form.email.trim() ? { email: form.email.trim() } : {}),
+        ...(phone ? { phone } : {}),
+        ...(mobile ? { mobilePhone: mobile } : {}),
+        ...(email ? { email } : {}),
         address: {
           street: form.street.trim(),
           complement: form.complement.trim(),
           neighborhood: form.neighborhood.trim(),
           number: form.number.trim(),
-          zipCode: form.zipCode.trim(),
+          zipCode,
           cityId: form.cityId as number,
         },
       };
       return createCustomer(dto);
     },
-    onSuccess: (created) => {
-      setCreatedId(created.id);
-      setStep(2);
+    onSuccess: (customer) => {
+      setCreated({ id: customer.id, name: form.legalName.trim() });
       qc.invalidateQueries({ queryKey: qk.customersAll });
-      // O dashboard conta empresas por situação (total / clientes / não-clientes).
+      /** O dashboard conta empresas por situação, então precisa ser recarregado. */
       qc.invalidateQueries({ queryKey: qk.dashboard() });
       notify.success("notify.success.companyCreated");
     },
-    onError: (e) => notify.fromError(e),
+    onError: (e) => {
+      /** CNPJ já cadastrado: volta ao primeiro passo e marca o campo, além do aviso. */
+      const code = isAxiosError(e)
+        ? (e.response?.data as { code?: string } | undefined)?.code
+        : undefined;
+      if (code === "CNPJ_ALREADY_EXISTS") {
+        setDuplicateCnpj(form.cnpj);
+        setStep(0);
+        requestAnimationFrame(() =>
+          document.getElementById("company-cnpj")?.focus(),
+        );
+      }
+      notify.fromError(e);
+    },
   });
 
-  const goToCadastro = () => {
-    if (createdId) navigate(paths.customerDetails(createdId));
-    else navigate(paths.customers);
-    closeAndReset();
+  /** O formulário tem algo digitado ou preenchido pelas consultas. */
+  const isDirty = (Object.keys(defaultForm) as (keyof NewCompanyForm)[]).some(
+    (key) => form[key] !== defaultForm[key],
+  );
+
+  /** Fecha a modal, pedindo confirmação se há dados preenchidos(não fecha durante o envio). */
+  const requestClose = () => {
+    if (submitting) return;
+    if (isDirty && !created) setConfirmDiscardOpen(true);
+    else closeAndReset();
   };
 
-  const goToNewInspection = () => {
-    if (createdId) navigate(paths.customerInspectionsTab(createdId));
-    else navigate(paths.customers);
-    closeAndReset();
-  };
-
+  /** Preenche o endereço com os dados do CEP consultado, mantendo o que já foi digitado nos campos que o CEP não traz. */
   const handleCepFound = useCallback((cepData: ViaCepResponseDTO) => {
     setForm((prev) => ({
       ...prev,
@@ -201,10 +371,8 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     }));
   }, []);
 
+  /** Preenche o formulário com os dados da empresa encontrada na Receita, mantendo o que já foi digitado nos campos que ela não traz. */
   const handleCnpjFound = useCallback((data: ReceitaWsResponseDTO) => {
-    // A ReceitaWS às vezes retorna mais de um telefone separado por "/"
-    // (ex: "(47) 3383-2264 / (47) 3383-0093") — usamos só o primeiro e
-    // normalizamos pela máscara; o campo continua livre para o usuário editar.
     const firstPhone = data.phone?.split("/")[0]?.trim();
 
     setForm((prev) => ({
@@ -223,313 +391,361 @@ export function AddCompanyModal({ open, onClose, cities }: AddCompanyModalProps)
     }));
   }, []);
 
+  /** Consulta o CNPJ na Receita e preenche o formulário com os dados encontrados. */
+  const cnpjLookup = useCnpjLookup({
+    value: form.cnpj,
+    onFound: handleCnpjFound,
+    onStatusChange: setCnpjStatus,
+  });
+
+  /** Consulta o CEP e preenche o endereço com os dados encontrados. */
+  const cepLookup = useCepLookup({
+    value: form.zipCode,
+    onFound: handleCepFound,
+  });
+
+  /** Texto de ajuda do CNPJ, pela ordem de prioridade dos erros possíveis. */
+  const cnpjHelperText = cnpjDuplicateError
+    ? t("notify.errorCodes.CNPJ_ALREADY_EXISTS")
+    : (cnpjLookup.errorMessage ??
+      (cnpjRequiredError
+        ? t("validation.required")
+        : cnpjError
+          ? t("validation.cnpjInvalid")
+          : cnpj === ""
+            ? t("customers.addModal.cnpjFirst")
+            : EMPTY_HELPER_TEXT));
+
+  /** Texto de ajuda do CEP, pela ordem de prioridade dos erros possíveis. */
+  const zipHelperText =
+    cepLookup.errorMessage ??
+    (zipRequiredError
+      ? t("validation.required")
+      : zipError
+        ? t("validation.cepInvalid")
+        : EMPTY_HELPER_TEXT);
+
   return (
-    <Dialog open={open} onClose={closeAndReset} fullWidth maxWidth="md">
-      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        {t("customers.addModal.title")}
-        <Tooltip title={t("common.actions.close")}>
-          <IconButton onClick={closeAndReset} aria-label={t("common.actions.close")} size="small">
-            <CloseIcon />
-          </IconButton>
-        </Tooltip>
-      </DialogTitle>
-
-      <DialogContent dividers>
-        <Stepper activeStep={step} sx={{ mb: 3 }}>
-          <Step><StepLabel>{t("customers.addModal.steps.info")}</StepLabel></Step>
-          <Step><StepLabel>{t("customers.addModal.steps.address")}</StepLabel></Step>
-          <Step><StepLabel>{t("customers.addModal.steps.done")}</StepLabel></Step>
-        </Stepper>
-
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: -1, mb: 2 }}>
-          {step === 0
-            ? t("customers.addModal.stepHints.step1")
-            : step === 1
-              ? t("customers.addModal.stepHints.step2")
-              : t("customers.addModal.stepHints.done")}
-        </Typography>
-
-        {step === 2 ? (
-          <Box sx={{ textAlign: "center", py: 4 }}>
-            <Typography variant="subtitle1" color="text.primary">
-              {t("customers.addModal.success.title")}
-            </Typography>
-
-            {createdId ? (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {t("customers.addModal.success.summary", { name: form.legalName.trim() })}
-              </Typography>
-            ) : null}
-
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              {t("customers.addModal.success.question")}
-            </Typography>
-          </Box>
-        ) : (
+    <>
+      <Modal
+        open={open && !created}
+        onClose={requestClose}
+        maxWidth="md"
+        title={t("customers.actions.addCompany")}
+        description={t("customers.addModal.description")}
+        actions={
           <>
-          {/* Os dois Grids ficam sempre montados (só a visibilidade alterna) —
-              desmontar/remontar ao trocar de passo reexecutaria o efeito de
-              autopreenchimento do CnpjTextField/CepTextField com o resultado
-              em cache, sobrescrevendo edições manuais do usuário. */}
-          <Grid container spacing={2} sx={{ display: step === 0 ? "flex" : "none" }}>
-            {/* Os `data-tour` ancoram os passos do tutorial guiado de nova
-                empresa. Ver src/features/tour. */}
+            {step === 0 ? (
+              <Button
+                tooltip={t("customers.addModal.actions.tooltip.next")}
+                variant="text"
+                onClick={handleNext}
+                data-tour="company.next"
+                endIcon={ArrowForward}
+                sx={{ color: "primary.main", ml: "auto" }}
+              >
+                {t("customers.addModal.actions.next")}
+              </Button>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  tooltip={t("customers.addModal.actions.tooltip.previous")}
+                  variant="text"
+                  onClick={() => setStep(0)}
+                  startIcon={ArrowBack}
+                >
+                  {t("customers.addModal.actions.previous")}
+                </Button>
+                <Button
+                  tooltip={t("customers.addModal.actions.tooltip.finish")}
+                  disabled={submitting}
+                  onClick={handleFinish}
+                  data-tour="company.finish"
+                  startIcon={!submitting ? Check : undefined}
+                >
+                  {submitting ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      {t("customers.addModal.actions.saving")}
+                      <CircularProgress size={18} />
+                    </Box>
+                  ) : (
+                    t("customers.addModal.actions.finish")
+                  )}
+                </Button>
+              </Box>
+            )}
+          </>
+        }
+      >
+        <Stepper activeStep={step} sx={{ mb: 3 }}>
+          <Step>
+            <StepLabel>{t("customers.addModal.steps.info")}</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>{t("customers.addModal.steps.address")}</StepLabel>
+          </Step>
+        </Stepper>
+        <>
+          {/**
+           * As duas etapas ficam sempre montadas, só alternando a visibilidade.
+           * Desmontar/remontar ao trocar de passo sobrescreveria edições manuais do usuário.
+           */}
+          <Grid
+            container
+            columnSpacing={2}
+            sx={{ display: step === 0 ? "flex" : "none" }}
+          >
             <Grid size={{ xs: 12, md: 6 }} data-tour="company.cnpj">
-              <CnpjTextField
-                label={t("customers.addModal.fields.cnpj")}
-                value={form.cnpj}
-                onChange={(v) => setForm((p) => ({ ...p, cnpj: v }))}
-                onCompanyFound={handleCnpjFound}
-                onStatusChange={setCnpjStatus}
+              <FormField
                 required
-                error={cnpjError}
-                helperText={
-                  cnpjError
-                    ? t("validation.cnpjInvalid")
-                    : !detailsUnlocked
-                      ? t("customers.addModal.cnpjFirst")
-                      : undefined
+                id="company-cnpj"
+                label={t("customers.addModal.fields.cnpj")}
+                mask="cnpj"
+                value={form.cnpj}
+                onChange={(e) => {
+                  setCnpjBlurred(false);
+                  setCnpjRequiredFlagged(false);
+                  setField("cnpj")(e);
+                }}
+                onBlur={() => setCnpjBlurred(true)}
+                error={
+                  cnpjLookup.isError ||
+                  cnpjError ||
+                  cnpjRequiredError ||
+                  cnpjDuplicateError
+                }
+                helperText={cnpjHelperText}
+                startIcon={BusinessOutlined}
+                endIcon={
+                  <LookupStatusIcon
+                    isFetching={cnpjLookup.isFetching}
+                    isError={cnpjLookup.isError}
+                    isFound={cnpjLookup.status === "found"}
+                  />
                 }
               />
             </Grid>
-
             <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
+              <FormField
                 label={t("customers.addModal.fields.fantasyName")}
-                placeholder={t("customers.addModal.placeholders.fantasyName")}
+                startIcon={StorefrontOutlined}
+                placeholder={t(
+                  "customers.addModal.fields.placeholder.fantasyName",
+                )}
+                disabled={!detailsUnlocked}
                 value={form.fantasyName}
-                onChange={(e) => setForm((p) => ({ ...p, fantasyName: e.target.value }))}
-                fullWidth
-                size="small"
-                disabled={!detailsUnlocked}
-                slotProps={{
-                  htmlInput: { maxLength: 100 }
-                }}
+                onChange={setField("fantasyName")}
+                helperText={EMPTY_HELPER_TEXT}
               />
             </Grid>
-
-            <Grid size={{ xs: 12 }} data-tour="company.legalName">
-              <TextField
+            <Grid size={{ xs: 12, md: 8 }} data-tour="company.legalName">
+              <FormField
+                required
+                id="company-legalName"
                 label={t("customers.addModal.fields.legalName")}
-                placeholder={t("customers.addModal.placeholders.legalName")}
+                startIcon={AccountBalanceOutlined}
+                placeholder={t(
+                  "customers.addModal.fields.placeholder.legalName",
+                )}
+                disabled={!detailsUnlocked}
                 value={form.legalName}
-                onChange={(e) => setForm((p) => ({ ...p, legalName: e.target.value }))}
-                fullWidth
-                size="small"
-                required
+                onChange={setField("legalName")}
+                error={legalNameError}
+                helperText={helper(legalNameError, "validation.required")}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <FormField
+                select
+                label={t("customers.addModal.fields.abvtexSeal")}
+                value={form.abvtexSeal}
+                onChange={(e) =>
+                  updateForm({
+                    abvtexSeal: e.target.value as NewCompanyForm["abvtexSeal"],
+                  })
+                }
                 disabled={!detailsUnlocked}
-                slotProps={{
-                  htmlInput: { maxLength: 100 }
-                }}
-              />
+                helperText={EMPTY_HELPER_TEXT}
+              >
+                {abvtexOptions.map((o) => (
+                  <MenuItem key={o.value} value={o.value}>
+                    {o.label}
+                  </MenuItem>
+                ))}
+              </FormField>
             </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <FormControl fullWidth size="small" disabled={!detailsUnlocked}>
-                <InputLabel id="abvtex">{t("customers.addModal.fields.abvtexSeal")}</InputLabel>
-                <Select
-                  labelId="abvtex"
-                  label={t("customers.addModal.fields.abvtexSeal")}
-                  value={form.abvtexSeal}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, abvtexSeal: e.target.value as NewCompanyForm["abvtexSeal"] }))
-                  }
-                >
-                  {abvtexOptions.map((o) => (
-                    <MenuItem key={o.value} value={o.value}>
-                      {o.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MaskedTextField
-                mask="phone"
-                label={t("customers.addModal.fields.phone")}
-                value={form.phone}
-                onChange={(v) => setForm((p) => ({ ...p, phone: v }))}
-                fullWidth
-                size="small"
-                disabled={!detailsUnlocked}
-                error={phoneError}
-                helperText={phoneError ? t("validation.phoneInvalid") : undefined}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MaskedTextField
-                mask="mobile"
-                label={t("customers.addModal.fields.mobile")}
-                value={form.mobile}
-                onChange={(v) => setForm((p) => ({ ...p, mobile: v }))}
-                fullWidth
-                size="small"
-                disabled={!detailsUnlocked}
-                error={mobileError}
-                helperText={mobileError ? t("validation.mobileInvalid") : undefined}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t("customers.addModal.fields.email")}
-                placeholder={t("customers.addModal.placeholders.email")}
-                value={form.email}
-                onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-                fullWidth
-                size="small"
-                disabled={!detailsUnlocked}
-                error={emailError}
-                helperText={emailError ? t("validation.emailInvalid") : undefined}
-                slotProps={{
-                  htmlInput: { maxLength: 75 }
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2} sx={{ display: step === 1 ? "flex" : "none" }}>
-            <Grid size={{ xs: 12, md: 3 }} data-tour="company.zipCode">
-              <CepTextField
-                value={form.zipCode}
-                onChange={(val) => setForm((p) => ({ ...p, zipCode: val }))}
-                onAddressFound={handleCepFound}
-                label={t("customers.addModal.fields.zipCode")}
-                required
-                error={zipError}
-                helperText={zipError ? t("validation.cepInvalid") : undefined}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 9 }}>
-              <TextField
-                label={t("customers.addModal.fields.street")}
-                placeholder={t("customers.addModal.placeholders.street")}
-                value={form.street}
-                onChange={(e) => setForm((p) => ({ ...p, street: e.target.value }))}
-                fullWidth
-                size="small"
-                required
-                slotProps={{
-                  htmlInput: { maxLength: 100 }
-                }}
-              />
-            </Grid>
-
             <Grid size={{ xs: 12, md: 3 }}>
-              <TextField
-                label={t("customers.addModal.fields.number")}
-                placeholder={t("customers.addModal.placeholders.number")}
-                value={form.number}
-                onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))}
-                fullWidth
-                size="small"
-                slotProps={{
-                  htmlInput: { maxLength: 20 }
-                }}
+              <FormField
+                mask="phone"
+                id="company-phone"
+                label={t("customers.addModal.fields.phone")}
+                startIcon={PhoneOutlined}
+                disabled={!detailsUnlocked}
+                value={form.phone}
+                onChange={setField("phone")}
+                error={phoneError}
+                helperText={helper(phoneError, "validation.phoneInvalid")}
               />
             </Grid>
-
-            <Grid size={{ xs: 12, md: 9 }}>
-              <TextField
-                label={t("customers.addModal.fields.complement")}
-                placeholder={t("customers.addModal.placeholders.complement")}
-                value={form.complement}
-                onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))}
-                fullWidth
-                size="small"
-                slotProps={{
-                  htmlInput: { maxLength: 75 }
-                }}
+            <Grid size={{ xs: 12, md: 3 }}>
+              <FormField
+                mask="mobile"
+                id="company-mobile"
+                label={t("customers.addModal.fields.mobile")}
+                startIcon={SmartphoneOutlined}
+                disabled={!detailsUnlocked}
+                value={form.mobile}
+                onChange={setField("mobile")}
+                error={mobileError}
+                helperText={helper(mobileError, "validation.mobileInvalid")}
               />
             </Grid>
-
             <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t("customers.addModal.fields.neighborhood")}
-                placeholder={t("customers.addModal.placeholders.neighborhood")}
-                value={form.neighborhood}
-                onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))}
-                fullWidth
-                size="small"
-                slotProps={{
-                  htmlInput: { maxLength: 75 }
-                }}
+              <FormField
+                id="company-email"
+                label={t("customers.addModal.fields.email")}
+                startIcon={MailOutlineOutlined}
+                placeholder={t("customers.addModal.fields.placeholder.email")}
+                disabled={!detailsUnlocked}
+                value={form.email}
+                onChange={setField("email")}
+                error={emailError}
+                helperText={helper(emailError, "validation.emailInvalid")}
               />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 6 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="city" required>{t("customers.addModal.fields.city")}</InputLabel>
-                <Select
-                  labelId="city"
-                  label={t("customers.addModal.fields.city")}
-                  value={form.cityId}
-                  onChange={(e) =>
-                    setForm((p) => ({
-                      ...p,
-                      cityId: e.target.value ? Number(e.target.value) : "",
-                    }))
-                  }
-                >
-                  <MenuItem value="">{t("customers.addModal.placeholders.city")}</MenuItem>
-                  {cities.map((c) => (
-                    <MenuItem key={c.id} value={c.id}>
-                      {c.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </Grid>
           </Grid>
-          </>
-        )}
-      </DialogContent>
-
-      <DialogActions sx={{ px: 3, py: 2 }}>
-        {step === 1 ? (
-          <Button variant="outlined" onClick={() => setStep(0)}>
-            {t("customers.addModal.actions.previous")}
-          </Button>
-        ) : (
-          <Box sx={{ flex: 1 }} />
-        )}
-
-        {step === 0 ? (
-          <Button
-            variant="contained"
-            onClick={() => setStep(1)}
-            data-tour="company.next"
-            disabled={!step1Valid}
+          <Grid
+            container
+            columnSpacing={2}
+            sx={{ display: step === 1 ? "flex" : "none" }}
           >
-            {t("customers.addModal.actions.next")}
-          </Button>
-        ) : step === 1 ? (
-          <Button
-            variant="contained"
-            onClick={() => submit()}
-            data-tour="company.finish"
-            disabled={!step2Valid || submitting}
-            startIcon={submitting ? <CircularProgress size={16} /> : undefined}
-          >
-            {submitting ? t("customers.addModal.actions.saving") : t("customers.addModal.actions.finish")}
-          </Button>
-        ) : (
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <Button onClick={closeAndReset}>
-              {t("customers.addModal.actions.close")}
-            </Button>
-            <Button variant="outlined" onClick={goToCadastro}>
-              {t("customers.addModal.actions.openRecord")}
-            </Button>
-            <Button variant="contained" onClick={goToNewInspection}>
-              {t("customers.addModal.actions.newInspection")}
-            </Button>
-          </Box>
-        )}
-      </DialogActions>
-    </Dialog>
+            <Grid size={{ xs: 12, md: 6 }} data-tour="company.zipCode">
+              <FormField
+                required
+                mask="cep"
+                id="company-zipCode"
+                label={t("customers.addModal.fields.zipCode")}
+                value={form.zipCode}
+                onChange={setField("zipCode")}
+                error={cepLookup.isError || zipError || zipRequiredError}
+                helperText={zipHelperText}
+                endIcon={
+                  <LookupStatusIcon
+                    isFetching={cepLookup.isFetching}
+                    isError={cepLookup.isError}
+                    isFound={cepLookup.isSuccess}
+                    onRetry={
+                      cepLookup.isUnavailable ? cepLookup.retry : undefined
+                    }
+                  />
+                }
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <FormField
+                select
+                required
+                id="company-city"
+                label={t("customers.addModal.fields.city")}
+                emptyOptionLabel={t(
+                  "customers.addModal.fields.placeholder.city",
+                )}
+                value={form.cityId}
+                onChange={(e) =>
+                  updateForm({
+                    cityId: e.target.value ? Number(e.target.value) : "",
+                  })
+                }
+                error={cityError}
+                helperText={helper(cityError, "validation.required")}
+              >
+                {cities.map((c) => (
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </FormField>
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <FormField
+                required
+                id="company-street"
+                label={t("customers.addModal.fields.street")}
+                placeholder={t("customers.addModal.fields.placeholder.street")}
+                value={form.street}
+                onChange={setField("street")}
+                error={streetError}
+                helperText={helper(streetError, "validation.required")}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <FormField
+                label={t("customers.addModal.fields.number")}
+                placeholder={t("customers.addModal.fields.placeholder.number")}
+                value={form.number}
+                onChange={setField("number")}
+                helperText={EMPTY_HELPER_TEXT}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <FormField
+                label={t("customers.addModal.fields.complement")}
+                placeholder={t(
+                  "customers.addModal.fields.placeholder.complement",
+                )}
+                value={form.complement}
+                onChange={setField("complement")}
+                helperText={EMPTY_HELPER_TEXT}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <FormField
+                label={t("customers.addModal.fields.neighborhood")}
+                placeholder={t(
+                  "customers.addModal.fields.placeholder.neighborhood",
+                )}
+                value={form.neighborhood}
+                onChange={setField("neighborhood")}
+                helperText={EMPTY_HELPER_TEXT}
+              />
+            </Grid>
+          </Grid>
+        </>
+      </Modal>
+      {/** Modal exibido após a criação de uma nova empresa. */}
+      <CompanyCreatedModal
+        open={open && !!created}
+        companyId={created?.id ?? null}
+        companyName={created?.name ?? ""}
+        onClose={closeAndReset}
+      />
+      {/** Confirma o descarte dos dados preenchidos ao fechar o formulário. */}
+      <ConfirmModal
+        open={confirmDiscardOpen}
+        title={t("unsavedChanges.title")}
+        message={t("unsavedChanges.message")}
+        actions={[
+          {
+            label: t("unsavedChanges.stay"),
+            tooltip: t("customers.addModal.discard.tooltip.stay"),
+            onClick: () => setConfirmDiscardOpen(false),
+            startIcon: ArrowBack,
+          },
+          {
+            label: t("unsavedChanges.leave"),
+            tooltip: t("customers.addModal.discard.tooltip.leave"),
+            color: "error",
+            startIcon: Close,
+            onClick: closeAndReset,
+          },
+        ]}
+      />
+    </>
   );
 }

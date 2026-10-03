@@ -1,11 +1,11 @@
 import { Button } from "@/components/button/Button";
-import { FormField } from "@/components/form/FormField";
 import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
+import { FormField } from "@/components/form/FormField";
 import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
 import { paths } from "@/routes/paths";
 import {
-  ArrowForwardOutlined,
+  ArrowForward,
   LockOutlined,
   PersonOutlineOutlined,
 } from "@mui/icons-material";
@@ -243,7 +243,7 @@ export default function LoginPage() {
                 <Button
                   tooltip={t("login.actions.tooltip.signIn")}
                   type="submit"
-                  endIcon={!loading && <ArrowForwardOutlined />}
+                  endIcon={!loading ? ArrowForward : undefined}
                   disabled={loading || cooldown > 0}
                   sx={{ mt: 1 }}
                 >

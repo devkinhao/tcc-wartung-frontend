@@ -85,9 +85,7 @@ export function UserMenu() {
         tooltip={t("userMenu.tooltip.title")}
         variant="text"
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        endIcon={
-          open ? <ExpandLess color="action" /> : <ExpandMore color="action" />
-        }
+        endIcon={open ? ExpandLess : ExpandMore}
       >
         <Stack direction="row" spacing={1} alignItems="center">
           {avatarSrc ? (

@@ -1,9 +1,9 @@
 import { Button } from "@/components/button/Button";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { FormField } from "@/components/form/FormField";
-import { Modal } from "@/components/Modal";
 import {
-  ArrowBackOutlined,
-  ArrowForwardOutlined,
+  ArrowBack,
+  ArrowForward,
   MailOutlineOutlined,
 } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
@@ -64,7 +64,7 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
         tooltip={t("forgotPassword.actions.tooltip.backToLogin")}
         variant="text"
         onClick={onBack}
-        startIcon={ArrowBackOutlined}
+        startIcon={ArrowBack}
         sx={{ alignSelf: "flex-start" }}
       >
         {t("forgotPassword.actions.backToLogin")}
@@ -105,7 +105,7 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
         <Button
           tooltip={t("forgotPassword.actions.tooltip.send")}
           type="submit"
-          endIcon={!loading && <ArrowForwardOutlined />}
+          endIcon={!loading ? ArrowForward : undefined}
           disabled={loading}
           sx={{ mt: 2 }}
         >
@@ -120,23 +120,19 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
         </Button>
       </Box>
       {/** Confirmação exibida em modal após o envio bem-sucedido do link de redefinição. */}
-      <Modal
+      <ConfirmModal
         open={submitted}
         title={t("forgotPassword.sent")}
-        actions={
-          <Button
-            tooltip={t("forgotPassword.actions.tooltip.backToLogin")}
-            onClick={onBack}
-            startIcon={ArrowBackOutlined}
-          >
-            {t("forgotPassword.actions.backToLogin")}
-          </Button>
-        }
-      >
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {t("forgotPassword.success")}
-        </Typography>
-      </Modal>
+        message={t("forgotPassword.success")}
+        actions={[
+          {
+            label: t("forgotPassword.actions.backToLogin"),
+            tooltip: t("forgotPassword.actions.tooltip.backToLogin"),
+            onClick: onBack,
+            startIcon: ArrowBack,
+          },
+        ]}
+      />
     </>
   );
 }

@@ -117,6 +117,10 @@ function buildTheme(mode: "light" | "dark") {
       MuiDrawer: {
         styleOverrides: { paper: { backgroundColor: t.bg.sidebar } },
       },
+      /** Texto de ajuda e de erro dos campos em tamanho reduzido, para ocupar menos espaço no formulário. */
+      MuiFormHelperText: {
+        styleOverrides: { root: { fontSize: typography.textScale.xs } },
+      },
       MuiButton: {
         styleOverrides: {
           /** Evita que ações do MUI usem caixa alta por padrão, alinhando ao visual da interface e textos. */

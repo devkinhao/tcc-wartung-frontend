@@ -19,7 +19,7 @@ type PaginationProps = {
 };
 
 /** Botão de anterior/próxima página, mostrando a tooltip com somente quando habilitado. */
-function PaginationButton(props: IconButtonProps) {
+function PaginationButton({ title: _title, ...props }: IconButtonProps) {
   if (props.disabled) return <IconButton {...props} />;
 
   return (
