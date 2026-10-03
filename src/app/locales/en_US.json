@@ -177,6 +177,10 @@
     "nextPage": "Next page",
     "previousPage": "Previous page"
   },
+  "sort": {
+    "ascending": "Sort ascending",
+    "descending": "Sort descending"
+  },
   "dashboard": {
     "title": "Dashboard",
     "loading": "Loading data...",
@@ -499,33 +503,40 @@
     "description": "Your system account details."
   },
   "customers": {
-    "title": "Manage companies",
     "description": "Search, filter and manage registered companies.",
     "actions": {
-      "addCompany": "New company"
+      "addCompany": "New Company",
+      "tooltip": {
+        "addCompany": "Add a new company to the list"
+      }
     },
     "filters": {
-      "searchLabel": "Search",
-      "searchPlaceholder": "Search by legal name or CNPJ",
-      "city": "City",
-      "allCities": "All cities",
+      "placeholder": {
+        "search": "Search by legal name or CNPJ"
+      },
+      "cities": "Filter by cities",
       "status": "Status",
       "statusCustomer": "Clients",
       "statusNonCustomer": "Non-clients",
       "statusInactive": "Inactive",
-      "all": "All",
-      "month": "Month",
-      "allMonths": "All months",
-      "clear": "Clear filters"
+      "months": "Months",
+      "clear": "Clear",
+      "tooltip": {
+        "clear": "Clear all filters"
+      }
     },
     "table": {
-      "legalName": "Legal name",
+      "legalName": "Legal Name",
       "cnpj": "CNPJ",
       "city": "City",
-      "isCustomer": "Customer?",
-      "activeInspections": "Active inspections",
+      "isCustomer": "Customer",
+      "activeInspections": "Active Inspections",
       "nextExpiration": "Expiration",
-      "inactive": "Inactive"
+      "inactive": "Inactive",
+      "tooltip": {
+        "inactive": "Inactive company",
+        "openDetails": "Click to view company details"
+      }
     },
     "loading": "Loading companies...",
     "empty": "No companies found.",

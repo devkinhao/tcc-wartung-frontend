@@ -96,6 +96,11 @@ function buildTheme(mode: "light" | "dark") {
       MuiCssBaseline: {
         styleOverrides: {
           /**
+           * Desativa a âncora de rolagem do navegador.
+           * Ao trocar as linhas de uma tabela paginada, ela fazia a página pular de posição.
+           */
+          html: { overflowAnchor: "none" },
+          /**
            * O Recharts 3 torna a área do gráfico focável.
            * Ao clicar, o navegador pode desenhar um retângulo preto ao redor do SVG.
            * Como os gráficos não têm interações diretas no elemento, o contorno é removido para manter a UI limpa.

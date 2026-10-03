@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Link as RouterLink, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link as RouterLink,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { isAxiosError } from "axios";
 import { resetPassword } from "../api/auth.api";
 import { useTranslation } from "react-i18next";
@@ -18,7 +22,7 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { FormField } from "@/components/form/FormField";
 import { typography } from "@/styles/typography";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { resetPasswordSchema } from "../schemas";
 
 export default function ResetPasswordPage() {
@@ -34,8 +38,12 @@ export default function ResetPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const passwordMismatch = confirmPassword !== "" && newPassword !== confirmPassword;
-  const formValid = resetPasswordSchema.safeParse({ newPassword, confirmPassword }).success;
+  const passwordMismatch =
+    confirmPassword !== "" && newPassword !== confirmPassword;
+  const formValid = resetPasswordSchema.safeParse({
+    newPassword,
+    confirmPassword,
+  }).success;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,8 +88,17 @@ export default function ResetPasswordPage() {
       >
         <Paper elevation={6} sx={{ width: 360, p: 4, borderRadius: 3 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
-            <Box component="img" src="/logo.png" alt={t("common.alt.logo")} sx={{ height: 45, borderRadius: 1 }} />
-            <Typography variant="h6" fontWeight={typography.weight.bold} color="primary">
+            <Box
+              component="img"
+              src="/logo.png"
+              alt={t("common.alt.logo")}
+              sx={{ height: 45, borderRadius: 1 }}
+            />
+            <Typography
+              variant="h6"
+              fontWeight={typography.weight.bold}
+              color="primary"
+            >
               {t("app.brandName")}
             </Typography>
           </Box>
@@ -110,7 +127,9 @@ export default function ResetPasswordPage() {
               <Typography variant="h6" color="primary">
                 {t("resetPassword.title")}
               </Typography>
-              <Alert severity="error">{t("resetPassword.errors.missingToken")}</Alert>
+              <Alert severity="error">
+                {t("resetPassword.errors.missingToken")}
+              </Alert>
               <Link component={RouterLink} to={paths.login} variant="body2">
                 {t("forgotPassword.title")}
               </Link>
@@ -137,7 +156,9 @@ export default function ResetPasswordPage() {
                 <FormField
                   required
                   label={t("resetPassword.fields.newPassword")}
-                  placeholder={t("resetPassword.fields.placeholder.newPassword")}
+                  placeholder={t(
+                    "resetPassword.fields.placeholder.newPassword",
+                  )}
                   type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -155,13 +176,19 @@ export default function ResetPasswordPage() {
                 <FormField
                   required
                   label={t("resetPassword.fields.confirmPassword")}
-                  placeholder={t("resetPassword.fields.placeholder.confirmPassword")}
+                  placeholder={t(
+                    "resetPassword.fields.placeholder.confirmPassword",
+                  )}
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
                   error={passwordMismatch}
-                  helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
+                  helperText={
+                    passwordMismatch
+                      ? t("userProfile.password.errors.mismatch")
+                      : undefined
+                  }
                   startIcon={LockOutlinedIcon}
                 />
 

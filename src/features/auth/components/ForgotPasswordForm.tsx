@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/button/Button";
 import { FormField } from "@/components/form/FormField";
 import { Modal } from "@/components/Modal";
 import {
@@ -64,7 +64,7 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
         tooltip={t("forgotPassword.actions.tooltip.backToLogin")}
         variant="text"
         onClick={onBack}
-        startIcon={<ArrowBackOutlined fontSize="small" />}
+        startIcon={ArrowBackOutlined}
         sx={{ alignSelf: "flex-start" }}
       >
         {t("forgotPassword.actions.backToLogin")}
@@ -127,7 +127,7 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
           <Button
             tooltip={t("forgotPassword.actions.tooltip.backToLogin")}
             onClick={onBack}
-            startIcon={<ArrowBackOutlined fontSize="small" />}
+            startIcon={ArrowBackOutlined}
           >
             {t("forgotPassword.actions.backToLogin")}
           </Button>

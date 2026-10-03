@@ -31,11 +31,14 @@ import {
   updateUserPermissions,
   type UserUpdateRequestDTO,
 } from "../api/users.api";
-import { getPermissions, type PermissionResponseDTO } from "../api/permissions.api";
+import {
+  getPermissions,
+  type PermissionResponseDTO,
+} from "../api/permissions.api";
 import type { User } from "../types/User";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { fieldError } from "@/validation/fields";
 import { userProfileSchema, userResetPasswordSchema } from "../schemas";
 
@@ -46,7 +49,11 @@ type Props = {
   onChanged?: () => void;
 };
 
-function TabPanel(props: { value: number; index: number; children: React.ReactNode }) {
+function TabPanel(props: {
+  value: number;
+  index: number;
+  children: React.ReactNode;
+}) {
   const { value, index, children } = props;
   if (value !== index) return null;
   return <Box sx={{ pt: 2 }}>{children}</Box>;
@@ -63,9 +70,10 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
   const [savingPerms, setSavingPerms] = useState(false);
   const [savingPwd, setSavingPwd] = useState(false);
 
-
   const [user, setUser] = useState<User | null>(null);
-  const [allPermissions, setAllPermissions] = useState<PermissionResponseDTO[]>([]);
+  const [allPermissions, setAllPermissions] = useState<PermissionResponseDTO[]>(
+    [],
+  );
 
   // profile
   const [fullName, setFullName] = useState("");
@@ -85,7 +93,10 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     enabled: open,
   });
   const activeAdminCount = useMemo(
-    () => allUsers.filter((u) => u.isActive && (u.permissions ?? []).includes("ROLE_ADMIN")).length,
+    () =>
+      allUsers.filter(
+        (u) => u.isActive && (u.permissions ?? []).includes("ROLE_ADMIN"),
+      ).length,
     [allUsers],
   );
   const isLastActiveAdmin =
@@ -208,7 +219,9 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
     }
   }
 
-  const title = user ? `${user.fullName} (@${user.username})` : t("users.edit.title");
+  const title = user
+    ? `${user.fullName} (@${user.username})`
+    : t("users.edit.title");
 
   const profile = userProfileSchema.safeParse({
     fullName,
@@ -239,7 +252,14 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pb: 1 }}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pb: 1,
+        }}
+      >
         {title}
         <Tooltip title={t("common.actions.close")}>
           <IconButton onClick={onClose} aria-label={t("common.actions.close")}>
@@ -252,7 +272,6 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
           sem isso o diálogo pula de tamanho e se re-centraliza a cada troca de
           aba. A aba de Permissões rola dentro do corpo se passar da altura. */}
       <DialogContent dividers sx={{ pt: 1, minHeight: 420 }}>
-
         {loading ? (
           <Box sx={{ py: 6, display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -263,7 +282,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
           </Typography>
         ) : (
           <>
-            <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={tab}
+              onChange={(_, v) => setTab(v)}
+              sx={{ borderBottom: 1, borderColor: "divider" }}
+            >
               <Tab label={t("users.edit.tabs.profile")} />
               <Tab label={t("users.edit.tabs.permissions")} />
               <Tab label={t("users.edit.tabs.security")} />
@@ -280,7 +303,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   disabled={savingProfile}
                   required
                   slotProps={{
-                    htmlInput: { maxLength: 50 }
+                    htmlInput: { maxLength: 50 },
                   }}
                 />
                 <MaskedTextField
@@ -300,9 +323,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={savingProfile}
                   error={emailError}
-                  helperText={emailError ? t("validation.emailInvalid") : undefined}
+                  helperText={
+                    emailError ? t("validation.emailInvalid") : undefined
+                  }
                   slotProps={{
-                    htmlInput: { maxLength: 50 }
+                    htmlInput: { maxLength: 50 },
                   }}
                 />
                 <TextField
@@ -313,7 +338,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setCreaNumber(e.target.value)}
                   disabled={savingProfile}
                   slotProps={{
-                    htmlInput: { maxLength: 10 }
+                    htmlInput: { maxLength: 10 },
                   }}
                 />
                 <TextField
@@ -323,7 +348,7 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   onChange={(e) => setProfession(e.target.value)}
                   disabled={savingProfile}
                   slotProps={{
-                    htmlInput: { maxLength: 60 }
+                    htmlInput: { maxLength: 60 },
                   }}
                 />
               </Stack>
@@ -331,7 +356,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
             {/* Permissões */}
             <TabPanel value={tab} index={1}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 1.5 }}
+              >
                 {t("users.edit.permissionsHint")}
               </Typography>
 
@@ -341,14 +370,17 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                   const label = perm.description || perm.name; // show ONLY description to the admin UI
                   // Não deixa desmarcar o ROLE_ADMIN do último admin ativo — o
                   // backend também barra (código LAST_ADMIN).
-                  const locked = perm.name === "ROLE_ADMIN" && isLastActiveAdmin;
+                  const locked =
+                    perm.name === "ROLE_ADMIN" && isLastActiveAdmin;
                   const control = (
                     <FormControlLabel
                       key={perm.id}
                       control={
                         <Checkbox
                           checked={checked}
-                          onChange={(e) => togglePermission(perm.name, e.target.checked)}
+                          onChange={(e) =>
+                            togglePermission(perm.name, e.target.checked)
+                          }
                           disabled={savingPerms || locked}
                         />
                       }
@@ -356,7 +388,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                     />
                   );
                   return locked ? (
-                    <Tooltip key={perm.id} title={t("users.edit.lastAdminLock")} placement="right">
+                    <Tooltip
+                      key={perm.id}
+                      title={t("users.edit.lastAdminLock")}
+                      placement="right"
+                    >
                       <span>{control}</span>
                     </Tooltip>
                   ) : (
@@ -368,7 +404,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
 
             {/* Segurança (Password only) */}
             <TabPanel value={tab} index={2}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 1.5 }}
+              >
                 {t("users.edit.resetPasswordHint")}
               </Typography>
 
@@ -391,9 +431,9 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
                     ),
                   },
 
-                  htmlInput: { maxLength: 100 }
+                  htmlInput: { maxLength: 100 },
                 }}
-                />
+              />
             </TabPanel>
           </>
         )}
@@ -415,7 +455,11 @@ export function EditUserModal({ open, userId, onClose, onChanged }: Props) {
         )}
 
         {tab !== 2 ? (
-          <Button variant="contained" onClick={handlePrimaryAction} disabled={saveDisabled}>
+          <Button
+            variant="contained"
+            onClick={handlePrimaryAction}
+            disabled={saveDisabled}
+          >
             {t("common.actions.save")}
           </Button>
         ) : (

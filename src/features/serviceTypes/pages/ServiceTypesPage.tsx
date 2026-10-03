@@ -27,7 +27,8 @@ import { useServiceTypes } from "../hooks/useServiceTypes";
 import type { ServiceTypeResponseDTO } from "../api/serviceTypes.api";
 import { CreateServiceTypeModal } from "../components/CreateServiceTypeModal";
 import { EditServiceTypeModal } from "../components/EditServiceTypeModal";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { TableContainer } from "@/components/table/TableContainer";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -36,17 +37,30 @@ export default function ServiceTypesPage() {
   const { t } = useTranslation();
 
   const [query, setQuery] = useState("");
-  const { serviceTypes, isLoading, error, reload, deleteServiceType, isDeleting } = useServiceTypes(query);
+  const {
+    serviceTypes,
+    isLoading,
+    error,
+    reload,
+    deleteServiceType,
+    isDeleting,
+  } = useServiceTypes(query);
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<ServiceTypeResponseDTO | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<ServiceTypeResponseDTO | null>(null);
+  const [editTarget, setEditTarget] = useState<ServiceTypeResponseDTO | null>(
+    null,
+  );
+  const [deleteTarget, setDeleteTarget] =
+    useState<ServiceTypeResponseDTO | null>(null);
 
   // Estado do row-menu
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuItem, setMenuItem] = useState<ServiceTypeResponseDTO | null>(null);
 
-  function openMenu(e: React.MouseEvent<HTMLElement>, s: ServiceTypeResponseDTO) {
+  function openMenu(
+    e: React.MouseEvent<HTMLElement>,
+    s: ServiceTypeResponseDTO,
+  ) {
     setMenuAnchor(e.currentTarget);
     setMenuItem(s);
   }
@@ -96,7 +110,11 @@ export default function ServiceTypesPage() {
           )}
         </Box>
 
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems={{ sm: "center" }}>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={1.5}
+          alignItems={{ sm: "center" }}
+        >
           <TextField
             size="small"
             label={t("serviceTypes.search")}
@@ -135,10 +153,12 @@ export default function ServiceTypesPage() {
           </Box>
         )}
 
-        <DataTableContainer>
+        <TableContainer>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <TableCell sx={{ width: "85%" }}><b>{t("serviceTypes.table.name")}</b></TableCell>
+              <TableCell sx={{ width: "85%" }}>
+                <b>{t("serviceTypes.table.name")}</b>
+              </TableCell>
               <TableCell align="right" sx={{ width: "15%" }} />
             </TableRow>
           </TableHead>
@@ -146,7 +166,10 @@ export default function ServiceTypesPage() {
           <TableBody>
             {serviceTypes.map((s) => (
               <TableRow key={s.id} hover>
-                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={s.name}>
+                <TableCell
+                  sx={ELLIPSIS_SX}
+                  title={s.name}
+                >
                   {s.name}
                 </TableCell>
                 <TableCell align="right">
@@ -173,30 +196,55 @@ export default function ServiceTypesPage() {
               </TableRow>
             )}
           </TableBody>
-        </DataTableContainer>
+        </TableContainer>
       </Box>
 
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-        <MenuItem onClick={handleEdit}>{t("serviceTypes.actions.edit")}</MenuItem>
-        <MenuItem onClick={handleDelete}>{t("serviceTypes.actions.delete")}</MenuItem>
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={closeMenu}
+      >
+        <MenuItem onClick={handleEdit}>
+          {t("serviceTypes.actions.edit")}
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>
+          {t("serviceTypes.actions.delete")}
+        </MenuItem>
       </Menu>
 
-      <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>{t("serviceTypes.confirmDelete.title")}</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
-            {t("serviceTypes.confirmDelete.message", { name: deleteTarget?.name ?? "" })}
+            {t("serviceTypes.confirmDelete.message", {
+              name: deleteTarget?.name ?? "",
+            })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>{t("common.actions.cancel")}</Button>
-          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+          <Button onClick={() => setDeleteTarget(null)}>
+            {t("common.actions.cancel")}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleConfirmDelete}
+          >
             {t("common.actions.confirm")}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <CreateServiceTypeModal open={createOpen} onClose={() => setCreateOpen(false)} onCreated={reload} />
+      <CreateServiceTypeModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={reload}
+      />
 
       <EditServiceTypeModal
         open={Boolean(editTarget)}

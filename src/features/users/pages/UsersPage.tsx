@@ -27,8 +27,9 @@ import { useTranslation } from "react-i18next";
 import { useUsers, type UserRow } from "../hooks/useUsers";
 import { EditUserModal } from "../components/EditUserModal";
 import { CreateUserModal } from "../components/CreateUserModal";
-import { SortableHeader } from "@/components/SortableHeader";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { TableSortableHeader } from "@/components/table/TableSortableHeader";
+import { TableContainer } from "@/components/table/TableContainer";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -37,8 +38,13 @@ export default function UsersPage() {
   const { t } = useTranslation();
 
   const [query, setQuery] = useState("");
-  const { users, isLoading, error, reload, deleteUser, isDeleting, sort } = useUsers(query);
-  const sharedSortProps = { sortBy: sort.by, sortDir: sort.dir, onSort: sort.handle };
+  const { users, isLoading, error, reload, deleteUser, isDeleting, sort } =
+    useUsers(query);
+  const sharedSortProps = {
+    sortBy: sort.by,
+    sortDir: sort.dir,
+    onSort: sort.handle,
+  };
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -100,7 +106,11 @@ export default function UsersPage() {
           )}
         </Box>
 
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems={{ sm: "center" }}>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={1.5}
+          alignItems={{ sm: "center" }}
+        >
           <TextField
             size="small"
             label={t("users.search")}
@@ -109,7 +119,12 @@ export default function UsersPage() {
             sx={{ minWidth: 260 }}
             disabled={isLoading}
           />
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setCreateOpen(true)} disabled={isLoading}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setCreateOpen(true)}
+            disabled={isLoading}
+          >
             {t("users.actions.newUser")}
           </Button>
         </Stack>
@@ -134,33 +149,71 @@ export default function UsersPage() {
           </Box>
         )}
 
-        <DataTableContainer>
+        <TableContainer>
           <TableHead sx={{ bgcolor: "background.default" }}>
             <TableRow>
-              <SortableHeader label={t("users.table.username")} column="username" {...sharedSortProps} width="15%" />
-              <SortableHeader label={t("users.table.fullName")} column="fullName" {...sharedSortProps} width="40%" />
-              <SortableHeader label={t("users.table.email")} column="email" {...sharedSortProps} width="28%" />
-              <SortableHeader label={t("users.table.status")} column="isActive" {...sharedSortProps} width="9%" />
+              <TableSortableHeader
+                label={t("users.table.username")}
+                column="username"
+                {...sharedSortProps}
+                width="15%"
+              />
+              <TableSortableHeader
+                label={t("users.table.fullName")}
+                column="fullName"
+                {...sharedSortProps}
+                width="40%"
+              />
+              <TableSortableHeader
+                label={t("users.table.email")}
+                column="email"
+                {...sharedSortProps}
+                width="28%"
+              />
+              <TableSortableHeader
+                label={t("users.table.status")}
+                column="isActive"
+                {...sharedSortProps}
+                width="9%"
+              />
               <TableCell align="right" sx={{ width: "8%" }} />
             </TableRow>
           </TableHead>
 
           <TableBody>
             {users.map((u) => (
-              <TableRow key={u.id} hover sx={{ cursor: "pointer" }} onClick={() => openEdit(u)}>
-                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.username}>
+              <TableRow
+                key={u.id}
+                hover
+                sx={{ cursor: "pointer" }}
+                onClick={() => openEdit(u)}
+              >
+                <TableCell
+                  sx={ELLIPSIS_SX}
+                  title={u.username}
+                >
                   {u.username}
                 </TableCell>
-                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.fullName}>
+                <TableCell
+                  sx={ELLIPSIS_SX}
+                  title={u.fullName}
+                >
                   {u.fullName}
                 </TableCell>
-                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={u.email}>
+                <TableCell
+                  sx={ELLIPSIS_SX}
+                  title={u.email}
+                >
                   {u.email}
                 </TableCell>
                 <TableCell>
                   <Chip
                     size="small"
-                    label={u.isActive ? t("common.status.active") : t("common.status.inactive")}
+                    label={
+                      u.isActive
+                        ? t("common.status.active")
+                        : t("common.status.inactive")
+                    }
                     color={u.isActive ? "success" : "default"}
                     variant={u.isActive ? "filled" : "outlined"}
                   />
@@ -189,23 +242,40 @@ export default function UsersPage() {
               </TableRow>
             )}
           </TableBody>
-        </DataTableContainer>
+        </TableContainer>
       </Box>
 
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={closeMenu}
+      >
         <MenuItem onClick={handleDelete}>{t("users.actions.delete")}</MenuItem>
       </Menu>
 
-      <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>{t("users.confirmDelete.title")}</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
-            {t("users.confirmDelete.message", { name: deleteTarget?.fullName ?? "" })}
+            {t("users.confirmDelete.message", {
+              name: deleteTarget?.fullName ?? "",
+            })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>{t("common.actions.cancel")}</Button>
-          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+          <Button onClick={() => setDeleteTarget(null)}>
+            {t("common.actions.cancel")}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleConfirmDelete}
+          >
             {t("common.actions.confirm")}
           </Button>
         </DialogActions>
@@ -214,7 +284,10 @@ export default function UsersPage() {
       <EditUserModal
         open={editOpen}
         userId={selectedUserId}
-        onClose={() => { setEditOpen(false); setSelectedUserId(null); }}
+        onClose={() => {
+          setEditOpen(false);
+          setSelectedUserId(null);
+        }}
         onChanged={reload}
       />
 

@@ -1,23 +1,23 @@
-/** MUI Ícones. */
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-/** MUI Material. */
 import { IconButton, InputAdornment } from "@mui/material";
-/** React. */
 import { useTranslation } from "react-i18next";
-/** Componentes */
-import { Tooltip } from "./Tooltip";
+import { Tooltip } from "../Tooltip";
 
-/** Props para o componente. */
 type PasswordVisibilityToggleProps = {
   visible: boolean;
   onToggle: () => void;
 };
 
 /** Adorno de fim para campos de senha, alterna a visibilidade do texto. */
-export function PasswordVisibilityToggle({ visible, onToggle }: PasswordVisibilityToggleProps) {
+export function PasswordVisibilityToggle({
+  visible,
+  onToggle,
+}: PasswordVisibilityToggleProps) {
   const { t } = useTranslation();
-  const label = visible ? t("common.tooltip.hidePassword") : t("common.tooltip.showPassword");
+  const label = visible
+    ? t("common.tooltip.hidePassword")
+    : t("common.tooltip.showPassword");
 
   return (
     <InputAdornment position="end">

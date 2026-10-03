@@ -177,6 +177,10 @@
     "nextPage": "Próxima página",
     "previousPage": "Página anterior"
   },
+  "sort": {
+    "ascending": "Ordenar em ordem crescente",
+    "descending": "Ordenar em ordem decrescente"
+  },
   "dashboard": {
     "title": "Dashboard",
     "loading": "Carregando dados...",
@@ -499,33 +503,40 @@
     "description": "Seus dados de acesso ao sistema."
   },
   "customers": {
-    "title": "Gerenciar Empresas",
     "description": "Busque, filtre e gerencie empresas cadastradas.",
     "actions": {
-      "addCompany": "Nova empresa"
+      "addCompany": "Nova Empresa",
+      "tooltip": {
+        "addCompany": "Adicionar uma nova empresa à lista"
+      }
     },
     "filters": {
-      "searchLabel": "Buscar",
-      "searchPlaceholder": "Buscar por razão social ou CNPJ",
-      "city": "Cidade",
-      "allCities": "Todas as cidades",
+      "placeholder": {
+        "search": "Buscar por razão social ou CNPJ"
+      },
+      "cities": "Filtrar por cidades",
       "status": "Situação",
       "statusCustomer": "Clientes",
       "statusNonCustomer": "Não-clientes",
       "statusInactive": "Inativas",
-      "all": "Todas",
-      "month": "Mês",
-      "allMonths": "Todos os meses",
-      "clear": "Limpar filtros"
+      "months": "Meses",
+      "clear": "Limpar",
+      "tooltip": {
+        "clear": "Limpar todos os filtros"
+      }
     },
     "table": {
-      "legalName": "Razão social",
+      "legalName": "Razão Social",
       "cnpj": "CNPJ",
       "city": "Cidade",
-      "isCustomer": "Cliente?",
-      "activeInspections": "Inspeções ativas",
+      "isCustomer": "Cliente",
+      "activeInspections": "Inspeções Ativas",
       "nextExpiration": "Vencimento",
-      "inactive": "Inativa"
+      "inactive": "Inativa",
+      "tooltip": {
+        "inactive": "Empresa inativa",
+        "openDetails": "Clique para ver os detalhes da empresa"
+      }
     },
     "loading": "Carregando empresas...",
     "empty": "Nenhuma empresa encontrada.",

@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { createUser, type UserCreateRequestDTO } from "../api/users.api";
 import { useNotify } from "@/hooks/useNotify";
 import { MaskedTextField } from "@/components/MaskedTextField";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { fieldError } from "@/validation/fields";
 import { userCreateSchema } from "../schemas";
 
@@ -72,8 +72,12 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
         fullName: form.fullName.trim(),
         ...(form.cpf?.trim() ? { cpf: form.cpf.trim() } : {}),
         ...(form.email?.trim() ? { email: form.email.trim() } : {}),
-        ...(form.creaNumber?.trim() ? { creaNumber: form.creaNumber.trim() } : {}),
-        ...(form.profession?.trim() ? { profession: form.profession.trim() } : {}),
+        ...(form.creaNumber?.trim()
+          ? { creaNumber: form.creaNumber.trim() }
+          : {}),
+        ...(form.profession?.trim()
+          ? { profession: form.profession.trim() }
+          : {}),
       };
 
       await createUser(payload);
@@ -105,19 +109,30 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
   });
 
   // Erros de formato só aparecem depois que o usuário digitou algo no campo.
-  const usernameFormatError = username !== "" && !!fieldError(validation, "username");
+  const usernameFormatError =
+    username !== "" && !!fieldError(validation, "username");
   const cpfError = cpf !== "" && !!fieldError(validation, "cpf");
   const emailError = email !== "" && !!fieldError(validation, "email");
-  const passwordMismatch = confirmPassword !== "" && form.password !== confirmPassword;
+  const passwordMismatch =
+    confirmPassword !== "" && form.password !== confirmPassword;
 
   const createDisabled = submitting || !validation.success;
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {t("users.create.title")}
         <Tooltip title={t("common.actions.close")}>
-          <IconButton onClick={handleClose} aria-label={t("common.actions.close")}>
+          <IconButton
+            onClick={handleClose}
+            aria-label={t("common.actions.close")}
+          >
             <CloseIcon />
           </IconButton>
         </Tooltip>
@@ -131,14 +146,23 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               fullWidth
               label={t("users.create.fields.username")}
               value={form.username}
-              onChange={(e) => setForm((p) => ({ ...p, username: e.target.value.toLowerCase() }))}
+              onChange={(e) =>
+                setForm((p) => ({
+                  ...p,
+                  username: e.target.value.toLowerCase(),
+                }))
+              }
               error={usernameFormatError}
-              helperText={usernameFormatError ? t("validation.usernameInvalid") : t("users.create.helpers.username")}
+              helperText={
+                usernameFormatError
+                  ? t("validation.usernameInvalid")
+                  : t("users.create.helpers.username")
+              }
               disabled={submitting}
               autoFocus
               required
               slotProps={{
-                htmlInput: { maxLength: 50 }
+                htmlInput: { maxLength: 50 },
               }}
             />
           </Grid>
@@ -150,7 +174,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               label={t("users.create.fields.password")}
               type={showPassword ? "text" : "password"}
               value={form.password}
-              onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, password: e.target.value }))
+              }
               disabled={submitting}
               required
               slotProps={{
@@ -163,9 +189,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                   ),
                 },
 
-                htmlInput: { maxLength: 100 }
+                htmlInput: { maxLength: 100 },
               }}
-              />
+            />
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
@@ -179,7 +205,11 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               disabled={submitting}
               required
               error={passwordMismatch}
-              helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
+              helperText={
+                passwordMismatch
+                  ? t("userProfile.password.errors.mismatch")
+                  : undefined
+              }
               slotProps={{
                 input: {
                   endAdornment: (
@@ -190,9 +220,9 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                   ),
                 },
 
-                htmlInput: { maxLength: 100 }
+                htmlInput: { maxLength: 100 },
               }}
-              />
+            />
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
@@ -201,11 +231,13 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               fullWidth
               label={t("users.create.fields.fullName")}
               value={form.fullName}
-              onChange={(e) => setForm((p) => ({ ...p, fullName: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, fullName: e.target.value }))
+              }
               disabled={submitting}
               required
               slotProps={{
-                htmlInput: { maxLength: 50 }
+                htmlInput: { maxLength: 50 },
               }}
             />
           </Grid>
@@ -230,12 +262,14 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               fullWidth
               label={t("users.create.fields.email")}
               value={form.email ?? ""}
-              onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, email: e.target.value }))
+              }
               disabled={submitting}
               error={emailError}
               helperText={emailError ? t("validation.emailInvalid") : undefined}
               slotProps={{
-                htmlInput: { maxLength: 50 }
+                htmlInput: { maxLength: 50 },
               }}
             />
           </Grid>
@@ -247,10 +281,12 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               label={t("users.create.fields.creaNumber")}
               placeholder="CREA-SC"
               value={form.creaNumber ?? ""}
-              onChange={(e) => setForm((p) => ({ ...p, creaNumber: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, creaNumber: e.target.value }))
+              }
               disabled={submitting}
               slotProps={{
-                htmlInput: { maxLength: 10 }
+                htmlInput: { maxLength: 10 },
               }}
             />
           </Grid>
@@ -261,10 +297,12 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
               fullWidth
               label={t("users.create.fields.profession")}
               value={form.profession ?? ""}
-              onChange={(e) => setForm((p) => ({ ...p, profession: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, profession: e.target.value }))
+              }
               disabled={submitting}
               slotProps={{
-                htmlInput: { maxLength: 60 }
+                htmlInput: { maxLength: 60 },
               }}
             />
           </Grid>
@@ -275,7 +313,11 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
         <Button variant="outlined" onClick={handleClose} disabled={submitting}>
           {t("common.actions.cancel")}
         </Button>
-        <Button variant="contained" onClick={handleCreate} disabled={createDisabled}>
+        <Button
+          variant="contained"
+          onClick={handleCreate}
+          disabled={createDisabled}
+        >
           {t("common.actions.save")}
         </Button>
       </DialogActions>

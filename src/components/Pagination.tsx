@@ -1,20 +1,49 @@
-import { TablePagination } from "@mui/material";
+import {
+  IconButton,
+  type IconButtonProps,
+  TablePagination,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Tooltip } from "./Tooltip";
 
-type Props = {
-  /** 1-based */
+type PaginationProps = {
+  /** Página atual, começando em 1. */
   page: number;
+  /** Quantidade de registros por página. */
   pageSize: number;
+  /** Total de registros em todas as páginas. */
   total: number;
-  /** expects 1-based */
+  /** Recebe a nova página, começando em 1. */
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
 };
 
-export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChange }: Props) {
+/** Botão de anterior/próxima página, mostrando a tooltip com somente quando habilitado. */
+function PaginationButton(props: IconButtonProps) {
+  if (props.disabled) return <IconButton {...props} />;
+
+  return (
+    <Tooltip title={props["aria-label"]}>
+      <IconButton {...props} />
+    </Tooltip>
+  );
+}
+
+/** Paginação das listagens, centralizada, com seletor de registros por página. */
+export function Pagination({
+  page,
+  pageSize,
+  total,
+  onPageChange,
+  onPageSizeChange,
+}: PaginationProps) {
+  /** Hooks. */
   const { t } = useTranslation();
 
+  /** Total tratado como 0 quando ainda não carregado. */
   const safeTotal = total || 0;
+
+  /** A paginação do MUI usa páginas começando em 0. */
   const pageZeroBased = Math.max(0, page - 1);
 
   return (
@@ -24,6 +53,7 @@ export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChan
       page={pageZeroBased}
       onPageChange={(_, newPage) => onPageChange(newPage + 1)}
       rowsPerPage={pageSize}
+      /** Ao mudar o tamanho da página, volta para a primeira. */
       onRowsPerPageChange={(e) => {
         const newSize = Number(e.target.value);
         onPageSizeChange(newSize);
@@ -50,12 +80,23 @@ export function Pagination({ page, pageSize, total, onPageChange, onPageSizeChan
             return "";
         }
       }}
+      /** Troca os botões de anterior/próxima para exibir a tooltip padrão do sistema. */
+      slots={{
+        actions: {
+          previousButton: PaginationButton,
+          nextButton: PaginationButton,
+        },
+      }}
+      /** Os botões usam a cor padrão dos ícones do MUI, e não a do texto. */
+      slotProps={{
+        actions: {
+          previousButton: { color: "default" },
+          nextButton: { color: "default" },
+        },
+      }}
       sx={{
-        borderTop: (t) => `1px solid ${t.palette.divider}`,
-        mt: 2,
         "& .MuiTablePagination-toolbar": { justifyContent: "center" },
-        // O MUI insere um spacer com flex:1 antes do conteúdo — sem removê-lo,
-        // ele ocupa todo o espaço livre e o justifyContent acima não faz nada.
+        /** O MUI insere um spacer que ocuparia o espaço livre e anularia a centralização. */
         "& .MuiTablePagination-spacer": { display: "none" },
       }}
     />

@@ -48,13 +48,14 @@ import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
 import { qk } from "@/api/keys";
 import { invalidateInspectionCaches } from "../cache";
 import { useNotify } from "@/hooks/useNotify";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
 import { EditableCardHeader } from "@/components/EditableCardHeader";
 import { AuditFooter } from "@/components/AuditFooter";
 import { RemindersCard } from "@/features/reminders/components/RemindersCard";
 import { formatDateBR, formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { guessMimeType, isDocx } from "@/utils/fileType";
 import { paths } from "@/routes/paths";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { TableContainer } from "@/components/table/TableContainer";
 // A biblioteca docx-preview tem ~200 KB e só é usada ao pré-visualizar um .docx.
 // Como este modal é importado pela home e pelas listagens, o import estático
 // colocava esse peso no carregamento inicial — aqui ela só desce sob demanda.
@@ -88,12 +89,18 @@ type Props = {
  * observações), gerir documentos e reativar quando encerrada. Renovar / desativar
  * / excluir ficam no menu da linha das listagens.
  */
-export function InspectionDetailModal({ inspectionId, open, onClose, customerId }: Props) {
+export function InspectionDetailModal({
+  inspectionId,
+  open,
+  onClose,
+  customerId,
+}: Props) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const notify = useNotify();
 
-  const enabled = open && Number.isFinite(inspectionId) && (inspectionId ?? 0) > 0;
+  const enabled =
+    open && Number.isFinite(inspectionId) && (inspectionId ?? 0) > 0;
   const id = inspectionId ?? 0;
 
   const [editing, setEditing] = useState(false);
@@ -141,7 +148,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
   }
 
   const mutation = useMutation({
-    mutationFn: (payload: InspectionUpdateRequestDTO) => updateInspection(id, payload),
+    mutationFn: (payload: InspectionUpdateRequestDTO) =>
+      updateInspection(id, payload),
     onSuccess: (updated) => {
       qc.setQueryData(qk.inspectionDetail(id), updated);
       invalidateInspectionCaches(qc, { customerId });
@@ -158,7 +166,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         qc.invalidateQueries({ queryKey: qk.inspectionDocuments(id) }),
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(id) }),
       ]);
-      if (customerId) qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
+      if (customerId)
+        qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
       notify.success("notify.success.documentsUploaded");
     },
     onError: (err) => notify.fromError(err),
@@ -171,7 +180,8 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         qc.invalidateQueries({ queryKey: qk.inspectionDocuments(id) }),
         qc.invalidateQueries({ queryKey: qk.inspectionDetail(id) }),
       ]);
-      if (customerId) qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
+      if (customerId)
+        qc.invalidateQueries({ queryKey: qk.customerDetail(customerId) });
       notify.success("notify.success.documentDeleted");
     },
     onError: (err) => notify.fromError(err),
@@ -190,12 +200,17 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
     inspectionDateValue !== "" &&
     expirationDateValue !== "" &&
     !!fieldError(generalForm, "expirationDate");
-  const artNumberInvalid = artNumberValue.trim() !== "" && !!fieldError(generalForm, "artNumber");
+  const artNumberInvalid =
+    artNumberValue.trim() !== "" && !!fieldError(generalForm, "artNumber");
 
   const draftEquipmentValues = toEquipmentValues(draft);
   const viewEquipmentValues = toEquipmentValues(view);
-  const equipmentErrors = equipmentFieldErrors(view?.serviceType.category, draftEquipmentValues);
-  const isGeneralValid = generalForm.success && Object.keys(equipmentErrors).length === 0;
+  const equipmentErrors = equipmentFieldErrors(
+    view?.serviceType.category,
+    draftEquipmentValues,
+  );
+  const isGeneralValid =
+    generalForm.success && Object.keys(equipmentErrors).length === 0;
 
   const hasUnsavedChanges =
     editing &&
@@ -246,7 +261,7 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         cylinderCount: draft.cylinderCount ?? null,
         btu: draft.btu ?? null,
       },
-      { onSuccess: () => notify.success("notify.success.saved") }
+      { onSuccess: () => notify.success("notify.success.saved") },
     );
   };
 
@@ -265,7 +280,9 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
         cylinderCount: view.cylinderCount,
         btu: view.btu,
       },
-      { onSuccess: () => notify.success("notify.success.inspectionReactivated") }
+      {
+        onSuccess: () => notify.success("notify.success.inspectionReactivated"),
+      },
     );
   };
 
@@ -327,15 +344,33 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
   };
 
   const title = view?.serviceType?.name
-    ? t("inspectionDetails.titleWithService", { service: view.serviceType.name })
+    ? t("inspectionDetails.titleWithService", {
+        service: view.serviceType.name,
+      })
     : t("inspectionDetails.title");
 
   return (
     <>
-      <Dialog open={open} onClose={requestClose} maxWidth="md" fullWidth scroll="paper">
+      <Dialog
+        open={open}
+        onClose={requestClose}
+        maxWidth="md"
+        fullWidth
+        scroll="paper"
+      >
         <DialogTitle sx={{ pr: 6 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-            <Typography component="span" fontWeight={typography.weight.bold} noWrap sx={{ minWidth: 0 }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{ minWidth: 0 }}
+          >
+            <Typography
+              component="span"
+              fontWeight={typography.weight.bold}
+              noWrap
+              sx={{ minWidth: 0 }}
+            >
               {title}
             </Typography>
           </Stack>
@@ -351,7 +386,12 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
 
         <DialogContent dividers>
           {isLoading || !view ? (
-            <Stack direction="row" spacing={2} alignItems="center" sx={{ py: 4 }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              sx={{ py: 4 }}
+            >
               <CircularProgress size={18} />
               <Typography variant="body2" color="text.secondary">
                 {t("inspectionDetails.loading")}
@@ -359,7 +399,12 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
             </Stack>
           ) : (
             <Stack spacing={2}>
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: "wrap" }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                sx={{ flexWrap: "wrap" }}
+              >
                 <Chip
                   size="small"
                   label={
@@ -370,15 +415,29 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   color={view.isActive ? "success" : "default"}
                 />
                 {view.isRenewed ? (
-                  <Chip size="small" label={t("inspectionDetails.status.renewed")} color="info" />
+                  <Chip
+                    size="small"
+                    label={t("inspectionDetails.status.renewed")}
+                    color="info"
+                  />
                 ) : null}
                 {!view.isActive && view.deactivationReason ? (
-                  <Tooltip title={t(deactivationReasonKey(view.deactivationReason))}>
-                    <Chip size="small" color="warning" label={t("inspections.deactivate.archivedChip")} />
+                  <Tooltip
+                    title={t(deactivationReasonKey(view.deactivationReason))}
+                  >
+                    <Chip
+                      size="small"
+                      color="warning"
+                      label={t("inspections.deactivate.archivedChip")}
+                    />
                   </Tooltip>
                 ) : null}
 
-                <Typography variant="body2" color="text.secondary" sx={{ display: "flex", gap: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ display: "flex", gap: 0.5 }}
+                >
                   {t("inspectionDetails.summary.customer")}:
                   {view.customer ? (
                     <Link
@@ -409,7 +468,11 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                 />
 
                 <Stack spacing={2}>
-                  <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }}>
+                  <Stack
+                    direction={{ xs: "column", md: "row" }}
+                    spacing={2}
+                    alignItems={{ md: "center" }}
+                  >
                     <TextField
                       label={t("inspectionDetails.fields.service")}
                       size="small"
@@ -424,9 +487,17 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                       fullWidth
                       required
                       type={editing ? "date" : "text"}
-                      value={editing ? toISODate(draft?.inspectionDate) : formatDateBR(view.inspectionDate)}
+                      value={
+                        editing
+                          ? toISODate(draft?.inspectionDate)
+                          : formatDateBR(view.inspectionDate)
+                      }
                       onChange={(e) =>
-                        setDraft((prev) => (prev ? { ...prev, inspectionDate: e.target.value } : prev))
+                        setDraft((prev) =>
+                          prev
+                            ? { ...prev, inspectionDate: e.target.value }
+                            : prev,
+                        )
                       }
                       disabled={!editing}
                       slotProps={{ inputLabel: { shrink: true } }}
@@ -438,15 +509,25 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                       fullWidth
                       required
                       type={editing ? "date" : "text"}
-                      value={editing ? toISODate(draft?.expirationDate) : formatDateBR(view.expirationDate)}
+                      value={
+                        editing
+                          ? toISODate(draft?.expirationDate)
+                          : formatDateBR(view.expirationDate)
+                      }
                       onChange={(e) =>
-                        setDraft((prev) => (prev ? { ...prev, expirationDate: e.target.value } : prev))
+                        setDraft((prev) =>
+                          prev
+                            ? { ...prev, expirationDate: e.target.value }
+                            : prev,
+                        )
                       }
                       disabled={!editing}
                       error={editing && expirationBeforeInspection}
                       helperText={
                         editing && expirationBeforeInspection
-                          ? t("inspections.addModal.errors.expirationBeforeInspection")
+                          ? t(
+                              "inspections.addModal.errors.expirationBeforeInspection",
+                            )
                           : undefined
                       }
                       slotProps={{ inputLabel: { shrink: true } }}
@@ -461,11 +542,15 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                       fullWidth
                       value={draft?.artNumber ?? ""}
                       onChange={(v) =>
-                        setDraft((prev) => (prev ? { ...prev, artNumber: v || null } : prev))
+                        setDraft((prev) =>
+                          prev ? { ...prev, artNumber: v || null } : prev,
+                        )
                       }
                       error={artNumberInvalid}
                       helperText={
-                        artNumberInvalid ? t("inspectionDetails.errors.artNumberFormat") : undefined
+                        artNumberInvalid
+                          ? t("inspectionDetails.errors.artNumberFormat")
+                          : undefined
                       }
                       sx={{ maxWidth: { sm: 320 } }}
                     />
@@ -482,14 +567,22 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
 
                   <ServiceEquipmentFields
                     category={view.serviceType.category}
-                    values={editing ? draftEquipmentValues : viewEquipmentValues}
+                    values={
+                      editing ? draftEquipmentValues : viewEquipmentValues
+                    }
                     onChange={(field, value) =>
                       setDraft((prev) => {
                         if (!prev) return prev;
                         if (field === "cylinderCount" || field === "btu") {
-                          return { ...prev, [field]: value.trim() === "" ? null : Number(value) };
+                          return {
+                            ...prev,
+                            [field]: value.trim() === "" ? null : Number(value),
+                          };
                         }
-                        return { ...prev, [field]: value === "" ? null : value };
+                        return {
+                          ...prev,
+                          [field]: value === "" ? null : value,
+                        };
                       })
                     }
                     disabled={!editing}
@@ -502,12 +595,16 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                     fullWidth
                     multiline
                     minRows={3}
-                    value={editing ? draft?.notes ?? "" : view.notes ?? ""}
+                    value={editing ? (draft?.notes ?? "") : (view.notes ?? "")}
                     onChange={(e) =>
-                      setDraft((prev) => (prev ? { ...prev, notes: e.target.value } : prev))
+                      setDraft((prev) =>
+                        prev ? { ...prev, notes: e.target.value } : prev,
+                      )
                     }
                     disabled={!editing}
-                    slotProps={{ htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH } }}
+                    slotProps={{
+                      htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH },
+                    }}
                   />
                 </Stack>
               </Box>
@@ -520,13 +617,25 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   justifyContent="space-between"
                   sx={{ mb: 2 }}
                 >
-                  <Typography variant="subtitle2">{t("inspectionDetails.sections.documents")}</Typography>
-                  <Tooltip title={readOnly ? t("inspectionDetails.documents.lockedHint") : ""}>
+                  <Typography variant="subtitle2">
+                    {t("inspectionDetails.sections.documents")}
+                  </Typography>
+                  <Tooltip
+                    title={
+                      readOnly
+                        ? t("inspectionDetails.documents.lockedHint")
+                        : ""
+                    }
+                  >
                     <span>
                       <Button
                         variant="outlined"
                         startIcon={
-                          uploadMutation.isPending ? <CircularProgress size={16} /> : <AttachFileIcon />
+                          uploadMutation.isPending ? (
+                            <CircularProgress size={16} />
+                          ) : (
+                            <AttachFileIcon />
+                          )
                         }
                         onClick={() => fileInputRef.current?.click()}
                         disabled={readOnly || uploadMutation.isPending}
@@ -549,38 +658,90 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                   />
                 </Stack>
 
-                <DataTableContainer stickyHeader={false}>
+                <TableContainer stickyHeader={false}>
                   <TableHead sx={{ bgcolor: "background.default" }}>
                     <TableRow>
-                      <TableCell sx={{ width: "48%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.name")}</b></TableCell>
-                      <TableCell align="center" sx={{ width: "14%", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.size")}</b></TableCell>
-                      <TableCell align="center" sx={{ width: "18%", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.uploadDate")}</b></TableCell>
-                      <TableCell align="center" sx={{ width: "10%", whiteSpace: "nowrap" }}><b>{t("inspectionDetails.documents.table.actions")}</b></TableCell>
+                      <TableCell
+                        sx={{
+                          width: "48%",
+                          ...ELLIPSIS_SX,
+                        }}
+                      >
+                        <b>{t("inspectionDetails.documents.table.name")}</b>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ width: "14%", whiteSpace: "nowrap" }}
+                      >
+                        <b>{t("inspectionDetails.documents.table.size")}</b>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ width: "18%", whiteSpace: "nowrap" }}
+                      >
+                        <b>
+                          {t("inspectionDetails.documents.table.uploadDate")}
+                        </b>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ width: "10%", whiteSpace: "nowrap" }}
+                      >
+                        <b>{t("inspectionDetails.documents.table.actions")}</b>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
                     {docsQuery.isLoading ? (
                       <TableRow>
-                        <TableCell colSpan={4} align="center" sx={{ py: 2, color: "text.secondary" }}>
+                        <TableCell
+                          colSpan={4}
+                          align="center"
+                          sx={{ py: 2, color: "text.secondary" }}
+                        >
                           {t("inspectionDetails.documents.loading")}
                         </TableCell>
                       </TableRow>
                     ) : documents?.length ? (
                       documents.map((d) => (
                         <TableRow key={d.id} hover>
-                          <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.name}>
+                          <TableCell
+                            sx={ELLIPSIS_SX}
+                            title={d.name}
+                          >
                             {d.name}
                           </TableCell>
-                          <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatFileSizeKB(d.size)}</TableCell>
-                          <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{ whiteSpace: "nowrap" }}
+                          >
+                            {formatFileSizeKB(d.size)}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{ whiteSpace: "nowrap" }}
+                          >
+                            {formatDateTimeBR(d.uploadDate)}
+                          </TableCell>
                           <TableCell align="center">
-                            <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
-                              <Tooltip title={t("inspectionDetails.documents.actions.view")}>
+                            <Stack
+                              direction="row"
+                              spacing={0.5}
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              <Tooltip
+                                title={t(
+                                  "inspectionDetails.documents.actions.view",
+                                )}
+                              >
                                 <span>
                                   <IconButton
                                     size="small"
-                                    aria-label={t("inspectionDetails.documents.actions.view")}
+                                    aria-label={t(
+                                      "inspectionDetails.documents.actions.view",
+                                    )}
                                     onClick={() => handlePreview(d.id, d.name)}
                                     disabled={previewLoading === d.id}
                                   >
@@ -588,20 +749,32 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                                   </IconButton>
                                 </span>
                               </Tooltip>
-                              <Tooltip title={t("inspectionDetails.documents.actions.download")}>
+                              <Tooltip
+                                title={t(
+                                  "inspectionDetails.documents.actions.download",
+                                )}
+                              >
                                 <IconButton
                                   size="small"
-                                  aria-label={t("inspectionDetails.documents.actions.download")}
+                                  aria-label={t(
+                                    "inspectionDetails.documents.actions.download",
+                                  )}
                                   onClick={() => handleDownload(d.id, d.name)}
                                 >
                                   <DownloadIcon fontSize="small" />
                                 </IconButton>
                               </Tooltip>
                               {readOnly ? null : (
-                                <Tooltip title={t("inspectionDetails.documents.table.actions")}>
+                                <Tooltip
+                                  title={t(
+                                    "inspectionDetails.documents.table.actions",
+                                  )}
+                                >
                                   <IconButton
                                     size="small"
-                                    aria-label={t("inspectionDetails.documents.table.actions")}
+                                    aria-label={t(
+                                      "inspectionDetails.documents.table.actions",
+                                    )}
                                     onClick={(e) => openDocMenu(e, d.id)}
                                   >
                                     <MoreVertIcon fontSize="small" />
@@ -614,13 +787,17 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={4} align="center" sx={{ py: 2, color: "text.secondary" }}>
+                        <TableCell
+                          colSpan={4}
+                          align="center"
+                          sx={{ py: 2, color: "text.secondary" }}
+                        >
                           {t("inspectionDetails.documents.empty")}
                         </TableCell>
                       </TableRow>
                     )}
                   </TableBody>
-                </DataTableContainer>
+                </TableContainer>
               </Box>
 
               <RemindersCard inspectionId={id} readOnly={readOnly} />
@@ -652,7 +829,11 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
       </Dialog>
 
       {/* Menu de ações por documento */}
-      <Menu anchorEl={docMenuAnchor} open={Boolean(docMenuAnchor)} onClose={closeDocMenu}>
+      <Menu
+        anchorEl={docMenuAnchor}
+        open={Boolean(docMenuAnchor)}
+        onClose={closeDocMenu}
+      >
         <MenuItem
           onClick={() => {
             if (docMenuTarget !== null) setConfirmDeleteId(docMenuTarget);
@@ -664,11 +845,30 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
       </Menu>
 
       {/* Pré-visualização de documento */}
-      <Dialog open={preview !== null} onClose={handleClosePreview} maxWidth="md" fullWidth>
-        <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <Dialog
+        open={preview !== null}
+        onClose={handleClosePreview}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           {preview?.name}
         </DialogTitle>
-        <DialogContent dividers sx={{ p: 0, display: "flex", justifyContent: "center", bgcolor: "background.default" }}>
+        <DialogContent
+          dividers
+          sx={{
+            p: 0,
+            display: "flex",
+            justifyContent: "center",
+            bgcolor: "background.default",
+          }}
+        >
           {preview?.kind === "image" ? (
             <Box
               component="img"
@@ -677,7 +877,12 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
               sx={{ maxWidth: "100%", maxHeight: "70vh", objectFit: "contain" }}
             />
           ) : preview?.kind === "pdf" ? (
-            <Box component="iframe" src={preview.url} title={preview.name} sx={{ width: "100%", height: "70vh", border: 0 }} />
+            <Box
+              component="iframe"
+              src={preview.url}
+              title={preview.name}
+              sx={{ width: "100%", height: "70vh", border: 0 }}
+            />
           ) : preview?.kind === "docx" && preview.blob ? (
             <Suspense
               fallback={
@@ -689,7 +894,9 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
               <DocxPreview
                 blob={preview.blob}
                 message={t("inspectionDetails.documents.previewUnsupported")}
-                downloadLabel={t("inspectionDetails.documents.actions.download")}
+                downloadLabel={t(
+                  "inspectionDetails.documents.actions.download",
+                )}
                 onDownload={() => handleDownload(preview.docId, preview.name)}
               />
             </Suspense>
@@ -709,23 +916,37 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
           ) : null}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClosePreview}>{t("common.actions.close")}</Button>
+          <Button onClick={handleClosePreview}>
+            {t("common.actions.close")}
+          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Confirmar exclusão de documento */}
-      <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
-        <DialogTitle>{t("inspectionDetails.documents.confirmDeleteTitle")}</DialogTitle>
+      <Dialog
+        open={confirmDeleteId !== null}
+        onClose={() => setConfirmDeleteId(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>
+          {t("inspectionDetails.documents.confirmDeleteTitle")}
+        </DialogTitle>
         <DialogContent>
-          <Typography variant="body2">{t("inspectionDetails.documents.confirmDelete")}</Typography>
+          <Typography variant="body2">
+            {t("inspectionDetails.documents.confirmDelete")}
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDeleteId(null)}>{t("common.actions.cancel")}</Button>
+          <Button onClick={() => setConfirmDeleteId(null)}>
+            {t("common.actions.cancel")}
+          </Button>
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              if (confirmDeleteId !== null) deleteDocMutation.mutate(confirmDeleteId);
+              if (confirmDeleteId !== null)
+                deleteDocMutation.mutate(confirmDeleteId);
               setConfirmDeleteId(null);
             }}
           >
@@ -735,13 +956,20 @@ export function InspectionDetailModal({ inspectionId, open, onClose, customerId 
       </Dialog>
 
       {/* Descartar edição ao fechar */}
-      <Dialog open={confirmDiscardOpen} onClose={() => setConfirmDiscardOpen(false)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={confirmDiscardOpen}
+        onClose={() => setConfirmDiscardOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>{t("unsavedChanges.title")}</DialogTitle>
         <DialogContent>
           <Typography variant="body2">{t("unsavedChanges.message")}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDiscardOpen(false)}>{t("unsavedChanges.stay")}</Button>
+          <Button onClick={() => setConfirmDiscardOpen(false)}>
+            {t("unsavedChanges.stay")}
+          </Button>
           <Button
             color="error"
             variant="contained"

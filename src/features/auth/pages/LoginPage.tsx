@@ -1,6 +1,6 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/button/Button";
 import { FormField } from "@/components/form/FormField";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { SystemLogo } from "@/components/SystemLogo";
 import { Tooltip } from "@/components/Tooltip";
 import { paths } from "@/routes/paths";

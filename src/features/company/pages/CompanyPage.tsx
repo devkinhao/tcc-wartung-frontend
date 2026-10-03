@@ -1,4 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import type { ViaCepResponseDTO } from "@/api/cep.api";
+import { qk } from "@/api/keys";
+import { CepTextField } from "@/components/CepTextField";
+import { MaskedTextField } from "@/components/MaskedTextField";
+import { useCities } from "@/features/customers/hooks/useCities";
+import {
+  companyAddressSchema,
+  companyContactsSchema,
+  companyGeneralSchema,
+} from "@/features/customers/schemas";
+import { useNotify } from "@/hooks/useNotify";
+import { PageHeader } from "@/layout/header/PageHeader";
+import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
+import { paths } from "@/routes/paths";
+import { fieldError } from "@/validation/fields";
 import {
   Box,
   Button,
@@ -15,24 +29,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { qk } from "@/api/keys";
-import { useCities } from "@/features/customers/hooks/useCities";
-import { fieldError } from "@/validation/fields";
-import {
-  companyGeneralSchema,
-  companyContactsSchema,
-  companyAddressSchema,
-} from "@/features/customers/schemas";
-import { CepTextField } from "@/components/CepTextField";
-import { MaskedTextField } from "@/components/MaskedTextField";
-import { useNotify } from "@/hooks/useNotify";
-import { PageHeader } from "@/layout/header/PageHeader";
-import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
-import { paths } from "@/routes/paths";
-import type { ViaCepResponseDTO } from "@/api/cep.api";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   getCompany,
   updateCompany,
@@ -40,8 +39,7 @@ import {
   type CompanyUpdateRequestDTO,
 } from "../api/company.api";
 
-// ---- Draft shape (alinha campos opcionais com strings para os inputs) ----
-
+/** Formato de rascunho da empresa, com campos opcionais normalizados para strings vazias. */
 type CompanyDraft = {
   fantasyName: string;
   legalName: string;
@@ -59,6 +57,7 @@ type CompanyDraft = {
   };
 };
 
+/** Converte a resposta da API em um draft editável, com campos opcionais como strings. */
 function toDraft(data: CompanyResponseDTO): CompanyDraft {
   return {
     fantasyName: data.fantasyName ?? "",
@@ -78,6 +77,7 @@ function toDraft(data: CompanyResponseDTO): CompanyDraft {
   };
 }
 
+/** Converte o draft em DTO de atualização, transformando strings vazias em nulas. */
 function toRequestDTO(draft: CompanyDraft): CompanyUpdateRequestDTO {
   return {
     fantasyName: draft.fantasyName || null,
@@ -97,20 +97,22 @@ function toRequestDTO(draft: CompanyDraft): CompanyUpdateRequestDTO {
   };
 }
 
-// ---- Page ----
-
+/** Página de edição dos dados cadastrais da empresa, com dados gerais e de endereço. */
 export default function CompanyPage() {
+  /** Hooks. */
   const { t } = useTranslation();
   const qc = useQueryClient();
   const cities = useCities();
-
   const notify = useNotify();
 
+  /** Estados. */
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<CompanyDraft | null>(null);
 
-  // Valida contra os schemas de empresa (espelham CustomerUpdateRequestDTO +
-  // AddressRequestDTO no backend). Um `safeParse` por seção.
+  /**
+   * Valida cada seção do formulário contra os schemas de empresa, que espelham
+   * CustomerUpdateRequestDTO e AddressRequestDTO no backend.
+   */
   const general = companyGeneralSchema.safeParse({
     fantasyName: draft?.fantasyName ?? "",
     legalName: draft?.legalName ?? "",
@@ -130,11 +132,26 @@ export default function CompanyPage() {
     cityId: draft?.address.cityId ?? 0,
   });
 
-  const cnpjError   = isEditing && (draft?.cnpj ?? "").trim() !== ""        && !!fieldError(general, "cnpj");
-  const emailError  = isEditing && (draft?.email ?? "").trim() !== ""       && !!fieldError(contacts, "email");
-  const phoneError  = isEditing && (draft?.phone ?? "").trim() !== ""       && !!fieldError(contacts, "phone");
-  const mobileError = isEditing && (draft?.mobilePhone ?? "").trim() !== "" && !!fieldError(contacts, "mobilePhone");
-  const zipCodeFormatError = isEditing && (draft?.address.zipCode ?? "").trim() !== "" && !!fieldError(address, "zipCode");
+  const cnpjError =
+    isEditing &&
+    (draft?.cnpj ?? "").trim() !== "" &&
+    !!fieldError(general, "cnpj");
+  const emailError =
+    isEditing &&
+    (draft?.email ?? "").trim() !== "" &&
+    !!fieldError(contacts, "email");
+  const phoneError =
+    isEditing &&
+    (draft?.phone ?? "").trim() !== "" &&
+    !!fieldError(contacts, "phone");
+  const mobileError =
+    isEditing &&
+    (draft?.mobilePhone ?? "").trim() !== "" &&
+    !!fieldError(contacts, "mobilePhone");
+  const zipCodeFormatError =
+    isEditing &&
+    (draft?.address.zipCode ?? "").trim() !== "" &&
+    !!fieldError(address, "zipCode");
 
   const isFormValid = general.success && contacts.success && address.success;
 
@@ -143,7 +160,7 @@ export default function CompanyPage() {
     queryFn: getCompany,
   });
 
-  // Inicializa o draft uma vez quando os dados chegam
+  /** Inicializa o draft uma única vez quando os dados da empresa chegam. */
   useEffect(() => {
     if (data) setDraft((prev) => prev ?? toDraft(data));
   }, [data]);
@@ -158,21 +175,21 @@ export default function CompanyPage() {
     onError: (err) => notify.fromError(err),
   });
 
-  // ---- Handlers de mudança no draft ----
-
+  /** Atualiza um campo de nível raiz do draft (exceto endereço). */
   function updateField<K extends keyof Omit<CompanyDraft, "address">>(
     field: K,
-    value: CompanyDraft[K]
+    value: CompanyDraft[K],
   ) {
     setDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
   }
 
+  /** Atualiza um campo do endereço dentro do draft. */
   function updateAddress<K extends keyof CompanyDraft["address"]>(
     field: K,
-    value: CompanyDraft["address"][K]
+    value: CompanyDraft["address"][K],
   ) {
     setDraft((prev) =>
-      prev ? { ...prev, address: { ...prev.address, [field]: value } } : prev
+      prev ? { ...prev, address: { ...prev.address, [field]: value } } : prev,
     );
   }
 
@@ -186,7 +203,7 @@ export default function CompanyPage() {
     save(toRequestDTO(draft));
   }
 
-  // Preenche campos de endereço automaticamente quando o CEP é encontrado
+  /** Preenche automaticamente os campos de endereço quando o CEP é encontrado. */
   const handleCepFound = useCallback((cepData: ViaCepResponseDTO) => {
     setDraft((prev) => {
       if (!prev) return prev;
@@ -204,8 +221,6 @@ export default function CompanyPage() {
     });
   }, []);
 
-  // ---- Render states ----
-
   if (isLoading || !draft) {
     return (
       <Stack direction="row" spacing={2} alignItems="center">
@@ -219,7 +234,10 @@ export default function CompanyPage() {
 
   return (
     <Box sx={{ maxWidth: 960 }}>
-      <PageHeader items={breadcrumbMap[paths.company]} subtitle={t("company.description")} />
+      <PageHeader
+        items={breadcrumbMap[paths.company]}
+        subtitle={t("company.description")}
+      />
 
       <Card sx={{ borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
@@ -227,87 +245,99 @@ export default function CompanyPage() {
             {t("company.generalTitle")}
           </Typography>
           <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              label={t("company.fields.fantasyName")}
-              fullWidth size="small"
-              value={draft.fantasyName}
-              onChange={(e) => updateField("fantasyName", e.target.value)}
-              disabled={!isEditing}
-              slotProps={{
-                htmlInput: { maxLength: 100 }
-              }}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label={t("company.fields.fantasyName")}
+                fullWidth
+                size="small"
+                value={draft.fantasyName}
+                onChange={(e) => updateField("fantasyName", e.target.value)}
+                disabled={!isEditing}
+                slotProps={{
+                  htmlInput: { maxLength: 100 },
+                }}
+              />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              label={t("company.fields.legalName")}
-              fullWidth size="small"
-              value={draft.legalName}
-              onChange={(e) => updateField("legalName", e.target.value)}
-              disabled={!isEditing}
-              required
-              slotProps={{
-                htmlInput: { maxLength: 100 }
-              }}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label={t("company.fields.legalName")}
+                fullWidth
+                size="small"
+                value={draft.legalName}
+                onChange={(e) => updateField("legalName", e.target.value)}
+                disabled={!isEditing}
+                required
+                slotProps={{
+                  htmlInput: { maxLength: 100 },
+                }}
+              />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <MaskedTextField
-              mask="cnpj"
-              label={t("company.fields.cnpj")}
-              fullWidth size="small"
-              value={draft.cnpj}
-              onChange={(v) => updateField("cnpj", v)}
-              disabled={!isEditing}
-              required
-              error={cnpjError}
-              helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <MaskedTextField
+                mask="cnpj"
+                label={t("company.fields.cnpj")}
+                fullWidth
+                size="small"
+                value={draft.cnpj}
+                onChange={(v) => updateField("cnpj", v)}
+                disabled={!isEditing}
+                required
+                error={cnpjError}
+                helperText={cnpjError ? t("validation.cnpjInvalid") : undefined}
+              />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <MaskedTextField
-              mask="phone"
-              label={t("company.fields.phone")}
-              fullWidth size="small"
-              value={draft.phone}
-              onChange={(v) => updateField("phone", v)}
-              disabled={!isEditing}
-              error={phoneError}
-              helperText={phoneError ? t("validation.phoneInvalid") : undefined}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <MaskedTextField
+                mask="phone"
+                label={t("company.fields.phone")}
+                fullWidth
+                size="small"
+                value={draft.phone}
+                onChange={(v) => updateField("phone", v)}
+                disabled={!isEditing}
+                error={phoneError}
+                helperText={
+                  phoneError ? t("validation.phoneInvalid") : undefined
+                }
+              />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <MaskedTextField
-              mask="mobile"
-              label={t("company.fields.mobile")}
-              fullWidth size="small"
-              value={draft.mobilePhone}
-              onChange={(v) => updateField("mobilePhone", v)}
-              disabled={!isEditing}
-              error={mobileError}
-              helperText={mobileError ? t("validation.mobileInvalid") : undefined}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 4 }}>
+              <MaskedTextField
+                mask="mobile"
+                label={t("company.fields.mobile")}
+                fullWidth
+                size="small"
+                value={draft.mobilePhone}
+                onChange={(v) => updateField("mobilePhone", v)}
+                disabled={!isEditing}
+                error={mobileError}
+                helperText={
+                  mobileError ? t("validation.mobileInvalid") : undefined
+                }
+              />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              label={t("company.fields.email")}
-              fullWidth size="small"
-              value={draft.email}
-              onChange={(e) => updateField("email", e.target.value)}
-              disabled={!isEditing}
-              error={emailError}
-              helperText={emailError ? t("validation.emailInvalid") : undefined}
-              slotProps={{
-                htmlInput: { maxLength: 75 }
-              }}
-            />
-          </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label={t("company.fields.email")}
+                fullWidth
+                size="small"
+                value={draft.email}
+                onChange={(e) => updateField("email", e.target.value)}
+                disabled={!isEditing}
+                error={emailError}
+                helperText={
+                  emailError ? t("validation.emailInvalid") : undefined
+                }
+                slotProps={{
+                  htmlInput: { maxLength: 75 },
+                }}
+              />
+            </Grid>
           </Grid>
 
           <Divider sx={{ my: 3 }} />
@@ -316,97 +346,103 @@ export default function CompanyPage() {
             {t("company.address.title")}
           </Typography>
           <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TextField
-              label={t("company.address.fields.street")}
-              fullWidth size="small"
-              required
-              value={draft.address.street}
-              onChange={(e) => updateAddress("street", e.target.value)}
-              disabled={!isEditing}
-              slotProps={{
-                htmlInput: { maxLength: 100 }
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 3 }}>
-            <TextField
-              label={t("company.address.fields.number")}
-              fullWidth size="small"
-              value={draft.address.number}
-              onChange={(e) => updateAddress("number", e.target.value)}
-              disabled={!isEditing}
-              slotProps={{
-                htmlInput: { maxLength: 20 }
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 3 }}>
-            <TextField
-              label={t("company.address.fields.complement")}
-              fullWidth size="small"
-              value={draft.address.complement}
-              onChange={(e) => updateAddress("complement", e.target.value)}
-              disabled={!isEditing}
-              slotProps={{
-                htmlInput: { maxLength: 75 }
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
-              label={t("company.address.fields.neighborhood")}
-              fullWidth size="small"
-              value={draft.address.neighborhood}
-              onChange={(e) => updateAddress("neighborhood", e.target.value)}
-              disabled={!isEditing}
-              slotProps={{
-                htmlInput: { maxLength: 75 }
-              }}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 3 }}>
-            <CepTextField
-              value={draft.address.zipCode}
-              onChange={(val) => updateAddress("zipCode", val)}
-              onAddressFound={handleCepFound}
-              label={t("company.address.fields.zipCode")}
-              disabled={!isEditing}
-              required
-              error={zipCodeFormatError}
-              helperText={zipCodeFormatError ? t("validation.cepInvalid") : undefined}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 5 }}>
-            <FormControl fullWidth size="small" disabled={!isEditing}>
-              <InputLabel id="company-city-label" required>
-                {t("company.address.fields.city")}
-              </InputLabel>
-              <Select
-                labelId="company-city-label"
-                label={t("company.address.fields.city")}
-                value={draft.address.cityId ?? ""}
-                onChange={(e) => {
-                  const id = Number(e.target.value);
-                  updateAddress("cityId", id > 0 ? id : null);
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                label={t("company.address.fields.street")}
+                fullWidth
+                size="small"
+                required
+                value={draft.address.street}
+                onChange={(e) => updateAddress("street", e.target.value)}
+                disabled={!isEditing}
+                slotProps={{
+                  htmlInput: { maxLength: 100 },
                 }}
-              >
-                <MenuItem value="">
-                  <em>{t("company.address.actions.selectCity")}</em>
-                </MenuItem>
-                {cities.map((city) => (
-                  <MenuItem key={city.id} value={city.id}>
-                    {city.name}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 3 }}>
+              <TextField
+                label={t("company.address.fields.number")}
+                fullWidth
+                size="small"
+                value={draft.address.number}
+                onChange={(e) => updateAddress("number", e.target.value)}
+                disabled={!isEditing}
+                slotProps={{
+                  htmlInput: { maxLength: 20 },
+                }}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 3 }}>
+              <TextField
+                label={t("company.address.fields.complement")}
+                fullWidth
+                size="small"
+                value={draft.address.complement}
+                onChange={(e) => updateAddress("complement", e.target.value)}
+                disabled={!isEditing}
+                slotProps={{
+                  htmlInput: { maxLength: 75 },
+                }}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 4 }}>
+              <TextField
+                label={t("company.address.fields.neighborhood")}
+                fullWidth
+                size="small"
+                value={draft.address.neighborhood}
+                onChange={(e) => updateAddress("neighborhood", e.target.value)}
+                disabled={!isEditing}
+                slotProps={{
+                  htmlInput: { maxLength: 75 },
+                }}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 3 }}>
+              <CepTextField
+                value={draft.address.zipCode}
+                onChange={(val) => updateAddress("zipCode", val)}
+                onAddressFound={handleCepFound}
+                label={t("company.address.fields.zipCode")}
+                disabled={!isEditing}
+                required
+                error={zipCodeFormatError}
+                helperText={
+                  zipCodeFormatError ? t("validation.cepInvalid") : undefined
+                }
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 5 }}>
+              <FormControl fullWidth size="small" disabled={!isEditing}>
+                <InputLabel id="company-city-label" required>
+                  {t("company.address.fields.city")}
+                </InputLabel>
+                <Select
+                  labelId="company-city-label"
+                  label={t("company.address.fields.city")}
+                  value={draft.address.cityId ?? ""}
+                  onChange={(e) => {
+                    const id = Number(e.target.value);
+                    updateAddress("cityId", id > 0 ? id : null);
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>{t("company.address.actions.selectCity")}</em>
                   </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+                  {cities.map((city) => (
+                    <MenuItem key={city.id} value={city.id}>
+                      {city.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
 
           <Divider sx={{ my: 3 }} />
@@ -418,7 +454,11 @@ export default function CompanyPage() {
               </Button>
             ) : (
               <Stack direction="row" spacing={1}>
-                <Button variant="outlined" onClick={handleCancel} disabled={isSaving}>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                >
                   {t("common.actions.cancel")}
                 </Button>
                 <Button

@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, CircularProgress, Divider, FormControlLabel, Grid, Skeleton, Stack, Switch, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Skeleton,
+  Stack,
+  Switch,
+  TextField,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -8,7 +21,7 @@ import { useNotify } from "@/hooks/useNotify";
 import { fieldError } from "@/validation/fields";
 import { emailSettingsSchema } from "@/features/configurations/schemas";
 import { digitsOnly } from "@/utils/masks";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -71,7 +84,10 @@ export default function EmailSettingsPage() {
   const hostError = isEditing && !!fieldError(validation, "host");
   const portError = isEditing && !!fieldError(validation, "port");
   const usernameError = isEditing && !!fieldError(validation, "username");
-  const fromAddressError = isEditing && (draft?.fromAddress ?? "").trim() !== "" && !!fieldError(validation, "fromAddress");
+  const fromAddressError =
+    isEditing &&
+    (draft?.fromAddress ?? "").trim() !== "" &&
+    !!fieldError(validation, "fromAddress");
 
   const { mutate: save, isPending: isSaving } = useMutation({
     mutationFn: () =>
@@ -92,7 +108,10 @@ export default function EmailSettingsPage() {
     onError: (err) => notify.fromError(err),
   });
 
-  function updateField<K extends keyof EmailSettingsDraft>(field: K, value: EmailSettingsDraft[K]) {
+  function updateField<K extends keyof EmailSettingsDraft>(
+    field: K,
+    value: EmailSettingsDraft[K],
+  ) {
     setDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
   }
 
@@ -144,7 +163,9 @@ export default function EmailSettingsPage() {
                 size="small"
                 required
                 value={draft.port}
-                onChange={(e) => updateField("port", digitsOnly(e.target.value).slice(0, 5))}
+                onChange={(e) =>
+                  updateField("port", digitsOnly(e.target.value).slice(0, 5))
+                }
                 disabled={!isEditing}
                 error={portError}
                 helperText={portError ? t("validation.required") : undefined}
@@ -162,7 +183,9 @@ export default function EmailSettingsPage() {
                 onChange={(e) => updateField("username", e.target.value)}
                 disabled={!isEditing}
                 error={usernameError}
-                helperText={usernameError ? t("validation.required") : undefined}
+                helperText={
+                  usernameError ? t("validation.required") : undefined
+                }
                 slotProps={{ htmlInput: { maxLength: 100 } }}
               />
             </Grid>
@@ -173,15 +196,36 @@ export default function EmailSettingsPage() {
                 fullWidth
                 size="small"
                 type={showPassword ? "text" : "password"}
-                value={isEditing ? draft.password : data.hasPassword ? "••••••••" : ""}
+                value={
+                  isEditing
+                    ? draft.password
+                    : data.hasPassword
+                      ? "••••••••"
+                      : ""
+                }
                 onChange={(e) => updateField("password", e.target.value)}
                 disabled={!isEditing}
-                placeholder={isEditing && data.hasPassword ? t("configurations.emailSettings.passwordPlaceholder") : undefined}
-                helperText={isEditing ? t("configurations.emailSettings.passwordHelper") : undefined}
+                placeholder={
+                  isEditing && data.hasPassword
+                    ? t("configurations.emailSettings.passwordPlaceholder")
+                    : undefined
+                }
+                helperText={
+                  isEditing
+                    ? t("configurations.emailSettings.passwordHelper")
+                    : undefined
+                }
                 slotProps={{
                   htmlInput: { maxLength: 100 },
                   input: isEditing
-                    ? { endAdornment: <PasswordVisibilityToggle visible={showPassword} onToggle={() => setShowPassword((p) => !p)} /> }
+                    ? {
+                        endAdornment: (
+                          <PasswordVisibilityToggle
+                            visible={showPassword}
+                            onToggle={() => setShowPassword((p) => !p)}
+                          />
+                        ),
+                      }
                     : undefined,
                 }}
               />
@@ -200,7 +244,9 @@ export default function EmailSettingsPage() {
                 helperText={
                   fromAddressError
                     ? t("validation.emailInvalid")
-                    : t("configurations.emailSettings.fields.fromAddressDescription")
+                    : t(
+                        "configurations.emailSettings.fields.fromAddressDescription",
+                      )
                 }
                 slotProps={{ htmlInput: { maxLength: 100 } }}
               />
@@ -211,11 +257,15 @@ export default function EmailSettingsPage() {
                 control={
                   <Switch
                     checked={draft.sendCopyToSender}
-                    onChange={(e) => updateField("sendCopyToSender", e.target.checked)}
+                    onChange={(e) =>
+                      updateField("sendCopyToSender", e.target.checked)
+                    }
                     disabled={!isEditing}
                   />
                 }
-                label={t("configurations.emailSettings.fields.sendCopyToSender")}
+                label={t(
+                  "configurations.emailSettings.fields.sendCopyToSender",
+                )}
               />
             </Grid>
           </Grid>
@@ -229,11 +279,23 @@ export default function EmailSettingsPage() {
               </Button>
             ) : (
               <Stack direction="row" spacing={1}>
-                <Button variant="outlined" onClick={handleCancel} disabled={isSaving}>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                >
                   {t("common.actions.cancel")}
                 </Button>
-                <Button variant="contained" onClick={() => save()} disabled={isSaving || !validation.success}>
-                  {isSaving ? <CircularProgress size={20} color="inherit" /> : t("common.actions.save")}
+                <Button
+                  variant="contained"
+                  onClick={() => save()}
+                  disabled={isSaving || !validation.success}
+                >
+                  {isSaving ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    t("common.actions.save")
+                  )}
                 </Button>
               </Stack>
             )}

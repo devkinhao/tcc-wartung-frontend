@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/button/Button";
 import { Tooltip } from "@/components/Tooltip";
 import { canAccess } from "@/features/auth/permissions";
 import { useAuth } from "@/features/auth/useAuth";
@@ -85,8 +85,12 @@ export function UserMenu() {
         tooltip={t("userMenu.tooltip.title")}
         variant="text"
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        startIcon={
-          avatarSrc ? (
+        endIcon={
+          open ? <ExpandLess color="action" /> : <ExpandMore color="action" />
+        }
+      >
+        <Stack direction="row" spacing={1} alignItems="center">
+          {avatarSrc ? (
             <Avatar
               src={avatarSrc}
               sx={{ width: 32, height: 32 }}
@@ -99,13 +103,9 @@ export function UserMenu() {
             >
               {firstName?.[0] ?? "U"}
             </Avatar>
-          )
-        }
-        endIcon={
-          open ? <ExpandLess color="action" /> : <ExpandMore color="action" />
-        }
-      >
-        <Typography sx={{ color: "text.primary" }}>{firstName}</Typography>
+          )}
+          <Typography sx={{ color: "text.primary" }}>{firstName}</Typography>
+        </Stack>
       </Button>
       {/** Menu contextual com dados do usuário e ações de navegação. */}
       <Menu

@@ -1,5 +1,11 @@
 import type { SvgIconComponent } from "@mui/icons-material";
-import { Grid, TextField, type TextFieldProps } from "@mui/material";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  TextField,
+  type TextFieldProps,
+} from "@mui/material";
 import { forwardRef, type ReactNode } from "react";
 import { FormLabel } from "./FormLabel";
 
@@ -7,11 +13,24 @@ export type FormFieldProps = Omit<TextFieldProps, "label"> & {
   label?: ReactNode;
   startIcon?: SvgIconComponent;
   endIcon?: ReactNode;
+  /** Em selects, o nome do item inicial é exibido com aparência de placeholder. */
+  emptyOptionLabel?: ReactNode;
 };
 
 /** Campo de texto reutilizável que permite renderização de label. */
 export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ label, required, startIcon: StartIcon, endIcon, ...props }, ref) => (
+  (
+    {
+      label,
+      required,
+      startIcon: StartIcon,
+      endIcon,
+      emptyOptionLabel,
+      children,
+      ...props
+    },
+    ref,
+  ) => (
     <Grid container>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <TextField
@@ -23,6 +42,10 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         {...props}
         slotProps={{
           ...props.slotProps,
+          /** Em selects, exibe o item de valor vazio em vez de ocultá-lo. */
+          select: props.select
+            ? { displayEmpty: true, ...props.slotProps?.select }
+            : props.slotProps?.select,
           /** Permite inserir ícones de início/fim no campo de texto. */
           input: {
             ...props.slotProps?.input,
@@ -52,7 +75,16 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
             },
           },
         }}
-      />
+      >
+        {props.select && emptyOptionLabel && (
+          <MenuItem value="">
+            <Box component="span" sx={{ opacity: 0.42 }}>
+              {emptyOptionLabel}
+            </Box>
+          </MenuItem>
+        )}
+        {children}
+      </TextField>
     </Grid>
   ),
 );

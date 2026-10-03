@@ -1,5 +1,6 @@
 import { usePreferences } from "@/features/preferences/usePreferences";
 import { AppBar, Box, Toolbar } from "@mui/material";
+import { APPBAR_HEIGHT } from "./constants";
 import { NotificationsMenu } from "./NotificationsMenu";
 import { UserMenu } from "./UserMenu";
 
@@ -26,7 +27,13 @@ export default function Header({ drawerWidth }: { drawerWidth: number }) {
           }),
       }}
     >
-      <Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          minHeight: APPBAR_HEIGHT,
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <NotificationsMenu disabled={!showNotifications} />
           <UserMenu />

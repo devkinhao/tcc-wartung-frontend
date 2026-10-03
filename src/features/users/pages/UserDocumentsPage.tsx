@@ -43,7 +43,8 @@ import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { TableContainer } from "@/components/table/TableContainer";
 import { formatDateTimeBR, formatFileSizeKB } from "@/utils/date";
 import { guessMimeType, isDocx } from "@/utils/fileType";
 import type { UserDocumentResponseDTO } from "../types/UserDocument";
@@ -58,11 +59,17 @@ type ViewMode = "list" | "grid";
 
 // Ícone por tipo de arquivo (deduzido pela extensão, igual à pré-visualização)
 // — puramente decorativo, não afeta o que pode ser aberto/baixado.
-function fileIcon(name: string, fontSize: "small" | "medium" | "large" = "small") {
-  if (isDocx(name)) return <DescriptionIcon fontSize={fontSize} color="primary" />;
+function fileIcon(
+  name: string,
+  fontSize: "small" | "medium" | "large" = "small",
+) {
+  if (isDocx(name))
+    return <DescriptionIcon fontSize={fontSize} color="primary" />;
   const mimeType = guessMimeType(name);
-  if (mimeType?.startsWith("image/")) return <ImageIcon fontSize={fontSize} color="success" />;
-  if (mimeType === "application/pdf") return <PictureAsPdfIcon fontSize={fontSize} color="error" />;
+  if (mimeType?.startsWith("image/"))
+    return <ImageIcon fontSize={fontSize} color="success" />;
+  if (mimeType === "application/pdf")
+    return <PictureAsPdfIcon fontSize={fontSize} color="error" />;
   return <InsertDriveFileIcon fontSize={fontSize} color="action" />;
 }
 
@@ -79,7 +86,10 @@ export default function UserDocumentsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Lista vs. grade — preferência puramente visual, lembrada entre sessões.
-  const [viewMode, setViewMode] = useLocalStorageState<ViewMode>("user-documents.viewMode", "list");
+  const [viewMode, setViewMode] = useLocalStorageState<ViewMode>(
+    "user-documents.viewMode",
+    "list",
+  );
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [menuTarget, setMenuTarget] = useState<number | null>(null);
@@ -176,8 +186,16 @@ export default function UserDocumentsPage() {
 
   // Ações por documento (ver/baixar/menu) — compartilhadas entre a linha da
   // lista e o card da grade, só muda o tamanho dos botões.
-  const documentActions = (d: UserDocumentResponseDTO, size: "small" | "medium" = "small"): ReactNode => (
-    <Stack direction="row" spacing={0.5} alignItems="center" justifyContent="center">
+  const documentActions = (
+    d: UserDocumentResponseDTO,
+    size: "small" | "medium" = "small",
+  ): ReactNode => (
+    <Stack
+      direction="row"
+      spacing={0.5}
+      alignItems="center"
+      justifyContent="center"
+    >
       <Tooltip title={t("userDocuments.actions.view")}>
         <span>
           <IconButton
@@ -226,7 +244,9 @@ export default function UserDocumentsPage() {
           justifyContent="space-between"
           sx={{ mb: 2 }}
         >
-          <Typography variant="subtitle2">{t("userDocuments.title")}</Typography>
+          <Typography variant="subtitle2">
+            {t("userDocuments.title")}
+          </Typography>
 
           <Stack direction="row" spacing={1.5} alignItems="center">
             <ToggleButtonGroup
@@ -235,12 +255,18 @@ export default function UserDocumentsPage() {
               value={viewMode}
               onChange={(_, next: ViewMode | null) => next && setViewMode(next)}
             >
-              <ToggleButton value="list" aria-label={t("userDocuments.viewMode.list")}>
+              <ToggleButton
+                value="list"
+                aria-label={t("userDocuments.viewMode.list")}
+              >
                 <Tooltip title={t("userDocuments.viewMode.list")}>
                   <ViewListIcon fontSize="small" />
                 </Tooltip>
               </ToggleButton>
-              <ToggleButton value="grid" aria-label={t("userDocuments.viewMode.grid")}>
+              <ToggleButton
+                value="grid"
+                aria-label={t("userDocuments.viewMode.grid")}
+              >
                 <Tooltip title={t("userDocuments.viewMode.grid")}>
                   <GridViewIcon fontSize="small" />
                 </Tooltip>
@@ -250,7 +276,13 @@ export default function UserDocumentsPage() {
             <Button
               variant="contained"
               size="small"
-              startIcon={uploadMutation.isPending ? <CircularProgress size={16} color="inherit" /> : <AttachFileIcon />}
+              startIcon={
+                uploadMutation.isPending ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <AttachFileIcon />
+                )
+              }
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadMutation.isPending}
             >
@@ -272,11 +304,19 @@ export default function UserDocumentsPage() {
         </Stack>
 
         {docsQuery.isLoading ? (
-          <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ py: 2, textAlign: "center" }}
+          >
             {t("userDocuments.loading")}
           </Typography>
         ) : !documents.length ? (
-          <Typography variant="body2" color="text.secondary" sx={{ py: 2, textAlign: "center" }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ py: 2, textAlign: "center" }}
+          >
             {t("userDocuments.empty")}
           </Typography>
         ) : viewMode === "grid" ? (
@@ -288,31 +328,52 @@ export default function UserDocumentsPage() {
                   sx={{
                     borderRadius: 2,
                     height: "100%",
-                    transition: (t) => t.transitions.create("box-shadow", { duration: t.transitions.duration.short }),
+                    transition: (t) =>
+                      t.transitions.create("box-shadow", {
+                        duration: t.transitions.duration.short,
+                      }),
                     "&:hover": { boxShadow: 3 },
                   }}
                 >
                   <CardContent>
-                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                    <Stack
+                      direction="row"
+                      spacing={1.5}
+                      alignItems="flex-start"
+                    >
                       {fileIcon(d.name, "large")}
                       <Box sx={{ minWidth: 0, flex: 1 }}>
                         <Typography
                           variant="body2"
                           fontWeight={600}
                           title={d.name}
-                          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                          sx={ELLIPSIS_SX}
                         >
                           {d.name}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary" display="block">
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          display="block"
+                        >
                           {formatFileSizeKB(d.size)}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary" display="block">
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          display="block"
+                        >
                           {formatDateTimeBR(d.uploadDate)}
                         </Typography>
                       </Box>
                     </Stack>
-                    <Box sx={{ mt: 1.5, display: "flex", justifyContent: "flex-end" }}>
+                    <Box
+                      sx={{
+                        mt: 1.5,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
                       {documentActions(d)}
                     </Box>
                   </CardContent>
@@ -321,37 +382,75 @@ export default function UserDocumentsPage() {
             ))}
           </Grid>
         ) : (
-        <DataTableContainer stickyHeader={false}>
-          <TableHead sx={{ bgcolor: "background.default" }}>
-            <TableRow>
-              <TableCell sx={{ width: "48%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("userDocuments.table.name")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "16%", whiteSpace: "nowrap" }}><b>{t("userDocuments.table.size")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "24%", whiteSpace: "nowrap" }}><b>{t("userDocuments.table.uploadDate")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "12%", whiteSpace: "nowrap" }}><b>{t("userDocuments.table.actions")}</b></TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {documents.map((d) => (
-              <TableRow key={d.id} hover>
-                <TableCell sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={d.name}>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    {fileIcon(d.name)}
-                    <Box component="span" sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>{d.name}</Box>
-                  </Stack>
+          <TableContainer stickyHeader={false}>
+            <TableHead sx={{ bgcolor: "background.default" }}>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    width: "48%",
+                    ...ELLIPSIS_SX,
+                  }}
+                >
+                  <b>{t("userDocuments.table.name")}</b>
                 </TableCell>
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatFileSizeKB(d.size)}</TableCell>
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateTimeBR(d.uploadDate)}</TableCell>
-                <TableCell align="center">{documentActions(d)}</TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ width: "16%", whiteSpace: "nowrap" }}
+                >
+                  <b>{t("userDocuments.table.size")}</b>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ width: "24%", whiteSpace: "nowrap" }}
+                >
+                  <b>{t("userDocuments.table.uploadDate")}</b>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ width: "12%", whiteSpace: "nowrap" }}
+                >
+                  <b>{t("userDocuments.table.actions")}</b>
+                </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </DataTableContainer>
+            </TableHead>
+
+            <TableBody>
+              {documents.map((d) => (
+                <TableRow key={d.id} hover>
+                  <TableCell
+                    sx={ELLIPSIS_SX}
+                    title={d.name}
+                  >
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      {fileIcon(d.name)}
+                      <Box
+                        component="span"
+                        sx={ELLIPSIS_SX}
+                      >
+                        {d.name}
+                      </Box>
+                    </Stack>
+                  </TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {formatFileSizeKB(d.size)}
+                  </TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {formatDateTimeBR(d.uploadDate)}
+                  </TableCell>
+                  <TableCell align="center">{documentActions(d)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </TableContainer>
         )}
       </Paper>
 
       {/* Menu de ações por documento */}
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={closeMenu}
+      >
         <MenuItem
           onClick={() => {
             if (menuTarget !== null) setConfirmDeleteId(menuTarget);
@@ -363,9 +462,22 @@ export default function UserDocumentsPage() {
       </Menu>
 
       {/* Pré-visualização de documento */}
-      <Dialog open={preview !== null} onClose={handleClosePreview} maxWidth="md" fullWidth>
+      <Dialog
+        open={preview !== null}
+        onClose={handleClosePreview}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>{preview?.name}</DialogTitle>
-        <DialogContent dividers sx={{ p: 0, display: "flex", justifyContent: "center", bgcolor: "background.default" }}>
+        <DialogContent
+          dividers
+          sx={{
+            p: 0,
+            display: "flex",
+            justifyContent: "center",
+            bgcolor: "background.default",
+          }}
+        >
           {preview?.kind === "image" ? (
             <Box
               component="img"
@@ -374,7 +486,12 @@ export default function UserDocumentsPage() {
               sx={{ maxWidth: "100%", maxHeight: "70vh", objectFit: "contain" }}
             />
           ) : preview?.kind === "pdf" ? (
-            <Box component="iframe" src={preview.url} title={preview.name} sx={{ width: "100%", height: "70vh", border: 0 }} />
+            <Box
+              component="iframe"
+              src={preview.url}
+              title={preview.name}
+              sx={{ width: "100%", height: "70vh", border: 0 }}
+            />
           ) : preview?.kind === "docx" && preview.blob ? (
             <Suspense
               fallback={
@@ -406,23 +523,35 @@ export default function UserDocumentsPage() {
           ) : null}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClosePreview}>{t("common.actions.close")}</Button>
+          <Button onClick={handleClosePreview}>
+            {t("common.actions.close")}
+          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Confirmar exclusão de documento */}
-      <Dialog open={confirmDeleteId !== null} onClose={() => setConfirmDeleteId(null)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={confirmDeleteId !== null}
+        onClose={() => setConfirmDeleteId(null)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>{t("userDocuments.confirmDeleteTitle")}</DialogTitle>
         <DialogContent>
-          <Typography variant="body2">{t("userDocuments.confirmDelete")}</Typography>
+          <Typography variant="body2">
+            {t("userDocuments.confirmDelete")}
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDeleteId(null)}>{t("common.actions.cancel")}</Button>
+          <Button onClick={() => setConfirmDeleteId(null)}>
+            {t("common.actions.cancel")}
+          </Button>
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              if (confirmDeleteId !== null) deleteMutation.mutate(confirmDeleteId);
+              if (confirmDeleteId !== null)
+                deleteMutation.mutate(confirmDeleteId);
               setConfirmDeleteId(null);
             }}
           >

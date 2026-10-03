@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import type { ExpirationByMonth } from "../api/dashboard.api";
 import { typography } from "@/styles/typography";
+import { MONTHS } from "@/utils/months";
 import { DashboardCard } from "./chart/DashboardCard";
 import { ChartTooltip } from "./chart/ChartTooltip";
 
@@ -14,11 +15,6 @@ type Props = {
   data: ExpirationByMonth[] | undefined;
   loading: boolean;
 };
-
-const MONTH_KEYS = [
-  "january","february","march","april","may","june",
-  "july","august","september","october","november","december",
-] as const;
 
 type MonthBar = {
   label: string;
@@ -38,8 +34,8 @@ function buildSeries(data: ExpirationByMonth[], t: (k: string) => string): Month
     const month = d.getMonth() + 1;
     const key = `${year}-${month}`;
     return {
-      label: t(`months.${MONTH_KEYS[month - 1]}`).slice(0, 3),
-      fullLabel: `${t(`months.${MONTH_KEYS[month - 1]}`)} ${year}`,
+      label: t(`months.${MONTHS[month - 1]}`).slice(0, 3),
+      fullLabel: `${t(`months.${MONTHS[month - 1]}`)} ${year}`,
       count: map.get(key) ?? 0,
       isCurrentMonth: i === 0,
     };

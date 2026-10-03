@@ -1,37 +1,44 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Box, Button, Stack } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useTranslation } from "react-i18next";
-
-import { useCustomers } from "../hooks/useCustomers";
-import { CustomersFilters } from "../components/CustomersFilters";
-import { CustomersTable } from "../components/CustomersTable";
 import { Pagination } from "@/components/Pagination";
-import { useCities } from "../hooks/useCities";
-import { AddCompanyModal } from "../components/AddCompanyModal";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
+import { Stack } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { AddCompanyModal } from "../components/AddCompanyModal";
+import { CustomersFilters } from "../components/CustomersFilters";
+import { CustomersTable } from "../components/CustomersTable";
+import { useCities } from "../hooks/useCities";
+import { useCustomers } from "../hooks/useCustomers";
 
+/** Página de listagem de clientes, com filtros, ordenação, paginação e cadastro. */
 export default function CustomersListPage() {
+  /** Hooks. */
   const { t } = useTranslation();
   const cities = useCities();
+  const {
+    customers,
+    loading,
+    total,
+    filters,
+    setFilter,
+    hasActiveFilters,
+    clearFilters,
+    pagination,
+    sort,
+  } = useCustomers();
+
+  /** Estados. */
   const [isAddOpen, setIsAddOpen] = useState(false);
-
-  const { customers, loading, total, filters, setFilter, hasActiveFilters, clearFilters, pagination, sort } =
-    useCustomers();
-
-  // Links externos (cards do dashboard) abrem a lista já filtrada por status.
-  // Consome o parâmetro na chegada, zerando os demais filtros para o número
-  // bater com o card de origem. "all" (card "Total") só limpa — os filtros
-  // ficam salvos em sessionStorage entre navegações, então sem isso o card
-  // "Total" herdaria o status de uma visita anterior.
   const [searchParams, setSearchParams] = useSearchParams();
+
+  /** Links externos, como os cards do dashboard, abrem a lista de empresas já filtrada por status. */
   useEffect(() => {
     const urlStatus = searchParams.get("status");
-    const isStatusFilter = urlStatus && ["customer", "non-customer", "inactive"].includes(urlStatus);
+    const isStatusFilter =
+      urlStatus && ["customer", "non-customer", "inactive"].includes(urlStatus);
 
     if (isStatusFilter || urlStatus === "all") {
       clearFilters();
@@ -42,39 +49,25 @@ export default function CustomersListPage() {
       next.delete("status");
       setSearchParams(next, { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams, clearFilters, setFilter, setSearchParams]);
 
+  /** Restaura a posição de rolagem da lista ao voltar para esta página. */
   useScrollRestoration("customers-list.scrollY", !loading);
 
   return (
-    <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
-        <PageHeader
-          items={breadcrumbMap[paths.customers]}
-          subtitle={t("customers.description")}
-        />
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setIsAddOpen(true)}
-          data-tour="customers.add"
-          sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
-        >
-          {t("customers.actions.addCompany")}
-        </Button>
-      </Stack>
-
-      <AddCompanyModal open={isAddOpen} onClose={() => setIsAddOpen(false)} cities={cities} />
-
+    <Stack>
+      <PageHeader
+        items={breadcrumbMap[paths.customers]}
+        subtitle={t("customers.description")}
+      />
       <CustomersFilters
         values={filters}
         onChange={setFilter}
         cities={cities}
         hasActiveFilters={hasActiveFilters}
         onClear={clearFilters}
+        onAddCompany={() => setIsAddOpen(true)}
       />
-
       <CustomersTable
         customers={customers}
         loading={loading}
@@ -82,16 +75,19 @@ export default function CustomersListPage() {
         sortDir={sort.dir}
         onSort={sort.handle}
       />
-
-      <Box sx={{ mt: 1 }}>
-        <Pagination
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          total={total}
-          onPageChange={pagination.setPage}
-          onPageSizeChange={pagination.setPageSize}
-        />
-      </Box>
-    </Box>
+      <Pagination
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        total={total}
+        onPageChange={pagination.setPage}
+        onPageSizeChange={pagination.setPageSize}
+      />
+      {/** Modal para adição de uma nova empresa à lista atual. */}
+      <AddCompanyModal
+        open={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        cities={cities}
+      />
+    </Stack>
   );
 }

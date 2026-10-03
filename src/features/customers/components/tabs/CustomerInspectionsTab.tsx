@@ -28,15 +28,18 @@ import { AddInspectionModal } from "@/features/inspections/components/AddInspect
 import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
 import { useInspectionRowActions } from "@/features/inspections/hooks/useInspectionRowActions";
 import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
-import { ExpirationChip } from "@/components/ExpirationChip";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { ExpirationChip } from "@/components/table/ExpirationChip";
+import { TableContainer } from "@/components/table/TableContainer";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
 
 // Observações não tem mais coluna própria — some dentro do resumo da coluna
 // "Serviço" junto com os campos de equipamento, que são mutuamente exclusivos
 // por categoria de serviço (só os preenchidos aparecem). Sem rótulos, valores
 // concatenados direto, para caber numa linha só junto do nome do serviço.
-function formatEquipmentSummary(i: InspectionSummaryResponseDTO): string | null {
+function formatEquipmentSummary(
+  i: InspectionSummaryResponseDTO,
+): string | null {
   const parts = [
     i.manufacturer?.trim(),
     i.model?.trim(),
@@ -58,13 +61,21 @@ type Props = {
   readOnly?: boolean;
 };
 
-export function CustomerInspectionsTab({ customerId, customerLegalName, customerCnpj, inspections, readOnly = false }: Props) {
+export function CustomerInspectionsTab({
+  customerId,
+  customerLegalName,
+  customerCnpj,
+  inspections,
+  readOnly = false,
+}: Props) {
   const { t } = useTranslation();
   const alertDays = useAlertDays();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [detailId, setDetailId] = useState<number | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [menuRow, setMenuRow] = useState<InspectionSummaryResponseDTO | null>(null);
+  const [menuRow, setMenuRow] = useState<InspectionSummaryResponseDTO | null>(
+    null,
+  );
 
   const {
     openRenew: setRenewTarget,
@@ -73,7 +84,10 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
     actionModals,
   } = useInspectionRowActions({ onOpenDetail: setDetailId });
 
-  function openRowMenu(e: React.MouseEvent<HTMLElement>, row: InspectionSummaryResponseDTO) {
+  function openRowMenu(
+    e: React.MouseEvent<HTMLElement>,
+    row: InspectionSummaryResponseDTO,
+  ) {
     setMenuAnchor(e.currentTarget);
     setMenuRow(row);
   }
@@ -114,13 +128,23 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 2 }}
+      >
         <Typography variant="subtitle2">
           {t("customerDetails.inspections.title")}
         </Typography>
 
         {!readOnly && (
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setIsAddOpen(true)}>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={<AddIcon />}
+            onClick={() => setIsAddOpen(true)}
+          >
             {t("inspections.actions.addInspection")}
           </Button>
         )}
@@ -129,53 +153,105 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
       <AddInspectionModal
         open={isAddOpen}
         onClose={() => setIsAddOpen(false)}
-        lockedCustomer={{ id: customerId, legalName: customerLegalName, cnpj: customerCnpj }}
+        lockedCustomer={{
+          id: customerId,
+          legalName: customerLegalName,
+          cnpj: customerCnpj,
+        }}
         onOpenDetail={setDetailId}
       />
 
-      <DataTableContainer stickyHeader={false}>
-          <TableHead sx={{ bgcolor: "background.default" }}>
-            <TableRow>
-              <TableCell align="center" sx={{ width: "15%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.inspectionDate")}</b></TableCell>
-              <TableCell sx={{ width: "53%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.service")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "13%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.expiration")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "12%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.documents")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "11%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><b>{t("customerDetails.inspections.table.status")}</b></TableCell>
-              <TableCell align="center" sx={{ width: "6%" }} />
-            </TableRow>
-          </TableHead>
+      <TableContainer stickyHeader={false}>
+        <TableHead sx={{ bgcolor: "background.default" }}>
+          <TableRow>
+            <TableCell
+              align="center"
+              sx={{
+                width: "15%",
+                ...ELLIPSIS_SX,
+              }}
+            >
+              <b>{t("customerDetails.inspections.table.inspectionDate")}</b>
+            </TableCell>
+            <TableCell
+              sx={{
+                width: "53%",
+                ...ELLIPSIS_SX,
+              }}
+            >
+              <b>{t("customerDetails.inspections.table.service")}</b>
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{
+                width: "13%",
+                ...ELLIPSIS_SX,
+              }}
+            >
+              <b>{t("customerDetails.inspections.table.expiration")}</b>
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{
+                width: "12%",
+                ...ELLIPSIS_SX,
+              }}
+            >
+              <b>{t("customerDetails.inspections.table.documents")}</b>
+            </TableCell>
+            <TableCell
+              align="center"
+              sx={{
+                width: "11%",
+                ...ELLIPSIS_SX,
+              }}
+            >
+              <b>{t("customerDetails.inspections.table.status")}</b>
+            </TableCell>
+            <TableCell align="center" sx={{ width: "6%" }} />
+          </TableRow>
+        </TableHead>
 
-          <TableBody>
-            {inspections?.length ? (
-              inspections.map((i) => {
-                const equipmentSummary = formatEquipmentSummary(i);
-                const serviceLine = i.serviceType?.name
-                  ? equipmentSummary
-                    ? `${i.serviceType.name} - ${equipmentSummary}`
-                    : i.serviceType.name
-                  : "—";
-                return (
+        <TableBody>
+          {inspections?.length ? (
+            inspections.map((i) => {
+              const equipmentSummary = formatEquipmentSummary(i);
+              const serviceLine = i.serviceType?.name
+                ? equipmentSummary
+                  ? `${i.serviceType.name} - ${equipmentSummary}`
+                  : i.serviceType.name
+                : "—";
+              return (
                 <TableRow
                   key={i.id}
                   hover
                   sx={{ cursor: "pointer" }}
                   onClick={() => setDetailId(i.id)}
                 >
-                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(i.inspectionDate)}</TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {formatDateBR(i.inspectionDate)}
+                  </TableCell>
 
                   <TableCell sx={{ overflow: "hidden" }}>
-                    <Stack direction="row" spacing={1} alignItems="center" flexWrap="nowrap">
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      flexWrap="nowrap"
+                    >
                       <Typography
                         variant="body2"
                         title={serviceLine}
-                        sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                        sx={ELLIPSIS_SX}
                       >
                         {serviceLine}
                       </Typography>
                       {i.isRenewed && (
                         <Chip
                           size="small"
-                          label={t("customerDetails.inspections.status.renewed")}
+                          label={t(
+                            "customerDetails.inspections.status.renewed",
+                          )}
                           color="info"
                           sx={{ flexShrink: 0 }}
                         />
@@ -184,17 +260,31 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                   </TableCell>
 
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                    <ExpirationChip date={i.expirationDate} alertDays={alertDays} active={i.isActive} />
+                    <ExpirationChip
+                      date={i.expirationDate}
+                      alertDays={alertDays}
+                      active={i.isActive}
+                    />
                   </TableCell>
 
-                  <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                  <TableCell
+                    align="center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {i.documents?.length ? (
-                      <Tooltip title={t("customerDetails.inspections.table.documents")}>
-                        <Badge badgeContent={i.documents.length} color="primary">
+                      <Tooltip
+                        title={t("customerDetails.inspections.table.documents")}
+                      >
+                        <Badge
+                          badgeContent={i.documents.length}
+                          color="primary"
+                        >
                           <DescriptionIcon fontSize="small" />
                         </Badge>
                       </Tooltip>
-                    ) : "—"}
+                    ) : (
+                      "—"
+                    )}
                   </TableCell>
 
                   <TableCell align="center">
@@ -209,18 +299,27 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                     ) : (
                       <Chip
                         size="small"
-                        label={i.isActive ? t("customerDetails.inspections.status.active") : t("customerDetails.inspections.status.inactive")}
+                        label={
+                          i.isActive
+                            ? t("customerDetails.inspections.status.active")
+                            : t("customerDetails.inspections.status.inactive")
+                        }
                         color={i.isActive ? "success" : "default"}
                         variant={i.isActive ? "filled" : "outlined"}
                       />
                     )}
                   </TableCell>
 
-                  <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                  <TableCell
+                    align="center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Tooltip title={t("common.actions.more")}>
                       <IconButton
                         size="small"
-                        aria-label={t("customerDetails.inspections.actions.rowMenu")}
+                        aria-label={t(
+                          "customerDetails.inspections.actions.rowMenu",
+                        )}
                         onClick={(e) => openRowMenu(e, i)}
                       >
                         <MoreVertIcon fontSize="small" />
@@ -228,19 +327,27 @@ export function CustomerInspectionsTab({ customerId, customerLegalName, customer
                     </Tooltip>
                   </TableCell>
                 </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 2, color: "text.secondary" }}>
-                  {t("customerDetails.inspections.empty")}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-      </DataTableContainer>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={6}
+                align="center"
+                sx={{ py: 2, color: "text.secondary" }}
+              >
+                {t("customerDetails.inspections.empty")}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </TableContainer>
 
-      <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeRowMenu}>
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={closeRowMenu}
+      >
         <MenuItem
           disabled={menuRow?.isRenewed || readOnly}
           onClick={() => {

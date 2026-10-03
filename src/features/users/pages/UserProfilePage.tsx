@@ -27,12 +27,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canAccess } from "@/features/auth/permissions";
 import { User } from "../types/User";
 import { useAvatarUrl } from "@/hooks/useAvatarUrl";
-import { changePassword, getMe, removeAvatar, updateMe, uploadAvatar } from "../api/user.api";
+import {
+  changePassword,
+  getMe,
+  removeAvatar,
+  updateMe,
+  uploadAvatar,
+} from "../api/user.api";
 import { useNotify } from "@/hooks/useNotify";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { MaskedTextField } from "@/components/MaskedTextField";
-import { PasswordVisibilityToggle } from "@/components/PasswordVisibilityToggle";
+import { PasswordVisibilityToggle } from "@/components/button/PasswordVisibilityToggle";
 import { fieldError } from "@/validation/fields";
 import { userProfileSchema, changePasswordSchema } from "../schemas";
 import { PageHeader } from "@/layout/header/PageHeader";
@@ -114,7 +120,10 @@ export default function UserProfile() {
 
       if (previousUser) {
         const previewUrl = URL.createObjectURL(file);
-        queryClient.setQueryData<User>(qk.me(), { ...previousUser, avatarUrl: previewUrl });
+        queryClient.setQueryData<User>(qk.me(), {
+          ...previousUser,
+          avatarUrl: previewUrl,
+        });
       }
 
       return { previousUser };
@@ -124,14 +133,16 @@ export default function UserProfile() {
     // (handleSaveProfile), então o "Perfil atualizado" do updateMutation cobre.
     onError(_, __, context) {
       notify.error("notify.error.saveFailed");
-      if (context?.previousUser) queryClient.setQueryData(qk.me(), context.previousUser);
+      if (context?.previousUser)
+        queryClient.setQueryData(qk.me(), context.previousUser);
     },
 
     onSettled() {
       queryClient.invalidateQueries({ queryKey: qk.me() });
       // Sem isso o Blob antigo continuaria no cache e o menu do topo seguiria
       // exibindo a foto anterior até a próxima recarga da página.
-      if (user?.id) queryClient.invalidateQueries({ queryKey: qk.avatar(user.id) });
+      if (user?.id)
+        queryClient.invalidateQueries({ queryKey: qk.avatar(user.id) });
     },
   });
 
@@ -215,7 +226,8 @@ export default function UserProfile() {
   const emailError = email.trim() !== "" && !!fieldError(profile, "email");
   const isProfileValid = profile.success;
 
-  const passwordMismatch = confirmPassword !== "" && newPassword !== confirmPassword;
+  const passwordMismatch =
+    confirmPassword !== "" && newPassword !== confirmPassword;
   const isPasswordFormValid = changePasswordSchema.safeParse({
     currentPassword,
     newPassword,
@@ -224,12 +236,17 @@ export default function UserProfile() {
 
   const isActive = user?.isActive ?? true;
   const permissions = user?.permissions ?? [];
-  const canChangePassword = canAccess(permissions, ["ROLE_CHANGE_OWN_PASSWORD"]);
+  const canChangePassword = canAccess(permissions, [
+    "ROLE_CHANGE_OWN_PASSWORD",
+  ]);
 
   return (
     <>
       <Box sx={{ maxWidth: 896 }}>
-        <PageHeader items={breadcrumbMap[paths.userProfile]} subtitle={t("userProfile.description")} />
+        <PageHeader
+          items={breadcrumbMap[paths.userProfile]}
+          subtitle={t("userProfile.description")}
+        />
 
         {isLoading ? (
           <Stack direction="row" spacing={2} alignItems="center">
@@ -242,16 +259,30 @@ export default function UserProfile() {
           <Card sx={{ borderRadius: 2 }}>
             <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               {/* Avatar + Status */}
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems={{ sm: "center" }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={3}
+                alignItems={{ sm: "center" }}
+              >
                 <Box sx={{ position: "relative", width: 112 }}>
                   {avatarPreview ? (
                     <Avatar
                       src={avatarPreview}
-                      sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}
+                      sx={{
+                        width: 112,
+                        height: 112,
+                        fontSize: typography.size.avatarInitials,
+                      }}
                       alt={t("common.alt.avatar")}
                     />
                   ) : (
-                    <Avatar sx={{ width: 112, height: 112, fontSize: typography.size.avatarInitials }}>
+                    <Avatar
+                      sx={{
+                        width: 112,
+                        height: 112,
+                        fontSize: typography.size.avatarInitials,
+                      }}
+                    >
                       {fullName?.charAt(0)}
                     </Avatar>
                   )}
@@ -276,7 +307,13 @@ export default function UserProfile() {
                         </IconButton>
                       </Tooltip>
 
-                      <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleAvatarChange}
+                      />
 
                       {avatarPreview && (
                         <Tooltip title={t("userProfile.actions.removeAvatar")}>
@@ -302,13 +339,21 @@ export default function UserProfile() {
                 </Box>
 
                 <Box>
-                  <Typography fontWeight={typography.weight.semibold} fontSize={18} color="text.primary">
+                  <Typography
+                    fontWeight={typography.weight.semibold}
+                    fontSize={18}
+                    color="text.primary"
+                  >
                     {fullName}
                   </Typography>
 
                   <Chip
                     size="small"
-                    label={isActive ? t("common.status.active") : t("common.status.inactive")}
+                    label={
+                      isActive
+                        ? t("common.status.active")
+                        : t("common.status.inactive")
+                    }
                     color={isActive ? "success" : "error"}
                     sx={{ mt: 1 }}
                   />
@@ -319,87 +364,105 @@ export default function UserProfile() {
 
               {/* Form */}
               <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      fullWidth
-                      label={t("userProfile.fields.fullName")}
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      size="small"
-                      disabled={!isEditing}
-                      required
-                      slotProps={{
-                        htmlInput: { maxLength: 50 }
-                      }}
-                    />
-                  </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label={t("userProfile.fields.fullName")}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    size="small"
+                    disabled={!isEditing}
+                    required
+                    slotProps={{
+                      htmlInput: { maxLength: 50 },
+                    }}
+                  />
+                </Grid>
 
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <MaskedTextField
-                      mask="cpf"
-                      fullWidth
-                      label={t("userProfile.fields.cpf")}
-                      value={cpf}
-                      onChange={(v) => setCpf(v)}
-                      size="small"
-                      disabled={!isEditing}
-                      error={isEditing && cpfError}
-                      helperText={isEditing && cpfError ? t("validation.cpfInvalid") : undefined}
-                    />
-                  </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <MaskedTextField
+                    mask="cpf"
+                    fullWidth
+                    label={t("userProfile.fields.cpf")}
+                    value={cpf}
+                    onChange={(v) => setCpf(v)}
+                    size="small"
+                    disabled={!isEditing}
+                    error={isEditing && cpfError}
+                    helperText={
+                      isEditing && cpfError
+                        ? t("validation.cpfInvalid")
+                        : undefined
+                    }
+                  />
+                </Grid>
 
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      fullWidth
-                      label={t("userProfile.fields.email")}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      size="small"
-                      disabled={!isEditing}
-                      error={isEditing && emailError}
-                      helperText={isEditing && emailError ? t("validation.emailInvalid") : undefined}
-                      slotProps={{
-                        htmlInput: { maxLength: 50 }
-                      }}
-                    />
-                  </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label={t("userProfile.fields.email")}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    size="small"
+                    disabled={!isEditing}
+                    error={isEditing && emailError}
+                    helperText={
+                      isEditing && emailError
+                        ? t("validation.emailInvalid")
+                        : undefined
+                    }
+                    slotProps={{
+                      htmlInput: { maxLength: 50 },
+                    }}
+                  />
+                </Grid>
 
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      fullWidth
-                      label={t("userProfile.fields.crea")}
-                      placeholder="CREA-SC"
-                      value={creaNumber}
-                      onChange={(e) => setCreaNumber(e.target.value)}
-                      size="small"
-                      disabled={!isEditing}
-                      slotProps={{
-                        htmlInput: { maxLength: 10 }
-                      }}
-                    />
-                  </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label={t("userProfile.fields.crea")}
+                    placeholder="CREA-SC"
+                    value={creaNumber}
+                    onChange={(e) => setCreaNumber(e.target.value)}
+                    size="small"
+                    disabled={!isEditing}
+                    slotProps={{
+                      htmlInput: { maxLength: 10 },
+                    }}
+                  />
+                </Grid>
 
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      fullWidth
-                      label={t("userProfile.fields.profession")}
-                      value={profession}
-                      onChange={(e) => setProfession(e.target.value)}
-                      size="small"
-                      disabled={!isEditing}
-                      slotProps={{
-                        htmlInput: { maxLength: 60 }
-                      }}
-                    />
-                  </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label={t("userProfile.fields.profession")}
+                    value={profession}
+                    onChange={(e) => setProfession(e.target.value)}
+                    size="small"
+                    disabled={!isEditing}
+                    slotProps={{
+                      htmlInput: { maxLength: 60 },
+                    }}
+                  />
+                </Grid>
               </Grid>
 
               <Divider sx={{ my: 3 }} />
 
               {/* Actions */}
-              <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={1}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                flexWrap="wrap"
+                gap={1}
+              >
                 {canChangePassword ? (
-                  <Button variant="text" startIcon={<LockIcon />} onClick={() => setPasswordModalOpen(true)}>
+                  <Button
+                    variant="text"
+                    startIcon={<LockIcon />}
+                    onClick={() => setPasswordModalOpen(true)}
+                  >
                     {t("userProfile.actions.changePassword")}
                   </Button>
                 ) : (
@@ -407,7 +470,10 @@ export default function UserProfile() {
                 )}
 
                 {!isEditing ? (
-                  <Button variant="contained" onClick={() => setIsEditing(true)}>
+                  <Button
+                    variant="contained"
+                    onClick={() => setIsEditing(true)}
+                  >
                     {t("userProfile.actions.editProfile")}
                   </Button>
                 ) : (
@@ -437,7 +503,12 @@ export default function UserProfile() {
       </Box>
 
       {/* Password Dialog */}
-      <Dialog open={passwordModalOpen} onClose={() => setPasswordModalOpen(false)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={passwordModalOpen}
+        onClose={() => setPasswordModalOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>{t("userProfile.password.title")}</DialogTitle>
 
         <DialogContent sx={{ pt: 1 }}>
@@ -460,9 +531,9 @@ export default function UserProfile() {
                   ),
                 },
 
-                htmlInput: { maxLength: 100 }
+                htmlInput: { maxLength: 100 },
               }}
-              />
+            />
 
             <TextField
               label={t("userProfile.password.fields.new")}
@@ -482,9 +553,9 @@ export default function UserProfile() {
                   ),
                 },
 
-                htmlInput: { maxLength: 100 }
+                htmlInput: { maxLength: 100 },
               }}
-              />
+            />
 
             <TextField
               label={t("userProfile.password.fields.confirm")}
@@ -495,7 +566,11 @@ export default function UserProfile() {
               fullWidth
               required
               error={passwordMismatch}
-              helperText={passwordMismatch ? t("userProfile.password.errors.mismatch") : undefined}
+              helperText={
+                passwordMismatch
+                  ? t("userProfile.password.errors.mismatch")
+                  : undefined
+              }
               slotProps={{
                 input: {
                   endAdornment: (
@@ -506,14 +581,17 @@ export default function UserProfile() {
                   ),
                 },
 
-                htmlInput: { maxLength: 100 }
+                htmlInput: { maxLength: 100 },
               }}
-              />
+            />
           </Stack>
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setPasswordModalOpen(false)} variant="outlined">
+          <Button
+            onClick={() => setPasswordModalOpen(false)}
+            variant="outlined"
+          >
             {t("common.actions.cancel")}
           </Button>
           <Button

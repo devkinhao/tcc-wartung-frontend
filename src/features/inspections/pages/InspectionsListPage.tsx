@@ -26,9 +26,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
-import { SortableHeader } from "@/components/SortableHeader";
-import { ExpirationChip } from "@/components/ExpirationChip";
-import { DataTableContainer } from "@/components/DataTableContainer";
+import { TableSortableHeader } from "@/components/table/TableSortableHeader";
+import { ExpirationChip } from "@/components/table/ExpirationChip";
+import { TableContainer } from "@/components/table/TableContainer";
 import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
@@ -66,12 +66,25 @@ export default function InspectionsListPage() {
   const { t } = useTranslation();
   const alertDays = useAlertDays();
 
-  const [filters, setFilters]   = useSessionStorageState<InspectionListFilters>("inspections-list.filters.v2", INITIAL_FILTERS);
-  const [page, setPage]         = useSessionStorageState("inspections-list.page", 1);
-  const [pageSize, setPageSize] = useSessionStorageState("inspections-list.pageSize", 10);
+  const [filters, setFilters] = useSessionStorageState<InspectionListFilters>(
+    "inspections-list.filters.v2",
+    INITIAL_FILTERS,
+  );
+  const [page, setPage] = useSessionStorageState("inspections-list.page", 1);
+  const [pageSize, setPageSize] = useSessionStorageState(
+    "inspections-list.pageSize",
+    10,
+  );
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [sortBy, setSortBy] = useSessionStorageState<InspectionSortableColumn | null>("inspections-list.sortBy", null);
-  const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">("inspections-list.sortDir", "asc");
+  const [sortBy, setSortBy] =
+    useSessionStorageState<InspectionSortableColumn | null>(
+      "inspections-list.sortBy",
+      null,
+    );
+  const [sortDir, setSortDir] = useSessionStorageState<"asc" | "desc">(
+    "inspections-list.sortDir",
+    "asc",
+  );
 
   // Links externos podem abrir a lista já filtrada (cartões da home →
   // ?status=expired) ou com uma inspeção aberta no modal (notificação →
@@ -95,7 +108,9 @@ export default function InspectionsListPage() {
   const paramInspectionId = Number(searchParams.get("inspection"));
   const detailId =
     clickedDetailId ??
-    (Number.isFinite(paramInspectionId) && paramInspectionId > 0 ? paramInspectionId : null);
+    (Number.isFinite(paramInspectionId) && paramInspectionId > 0
+      ? paramInspectionId
+      : null);
 
   const closeDetail = () => {
     setClickedDetailId(null);
@@ -124,8 +139,15 @@ export default function InspectionsListPage() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: qk.inspectionsList({ ...queryFilters, page, pageSize, sortBy, sortDir }),
-    queryFn:  () => listAllInspections(queryFilters, page, pageSize, sortBy, sortDir),
+    queryKey: qk.inspectionsList({
+      ...queryFilters,
+      page,
+      pageSize,
+      sortBy,
+      sortDir,
+    }),
+    queryFn: () =>
+      listAllInspections(queryFilters, page, pageSize, sortBy, sortDir),
     placeholderData: (prev) => prev,
   });
 
@@ -146,7 +168,10 @@ export default function InspectionsListPage() {
     filters.manufacturer.trim() !== "" ||
     filters.model.trim() !== "";
 
-  function setFilter<K extends keyof InspectionListFilters>(key: K, value: InspectionListFilters[K]) {
+  function setFilter<K extends keyof InspectionListFilters>(
+    key: K,
+    value: InspectionListFilters[K],
+  ) {
     setFilters((p) => ({ ...p, [key]: value }));
     setPage(1);
   }
@@ -157,7 +182,9 @@ export default function InspectionsListPage() {
   }
 
   function handleSort(column: InspectionSortableColumn) {
-    setSortDir((prev) => (sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc"));
+    setSortDir((prev) =>
+      sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc",
+    );
     setSortBy(column);
     setPage(1);
   }
@@ -196,7 +223,13 @@ export default function InspectionsListPage() {
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2} sx={{ mb: 3 }}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        spacing={2}
+        sx={{ mb: 3 }}
+      >
         <PageHeader
           items={breadcrumbMap[paths.inspections]}
           subtitle={t("inspections.description")}
@@ -243,22 +276,35 @@ export default function InspectionsListPage() {
           label={t("inspections.filters.search")}
           value={filters.search}
           onChange={(e) => setFilter("search", e.target.value)}
-          sx={{ minWidth: { xs: "100%", sm: 200 }, flex: { sm: 1 }, maxWidth: { sm: 260 } }}
+          sx={{
+            minWidth: { xs: "100%", sm: 200 },
+            flex: { sm: 1 },
+            maxWidth: { sm: 260 },
+          }}
         />
 
         <FormControl size="small" sx={{ width: { xs: "100%", sm: 155 } }}>
-          <InputLabel id="inspections-service">{t("inspections.filters.service")}</InputLabel>
+          <InputLabel id="inspections-service">
+            {t("inspections.filters.service")}
+          </InputLabel>
           <Select
             labelId="inspections-service"
             label={t("inspections.filters.service")}
-            value={filters.serviceTypeId === "" ? "" : String(filters.serviceTypeId)}
+            value={
+              filters.serviceTypeId === "" ? "" : String(filters.serviceTypeId)
+            }
             onChange={(e) =>
-              setFilter("serviceTypeId", e.target.value === "" ? "" : Number(e.target.value))
+              setFilter(
+                "serviceTypeId",
+                e.target.value === "" ? "" : Number(e.target.value),
+              )
             }
           >
             <MenuItem value="">{t("inspections.filters.allServices")}</MenuItem>
             {serviceTypes.map((s) => (
-              <MenuItem key={s.id} value={String(s.id)}>{s.name}</MenuItem>
+              <MenuItem key={s.id} value={String(s.id)}>
+                {s.name}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -283,12 +329,18 @@ export default function InspectionsListPage() {
           size="small"
           exclusive
           value={filters.status}
-          onChange={(_, value) => setFilter("status", (value ?? "") as InspectionStatus | "")}
+          onChange={(_, value) =>
+            setFilter("status", (value ?? "") as InspectionStatus | "")
+          }
           sx={{
             maxWidth: "100%",
             overflowX: "auto",
             flexShrink: 0,
-            "& .MuiToggleButton-root": { textTransform: "none", px: 1, whiteSpace: "nowrap" },
+            "& .MuiToggleButton-root": {
+              textTransform: "none",
+              px: 1,
+              whiteSpace: "nowrap",
+            },
             "& .Mui-selected": {
               bgcolor: "primary.main",
               color: "primary.contrastText",
@@ -322,14 +374,46 @@ export default function InspectionsListPage() {
       </Stack>
 
       {/* Tabela */}
-      <DataTableContainer>
+      <TableContainer>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
-            <SortableHeader label={t("inspections.table.inspectionDate")} column="inspectionDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="18%" />
-            <SortableHeader label={t("inspections.table.service")} column="serviceType.name" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="24%" />
-            <SortableHeader label={t("inspections.table.customer")} column="customer.legalName" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} width="31%" />
-            <SortableHeader label={t("inspections.table.expirationDate")} column="expirationDate" sortBy={sortBy} sortDir={sortDir} onSort={handleSort} align="center" width="16%" />
-            <TableCell align="center" sx={{ width: "14%" }}><b>{t("inspections.table.actions")}</b></TableCell>
+            <TableSortableHeader
+              label={t("inspections.table.inspectionDate")}
+              column="inspectionDate"
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSort={handleSort}
+              align="center"
+              width="18%"
+            />
+            <TableSortableHeader
+              label={t("inspections.table.service")}
+              column="serviceType.name"
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSort={handleSort}
+              width="24%"
+            />
+            <TableSortableHeader
+              label={t("inspections.table.customer")}
+              column="customer.legalName"
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSort={handleSort}
+              width="31%"
+            />
+            <TableSortableHeader
+              label={t("inspections.table.expirationDate")}
+              column="expirationDate"
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSort={handleSort}
+              align="center"
+              width="16%"
+            />
+            <TableCell align="center" sx={{ width: "14%" }}>
+              <b>{t("inspections.table.actions")}</b>
+            </TableCell>
           </TableRow>
         </TableHead>
 
@@ -337,9 +421,16 @@ export default function InspectionsListPage() {
           {isLoading ? (
             <TableRow>
               <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
+                <Stack
+                  direction="row"
+                  spacing={1.5}
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <CircularProgress size={18} />
-                  <Typography variant="body2" color="text.secondary">{t("common.loading")}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {t("common.loading")}
+                  </Typography>
                 </Stack>
               </TableCell>
             </TableRow>
@@ -347,7 +438,9 @@ export default function InspectionsListPage() {
             <TableRow>
               <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
                 <Typography variant="body2" color="text.secondary">
-                  {hasActiveFilters ? t("inspections.emptyFiltered") : t("inspections.empty")}
+                  {hasActiveFilters
+                    ? t("inspections.emptyFiltered")
+                    : t("inspections.empty")}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -357,68 +450,101 @@ export default function InspectionsListPage() {
               const equipmentLine = equipmentSummary(item);
 
               return (
-              <TableRow
-                key={item.id}
-                hover
-                sx={{ cursor: "pointer" }}
-                onClick={() => openDetails(item.id)}
-              >
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>{formatDateBR(item.inspectionDate)}</TableCell>
-                <TableCell sx={{ overflow: "hidden" }}>
-                  <Typography variant="body2" noWrap title={item.serviceTypeName}>
-                    {item.serviceTypeName}
-                  </Typography>
-                  {equipmentLine ? (
-                    <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }} title={equipmentLine}>
-                      {equipmentLine}
+                <TableRow
+                  key={item.id}
+                  hover
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => openDetails(item.id)}
+                >
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {formatDateBR(item.inspectionDate)}
+                  </TableCell>
+                  <TableCell sx={{ overflow: "hidden" }}>
+                    <Typography
+                      variant="body2"
+                      noWrap
+                      title={item.serviceTypeName}
+                    >
+                      {item.serviceTypeName}
                     </Typography>
-                  ) : null}
-                </TableCell>
-                <TableCell sx={{ overflow: "hidden" }}>
-                  <Typography variant="body2" noWrap title={item.customerLegalName}>
-                    {item.customerLegalName}
-                  </Typography>
-                  {item.customerCity ? (
-                    <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }}>
-                      {item.customerCity}
+                    {equipmentLine ? (
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        noWrap
+                        sx={{ display: "block" }}
+                        title={equipmentLine}
+                      >
+                        {equipmentLine}
+                      </Typography>
+                    ) : null}
+                  </TableCell>
+                  <TableCell sx={{ overflow: "hidden" }}>
+                    <Typography
+                      variant="body2"
+                      noWrap
+                      title={item.customerLegalName}
+                    >
+                      {item.customerLegalName}
                     </Typography>
-                  ) : null}
-                </TableCell>
-                <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                  {item.isActive ? (
-                    <ExpirationChip date={item.expirationDate} alertDays={alertDays} />
-                  ) : item.isRenewed ? (
-                    <Chip
-                      size="small"
-                      variant="outlined"
-                      label={t("inspections.table.renewedChip")}
-                      sx={{ color: "text.secondary", borderColor: "divider" }}
-                    />
-                  ) : (
-                    <Tooltip title={item.deactivationReason ? t(deactivationReasonKey(item.deactivationReason)) : ""}>
+                    {item.customerCity ? (
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        noWrap
+                        sx={{ display: "block" }}
+                      >
+                        {item.customerCity}
+                      </Typography>
+                    ) : null}
+                  </TableCell>
+                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                    {item.isActive ? (
+                      <ExpirationChip
+                        date={item.expirationDate}
+                        alertDays={alertDays}
+                      />
+                    ) : item.isRenewed ? (
                       <Chip
                         size="small"
                         variant="outlined"
-                        label={t("inspections.table.deactivatedChip")}
+                        label={t("inspections.table.renewedChip")}
                         sx={{ color: "text.secondary", borderColor: "divider" }}
                       />
-                    </Tooltip>
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  <InspectionRowActions
-                    item={item}
-                    onRenew={openRenew}
-                    onDeactivate={openDeactivate}
-                    onDelete={openDelete}
-                  />
-                </TableCell>
-              </TableRow>
+                    ) : (
+                      <Tooltip
+                        title={
+                          item.deactivationReason
+                            ? t(deactivationReasonKey(item.deactivationReason))
+                            : ""
+                        }
+                      >
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={t("inspections.table.deactivatedChip")}
+                          sx={{
+                            color: "text.secondary",
+                            borderColor: "divider",
+                          }}
+                        />
+                      </Tooltip>
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    <InspectionRowActions
+                      item={item}
+                      onRenew={openRenew}
+                      onDeactivate={openDeactivate}
+                      onDelete={openDelete}
+                    />
+                  </TableCell>
+                </TableRow>
               );
             })
           )}
         </TableBody>
-      </DataTableContainer>
+      </TableContainer>
 
       <Box sx={{ mt: 1 }}>
         <Pagination
