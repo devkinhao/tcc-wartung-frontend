@@ -115,21 +115,25 @@ export function UserMenu() {
         slotProps={{ paper: { sx: { width: 260 } } }}
       >
         {/** Informações do usuário autenticado. */}
-        <Box sx={{ px: 2, py: 1.5 }}>
-          <Stack direction="column">
-            {user.profession && (
-              <Typography variant="subtitle1" noWrap>
-                {user.profession}
-              </Typography>
-            )}
-            {user.email && (
-              <Typography variant="caption" color="text.secondary" noWrap>
-                {user.email}
-              </Typography>
-            )}
-          </Stack>
-        </Box>
-        <Divider sx={{ my: 1 }} />
+        {(user.profession || user.email) && (
+          <>
+            <Box sx={{ px: 2, py: 1.5 }}>
+              <Stack direction="column">
+                {user.profession && (
+                  <Typography variant="subtitle1" noWrap>
+                    {user.profession}
+                  </Typography>
+                )}
+                {user.email && (
+                  <Typography variant="caption" color="text.secondary" noWrap>
+                    {user.email}
+                  </Typography>
+                )}
+              </Stack>
+            </Box>
+            <Divider sx={{ my: 1 }} />
+          </>
+        )}
         {/** Acesso ao perfil do usuário. */}
         <Tooltip title={t("userMenu.tooltip.myProfile")} placement="left">
           <MenuItem onClick={() => go(paths.userProfile)}>
