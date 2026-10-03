@@ -12,7 +12,7 @@ export const tokens = {
     text: { primary: "#303030", secondary: "#707070", contrast: "#fffefd" },
     brand: { blue: "#335e78", green: "#78744c" },
     button: { gray: "#9E9D99", hover: "#BDBCB7" },
-    semantic: { success: "#16a34a", warning: "#d97706", danger: "#dc2626" },
+    semantic: { success: "#698f4a", warning: "#f18826", danger: "#c02a2a" },
   },
   dark: {
     bg: {
