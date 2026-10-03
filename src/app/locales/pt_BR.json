@@ -166,6 +166,12 @@
     "filters": {
       "unread": "Não lidas",
       "all": "Todas"
+    },
+    "receivedAt": "Recebida em {{date}}",
+    "indicator": {
+      "single": "Nova notificação: {{title}}",
+      "multiple": "{{count}} notificações novas",
+      "dismiss": "Fechar aviso"
     }
   },
   "pagination": {
@@ -229,6 +235,8 @@
     "showNotificationsDescription": "Exibir notificações no sistema",
     "chatbotEnabled": "Chatbot",
     "chatbotEnabledDescription": "Exibir o assistente de chat no sistema",
+    "notificationSoundEnabled": "Som da notificação",
+    "notificationSoundEnabledDescription": "Tocar um som quando uma notificação nova chegar",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -245,6 +253,10 @@
       "CHATBOT_ENABLED": {
         "true": "Ativado",
         "false": "Desativado"
+      },
+      "NOTIFICATION_SOUND_ENABLED": {
+        "true": "Ativado",
+        "false": "Desativado"
       }
     }
   },
@@ -259,7 +271,9 @@
       "maxFileSizeMb": "Tamanho máximo de arquivo (MB)",
       "maxFileSizeMbDescription": "Tamanho máximo permitido, em megabytes, para upload de documentos",
       "reminderDeleteAfterDays": "Dias para exclusão de lembretes vencidos",
-      "reminderDeleteAfterDaysDescription": "Quantidade de dias após o vencimento em que um lembrete não concluído é excluído automaticamente"
+      "reminderDeleteAfterDaysDescription": "Quantidade de dias após o vencimento em que um lembrete não concluído é excluído automaticamente",
+      "reminderAlertDays": "Dias de antecedência do alerta de lembrete",
+      "reminderAlertDaysDescription": "Quantidade de dias antes do vencimento em que um lembrete pendente passa a gerar uma notificação"
     },
     "actions": {
       "save": "Salvar configurações"
@@ -1070,7 +1084,7 @@
       "companyClosedWarning": "A empresa será marcada como inativa e sairá das visões de acompanhamento.",
       "confirm": "Confirmar",
       "action": "Desativar inspeção",
-      "archivedChip": "Inspeção desativada"
+      "archivedChip": "Desativada"
     }
   },
   "chatbot": {

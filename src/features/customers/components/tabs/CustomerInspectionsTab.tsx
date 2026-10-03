@@ -1,4 +1,18 @@
-import { useState } from "react";
+import { ExpirationChip } from "@/components/table/ExpirationChip";
+import { TableContainer } from "@/components/table/TableContainer";
+import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
+import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
+import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
+import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
+import { useInspectionRowActions } from "@/features/inspections/hooks/useInspectionRowActions";
+import { ELLIPSIS_SX } from "@/styles/ellipsis";
+import { formatDateBR } from "@/utils/date";
+import AddIcon from "@mui/icons-material/Add";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import BlockIcon from "@mui/icons-material/Block";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DescriptionIcon from "@mui/icons-material/Description";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Badge,
   Button,
@@ -15,22 +29,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DescriptionIcon from "@mui/icons-material/Description";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
-import BlockIcon from "@mui/icons-material/Block";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { formatDateBR } from "@/utils/date";
-import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
-import { AddInspectionModal } from "@/features/inspections/components/AddInspectionModal";
-import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
-import { useInspectionRowActions } from "@/features/inspections/hooks/useInspectionRowActions";
-import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
-import { ELLIPSIS_SX } from "@/styles/ellipsis";
-import { ExpirationChip } from "@/components/table/ExpirationChip";
-import { TableContainer } from "@/components/table/TableContainer";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
 
 // Observações não tem mais coluna própria — some dentro do resumo da coluna
@@ -149,7 +149,6 @@ export function CustomerInspectionsTab({
           </Button>
         )}
       </Stack>
-
       <AddInspectionModal
         open={isAddOpen}
         onClose={() => setIsAddOpen(false)}
@@ -160,7 +159,6 @@ export function CustomerInspectionsTab({
         }}
         onOpenDetail={setDetailId}
       />
-
       <TableContainer stickyHeader={false}>
         <TableHead sx={{ bgcolor: "background.default" }}>
           <TableRow>
@@ -211,7 +209,6 @@ export function CustomerInspectionsTab({
             <TableCell align="center" sx={{ width: "6%" }} />
           </TableRow>
         </TableHead>
-
         <TableBody>
           {inspections?.length ? (
             inspections.map((i) => {

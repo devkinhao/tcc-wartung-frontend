@@ -39,6 +39,7 @@ import {
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { toUpperCaseInput } from "@/utils/strings";
 
 /** Dados mínimos da inspeção de origem necessários para renovar. */
 export type RenewableInspection = {
@@ -297,7 +298,7 @@ function RenewInspectionForm({ open, onClose, inspection, onRenewed, onOpenDetai
                 multiline
                 minRows={2}
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={(e) => setNotes(toUpperCaseInput(e.target.value))}
                 slotProps={{
                   htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH }
                 }}

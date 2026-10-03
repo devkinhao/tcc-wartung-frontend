@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
-import { formatDateTimeBR } from "@/utils/date";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
 import { paths } from "@/routes/paths";
@@ -26,7 +25,7 @@ import {
   type NotificationResponseDTO,
 } from "../api/notifications.api";
 import { resolveNotificationLink } from "../utils";
-import { typography } from "@/styles/typography";
+import { NotificationListItem } from "../components/NotificationListItem";
 
 type FilterKey = "unread" | "all";
 
@@ -144,30 +143,7 @@ export default function NotificationsPage() {
                 "&:hover": { bgcolor: "action.hover" },
               }}
             >
-              <Box
-                sx={{
-                  mt: 0.75,
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                  bgcolor: n.read ? "transparent" : "primary.main",
-                }}
-              />
-              <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Typography
-                  variant="body2"
-                  fontWeight={n.read ? typography.weight.regular : typography.weight.bold}
-                >
-                  {n.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {n.message}
-                </Typography>
-                <Typography variant="caption" color="text.disabled">
-                  {formatDateTimeBR(n.createdAt)}
-                </Typography>
-              </Box>
+              <NotificationListItem notification={n} />
             </Box>
           ))
         )}

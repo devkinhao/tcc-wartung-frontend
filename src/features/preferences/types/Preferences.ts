@@ -3,6 +3,8 @@ export enum PreferenceName {
   THEME = "THEME",
   SHOW_NOTIFICATIONS = "SHOW_NOTIFICATIONS",
   CHATBOT_ENABLED = "CHATBOT_ENABLED",
+  /** Subconfiguração de SHOW_NOTIFICATIONS — ver PreferencesPage. */
+  NOTIFICATION_SOUND_ENABLED = "NOTIFICATION_SOUND_ENABLED",
 }
 
 export type UserPreference = {

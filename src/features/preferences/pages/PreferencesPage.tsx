@@ -21,6 +21,8 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
 import ChatIcon from "@mui/icons-material/Chat";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -53,6 +55,10 @@ const PREFERENCE_OPTION_ICONS: Record<string, Record<string, React.ReactNode>> =
     true: <ChatIcon fontSize="small" sx={{ color: "primary.main" }} />,
     false: <ChatBubbleOutlineIcon fontSize="small" sx={{ color: "text.disabled" }} />,
   },
+  NOTIFICATION_SOUND_ENABLED: {
+    true: <VolumeUpIcon fontSize="small" sx={{ color: "primary.main" }} />,
+    false: <VolumeOffIcon fontSize="small" sx={{ color: "text.disabled" }} />,
+  },
 };
 
 const PREFERENCE_ORDER = [
@@ -61,6 +67,13 @@ const PREFERENCE_ORDER = [
   PreferenceName.SHOW_NOTIFICATIONS,
   PreferenceName.CHATBOT_ENABLED,
 ];
+
+/** Preferências que são subconfiguração de outra — só fazem sentido (e só aparecem
+ * habilitadas) com a preferência "mãe" ligada. Renderizadas recuadas, logo abaixo
+ * dela, em vez de soltas na lista principal. */
+const PARENT_PREFERENCE: Partial<Record<string, PreferenceName>> = {
+  [PreferenceName.NOTIFICATION_SOUND_ENABLED]: PreferenceName.SHOW_NOTIFICATIONS,
+};
 
 /**
  * Controle de uma preferência: interruptor para as opções de liga/desliga
@@ -73,12 +86,14 @@ function PreferenceControl({
   currentValue,
   onChange,
   label,
+  disabled = false,
 }: {
   name: string;
   values: string[];
   currentValue: string;
   onChange: (value: string) => void;
   label: (value: string) => string;
+  disabled?: boolean;
 }) {
   const icons = PREFERENCE_OPTION_ICONS[name] ?? {};
   const isBoolean = values.length === 2 && values.includes("true") && values.includes("false");
@@ -89,6 +104,7 @@ function PreferenceControl({
         <Switch
           checked={currentValue === "true"}
           onChange={(e) => onChange(e.target.checked ? "true" : "false")}
+          disabled={disabled}
           slotProps={{ input: { "aria-label": label(currentValue) } }}
         />
         <Typography variant="body2" color="text.secondary" sx={{ minWidth: 78 }}>
@@ -145,6 +161,15 @@ function PreferenceControl({
   );
 }
 
+/** Ícone de cada preferência na lista principal — às subconfigurações (indentadas)
+ * cabe o mesmo ícone da própria opção, sem essa marcação extra. */
+const PREFERENCE_ROW_ICONS: Record<string, React.ReactNode> = {
+  THEME: <LightModeIcon fontSize="small" color="action" />,
+  LANGUAGE: <LanguageIcon fontSize="small" color="action" />,
+  SHOW_NOTIFICATIONS: <NotificationsActiveIcon fontSize="small" color="action" />,
+  CHATBOT_ENABLED: <ChatIcon fontSize="small" color="action" />,
+};
+
 export default function PreferencesPage() {
   const { t } = useTranslation();
   const { preferences, setPreference, isLoading } = usePreferences();
@@ -157,16 +182,23 @@ export default function PreferencesPage() {
   const optionLabel = (prefName: string, value: string) =>
     t(`preferences.options.${prefName}.${value}`, { defaultValue: value });
 
-  const sortedEntries = options
-    ? Object.entries(options).sort(([a], [b]) => {
-        const ia = PREFERENCE_ORDER.indexOf(a as PreferenceName);
-        const ib = PREFERENCE_ORDER.indexOf(b as PreferenceName);
-        if (ia === -1 && ib === -1) return 0;
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
-        return ia - ib;
-      })
+  // Preferências "soltas", na ordem definida — as que são subconfiguração de outra
+  // (ver PARENT_PREFERENCE) ficam de fora daqui e são renderizadas junto da mãe.
+  const topLevelEntries = options
+    ? Object.entries(options)
+        .filter(([name]) => !PARENT_PREFERENCE[name])
+        .sort(([a], [b]) => {
+          const ia = PREFERENCE_ORDER.indexOf(a as PreferenceName);
+          const ib = PREFERENCE_ORDER.indexOf(b as PreferenceName);
+          if (ia === -1 && ib === -1) return 0;
+          if (ia === -1) return 1;
+          if (ib === -1) return -1;
+          return ia - ib;
+        })
     : [];
+
+  const childrenOf = (parentName: string) =>
+    options ? Object.entries(options).filter(([name]) => PARENT_PREFERENCE[name] === parentName) : [];
 
   return (
     <Box sx={{ maxWidth: 720 }}>
@@ -178,39 +210,82 @@ export default function PreferencesPage() {
         <Card sx={{ borderRadius: 2 }}>
           <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
             <Stack divider={<Divider />} spacing={2.5}>
-              {sortedEntries.map(([name, values]) => {
+              {topLevelEntries.map(([name, values]) => {
                 const currentValue = (preferences as Record<string, string>)[name] ?? "";
+                const children = childrenOf(name);
 
                 return (
-                  <Stack
-                    key={name}
-                    direction={{ xs: "column", sm: "row" }}
-                    spacing={2}
-                    alignItems={{ sm: "center" }}
-                    justifyContent="space-between"
-                  >
-                    <Box sx={{ minWidth: 0 }}>
-                      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
-                        {name === "THEME" && <LightModeIcon fontSize="small" color="action" />}
-                        {name === "LANGUAGE" && <LanguageIcon fontSize="small" color="action" />}
-                        {name === "SHOW_NOTIFICATIONS" && <NotificationsActiveIcon fontSize="small" color="action" />}
-                        {name === "CHATBOT_ENABLED" && <ChatIcon fontSize="small" color="action" />}
-                        <Typography variant="subtitle1" color="text.primary">
-                          {t(`preferences.${toCamelCase(name)}`, { defaultValue: name })}
+                  <Stack key={name} spacing={2}>
+                    <Stack
+                      direction={{ xs: "column", sm: "row" }}
+                      spacing={2}
+                      alignItems={{ sm: "center" }}
+                      justifyContent="space-between"
+                    >
+                      <Box sx={{ minWidth: 0 }}>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                          {PREFERENCE_ROW_ICONS[name]}
+                          <Typography variant="subtitle1" color="text.primary">
+                            {t(`preferences.${toCamelCase(name)}`, { defaultValue: name })}
+                          </Typography>
+                        </Stack>
+                        <Typography variant="body2" color="text.secondary">
+                          {t(`preferences.${toCamelCase(name)}Description`, { defaultValue: "" })}
                         </Typography>
-                      </Stack>
-                      <Typography variant="body2" color="text.secondary">
-                        {t(`preferences.${toCamelCase(name)}Description`, { defaultValue: "" })}
-                      </Typography>
-                    </Box>
+                      </Box>
 
-                    <PreferenceControl
-                      name={name}
-                      values={values}
-                      currentValue={currentValue}
-                      onChange={(value) => setPreference(name, value)}
-                      label={(value) => optionLabel(name, value)}
-                    />
+                      <PreferenceControl
+                        name={name}
+                        values={values}
+                        currentValue={currentValue}
+                        onChange={(value) => setPreference(name, value)}
+                        label={(value) => optionLabel(name, value)}
+                      />
+                    </Stack>
+
+                    {/* Subconfigurações — recuadas, desligadas junto com a preferência
+                        mãe (ver PARENT_PREFERENCE). O valor salvo não se perde: só fica
+                        bloqueado pra edição enquanto a mãe estiver desligada. */}
+                    {children.length > 0 && (
+                      <Stack spacing={1.5} sx={{ pl: { xs: 2, sm: 4 }, borderLeft: 2, borderColor: "divider" }}>
+                        {children.map(([childName, childValues]) => {
+                          const childCurrentValue = (preferences as Record<string, string>)[childName] ?? "";
+                          const parentEnabled = currentValue === "true";
+
+                          return (
+                            <Stack
+                              key={childName}
+                              direction={{ xs: "column", sm: "row" }}
+                              spacing={2}
+                              alignItems={{ sm: "center" }}
+                              justifyContent="space-between"
+                              sx={{ opacity: parentEnabled ? 1 : 0.5 }}
+                            >
+                              <Box sx={{ minWidth: 0 }}>
+                                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                                  {PREFERENCE_OPTION_ICONS[childName]?.[childCurrentValue]}
+                                  <Typography variant="body1" color="text.primary">
+                                    {t(`preferences.${toCamelCase(childName)}`, { defaultValue: childName })}
+                                  </Typography>
+                                </Stack>
+                                <Typography variant="body2" color="text.secondary">
+                                  {t(`preferences.${toCamelCase(childName)}Description`, { defaultValue: "" })}
+                                </Typography>
+                              </Box>
+
+                              <PreferenceControl
+                                name={childName}
+                                values={childValues}
+                                currentValue={childCurrentValue}
+                                onChange={(value) => setPreference(childName, value)}
+                                label={(value) => optionLabel(childName, value)}
+                                disabled={!parentEnabled}
+                              />
+                            </Stack>
+                          );
+                        })}
+                      </Stack>
+                    )}
                   </Stack>
                 );
               })}

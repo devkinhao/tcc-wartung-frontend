@@ -166,6 +166,12 @@
     "filters": {
       "unread": "Unread",
       "all": "All"
+    },
+    "receivedAt": "Received on {{date}}",
+    "indicator": {
+      "single": "New notification: {{title}}",
+      "multiple": "{{count}} new notifications",
+      "dismiss": "Dismiss"
     }
   },
   "pagination": {
@@ -229,6 +235,8 @@
     "showNotificationsDescription": "Show notifications in the system",
     "chatbotEnabled": "Chatbot",
     "chatbotEnabledDescription": "Show the chat assistant in the system",
+    "notificationSoundEnabled": "Notification sound",
+    "notificationSoundEnabledDescription": "Play a sound when a new notification arrives",
     "options": {
       "LANGUAGE": {
         "pt_BR": "Português (Brasil)",
@@ -245,6 +253,10 @@
       "CHATBOT_ENABLED": {
         "true": "Enabled",
         "false": "Disabled"
+      },
+      "NOTIFICATION_SOUND_ENABLED": {
+        "true": "Enabled",
+        "false": "Disabled"
       }
     }
   },
@@ -259,7 +271,9 @@
       "maxFileSizeMb": "Maximum file size (MB)",
       "maxFileSizeMbDescription": "Maximum allowed size, in megabytes, for document uploads",
       "reminderDeleteAfterDays": "Days until overdue reminders are deleted",
-      "reminderDeleteAfterDaysDescription": "Number of days after the due date an uncompleted reminder is automatically deleted"
+      "reminderDeleteAfterDaysDescription": "Number of days after the due date an uncompleted reminder is automatically deleted",
+      "reminderAlertDays": "Reminder alert lead time (days)",
+      "reminderAlertDaysDescription": "Number of days before the due date that a pending reminder starts generating a notification"
     },
     "actions": {
       "save": "Save settings"
@@ -1070,7 +1084,7 @@
       "companyClosedWarning": "The company will be marked inactive and drop out of the tracking views.",
       "confirm": "Confirm",
       "action": "Deactivate inspection",
-      "archivedChip": "Inspection deactivated"
+      "archivedChip": "Deactivated"
     }
   },
   "chatbot": {

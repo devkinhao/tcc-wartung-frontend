@@ -67,6 +67,7 @@ import { MaskedTextField } from "@/components/MaskedTextField";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { toUpperCaseInput } from "@/utils/strings";
 import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
 import { deactivationReasonKey } from "../deactivationReason";

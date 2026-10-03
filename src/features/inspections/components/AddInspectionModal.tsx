@@ -40,6 +40,7 @@ import { formatDateBR, addYearsISODate } from "@/utils/date";
 import { fieldError } from "@/validation/fields";
 import { inspectionFormSchema } from "../schemas";
 import { INSPECTION_NOTES_MAX_LENGTH } from "../constants";
+import { toUpperCaseInput } from "@/utils/strings";
 import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 import {
   EMPTY_EQUIPMENT_FIELDS,
@@ -397,7 +398,7 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
                 multiline
                 minRows={3}
                 value={form.notes}
-                onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
+                onChange={(e) => setForm((p) => ({ ...p, notes: toUpperCaseInput(e.target.value) }))}
                 slotProps={{
                   htmlInput: { maxLength: INSPECTION_NOTES_MAX_LENGTH }
                 }}
