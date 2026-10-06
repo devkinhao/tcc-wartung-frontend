@@ -1030,6 +1030,8 @@
         "customer": "Company"
       },
       "customerNoOptions": "Type to search for a company",
+      "customerNotFound": "No company found",
+      "customerListTruncated": "Showing {{shown}} of {{total}} companies. Type to narrow the search.",
       "errors": {
         "expirationBeforeInspection": "Expiration date cannot be before the inspection date"
       },

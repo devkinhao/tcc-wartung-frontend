@@ -78,6 +78,10 @@ const defaultForm: NewInspectionForm = {
   equipment: EMPTY_EQUIPMENT_FIELDS,
 };
 
+function customerLabel(customer: CustomerSummaryResponseDTO) {
+  return `${customer.legalName} — ${customer.cnpj}`;
+}
+
 export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail }: AddInspectionModalProps) {
   const { t } = useTranslation();
   const notify = useNotify();
@@ -102,11 +106,19 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
     return () => clearTimeout(handle);
   }, [customerInput]);
 
-  const { data: customerOptions = [], isFetching: loadingCustomers } = useQuery({
-    queryKey: qk.customerSearch(debouncedInput),
-    queryFn: () => searchCustomers(debouncedInput),
+  // Com uma empresa já escolhida o campo mostra o rótulo dela; usar isso como busca não acharia nada.
+  const customerSearch =
+    form.customer && debouncedInput === customerLabel(form.customer) ? "" : debouncedInput;
+
+  const { data: customerResult, isFetching: loadingCustomers } = useQuery({
+    queryKey: qk.customerSearch(customerSearch),
+    queryFn: () => searchCustomers(customerSearch),
     enabled: open && !lockedCustomer,
   });
+
+  const customerOptions = customerResult?.items ?? [];
+  const customerListTruncated =
+    !form.customer && (customerResult?.total ?? 0) > customerOptions.length;
 
   const { data: serviceTypes = [], isLoading: loadingServiceTypes } = useQuery({
     queryKey: qk.serviceTypes(),
@@ -246,6 +258,9 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
               ) : (
                 <Autocomplete
                   options={[...customerOptions].sort((a, b) => a.legalName.localeCompare(b.legalName))}
+                  // A busca (com normalização de acento/pontuação) é feita no backend; sem isto o
+                  // Autocomplete refiltra por texto simples e descarta "N.S.G. Facção" para "nsg".
+                  filterOptions={(options) => options}
                   loading={loadingCustomers}
                   openOnFocus
                   autoHighlight
@@ -253,15 +268,27 @@ export function AddInspectionModal({ open, onClose, lockedCustomer, onOpenDetail
                   onChange={(_, value) => setForm((p) => ({ ...p, customer: value }))}
                   inputValue={customerInput}
                   onInputChange={(_, value) => setCustomerInput(value)}
-                  getOptionLabel={(o) => `${o.legalName} — ${o.cnpj}`}
+                  getOptionLabel={customerLabel}
                   isOptionEqualToValue={(o, v) => o.id === v.id}
-                  noOptionsText={t("inspections.addModal.customerNoOptions")}
+                  noOptionsText={
+                    customerInput
+                      ? t("inspections.addModal.customerNotFound")
+                      : t("inspections.addModal.customerNoOptions")
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label={t("inspections.addModal.fields.customer")}
                       required
                       size="small"
+                      helperText={
+                        customerListTruncated
+                          ? t("inspections.addModal.customerListTruncated", {
+                              shown: customerOptions.length,
+                              total: customerResult?.total,
+                            })
+                          : undefined
+                      }
                       slotProps={{
                         // `params.InputProps` é a API do renderInput do Autocomplete
                         // (não o prop depreciado do TextField) — repassa aqui.

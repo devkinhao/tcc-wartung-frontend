@@ -1030,6 +1030,8 @@
         "customer": "Empresa"
       },
       "customerNoOptions": "Digite para buscar uma empresa",
+      "customerNotFound": "Nenhuma empresa encontrada",
+      "customerListTruncated": "Mostrando {{shown}} de {{total}} empresas. Digite para refinar a busca.",
       "errors": {
         "expirationBeforeInspection": "O vencimento não pode ser anterior à data da inspeção"
       },

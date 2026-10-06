@@ -1,4 +1,5 @@
 import { api } from "@/api/client";
+import type { SpringPage } from "@/api/pagination";
 import type {
   CustomerSummaryResponseDTO,
   InspectionDetailResponseDTO,
@@ -28,9 +29,15 @@ export async function getServiceTypes(): Promise<ServiceTypeResponseDTO[]> {
   return data;
 }
 
-export async function searchCustomers(search: string): Promise<CustomerSummaryResponseDTO[]> {
-  const { data } = await api.get<{ content: CustomerSummaryResponseDTO[] }>("/customers", {
-    params: { search: search || undefined, page: 0, size: 50 },
+export type CustomerSearchResult = {
+  items: CustomerSummaryResponseDTO[];
+  /** Total de empresas que casam com a busca, mesmo as que ficaram fora do limite de `items`. */
+  total: number;
+};
+
+export async function searchCustomers(search: string): Promise<CustomerSearchResult> {
+  const { data } = await api.get<SpringPage<CustomerSummaryResponseDTO>>("/customers", {
+    params: { search: search || undefined, isActive: true, page: 0, size: 50 },
   });
-  return data.content;
+  return { items: data.content, total: data.page.totalElements };
 }
