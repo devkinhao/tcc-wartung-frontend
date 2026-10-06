@@ -1,7 +1,7 @@
 import { useMemo, useCallback, ReactNode, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/useAuth";
-import i18n from "@/app/i18n";
+import i18n, { rememberLanguage } from "@/app/i18n";
 import { qk } from "@/api/keys";
 
 import { getMyPreferences, updatePreference } from "./api/preferences.api";
@@ -58,6 +58,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (preferences.LANGUAGE) {
       i18n.changeLanguage(preferences.LANGUAGE);
+      rememberLanguage(preferences.LANGUAGE);
     }
   }, [preferences.LANGUAGE]);
 

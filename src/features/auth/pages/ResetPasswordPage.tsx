@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Link as RouterLink,
   useNavigate,
@@ -7,6 +7,7 @@ import {
 import { isAxiosError } from "axios";
 import { resetPassword } from "../api/auth.api";
 import { useTranslation } from "react-i18next";
+import i18n, { isSupportedLanguage } from "@/app/i18n";
 import { paths } from "@/routes/paths";
 import {
   Alert,
@@ -30,6 +31,12 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
+  const linkLanguage = searchParams.get("lang");
+
+  /** O link do e-mail informa o idioma do usuário, que ainda não está autenticado. */
+  useEffect(() => {
+    if (isSupportedLanguage(linkLanguage)) i18n.changeLanguage(linkLanguage);
+  }, [linkLanguage]);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
