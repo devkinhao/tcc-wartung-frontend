@@ -384,7 +384,7 @@ export default function InspectionsListPage() {
               sortDir={sortDir}
               onSort={handleSort}
               align="center"
-              width="18%"
+              width="13%"
             />
             <TableSortableHeader
               label={t("inspections.table.service")}
@@ -392,7 +392,7 @@ export default function InspectionsListPage() {
               sortBy={sortBy}
               sortDir={sortDir}
               onSort={handleSort}
-              width="24%"
+              width="29%"
             />
             <TableSortableHeader
               label={t("inspections.table.customer")}
@@ -400,7 +400,7 @@ export default function InspectionsListPage() {
               sortBy={sortBy}
               sortDir={sortDir}
               onSort={handleSort}
-              width="31%"
+              width="29%"
             />
             <TableSortableHeader
               label={t("inspections.table.expirationDate")}
@@ -411,7 +411,7 @@ export default function InspectionsListPage() {
               align="center"
               width="16%"
             />
-            <TableCell align="center" sx={{ width: "14%" }}>
+            <TableCell align="center" sx={{ width: "13%" }}>
               <b>{t("inspections.table.actions")}</b>
             </TableCell>
           </TableRow>
@@ -446,7 +446,7 @@ export default function InspectionsListPage() {
             </TableRow>
           ) : (
             items.map((item) => {
-              // Linha de baixo da coluna Serviço: equipamento + observações.
+              // Ao lado do nome do serviço: equipamento + observações.
               const equipmentLine = equipmentSummary(item);
 
               return (
@@ -460,43 +460,43 @@ export default function InspectionsListPage() {
                     {formatDateBR(item.inspectionDate)}
                   </TableCell>
                   <TableCell sx={{ overflow: "hidden" }}>
-                    <Typography
-                      variant="body2"
-                      noWrap
-                      title={item.serviceTypeName}
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="baseline"
+                      title={[item.serviceTypeName, equipmentLine].filter(Boolean).join(" ")}
                     >
-                      {item.serviceTypeName}
-                    </Typography>
-                    {equipmentLine ? (
                       <Typography
-                        variant="caption"
-                        color="text.secondary"
+                        variant="body2"
                         noWrap
-                        sx={{ display: "block" }}
-                        title={equipmentLine}
+                        sx={{ flexShrink: 0, maxWidth: "60%" }}
                       >
-                        {equipmentLine}
+                        {item.serviceTypeName}
                       </Typography>
-                    ) : null}
+                      {equipmentLine ? (
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          noWrap
+                          sx={{ minWidth: 0 }}
+                        >
+                          {equipmentLine}
+                        </Typography>
+                      ) : null}
+                    </Stack>
                   </TableCell>
                   <TableCell sx={{ overflow: "hidden" }}>
                     <Typography
                       variant="body2"
                       noWrap
-                      title={item.customerLegalName}
+                      title={
+                        item.customerCity
+                          ? `${item.customerLegalName} · ${item.customerCity}`
+                          : item.customerLegalName
+                      }
                     >
                       {item.customerLegalName}
                     </Typography>
-                    {item.customerCity ? (
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        noWrap
-                        sx={{ display: "block" }}
-                      >
-                        {item.customerCity}
-                      </Typography>
-                    ) : null}
                   </TableCell>
                   <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                     {item.isActive ? (
