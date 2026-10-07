@@ -261,12 +261,33 @@ export function InspectionDetailModal({
         cylinderCount: draft.cylinderCount ?? null,
         btu: draft.btu ?? null,
       },
-      { onSuccess: () => notify.success("notify.success.saved") },
+      {
+        onSuccess: () =>
+          notify.success(
+            view?.isActive
+              ? "notify.success.saved"
+              : "notify.success.inspectionReactivated",
+          ),
+      },
     );
   };
 
   const handleReactivate = () => {
     if (!view) return;
+
+    // Inspeções antigas podem não ter os dados de equipamento que o serviço exige.
+    // Como a inspeção inativa é somente leitura, abre a edição para completá-los
+    // e a reativação acontece ao salvar.
+    if (
+      Object.keys(equipmentFieldErrors(view.serviceType.category, viewEquipmentValues))
+        .length > 0
+    ) {
+      setDraft({ ...view, isActive: true });
+      setEditing(true);
+      notify.warning("notify.errorCodes.SERVICE_FIELDS_REQUIRED");
+      return;
+    }
+
     mutation.mutate(
       {
         inspectionDate: toISODate(view.inspectionDate),
@@ -466,7 +487,7 @@ export function InspectionDetailModal({
                   editing={editing}
                   saving={mutation.isPending}
                   saveDisabled={!isGeneralValid}
-                  readOnly={readOnly}
+                  readOnly={readOnly && !editing}
                   onEdit={startEditing}
                   onCancel={cancelEditing}
                   onSave={handleSave}
