@@ -1,9 +1,10 @@
-import { Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { toUpperCaseInput } from "@/utils/strings";
 import {
   CAPACITY_UNIT_KEY,
   getServiceFields,
+  MANUFACTURER_SUGGESTIONS,
   type EquipmentFieldKey,
   type EquipmentFieldValues,
   type ServiceCategory,
@@ -31,6 +32,9 @@ const UPPERCASE_FIELDS = new Set<EquipmentFieldKey>(["manufacturer", "model"]);
  * Campos de equipamento da inspeção — só os aplicáveis ao serviço escolhido
  * aparecem (ver `serviceCategory.ts`). Usado por criar/editar/renovar
  * inspeção, entre o campo de ART e o de observações.
+ *
+ * Quando a categoria tem fabricantes conhecidos (ver `MANUFACTURER_SUGGESTIONS`),
+ * o campo de fabricante sugere-os enquanto se digita, sem impedir outro nome.
  */
 export function ServiceEquipmentFields({ category, values, onChange, disabled = false, errors = {} }: Props) {
   const { t } = useTranslation();
@@ -48,25 +52,48 @@ export function ServiceEquipmentFields({ category, values, onChange, disabled = 
         const label = unitKey
           ? `${t(`inspectionDetails.fields.${field}`)} (${t(unitKey)})`
           : t(`inspectionDetails.fields.${field}`);
+        const textFieldProps = {
+          label,
+          size: "small",
+          fullWidth: true,
+          required: required.includes(field),
+          error: !!error,
+          helperText: error ? t(error) : undefined,
+        } as const;
+        const toFieldValue = (value: string) => (UPPERCASE_FIELDS.has(field) ? toUpperCaseInput(value) : value);
+        const suggestions = field === "manufacturer" && category ? MANUFACTURER_SUGGESTIONS[category] : undefined;
+
         return (
           <Grid key={field} size={{ xs: 12, md: mdWidth }}>
-            <TextField
-              label={label}
-              size="small"
-              fullWidth
-              required={required.includes(field)}
-              type={NUMERIC_FIELDS.has(field) ? "number" : "text"}
-              value={values[field]}
-              onChange={(e) =>
-                onChange(field, UPPERCASE_FIELDS.has(field) ? toUpperCaseInput(e.target.value) : e.target.value)
-              }
-              disabled={disabled}
-              error={!!error}
-              helperText={error ? t(error) : undefined}
-              slotProps={{
-                htmlInput: NUMERIC_FIELDS.has(field) ? { min: 1 } : { maxLength: MAX_LENGTH[field] },
-              }}
-            />
+            {suggestions ? (
+              // Só o texto é controlado: controlar também `value` com o texto
+              // digitado faria o Autocomplete parar de filtrar as opções.
+              <Autocomplete
+                freeSolo
+                options={suggestions}
+                inputValue={values[field]}
+                onInputChange={(_, value) => onChange(field, toFieldValue(value))}
+                disabled={disabled}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    {...textFieldProps}
+                    slotProps={{ htmlInput: { ...params.inputProps, maxLength: MAX_LENGTH[field] } }}
+                  />
+                )}
+              />
+            ) : (
+              <TextField
+                {...textFieldProps}
+                type={NUMERIC_FIELDS.has(field) ? "number" : "text"}
+                value={values[field]}
+                onChange={(e) => onChange(field, toFieldValue(e.target.value))}
+                disabled={disabled}
+                slotProps={{
+                  htmlInput: NUMERIC_FIELDS.has(field) ? { min: 1 } : { maxLength: MAX_LENGTH[field] },
+                }}
+              />
+            )}
           </Grid>
         );
       })}

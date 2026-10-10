@@ -58,6 +58,29 @@ export const CAPACITY_UNIT_KEY: Partial<Record<ServiceCategory, string>> = {
   ELEVADOR: "inspectionDetails.fields.capacityUnit.kg",
 };
 
+/** Fabricantes sugeridos no campo (o usuário ainda pode digitar outro). Levantados
+ * das observações das inspeções antigas, onde eram anotados antes de o campo existir. */
+export const MANUFACTURER_SUGGESTIONS: Partial<Record<ServiceCategory, readonly string[]>> = {
+  COMPRESSOR: [
+    "ARXO",
+    "ATLAS COPCO",
+    "CHIAPERINI",
+    "CHICAGO PNEUMATIC",
+    "ESQUILO",
+    "LUPERMAQ",
+    "MAGRINI",
+    "METALPLAN",
+    "MOTOMIL",
+    "PRESSURE",
+    "PUMA",
+    "ROTAMIL",
+    "SCHULZ",
+    "TECNOMECANICA",
+    "WAYNE",
+    "WETZEL",
+  ],
+};
+
 const NUMERIC_FIELDS = new Set<EquipmentFieldKey>(["capacity", "cylinderCount", "btu"]);
 
 /**
