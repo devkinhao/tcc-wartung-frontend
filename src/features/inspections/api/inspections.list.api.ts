@@ -1,6 +1,7 @@
 import { api } from "@/api/client";
 import { type SpringPage, toSpringPageParams } from "@/api/pagination";
 import type { InspectionDeactivationReason } from "../deactivationReason";
+import type { ServiceCategory } from "../serviceCategory";
 
 export type InspectionListItem = {
   id: number;
@@ -10,6 +11,7 @@ export type InspectionListItem = {
   customerCity: string | null;
   inspectionDate: string;
   serviceTypeName: string;
+  serviceCategory: ServiceCategory | null;
   manufacturer: string | null;
   model: string | null;
   capacity: string | null;

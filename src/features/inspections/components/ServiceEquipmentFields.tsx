@@ -2,7 +2,7 @@ import { Autocomplete, Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { toUpperCaseInput } from "@/utils/strings";
 import {
-  CAPACITY_UNIT_KEY,
+  capacityUnitLabelKey,
   getServiceFields,
   MANUFACTURER_SUGGESTIONS,
   type EquipmentFieldKey,
@@ -48,7 +48,7 @@ export function ServiceEquipmentFields({ category, values, onChange, disabled = 
     <Grid container spacing={2}>
       {fields.map((field) => {
         const error = errors[field];
-        const unitKey = field === "capacity" && category ? CAPACITY_UNIT_KEY[category] : undefined;
+        const unitKey = field === "capacity" ? capacityUnitLabelKey(category) : undefined;
         const label = unitKey
           ? `${t(`inspectionDetails.fields.${field}`)} (${t(unitKey)})`
           : t(`inspectionDetails.fields.${field}`);

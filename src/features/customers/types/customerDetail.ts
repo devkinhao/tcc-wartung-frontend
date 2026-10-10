@@ -1,6 +1,7 @@
 import { AbvtexSealType } from "./abvtexSeal"
 import type { City } from "./City";
 import type { InspectionDeactivationReason } from "@/features/inspections/deactivationReason";
+import type { ServiceTypeResponseDTO } from "@/features/inspections/types/inspectionDetail";
 
 export type AddressResponseDTO = {
   street: string;
@@ -9,11 +10,6 @@ export type AddressResponseDTO = {
   number: string;
   zipCode: string;
   city: City;
-};
-
-export type ServiceTypeResponseDTO = {
-  id: number;
-  name: string;
 };
 
 export type InspectionDocumentResponseDTO = {

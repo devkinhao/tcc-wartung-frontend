@@ -117,7 +117,7 @@ function AttentionRow({
         : t("home.attention.dueIn", { count: absDays, unit: dayUnit });
 
   const whatsappLink = row.customerMobilePhone ? buildWhatsAppLink(row.customerMobilePhone) : null;
-  const equipmentLine = equipmentSummary(row);
+  const equipmentLine = equipmentSummary(t, row.serviceCategory, row);
 
   return (
     <Stack

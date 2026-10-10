@@ -849,6 +849,13 @@
     }
   },
   "inspectionDetails": {
+    "capacityValue": {
+      "liters": "{{value}} L",
+      "kg": "{{value}} KG",
+      "cylinders_one": "{{value}} CYLINDER",
+      "cylinders_other": "{{value}} CYLINDERS",
+      "btu": "{{value}} BTUs"
+    },
     "loading": "Loading inspection...",
     "title": "Inspection",
     "titleWithService": "Inspection • {{service}}",

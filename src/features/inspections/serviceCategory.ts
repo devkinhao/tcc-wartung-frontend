@@ -50,13 +50,29 @@ export function getServiceFields(category: ServiceCategory | null | undefined): 
   return category ? SERVICE_CATEGORY_FIELDS[category] : NO_FIELDS;
 }
 
-/** Chave i18n da unidade de capacidade exibida ao lado do rótulo do campo
- * (ex: "Capacidade (Litros)") — categorias fora daqui não usam o campo capacity. */
-export const CAPACITY_UNIT_KEY: Partial<Record<ServiceCategory, string>> = {
-  CALDEIRA: "inspectionDetails.fields.capacityUnit.liters",
-  COMPRESSOR: "inspectionDetails.fields.capacityUnit.liters",
-  ELEVADOR: "inspectionDetails.fields.capacityUnit.kg",
+/** Unidade da capacidade de cada categoria — conforme a categoria, a quantidade fica
+ * no campo capacity (litros, kg), cylinderCount (botijões) ou btu. Espelha
+ * ServiceCategory#getCapacityUnit do backend (usado nos relatórios). */
+const CAPACITY_UNIT: Partial<Record<ServiceCategory, "liters" | "kg" | "cylinders" | "btu">> = {
+  CALDEIRA: "liters",
+  COMPRESSOR: "liters",
+  ELEVADOR: "kg",
+  GAS: "cylinders",
+  PMOC: "btu",
 };
+
+/** Chave i18n do nome da unidade, ao lado do rótulo do campo capacity: "Capacidade (Litros)".
+ * Botijões e BTUs não precisam — já estão no nome dos próprios campos. */
+export function capacityUnitLabelKey(category: ServiceCategory | null | undefined): string | undefined {
+  const unit = category ? CAPACITY_UNIT[category] : undefined;
+  return unit === "liters" || unit === "kg" ? `inspectionDetails.fields.capacityUnit.${unit}` : undefined;
+}
+
+/** Chave i18n da quantidade já com a unidade, para listas: "200 L", "3 BOTIJÕES". */
+export function capacityValueKey(category: ServiceCategory | null | undefined): string | undefined {
+  const unit = category ? CAPACITY_UNIT[category] : undefined;
+  return unit && `inspectionDetails.capacityValue.${unit}`;
+}
 
 /** Fabricantes sugeridos no campo (o usuário ainda pode digitar outro). Levantados
  * das observações das inspeções antigas, onde eram anotados antes de o campo existir. */

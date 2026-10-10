@@ -447,7 +447,7 @@ export default function InspectionsListPage() {
           ) : (
             items.map((item) => {
               // Ao lado do nome do serviço: equipamento + observações.
-              const equipmentLine = equipmentSummary(item);
+              const equipmentLine = equipmentSummary(t, item.serviceCategory, item);
 
               return (
                 <TableRow

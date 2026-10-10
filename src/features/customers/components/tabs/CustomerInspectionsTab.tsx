@@ -5,6 +5,7 @@ import { AddInspectionModal } from "@/features/inspections/components/AddInspect
 import { InspectionDetailModal } from "@/features/inspections/components/InspectionDetailModal";
 import { deactivationReasonKey } from "@/features/inspections/deactivationReason";
 import { useInspectionRowActions } from "@/features/inspections/hooks/useInspectionRowActions";
+import { equipmentSummary } from "@/features/inspections/utils/equipmentSummary";
 import { ELLIPSIS_SX } from "@/styles/ellipsis";
 import { formatDateBR } from "@/utils/date";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,25 +33,6 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { InspectionSummaryResponseDTO } from "../../types/customerDetail";
-
-// Observações não tem mais coluna própria — some dentro do resumo da coluna
-// "Serviço" junto com os campos de equipamento, que são mutuamente exclusivos
-// por categoria de serviço (só os preenchidos aparecem). Sem rótulos, valores
-// concatenados direto, para caber numa linha só junto do nome do serviço.
-function formatEquipmentSummary(
-  i: InspectionSummaryResponseDTO,
-): string | null {
-  const parts = [
-    i.manufacturer?.trim(),
-    i.model?.trim(),
-    i.capacity?.trim(),
-    i.cylinderCount != null ? String(i.cylinderCount) : null,
-    i.btu != null ? String(i.btu) : null,
-    i.notes?.trim(),
-  ].filter((part): part is string => !!part);
-
-  return parts.length ? parts.join(" ") : null;
-}
 
 type Props = {
   customerId: number;
@@ -212,10 +194,11 @@ export function CustomerInspectionsTab({
         <TableBody>
           {inspections?.length ? (
             inspections.map((i) => {
-              const equipmentSummary = formatEquipmentSummary(i);
+              // Observações não têm coluna própria: vão no resumo, ao lado do serviço.
+              const equipmentLine = equipmentSummary(t, i.serviceType?.category ?? null, i);
               const serviceLine = i.serviceType?.name
-                ? equipmentSummary
-                  ? `${i.serviceType.name} - ${equipmentSummary}`
+                ? equipmentLine
+                  ? `${i.serviceType.name} - ${equipmentLine}`
                   : i.serviceType.name
                 : "—";
               return (
