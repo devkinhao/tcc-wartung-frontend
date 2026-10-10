@@ -519,12 +519,6 @@
   },
   "customers": {
     "description": "Busque, filtre e gerencie empresas cadastradas.",
-    "actions": {
-      "addCompany": "Nova Empresa",
-      "tooltip": {
-        "addCompany": "Adicionar uma nova empresa à lista"
-      }
-    },
     "filters": {
       "placeholder": {
         "search": "Buscar por razão social ou CNPJ"
@@ -540,7 +534,15 @@
         "clear": "Limpar todos os filtros"
       }
     },
+    "actions": {
+      "addCompany": "Nova Empresa",
+      "tooltip": {
+        "addCompany": "Adicionar uma nova empresa à lista"
+      }
+    },
     "table": {
+      "loading": "Carregando empresas...",
+      "empty": "Nenhuma empresa encontrada.",
       "legalName": "Razão Social",
       "cnpj": "CNPJ",
       "city": "Cidade",
@@ -549,12 +551,12 @@
       "nextExpiration": "Vencimento",
       "inactive": "Inativa",
       "tooltip": {
+        "openDetails": "Clique para ver os detalhes da empresa",
         "inactive": "Empresa inativa",
-        "openDetails": "Clique para ver os detalhes da empresa"
+        "customer": "Esta empresa é cliente",
+        "nonCustomer": "Esta empresa ainda não é cliente"
       }
     },
-    "loading": "Carregando empresas...",
-    "empty": "Nenhuma empresa encontrada.",
     "rowMenu": {
       "view": "Ver cadastro",
       "address": "Ver endereço",
@@ -1003,33 +1005,29 @@
     }
   },
   "inspections": {
-    "title": "Inspeções",
-    "description": "Todas as inspeções cadastradas.",
-    "empty": "Nenhuma inspeção encontrada.",
-    "emptyFiltered": "Nenhuma inspeção encontrada com os filtros aplicados.",
-    "status": {
-      "expired": "Vencidas",
-      "nearExpiration": "Vencem nos próximos {{days}} dias",
-      "onTrack": "Em dia"
-    },
+    "description": "Acompanhe inspeções, vencimentos e a situação de conformidade de cada empresa.",
     "filters": {
-      "search": "Buscar por empresa",
-      "status": "Status",
-      "service": "Serviço",
-      "allServices": "Todos os serviços",
-      "manufacturer": "Fabricante",
-      "model": "Modelo",
-      "clear": "Limpar filtros",
-      "statusAll": "Todas",
+      "placeholder": {
+        "search": "Buscar por empresa ou fabricante/modelo"
+      },
+      "allServices": "Filtrar por serviço",
+      "status": "Situação",
       "statusExpired": "Vencidas",
       "statusNear": "Vencem logo",
-      "statusOk": "Em dia"
+      "statusOk": "Em dia",
+      "statusInactive": "Inativas",
+      "clear": "Limpar",
+      "tooltip": {
+        "clear": "Limpar todos os filtros"
+      }
     },
     "actions": {
-      "addInspection": "Nova inspeção"
-    },
-    "rowActions": {
-      "view": "Ver inspeção"
+      "addInspection": "Nova Inspeção",
+      "tooltip": {
+        "addInspection": "Vincular uma nova inspeção a uma empresa",
+        "renewInspection": "Renovar inspeção",
+        "deactivateInspection": "Desativar inspeção"
+      }
     },
     "addModal": {
       "title": "Nova inspeção",
@@ -1059,15 +1057,22 @@
       "expirationShortcut": "+{{count}} {{unit}}"
     },
     "table": {
-      "customer": "Empresa",
+      "loading": "Carregando inspeções...",
+      "empty": "Nenhuma inspeção encontrada.",
+      "emptyFiltered": "Nenhuma inspeção encontrada com os filtros aplicados.",
       "service": "Serviço",
-      "notes": "Observações",
+      "customer": "Empresa",
       "inspectionDate": "Data da Inspeção",
       "expirationDate": "Vencimento",
-      "status": "Status",
       "actions": "Ações",
-      "renewedChip": "Já renovada",
-      "deactivatedChip": "Desativada"
+      "renewedChip": "Renovada",
+      "deactivatedChip": "Desativada",
+      "tooltip": {
+        "openDetails": "Clique para ver os detalhes da inspeção",
+        "renewedChip": "Inspeção renovada, uma nova foi criada a partir dela",
+        "deactivatedChip": "Inspeção desativada, fora da lista de pendências",
+        "deactivatedChipWithReason": "Inspeção desativada, {{reason}}"
+      }
     },
     "renewModal": {
       "title": "Renovar inspeção",
@@ -1080,7 +1085,6 @@
         "confirmShort": "Renovar",
         "openNew": "Abrir nova inspeção"
       },
-      "tooltip": "Criar a próxima inspeção a partir desta",
       "currentSummary": "Realizada em {{inspectionDate}} · vence em {{expirationDate}}"
     },
     "deactivate": {

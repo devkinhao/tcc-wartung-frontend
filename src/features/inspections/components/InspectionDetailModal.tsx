@@ -24,6 +24,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DownloadIcon from "@mui/icons-material/Download";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -63,6 +64,7 @@ import { deactivationReasonKey } from "../deactivationReason";
 import { inspectionFormSchema } from "../schemas";
 import { equipmentFieldErrors, toEquipmentValues } from "../serviceCategory";
 import type { InspectionDetailResponseDTO } from "../types/inspectionDetail";
+import { DeleteInspectionDialog } from "./DeleteInspectionDialog";
 import { ServiceEquipmentFields } from "./ServiceEquipmentFields";
 // A biblioteca docx-preview tem ~200 KB e só é usada ao pré-visualizar um .docx.
 // Como este modal é importado pela home e pelas listagens, o import estático
@@ -86,8 +88,8 @@ type Props = {
 
 /**
  * Detalhes da inspeção num modal: ver/editar dados (serviço, datas, ART,
- * observações), gerir documentos e reativar quando encerrada. Renovar / desativar
- * / excluir ficam no menu da linha das listagens.
+ * observações), gerir documentos, reativar quando encerrada e excluir a
+ * inspeção. Renovar / desativar ficam nas ações da linha das listagens.
  */
 export function InspectionDetailModal({
   inspectionId,
@@ -108,6 +110,8 @@ export function InspectionDetailModal({
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
 
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [confirmDeleteInspectionOpen, setConfirmDeleteInspectionOpen] =
+    useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [docMenuAnchor, setDocMenuAnchor] = useState<HTMLElement | null>(null);
@@ -836,6 +840,17 @@ export function InspectionDetailModal({
         </DialogContent>
 
         <DialogActions>
+          {view ? (
+            <Button
+              color="error"
+              startIcon={<DeleteOutlineIcon />}
+              onClick={() => setConfirmDeleteInspectionOpen(true)}
+              disabled={mutation.isPending || editing}
+              sx={{ mr: view.isActive || view.isRenewed ? "auto" : 0 }}
+            >
+              {t("inspectionDetails.actions.delete")}
+            </Button>
+          ) : null}
           {view && !view.isActive && !view.isRenewed ? (
             <Button
               color="success"
@@ -850,6 +865,26 @@ export function InspectionDetailModal({
           <Button onClick={requestClose}>{t("common.actions.close")}</Button>
         </DialogActions>
       </Dialog>
+
+      {/** Confirmar exclusão da inspeção; ao excluir, o modal de detalhe também é fechado. */}
+      <DeleteInspectionDialog
+        open={confirmDeleteInspectionOpen}
+        inspection={
+          view
+            ? {
+                id: view.id,
+                serviceTypeName: view.serviceType.name,
+                customerLegalName: view.customer?.legalName ?? "",
+                customerId: customerId ?? undefined,
+              }
+            : null
+        }
+        onClose={() => setConfirmDeleteInspectionOpen(false)}
+        onDeleted={() => {
+          cancelEditing();
+          onClose();
+        }}
+      />
 
       {/* Menu de ações por documento */}
       <Menu

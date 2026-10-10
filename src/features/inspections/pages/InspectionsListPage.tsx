@@ -1,81 +1,48 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
 import { qk } from "@/api/keys";
 import { Pagination } from "@/components/Pagination";
-import { TableSortableHeader } from "@/components/table/TableSortableHeader";
-import { ExpirationChip } from "@/components/table/ExpirationChip";
-import { TableContainer } from "@/components/table/TableContainer";
-import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
-import { formatDateBR } from "@/utils/date";
-import { useAlertDays } from "@/features/configurations/hooks/useAlertDays";
+import { useSessionStorageState } from "@/hooks/useSessionStorageState";
 import { PageHeader } from "@/layout/header/PageHeader";
 import { breadcrumbMap } from "@/layout/header/breadcrumbMap";
-import { AddInspectionModal } from "../components/AddInspectionModal";
-import { InspectionDetailModal } from "../components/InspectionDetailModal";
-import { InspectionRowActions } from "../components/InspectionRowActions";
-import { useInspectionRowActions } from "../hooks/useInspectionRowActions";
-import { deactivationReasonKey } from "../deactivationReason";
+import { paths } from "@/routes/paths";
+import { Stack } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import {
+  INITIAL_INSPECTION_FILTERS,
+  isInspectionStatus,
   listAllInspections,
   type InspectionListFilters,
-  type InspectionListItem,
   type InspectionSortableColumn,
-  type InspectionStatus,
 } from "../api/inspections.list.api";
-import { getServiceTypes } from "../api/inspections.create.api";
-import { equipmentSummary } from "../utils/equipmentSummary";
-import { paths } from "@/routes/paths";
+import { AddInspectionModal } from "../components/AddInspectionModal";
+import { InspectionDetailModal } from "../components/InspectionDetailModal";
+import { InspectionsFilters } from "../components/InspectionsFilters";
+import { InspectionsTable } from "../components/InspectionsTable";
+import { useInspectionRowActions } from "../hooks/useInspectionRowActions";
 
-const VALID_STATUSES: InspectionStatus[] = ["expired", "near", "ok"];
-
-const INITIAL_FILTERS: InspectionListFilters = {
-  status: "",
-  search: "",
-  serviceTypeId: "",
-  manufacturer: "",
-  model: "",
-};
-
+/** Listagem de inspeções, com filtros, ordenação e paginação mantidos na sessão. */
 export default function InspectionsListPage() {
+  /** Hooks. */
   const { t } = useTranslation();
-  const alertDays = useAlertDays();
 
+  /** Estados. */
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [clickedDetailId, setClickedDetailId] = useState<number | null>(null);
+
+  /** Filtros, página e ordenação guardados na sessão, para serem restaurados ao voltar à tela. */
   const [filters, setFilters] = useSessionStorageState<InspectionListFilters>(
     "inspections-list.filters.v2",
-    INITIAL_FILTERS,
+    INITIAL_INSPECTION_FILTERS,
   );
   const [page, setPage] = useSessionStorageState("inspections-list.page", 1);
   const [pageSize, setPageSize] = useSessionStorageState(
     "inspections-list.pageSize",
     10,
   );
-  const [isAddOpen, setIsAddOpen] = useState(false);
   const [sortBy, setSortBy] =
     useSessionStorageState<InspectionSortableColumn | null>(
       "inspections-list.sortBy",
@@ -86,16 +53,14 @@ export default function InspectionsListPage() {
     "asc",
   );
 
-  // Links externos podem abrir a lista já filtrada (cartões da home →
-  // ?status=expired) ou com uma inspeção aberta no modal (notificação →
-  // ?inspection=123). O status é consumido na chegada; o id da inspeção fica
-  // derivado do param (reage mesmo estando já na lista) e é limpo ao fechar.
+  /** Parâmetros de URL. */
   const [searchParams, setSearchParams] = useSearchParams();
 
+  /** Aplica o status vindo da URL apenas na chegada e remove o parâmetro. */
   useEffect(() => {
     const urlStatus = searchParams.get("status");
-    if (urlStatus && (VALID_STATUSES as string[]).includes(urlStatus)) {
-      setFilters((p) => ({ ...p, status: urlStatus as InspectionStatus }));
+    if (isInspectionStatus(urlStatus)) {
+      setFilters((p) => ({ ...p, status: urlStatus }));
       setPage(1);
       const next = new URLSearchParams(searchParams);
       next.delete("status");
@@ -104,14 +69,16 @@ export default function InspectionsListPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [clickedDetailId, setClickedDetailId] = useState<number | null>(null);
   const paramInspectionId = Number(searchParams.get("inspection"));
+
+  /** Inspeção aberta no modal: a clicada na tabela ou a indicada na URL. */
   const detailId =
     clickedDetailId ??
     (Number.isFinite(paramInspectionId) && paramInspectionId > 0
       ? paramInspectionId
       : null);
 
+  /** Fecha o modal de detalhe e limpa a inspection da URL. */
   const closeDetail = () => {
     setClickedDetailId(null);
     if (searchParams.has("inspection")) {
@@ -121,16 +88,17 @@ export default function InspectionsListPage() {
     }
   };
 
-  const {
-    openRenew: setRenewTarget,
-    openDeactivate: setDeactivateTarget,
-    openDelete: setDeleteTarget,
-    actionModals,
-  } = useInspectionRowActions({ onOpenDetail: setClickedDetailId });
+  /** Modais de renovar e desativar, abertos pelas ações da linha com a própria inspeção da lista. */
+  const { openRenew, openDeactivate, actionModals } = useInspectionRowActions({
+    onOpenDetail: setClickedDetailId,
+  });
 
+  /** Campos de texto passam por debounce para não consultar a API a cada tecla. */
   const debouncedSearch = useDebouncedValue(filters.search, 400);
   const debouncedManufacturer = useDebouncedValue(filters.manufacturer, 400);
   const debouncedModel = useDebouncedValue(filters.model, 400);
+
+  /** Filtros enviados à API, com os campos de texto já com debounce. */
   const queryFilters: InspectionListFilters = {
     ...filters,
     search: debouncedSearch,
@@ -138,6 +106,7 @@ export default function InspectionsListPage() {
     model: debouncedModel,
   };
 
+  /** Página de inspeções; mantém a anterior na tela enquanto a nova carrega. */
   const { data, isLoading } = useQuery({
     queryKey: qk.inspectionsList({
       ...queryFilters,
@@ -151,16 +120,13 @@ export default function InspectionsListPage() {
     placeholderData: (prev) => prev,
   });
 
-  const { data: serviceTypes = [] } = useQuery({
-    queryKey: qk.serviceTypes(),
-    queryFn: getServiceTypes,
-    staleTime: 5 * 60 * 1000,
-  });
-
+  /** Restaura a rolagem da lista ao voltar para a tela, depois que os dados carregam. */
   useScrollRestoration("inspections-list.scrollY", !isLoading);
 
   const items = data?.content ?? [];
   const total = data?.page.totalElements ?? 0;
+
+  /** Indica se há algum filtro aplicado, o que habilita "Limpar" e muda a mensagem de lista vazia. */
   const hasActiveFilters =
     filters.search.trim() !== "" ||
     filters.status !== "" ||
@@ -168,6 +134,7 @@ export default function InspectionsListPage() {
     filters.manufacturer.trim() !== "" ||
     filters.model.trim() !== "";
 
+  /** Atualiza um filtro e volta para a primeira página. */
   function setFilter<K extends keyof InspectionListFilters>(
     key: K,
     value: InspectionListFilters[K],
@@ -176,11 +143,13 @@ export default function InspectionsListPage() {
     setPage(1);
   }
 
+  /** Restaura os filtros iniciais e volta para a primeira página. */
   function clearFilters() {
-    setFilters(INITIAL_FILTERS);
+    setFilters(INITIAL_INSPECTION_FILTERS);
     setPage(1);
   }
 
+  /** Ordena pela coluna; clicar de novo na mesma alterna asc/desc. */
   function handleSort(column: InspectionSortableColumn) {
     setSortDir((prev) =>
       sortBy === column ? (prev === "asc" ? "desc" : "asc") : "asc",
@@ -189,375 +158,54 @@ export default function InspectionsListPage() {
     setPage(1);
   }
 
-  const openDetails = (id: number) => setClickedDetailId(id);
-
-  const openDelete = (item: InspectionListItem) =>
-    setDeleteTarget({
-      id: item.id,
-      serviceTypeName: item.serviceTypeName,
-      customerLegalName: item.customerLegalName,
-    });
-
-  const openRenew = (item: InspectionListItem) =>
-    setRenewTarget({
-      id: item.id,
-      inspectionDate: item.inspectionDate,
-      expirationDate: item.expirationDate,
-      customerLegalName: item.customerLegalName,
-      serviceTypeName: item.serviceTypeName,
-    });
-
-  const openDeactivate = (item: InspectionListItem) =>
-    setDeactivateTarget({
-      id: item.id,
-      serviceTypeName: item.serviceTypeName,
-      customerLegalName: item.customerLegalName,
-    });
-
-  const STATUS_OPTIONS: { value: InspectionStatus | ""; label: string }[] = [
-    { value: "", label: t("inspections.filters.statusAll") },
-    { value: "expired", label: t("inspections.filters.statusExpired") },
-    { value: "near", label: t("inspections.filters.statusNear") },
-    { value: "ok", label: t("inspections.filters.statusOk") },
-  ];
-
   return (
-    <Box>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        spacing={2}
-        sx={{ mb: 3 }}
-      >
-        <PageHeader
-          items={breadcrumbMap[paths.inspections]}
-          subtitle={t("inspections.description")}
-        />
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setIsAddOpen(true)}
-          data-tour="inspections.add"
-          sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
-        >
-          {t("inspections.actions.addInspection")}
-        </Button>
-      </Stack>
-
+    <Stack>
+      <PageHeader
+        items={breadcrumbMap[paths.inspections]}
+        subtitle={t("inspections.description")}
+      />
+      <InspectionsFilters
+        filters={filters}
+        hasActiveFilters={hasActiveFilters}
+        onChange={setFilter}
+        onClear={clearFilters}
+        onAddInspection={() => setIsAddOpen(true)}
+      />
+      <InspectionsTable
+        items={items}
+        isLoading={isLoading}
+        hasActiveFilters={hasActiveFilters}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        onSort={handleSort}
+        onOpenDetail={setClickedDetailId}
+        onRenew={openRenew}
+        onDeactivate={openDeactivate}
+      />
+      {/** Modal para criação de inspeção. */}
       <AddInspectionModal
         open={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onOpenDetail={setClickedDetailId}
       />
+      {/** Modais de renovar e desativar. */}
       {actionModals}
+      {/** Modal para os detalhes da inspeção, com edição, documentos e exclusão. */}
       <InspectionDetailModal
         inspectionId={detailId}
         open={detailId !== null}
         onClose={closeDetail}
       />
-
-      {/* Filtros */}
-      {/* Larguras/paddings enxutos de propósito: com o botão "Limpar filtros"
-          sempre visível (não só quando há filtro ativo), a barra inteira
-          precisa caber numa linha só em 1366px de largura com a sidebar
-          aberta (~1098px úteis) — sem essa folga o botão sozinho quebra
-          pra linha de baixo. */}
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={1}
-        alignItems={{ sm: "center" }}
-        flexWrap="wrap"
-        useFlexGap
-        sx={{ mb: 2 }}
-      >
-        <TextField
-          size="small"
-          label={t("inspections.filters.search")}
-          value={filters.search}
-          onChange={(e) => setFilter("search", e.target.value)}
-          sx={{
-            minWidth: { xs: "100%", sm: 200 },
-            flex: { sm: 1 },
-            maxWidth: { sm: 260 },
-          }}
-        />
-
-        <FormControl size="small" sx={{ width: { xs: "100%", sm: 155 } }}>
-          <InputLabel id="inspections-service">
-            {t("inspections.filters.service")}
-          </InputLabel>
-          <Select
-            labelId="inspections-service"
-            label={t("inspections.filters.service")}
-            value={
-              filters.serviceTypeId === "" ? "" : String(filters.serviceTypeId)
-            }
-            onChange={(e) =>
-              setFilter(
-                "serviceTypeId",
-                e.target.value === "" ? "" : Number(e.target.value),
-              )
-            }
-          >
-            <MenuItem value="">{t("inspections.filters.allServices")}</MenuItem>
-            {serviceTypes.map((s) => (
-              <MenuItem key={s.id} value={String(s.id)}>
-                {s.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField
-          size="small"
-          label={t("inspections.filters.manufacturer")}
-          value={filters.manufacturer}
-          onChange={(e) => setFilter("manufacturer", e.target.value)}
-          sx={{ width: { xs: "100%", sm: 120 } }}
-        />
-
-        <TextField
-          size="small"
-          label={t("inspections.filters.model")}
-          value={filters.model}
-          onChange={(e) => setFilter("model", e.target.value)}
-          sx={{ width: { xs: "100%", sm: 120 } }}
-        />
-
-        <ToggleButtonGroup
-          size="small"
-          exclusive
-          value={filters.status}
-          onChange={(_, value) =>
-            setFilter("status", (value ?? "") as InspectionStatus | "")
-          }
-          sx={{
-            maxWidth: "100%",
-            overflowX: "auto",
-            flexShrink: 0,
-            "& .MuiToggleButton-root": {
-              textTransform: "none",
-              px: 1,
-              whiteSpace: "nowrap",
-            },
-            "& .Mui-selected": {
-              bgcolor: "primary.main",
-              color: "primary.contrastText",
-              "&:hover": { bgcolor: "primary.dark" },
-            },
-          }}
-        >
-          {STATUS_OPTIONS.map((opt) => (
-            <ToggleButton key={opt.value || "all"} value={opt.value}>
-              {opt.label}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-
-        <Button
-          size="small"
-          color="inherit"
-          onClick={clearFilters}
-          disabled={!hasActiveFilters}
-          startIcon={<FilterAltOffIcon fontSize="small" />}
-          sx={{
-            flexShrink: 0,
-            color: "text.secondary",
-            whiteSpace: "nowrap",
-            px: 1,
-            "& .MuiButton-startIcon": { mr: 0.75 },
-          }}
-        >
-          {t("inspections.filters.clear")}
-        </Button>
-      </Stack>
-
-      {/* Tabela */}
-      <TableContainer>
-        <TableHead sx={{ bgcolor: "background.default" }}>
-          <TableRow>
-            <TableSortableHeader
-              label={t("inspections.table.inspectionDate")}
-              column="inspectionDate"
-              sortBy={sortBy}
-              sortDir={sortDir}
-              onSort={handleSort}
-              align="center"
-              width="13%"
-            />
-            <TableSortableHeader
-              label={t("inspections.table.service")}
-              column="serviceType.name"
-              sortBy={sortBy}
-              sortDir={sortDir}
-              onSort={handleSort}
-              width="29%"
-            />
-            <TableSortableHeader
-              label={t("inspections.table.customer")}
-              column="customer.legalName"
-              sortBy={sortBy}
-              sortDir={sortDir}
-              onSort={handleSort}
-              width="29%"
-            />
-            <TableSortableHeader
-              label={t("inspections.table.expirationDate")}
-              column="expirationDate"
-              sortBy={sortBy}
-              sortDir={sortDir}
-              onSort={handleSort}
-              align="center"
-              width="16%"
-            />
-            <TableCell align="center" sx={{ width: "13%" }}>
-              <b>{t("inspections.table.actions")}</b>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {isLoading ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                <Stack
-                  direction="row"
-                  spacing={1.5}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <CircularProgress size={18} />
-                  <Typography variant="body2" color="text.secondary">
-                    {t("common.loading")}
-                  </Typography>
-                </Stack>
-              </TableCell>
-            </TableRow>
-          ) : items.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
-                <Typography variant="body2" color="text.secondary">
-                  {hasActiveFilters
-                    ? t("inspections.emptyFiltered")
-                    : t("inspections.empty")}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ) : (
-            items.map((item) => {
-              // Ao lado do nome do serviço: equipamento + observações.
-              const equipmentLine = equipmentSummary(t, item.serviceCategory, item);
-
-              return (
-                <TableRow
-                  key={item.id}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => openDetails(item.id)}
-                >
-                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                    {formatDateBR(item.inspectionDate)}
-                  </TableCell>
-                  <TableCell sx={{ overflow: "hidden" }}>
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      alignItems="baseline"
-                      title={[item.serviceTypeName, equipmentLine].filter(Boolean).join(" ")}
-                    >
-                      <Typography
-                        variant="body2"
-                        noWrap
-                        sx={{ flexShrink: 0, maxWidth: "60%" }}
-                      >
-                        {item.serviceTypeName}
-                      </Typography>
-                      {equipmentLine ? (
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          noWrap
-                          sx={{ minWidth: 0 }}
-                        >
-                          {equipmentLine}
-                        </Typography>
-                      ) : null}
-                    </Stack>
-                  </TableCell>
-                  <TableCell sx={{ overflow: "hidden" }}>
-                    <Typography
-                      variant="body2"
-                      noWrap
-                      title={
-                        item.customerCity
-                          ? `${item.customerLegalName} · ${item.customerCity}`
-                          : item.customerLegalName
-                      }
-                    >
-                      {item.customerLegalName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                    {item.isActive ? (
-                      <ExpirationChip
-                        date={item.expirationDate}
-                        alertDays={alertDays}
-                      />
-                    ) : item.isRenewed ? (
-                      <Chip
-                        size="small"
-                        variant="outlined"
-                        label={t("inspections.table.renewedChip")}
-                        sx={{ color: "text.secondary", borderColor: "divider" }}
-                      />
-                    ) : (
-                      <Tooltip
-                        title={
-                          item.deactivationReason
-                            ? t(deactivationReasonKey(item.deactivationReason))
-                            : ""
-                        }
-                      >
-                        <Chip
-                          size="small"
-                          variant="outlined"
-                          label={t("inspections.table.deactivatedChip")}
-                          sx={{
-                            color: "text.secondary",
-                            borderColor: "divider",
-                          }}
-                        />
-                      </Tooltip>
-                    )}
-                  </TableCell>
-                  <TableCell align="right">
-                    <InspectionRowActions
-                      item={item}
-                      onRenew={openRenew}
-                      onDeactivate={openDeactivate}
-                      onDelete={openDelete}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          )}
-        </TableBody>
-      </TableContainer>
-
-      <Box sx={{ mt: 1 }}>
-        <Pagination
-          page={page}
-          pageSize={pageSize}
-          total={total}
-          onPageChange={setPage}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setPage(1);
-          }}
-        />
-      </Box>
-    </Box>
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        total={total}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(1);
+        }}
+      />
+    </Stack>
   );
 }

@@ -48,7 +48,7 @@ export function ExpirationChip({
       : "expiration.tooltip.due";
 
   return (
-    <Tooltip title={t(tooltipKey, { date: formattedDate })}>
+    <Tooltip title={t(tooltipKey, { date: formattedDate })} placement="left">
       <Chip
         size="small"
         label={formattedDate}

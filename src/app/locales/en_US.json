@@ -519,12 +519,6 @@
   },
   "customers": {
     "description": "Search, filter and manage registered companies.",
-    "actions": {
-      "addCompany": "New Company",
-      "tooltip": {
-        "addCompany": "Add a new company to the list"
-      }
-    },
     "filters": {
       "placeholder": {
         "search": "Search by legal name or CNPJ"
@@ -540,7 +534,15 @@
         "clear": "Clear all filters"
       }
     },
+    "actions": {
+      "addCompany": "New Company",
+      "tooltip": {
+        "addCompany": "Add a new company to the list"
+      }
+    },
     "table": {
+      "loading": "Loading companies...",
+      "empty": "No companies found.",
       "legalName": "Legal Name",
       "cnpj": "CNPJ",
       "city": "City",
@@ -549,12 +551,12 @@
       "nextExpiration": "Expiration",
       "inactive": "Inactive",
       "tooltip": {
+        "openDetails": "Click to view company details",
         "inactive": "Inactive company",
-        "openDetails": "Click to view company details"
+        "customer": "This company is a customer",
+        "nonCustomer": "This company is not a customer yet"
       }
     },
-    "loading": "Loading companies...",
-    "empty": "No companies found.",
     "rowMenu": {
       "view": "View details",
       "address": "View address",
@@ -1003,33 +1005,29 @@
     }
   },
   "inspections": {
-    "title": "Inspections",
-    "description": "All registered inspections.",
-    "empty": "No inspections found.",
-    "emptyFiltered": "No inspections match the applied filters.",
-    "status": {
-      "expired": "Expired",
-      "nearExpiration": "Expiring in {{days}} days",
-      "onTrack": "On Track"
-    },
+    "description": "Track inspections, due dates, and the compliance status of each company.",
     "filters": {
-      "search": "Search by company",
-      "status": "Status",
-      "service": "Service",
+      "placeholder": {
+        "search": "Search by company or manufacturer/model"
+      },
       "allServices": "All services",
-      "manufacturer": "Manufacturer",
-      "model": "Model",
-      "clear": "Clear filters",
-      "statusAll": "All",
-      "statusExpired": "Overdue",
-      "statusNear": "Due soon",
-      "statusOk": "On track"
+      "status": "Status",
+      "statusExpired": "Expired",
+      "statusNear": "Expiring soon",
+      "statusOk": "Up to date",
+      "statusInactive": "Inactive",
+      "clear": "Clear",
+      "tooltip": {
+        "clear": "Clear all filters"
+      }
     },
     "actions": {
-      "addInspection": "New inspection"
-    },
-    "rowActions": {
-      "view": "View inspection"
+      "addInspection": "New Inspection",
+      "tooltip": {
+        "addInspection": "Link a new inspection to a company",
+        "renewInspection": "Renew inspection",
+        "deactivateInspection": "Deactivate inspection"
+      }
     },
     "addModal": {
       "title": "New inspection",
@@ -1059,15 +1057,22 @@
       "expirationShortcut": "+{{count}} {{unit}}"
     },
     "table": {
-      "customer": "Company",
+      "loading": "Loading inspections...",
+      "empty": "No inspections found.",
+      "emptyFiltered": "No inspections match the applied filters.",
       "service": "Service",
-      "notes": "Notes",
+      "customer": "Company",
       "inspectionDate": "Inspection Date",
       "expirationDate": "Expiration",
-      "status": "Status",
       "actions": "Actions",
-      "renewedChip": "Already renewed",
-      "deactivatedChip": "Deactivated"
+      "renewedChip": "Renewed",
+      "deactivatedChip": "Deactivated",
+      "tooltip": {
+        "openDetails": "Click to view inspection details",
+        "renewedChip": "Inspection renewed, a new one was created from it",
+        "deactivatedChip": "Inspection deactivated, no longer in the pending list",
+        "deactivatedChipWithReason": "Inspection deactivated, {{reason}}"
+      }
     },
     "renewModal": {
       "title": "Renew inspection",
@@ -1080,7 +1085,6 @@
         "confirmShort": "Renew",
         "openNew": "Open new inspection"
       },
-      "tooltip": "Create the next inspection from this one",
       "currentSummary": "Done on {{inspectionDate}} · due {{expirationDate}}"
     },
     "deactivate": {

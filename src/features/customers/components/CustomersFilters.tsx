@@ -1,9 +1,7 @@
 import { Button } from "@/components/button/Button";
 import { FormField } from "@/components/form/FormField";
 import { MONTHS } from "@/utils/months";
-import { SearchOutlined } from "@mui/icons-material";
-import AddIcon from "@mui/icons-material/Add";
-import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import { Add, FilterAltOff, SearchOutlined } from "@mui/icons-material";
 import { MenuItem, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { City } from "../types/City";
@@ -71,9 +69,9 @@ export function CustomersFilters({
         onChange={(e) => onChange("city", String(e.target.value))}
         sx={{ width: { xs: "100%", sm: 180 } }}
       >
-        {cities.map((c) => (
-          <MenuItem key={c.id} value={c.name}>
-            {c.name}
+        {cities.map((city) => (
+          <MenuItem key={city.id} value={city.name}>
+            {city.name}
           </MenuItem>
         ))}
       </FormField>
@@ -108,13 +106,13 @@ export function CustomersFilters({
         tooltip={t("customers.filters.tooltip.clear")}
         onClick={onClear}
         disabled={!hasActiveFilters}
-        startIcon={FilterAltOffIcon}
+        startIcon={FilterAltOff}
       >
         {t("customers.filters.clear")}
       </Button>
       <Button
         tooltip={t("customers.actions.tooltip.addCompany")}
-        startIcon={AddIcon}
+        startIcon={Add}
         onClick={onAddCompany}
         data-tour="customers.add"
         sx={{ ml: "auto" }}

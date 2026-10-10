@@ -26,6 +26,8 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(
             bgcolor: "background.paper",
             color: "text.secondary",
             boxShadow: 3,
+            /** Largura máxima maior que a padrão do MUI (300px), para caber mais texto antes de quebrar a linha. */
+            maxWidth: 320,
           },
         },
         /** Aproxima a tooltip do elemento âncora, compensando o espaçamento padrão do MUI. */

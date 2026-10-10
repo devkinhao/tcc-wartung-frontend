@@ -24,7 +24,14 @@ export type InspectionListItem = {
   deactivationReason: InspectionDeactivationReason | null;
 };
 
-export type InspectionStatus = "expired" | "near" | "ok";
+/** Situações pelas quais a listagem pode ser filtrada. */
+export const INSPECTION_STATUSES = ["expired", "near", "ok", "inactive"] as const;
+
+export type InspectionStatus = (typeof INSPECTION_STATUSES)[number];
+
+/** Indica se o valor é uma situação de inspeção válida. */
+export const isInspectionStatus = (value: string | null): value is InspectionStatus =>
+  INSPECTION_STATUSES.some((status) => status === value);
 
 export type InspectionListFilters = {
   status: InspectionStatus | "";
@@ -32,6 +39,15 @@ export type InspectionListFilters = {
   serviceTypeId: number | "";
   manufacturer: string;
   model: string;
+};
+
+/** Filtros da listagem sem nenhum critério aplicado. */
+export const INITIAL_INSPECTION_FILTERS: InspectionListFilters = {
+  status: "",
+  search: "",
+  serviceTypeId: "",
+  manufacturer: "",
+  model: "",
 };
 
 export type InspectionSortableColumn =
